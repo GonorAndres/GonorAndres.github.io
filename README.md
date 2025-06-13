@@ -1,2 +1,2 @@
 # GonorAndres.github.io
-Repositorio para mi github page
+Repositorio para mi pagina de github
