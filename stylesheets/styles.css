@@ -13,7 +13,7 @@ h1, h2, h4, h5, h6 {
 
 h3 {
   color: #d84315;           /* naranja quemado */
-  font-weight: bold;
+  font-weight: 500;
   letter-spacing: 1px;       /* espacio entre letras */
   margin-bottom: 0.5em;
 }
@@ -37,7 +37,7 @@ h2 {
   font-weight: 500;
 }
 
-h3, h4, h5, h6 {
+h4, h5, h6 {
   color:#494949;
   font-weight: 500;
 }
