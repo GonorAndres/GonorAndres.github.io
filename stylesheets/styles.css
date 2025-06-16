@@ -14,7 +14,6 @@ h1, h2, h4, h5, h6 {
 h3 {
   color: #d84315;           /* naranja quemado */
   font-weight: bold;
-  text-transform: uppercase; /* TODO EN MAYÚSCULAS */
   letter-spacing: 1px;       /* espacio entre letras */
   margin-bottom: 0.5em;
 }
