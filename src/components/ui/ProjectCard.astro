@@ -1,0 +1,76 @@
+---
+import type { Lang } from '../../i18n';
+import { t } from '../../i18n';
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  url: string;
+  platform: string;
+  category: 'recreational' | 'academic';
+  tags?: string[];
+  variant?: 'standard' | 'tall' | 'wide';
+  lang: Lang;
+}
+
+const { title, description, url, platform, category, tags = [], variant = 'standard', lang } = Astro.props;
+
+const variantClasses: Record<string, string> = {
+  standard: '',
+  tall: 'md:row-span-2',
+  wide: 'md:col-span-2',
+};
+
+const categoryColors: Record<string, string> = {
+  recreational: 'bg-terracotta/10 border-terracotta/30',
+  academic: 'bg-sage/10 border-sage/30',
+};
+---
+
+<article
+  class:list={[
+    'group relative flex flex-col rounded-2xl border p-6 transition-all hover:shadow-lg hover:-translate-y-1 fade-up',
+    categoryColors[category],
+    variantClasses[variant],
+  ]}
+>
+  <!-- Category indicator -->
+  <div class="flex items-center gap-2 mb-3">
+    <span class:list={[
+      'text-xs font-medium px-2 py-0.5 rounded-full',
+      category === 'recreational' ? 'bg-terracotta/20 text-terracotta' : 'bg-sage/20 text-sage',
+    ]}>
+      {t(lang, category === 'recreational' ? 'projects.recreational' : 'projects.academic')}
+    </span>
+    <span class="text-xs text-navy/40">{platform}</span>
+  </div>
+
+  <h3 class="font-serif text-lg font-bold text-navy mb-2 group-hover:text-terracotta transition-colors">
+    {title}
+  </h3>
+
+  <p class="text-sm text-navy/60 flex-1 mb-4">
+    {description}
+  </p>
+
+  {tags.length > 0 && (
+    <div class="flex flex-wrap gap-1.5 mb-4">
+      {tags.map((tag) => (
+        <CategoryBadge label={tag} />
+      ))}
+    </div>
+  )}
+
+  <a
+    href={url}
+    target="_blank"
+    rel="noopener"
+    class="inline-flex items-center gap-1 text-sm font-medium text-terracotta hover:text-terracotta/80 transition-colors"
+  >
+    {t(lang, 'projects.viewProject')}
+    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+    </svg>
+  </a>
+</article>

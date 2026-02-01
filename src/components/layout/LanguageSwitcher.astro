@@ -1,0 +1,27 @@
+---
+import { t } from '../../i18n';
+import type { Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const targetLang = lang === 'es' ? 'en' : 'es';
+
+// Build the target URL by toggling the /en/ prefix
+const currentPath = Astro.url.pathname;
+let targetPath: string;
+if (lang === 'es') {
+  targetPath = `/en${currentPath}`;
+} else {
+  targetPath = currentPath.replace(/^\/en/, '') || '/';
+}
+---
+
+<a
+  href={targetPath}
+  class="text-sm font-medium px-3 py-1 rounded-full border border-amber/40 text-navy/70 hover:bg-amber/10 hover:text-terracotta transition-colors"
+>
+  {t(lang, 'lang.switch')}
+</a>

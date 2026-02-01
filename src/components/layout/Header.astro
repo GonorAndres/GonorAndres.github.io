@@ -1,0 +1,70 @@
+---
+import { t, useTranslatedPath } from '../../i18n';
+import type { Lang } from '../../i18n';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const tp = useTranslatedPath(lang);
+---
+
+<header class="sticky top-0 z-50 bg-cream/90 backdrop-blur-sm border-b border-amber/20">
+  <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href={tp('/')} class="font-serif text-xl font-bold text-navy hover:text-terracotta transition-colors">
+      Andrés González Ortega
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      <a href={tp('/')} class="text-sm font-medium text-navy/70 hover:text-terracotta transition-colors">
+        {t(lang, 'nav.home')}
+      </a>
+      <a href={tp('/#proyectos')} class="text-sm font-medium text-navy/70 hover:text-terracotta transition-colors">
+        {t(lang, 'nav.projects')}
+      </a>
+      <a href={tp('/blog/')} class="text-sm font-medium text-navy/70 hover:text-terracotta transition-colors">
+        {t(lang, 'nav.blog')}
+      </a>
+      <a href={tp('/#contacto')} class="text-sm font-medium text-navy/70 hover:text-terracotta transition-colors">
+        {t(lang, 'nav.contact')}
+      </a>
+      <LanguageSwitcher lang={lang} />
+    </div>
+
+    <!-- Mobile menu button -->
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden p-2 text-navy"
+      aria-label="Menu"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-3">
+    <a href={tp('/')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">
+      {t(lang, 'nav.home')}
+    </a>
+    <a href={tp('/#proyectos')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">
+      {t(lang, 'nav.projects')}
+    </a>
+    <a href={tp('/blog/')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">
+      {t(lang, 'nav.blog')}
+    </a>
+    <a href={tp('/#contacto')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">
+      {t(lang, 'nav.contact')}
+    </a>
+    <LanguageSwitcher lang={lang} />
+  </div>
+
+  <script>
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+  </script>
+</header>

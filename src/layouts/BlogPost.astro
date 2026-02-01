@@ -1,0 +1,46 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { Lang } from '../i18n';
+import CategoryBadge from '../components/ui/CategoryBadge.astro';
+import Squiggle from '../components/decorations/Squiggle.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  category: string;
+  lang: Lang;
+}
+
+const { title, description, date, category, lang } = Astro.props;
+const formattedDate = new Date(date).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={`${title} | AGO Blog`} description={description} lang={lang}>
+  <article class="py-16 px-6">
+    <div class="max-w-3xl mx-auto">
+      <div class="mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <CategoryBadge label={category} />
+          <time class="text-sm text-navy/50">{formattedDate}</time>
+        </div>
+        <h1 class="text-3xl md:text-5xl font-bold text-navy leading-tight mb-4">{title}</h1>
+        <p class="text-lg text-navy/60">{description}</p>
+      </div>
+      <Squiggle class="w-full h-4 mb-8" color="#D4A574" />
+      <div class="prose prose-lg max-w-none
+        prose-headings:font-serif prose-headings:text-navy
+        prose-p:text-navy/80
+        prose-a:text-terracotta prose-a:no-underline hover:prose-a:underline
+        prose-strong:text-navy
+        prose-code:text-terracotta prose-code:bg-amber/10 prose-code:px-1 prose-code:rounded
+      ">
+        <slot />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
