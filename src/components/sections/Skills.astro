@@ -1,0 +1,74 @@
+---
+import { t } from '../../i18n';
+import type { Lang } from '../../i18n';
+import Squiggle from '../decorations/Squiggle.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const skillGroups = lang === 'es' ? [
+  {
+    title: 'Lenguajes & Herramientas',
+    skills: ['Python', 'R', 'SQL', 'Excel Avanzado', 'VBA', 'Git'],
+  },
+  {
+    title: 'Ciencia Actuarial',
+    skills: ['Seguros de Vida', 'Seguros de Danos', 'Reservas', 'Regulacion (LISF)', 'Tablas de Mortalidad'],
+  },
+  {
+    title: 'Analisis de Datos',
+    skills: ['Machine Learning', 'Simulacion Montecarlo', 'Inferencia Bayesiana', 'GLM', 'Visualizacion'],
+  },
+  {
+    title: 'Finanzas Cuantitativas',
+    skills: ['Derivados', 'Portafolios (Markowitz)', 'VaR', 'Curvas Forward', 'Matematicas Financieras'],
+  },
+] : [
+  {
+    title: 'Languages & Tools',
+    skills: ['Python', 'R', 'SQL', 'Advanced Excel', 'VBA', 'Git'],
+  },
+  {
+    title: 'Actuarial Science',
+    skills: ['Life Insurance', 'Property Insurance', 'Reserves', 'Regulation (LISF)', 'Mortality Tables'],
+  },
+  {
+    title: 'Data Analysis',
+    skills: ['Machine Learning', 'Monte Carlo Simulation', 'Bayesian Inference', 'GLM', 'Visualization'],
+  },
+  {
+    title: 'Quantitative Finance',
+    skills: ['Derivatives', 'Portfolios (Markowitz)', 'VaR', 'Forward Curves', 'Financial Mathematics'],
+  },
+];
+---
+
+<section class="py-20 px-6 bg-navy text-cream">
+  <div class="max-w-6xl mx-auto">
+    <div class="mb-12 md:mr-16 md:text-right">
+      <h2 class="text-3xl md:text-4xl font-bold fade-up">
+        {t(lang, 'section.skills')}
+      </h2>
+      <Squiggle class="w-32 h-4 mt-2 md:ml-auto" color="#D4A574" />
+    </div>
+
+    <!-- Asymmetric 2-col layout with offset -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+      {skillGroups.map((group, i) => (
+        <div class:list={['fade-up', i % 2 === 1 ? 'md:mt-8' : '']}>
+          <h3 class="font-serif text-xl font-bold text-amber mb-4">{group.title}</h3>
+          <div class="flex flex-wrap gap-2">
+            {group.skills.map((skill) => (
+              <span class="text-sm px-3 py-1.5 rounded-full bg-cream/10 text-cream/80 border border-cream/10">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,253 @@
+---
+import { t } from '../../i18n';
+import type { Lang } from '../../i18n';
+import ProjectCard from '../ui/ProjectCard.astro';
+import OrganicBlob from '../decorations/OrganicBlob.astro';
+import Squiggle from '../decorations/Squiggle.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const projects = lang === 'es' ? [
+  {
+    title: 'GMM Explorer - Gastos Médicos Mayores',
+    description: 'Sistema interactivo de clasificación y tarificación de siniestros de seguros de Gastos Médicos Mayores. Análisis de 5.1M siniestros y 95.9M asegurados-año (2020-2024). Proyecto académico UNAM.',
+    url: 'https://gmm-explorer.vercel.app/contexto',
+    platform: 'Vercel',
+    category: 'recreational' as const,
+    tags: ['Next.js', 'Actuaría', 'GMM', 'Tarificación', 'CNSF'],
+    variant: 'wide' as const,
+  },
+  {
+    title: 'Simulación Montecarlo - Poker',
+    description: 'Estimacion de probabilidades en Texas Hold\'em usando simulacion Montecarlo para comprender el comportamiento del azar.',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/TexasPokerCaseStudy',
+    platform: 'GitHub',
+    category: 'recreational' as const,
+    tags: ['Python', 'Simulacion', 'Probabilidad'],
+    variant: 'wide' as const,
+  },
+  {
+    title: 'Inferencia Bayesiana vs Frecuentista - Test A/B',
+    description: 'Evaluacion de tasa de conversion con metodos frecuentistas y bayesianos, incluyendo PyMC y distribucion Beta.',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Bayesian_vs_Frequentist',
+    platform: 'GitHub',
+    category: 'recreational' as const,
+    tags: ['Python', 'Bayes', 'PyMC'],
+    variant: 'tall' as const,
+  },
+  {
+    title: 'Modelo Predictivo de Incumplimiento Crediticio',
+    description: 'Machine learning con 85.19% de precision (AUC) para predecir incumplimiento en prestamos. GLM en Python con 32,000+ registros.',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model',
+    platform: 'GitHub',
+    category: 'recreational' as const,
+    tags: ['ML', 'GLM', 'Riesgo'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Optimizacion de Portafolio - Markowitz',
+    description: 'Teoria moderna de portafolios con 10 activos del mercado mexicano, logrando 110% de rendimiento anualizado en prueba.',
+    url: 'https://drive.google.com/drive/folders/1Dz54zcTpa9quMFCkgddBN5GWQfy6CIXv',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Excel', 'VaR', 'Finanzas'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Derivados de Divisas - MCF',
+    description: 'Analisis del mercado de divisas: curva forward, precios forwards, spread bid/offer y superficie de volatilidad.',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Evaluaci%C3%B3nDerivadosDivisas',
+    platform: 'GitHub',
+    category: 'academic' as const,
+    tags: ['Python', 'Derivados', 'Opciones'],
+    variant: 'wide' as const,
+  },
+  {
+    title: 'Analisis Demografico - Michoacan',
+    description: 'Estudio de la poblacion de Michoacan usando datos del censo 2020 de INEGI: mortalidad, fecundidad y estructura por edades.',
+    url: 'https://drive.google.com/drive/folders/1U_KrCv0g6o-JWNv0l6RHoPCWZBr0-exu',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Excel', 'INEGI', 'Demografia'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Limpieza de Datos - Deuda Publica CDMX',
+    description: 'Limpieza de base de deuda publica del Gobierno CDMX. Reconstruccion de tasa TIIE con funciones avanzadas de Excel.',
+    url: 'https://drive.google.com/drive/folders/1qOYJXgcIiZUyhf2OQTCRu_bgskaZ06AE',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Excel', 'Datos', 'TIIE'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Nota Tecnica - Seguro de Vida',
+    description: 'Documento tecnico sobre seguro de vida individual ajustado a regulacion mexicana (Circular Unica y LISF).',
+    url: 'https://drive.google.com/drive/folders/1PfotLUbidzwk8gdW4kbqQfLB4PbkuYBj',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Actuaria', 'Seguros', 'Regulacion'],
+    variant: 'tall' as const,
+  },
+  {
+    title: 'Nota Tecnica - Seguro de Danos',
+    description: 'Seguro de danos para autos con datos de la CNSF. Nota tecnica comparativa con ramo vida y cotizador en Excel.',
+    url: 'https://drive.google.com/drive/folders/12tF-Ma_sWtDM5k6zYzNx8btUGS78b-0W',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Actuaria', 'Autos', 'CNSF'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Tabla de Amortizaciones Dinamica',
+    description: 'Amortizador en Excel basado en parametros del usuario: monto, tasa y tipo de pago. Proyecto de Matematicas Financieras.',
+    url: 'https://drive.google.com/drive/folders/15Zyl2XKcXKnmrrFLtlctQwYeVz_C9EdW',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Excel', 'Amortizacion'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Metodo de Euler - EDOs',
+    description: 'Implementacion del Metodo de Euler para EDOs de primer orden con demostracion de existencia y unicidad (Picard-Lindelof).',
+    url: 'https://colab.research.google.com/drive/1g6uDqBaJoHbx2MyNeh2tgP5nwKOgqPkA',
+    platform: 'Colab',
+    category: 'academic' as const,
+    tags: ['Python', 'EDOs', 'Euler'],
+    variant: 'standard' as const,
+  },
+] : [
+  {
+    title: 'GMM Explorer - Major Medical Expenses',
+    description: 'Interactive system for classifying and pricing Major Medical Expenses insurance claims. Analysis of 5.1M claims and 95.9M insured-years (2020-2024). UNAM academic project.',
+    url: 'https://gmm-explorer.vercel.app/contexto',
+    platform: 'Vercel',
+    category: 'recreational' as const,
+    tags: ['Next.js', 'Actuarial', 'GMM', 'Pricing', 'CNSF'],
+    variant: 'wide' as const,
+  },
+  {
+    title: 'Monte Carlo Simulation - Poker',
+    description: 'Probability estimation in Texas Hold\'em using Monte Carlo simulation to understand randomness behavior.',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/TexasPokerCaseStudy',
+    platform: 'GitHub',
+    category: 'recreational' as const,
+    tags: ['Python', 'Simulation', 'Probability'],
+    variant: 'wide' as const,
+  },
+  {
+    title: 'Bayesian vs Frequentist - A/B Test',
+    description: 'Conversion rate evaluation using frequentist and Bayesian methods, including PyMC and Beta distribution.',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Bayesian_vs_Frequentist',
+    platform: 'GitHub',
+    category: 'recreational' as const,
+    tags: ['Python', 'Bayes', 'PyMC'],
+    variant: 'tall' as const,
+  },
+  {
+    title: 'Credit Default Prediction Model',
+    description: 'Machine learning with 85.19% AUC to predict loan defaults. GLM in Python with 32,000+ records.',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model',
+    platform: 'GitHub',
+    category: 'recreational' as const,
+    tags: ['ML', 'GLM', 'Risk'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Portfolio Optimization - Markowitz',
+    description: 'Modern portfolio theory with 10 Mexican market assets, achieving 110% annualized return in test period.',
+    url: 'https://drive.google.com/drive/folders/1Dz54zcTpa9quMFCkgddBN5GWQfy6CIXv',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Excel', 'VaR', 'Finance'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Currency Derivatives - QMF',
+    description: 'Currency market analysis: forward curve, forward prices, bid/offer spread and volatility surface.',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Evaluaci%C3%B3nDerivadosDivisas',
+    platform: 'GitHub',
+    category: 'academic' as const,
+    tags: ['Python', 'Derivatives', 'Options'],
+    variant: 'wide' as const,
+  },
+  {
+    title: 'Demographic Analysis - Michoacan',
+    description: 'Population study of Michoacan using INEGI 2020 census data: mortality, fertility and age structure.',
+    url: 'https://drive.google.com/drive/folders/1U_KrCv0g6o-JWNv0l6RHoPCWZBr0-exu',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Excel', 'INEGI', 'Demographics'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Data Cleaning - CDMX Public Debt',
+    description: 'Public debt database cleaning for Mexico City Government. TIIE rate reconstruction with advanced Excel functions.',
+    url: 'https://drive.google.com/drive/folders/1qOYJXgcIiZUyhf2OQTCRu_bgskaZ06AE',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Excel', 'Data', 'TIIE'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Technical Note - Life Insurance',
+    description: 'Technical document on individual life insurance adjusted to Mexican regulation (Circular Unica and LISF).',
+    url: 'https://drive.google.com/drive/folders/1PfotLUbidzwk8gdW4kbqQfLB4PbkuYBj',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Actuarial', 'Insurance', 'Regulation'],
+    variant: 'tall' as const,
+  },
+  {
+    title: 'Technical Note - Property Insurance',
+    description: 'Auto property insurance with CNSF data. Comparative technical note with life insurance and Excel quoter.',
+    url: 'https://drive.google.com/drive/folders/12tF-Ma_sWtDM5k6zYzNx8btUGS78b-0W',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Actuarial', 'Auto', 'CNSF'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Dynamic Amortization Table',
+    description: 'Excel amortization tool based on user parameters: amount, rate and payment type. Financial Mathematics project.',
+    url: 'https://drive.google.com/drive/folders/15Zyl2XKcXKnmrrFLtlctQwYeVz_C9EdW',
+    platform: 'Drive',
+    category: 'academic' as const,
+    tags: ['Excel', 'Amortization'],
+    variant: 'standard' as const,
+  },
+  {
+    title: 'Euler Method - ODEs',
+    description: 'Euler Method implementation for first-order ODEs with existence and uniqueness proof (Picard-Lindelof).',
+    url: 'https://colab.research.google.com/drive/1g6uDqBaJoHbx2MyNeh2tgP5nwKOgqPkA',
+    platform: 'Colab',
+    category: 'academic' as const,
+    tags: ['Python', 'ODEs', 'Euler'],
+    variant: 'standard' as const,
+  },
+];
+---
+
+<section id="proyectos" class="relative py-20 px-6">
+  <OrganicBlob variant={2} color="#C17654" class="w-[400px] h-[400px] -top-20 right-0 opacity-30" />
+
+  <div class="max-w-6xl mx-auto relative z-10">
+    <div class="mb-12 md:ml-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-navy fade-up">
+        {t(lang, 'section.featured')}
+      </h2>
+      <Squiggle class="w-32 h-4 mt-2" color="#C17654" />
+    </div>
+
+    <!-- Asymmetric grid: NOT uniform 3-column -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-auto">
+      {projects.map((project) => (
+        <ProjectCard {...project} lang={lang} />
+      ))}
+    </div>
+  </div>
+</section>

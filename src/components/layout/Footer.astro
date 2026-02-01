@@ -1,0 +1,38 @@
+---
+import { t } from '../../i18n';
+import type { Lang } from '../../i18n';
+import Squiggle from '../decorations/Squiggle.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<footer class="bg-navy text-cream/80">
+  <Squiggle class="w-full h-4" color="#D4A574" />
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <span class="font-serif text-xl font-bold text-cream">{lang === 'es' ? 'Licenciado en Actuaría' : 'Actuarial Sciences'}</span>
+        <p class="mt-2 text-sm text-cream/60">Andrés González Ortega</p>
+      </div>
+      <div class="space-y-2">
+        <a href="https://github.com/GonorAndres" target="_blank" rel="noopener" class="block text-sm hover:text-amber transition-colors">
+          GitHub
+        </a>
+        <a href="https://drive.google.com/file/d/16cdRmnzf0drNv9c5848N6ZedgYX9WhwV/view" target="_blank" rel="noopener" class="block text-sm hover:text-amber transition-colors">
+          CV
+        </a>
+        <a href="https://drive.google.com/drive/folders/1fQXrnQaQckXr5nBcOWvSptJGdcixYVO8" target="_blank" rel="noopener" class="block text-sm hover:text-amber transition-colors">
+          Drive
+        </a>
+      </div>
+      <div class="text-sm text-cream/50">
+        <p>&copy; {new Date().getFullYear()} Andrés González Ortega.</p>
+        <p>{t(lang, 'footer.rights')}</p>
+      </div>
+    </div>
+  </div>
+</footer>

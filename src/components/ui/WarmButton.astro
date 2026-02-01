@@ -1,0 +1,22 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  external?: boolean;
+}
+
+const { href, variant = 'primary', external = false } = Astro.props;
+const linkProps = external ? { target: '_blank', rel: 'noopener' } : {};
+
+const classes = variant === 'primary'
+  ? 'bg-terracotta text-cream hover:bg-terracotta/90'
+  : 'border-2 border-navy/20 text-navy hover:border-terracotta hover:text-terracotta';
+---
+
+<a
+  href={href}
+  class:list={['inline-block px-6 py-3 font-medium rounded-lg transition-colors', classes]}
+  {...linkProps}
+>
+  <slot />
+</a>

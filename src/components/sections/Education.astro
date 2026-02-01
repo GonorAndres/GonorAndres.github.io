@@ -1,0 +1,48 @@
+---
+import { t } from '../../i18n';
+import type { Lang } from '../../i18n';
+import OrganicBlob from '../decorations/OrganicBlob.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const education = lang === 'es' ? [
+  {
+    degree: 'Licenciatura en Actuaria',
+    school: 'Universidad Nacional Autonoma de Mexico (UNAM)',
+    details: 'Facultad de Ciencias',
+  },
+] : [
+  {
+    degree: 'B.S. in Actuarial Science',
+    school: 'National Autonomous University of Mexico (UNAM)',
+    details: 'Faculty of Sciences',
+  },
+];
+---
+
+<section class="relative py-20 px-6 overflow-hidden">
+  <OrganicBlob variant={4} color="#7A8B6F" class="w-[300px] h-[300px] -bottom-16 -left-16 opacity-30" />
+
+  <div class="max-w-6xl mx-auto relative z-10">
+    <div class="mb-12 md:ml-8">
+      <h2 class="text-3xl md:text-4xl font-bold text-navy fade-up">
+        {t(lang, 'section.education')}
+      </h2>
+    </div>
+
+    <div class="md:ml-16 space-y-8">
+      {education.map((edu) => (
+        <div class="relative pl-6 border-l-2 border-amber/40 fade-up">
+          <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-terracotta"></div>
+          <h3 class="font-serif text-xl font-bold text-navy">{edu.degree}</h3>
+          <p class="text-navy/70 mt-1">{edu.school}</p>
+          <p class="text-sm text-sage mt-0.5">{edu.details}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

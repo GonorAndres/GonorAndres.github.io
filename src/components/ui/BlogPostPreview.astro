@@ -1,0 +1,41 @@
+---
+import type { Lang } from '../../i18n';
+import { t, useTranslatedPath } from '../../i18n';
+import CategoryBadge from './CategoryBadge.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  slug: string;
+  date: string;
+  category: string;
+  lang: Lang;
+}
+
+const { title, description, slug, date, category, lang } = Astro.props;
+const tp = useTranslatedPath(lang);
+const formattedDate = new Date(date).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article class="group p-6 rounded-2xl border border-amber/20 hover:shadow-md hover:-translate-y-0.5 transition-all fade-up">
+  <div class="flex items-center gap-3 mb-3">
+    <CategoryBadge label={category} />
+    <time class="text-xs text-navy/40">{formattedDate}</time>
+  </div>
+  <h3 class="font-serif text-lg font-bold text-navy mb-2 group-hover:text-terracotta transition-colors">
+    <a href={tp(`/blog/${slug}/`)}>
+      {title}
+    </a>
+  </h3>
+  <p class="text-sm text-navy/60 mb-3">{description}</p>
+  <a
+    href={tp(`/blog/${slug}/`)}
+    class="text-sm font-medium text-terracotta hover:text-terracotta/80 transition-colors"
+  >
+    {t(lang, 'blog.readMore')} &rarr;
+  </a>
+</article>
