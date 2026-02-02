@@ -6,7 +6,7 @@ export default {
   'hero.greeting': 'Hola, soy',
   'hero.name': 'Andrés González Ortega',
   'hero.role': 'Actuario',
-  'hero.description': 'Analista de datos apasionado por la ciencia actuarial y la programacion. Transformo problemas complejos en soluciones claras.',
+  'hero.description': 'Me mueve entender los porques y los comos del mundo, que es super complejo, a traves de la probabilidad, el modelado computacional y todas las herramientas que me ha proporcionado la carrera de actuaria. Disfruto explorar caminos distintos, aprender lo que haga falta y llegar a soluciones que sean claras y completas.',
   'hero.cta': 'Ver proyectos',
   'hero.cv': 'Descargar CV',
   'section.featured': 'Proyectos Destacados',
@@ -27,4 +27,8 @@ export default {
   'projects.recreational': 'Recreativos',
   'projects.academic': 'Escolares',
   'lang.switch': 'English',
+  'section.sharedNotes': 'Notas para Compartir',
+  'sharedNotes.subtitle': 'Documentos listos para leer: analisis, reportes y resumenes tecnicos.',
+  'sharedNotes.viewPdf': 'Ver PDF',
+  'education.certificates': 'Certificaciones',
 } as const;

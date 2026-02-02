@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import BlogPostPreview from '../../../../components/ui/BlogPostPreview.astro';
+import { t } from '../../../../i18n';
+
+const categoryLabels: Record<string, string> = {
+  'actuaria-para-todos': 'Actuarial for everyone',
+  'proyectos-y-analisis': 'Projects & analysis',
+  'herramientas': 'Tools',
+  'mercado-mexicano': 'Mexican market',
+};
+
+export async function getStaticPaths() {
+  const categories = ['actuaria-para-todos', 'proyectos-y-analisis', 'herramientas', 'mercado-mexicano'];
+  return categories.map((cat) => ({ params: { cat } }));
+}
+
+const { cat } = Astro.params;
+const posts = (await getCollection('blog'))
+  .filter((p) => p.data.lang === 'en' && p.data.category === cat)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+---
+
+<BaseLayout title={`${categoryLabels[cat!]} | Blog`} lang="en">
+  <section class="py-16 px-6">
+    <div class="max-w-4xl mx-auto">
+      <a href="/en/blog/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; {t('en', 'blog.allPosts')}</a>
+      <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{categoryLabels[cat!]}</h1>
+
+      <div class="space-y-6">
+        {posts.map((post) => (
+          <BlogPostPreview
+            title={post.data.title}
+            description={post.data.description}
+            slug={post.slug}
+            date={post.data.date}
+            category={post.data.category}
+            lang="en"
+          />
+        ))}
+      </div>
+
+      {posts.length === 0 && (
+        <p class="text-navy/50 text-center py-12">No articles in this category yet.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>

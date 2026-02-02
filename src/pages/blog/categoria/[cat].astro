@@ -29,6 +29,24 @@ const posts = (await getCollection('blog'))
       <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{categoryLabels[cat!]}</h1>
 
       <div class="space-y-6">
+        {cat === 'herramientas' && (
+          <article class="group p-6 rounded-2xl border border-terracotta/30 bg-terracotta/5 hover:shadow-md hover:-translate-y-0.5 transition-all fade-up">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-xs px-2 py-0.5 rounded-full bg-terracotta/20 text-terracotta font-medium">Interactivo</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-sage/15 text-sage font-medium">herramientas</span>
+            </div>
+            <h3 class="font-serif text-lg font-bold text-navy mb-2 group-hover:text-terracotta transition-colors">
+              <a href="/blog/visualizaciones-matematicas/">
+                Visualizaciones Matemáticas Interactivas
+              </a>
+            </h3>
+            <p class="text-sm text-navy/60 mb-3">Demostraciones interactivas de conceptos fundamentales del análisis: límite sin(x)/x, derivada del seno y la fórmula de Euler. Con visualizaciones SVG manipulables.</p>
+            <a href="/blog/visualizaciones-matematicas/" class="text-sm font-medium text-terracotta hover:text-terracotta/80 transition-colors">
+              Explorar demostraciones &rarr;
+            </a>
+          </article>
+        )}
+
         {posts.map((post) => (
           <BlogPostPreview
             title={post.data.title}
@@ -41,7 +59,7 @@ const posts = (await getCollection('blog'))
         ))}
       </div>
 
-      {posts.length === 0 && (
+      {posts.length === 0 && cat !== 'herramientas' && (
         <p class="text-navy/50 text-center py-12">No hay articulos en esta categoria aun.</p>
       )}
     </div>
