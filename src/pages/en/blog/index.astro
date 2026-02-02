@@ -30,7 +30,7 @@ const categoryLabels: Record<string, string> = {
           {t('en', 'blog.allPosts')}
         </a>
         {categories.map((cat) => (
-          <a href={`/en/blog/${cat}/`} class="text-sm px-3 py-1 rounded-full bg-sage/15 text-sage hover:bg-sage/25 transition-colors">
+          <a href={`/en/blog/categoria/${cat}/`} class="text-sm px-3 py-1 rounded-full bg-sage/15 text-sage hover:bg-sage/25 transition-colors">
             {categoryLabels[cat]}
           </a>
         ))}
