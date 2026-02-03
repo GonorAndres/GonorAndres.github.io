@@ -19,14 +19,11 @@ const { lang } = Astro.props;
         <p class="mt-2 text-sm text-cream/60">Andrés González Ortega</p>
       </div>
       <div class="space-y-2">
-        <a href="https://github.com/GonorAndres" target="_blank" rel="noopener" class="block text-sm hover:text-amber transition-colors">
-          GitHub
+        <a href="https://drive.google.com/drive/folders/1M7KZaFbTw19vDoA-AeusJDkL--nnAwEN?usp=drive_link" target="_blank" rel="noopener" class="block text-sm hover:text-amber transition-colors">
+          {lang === 'es' ? 'Carpeta academica' : 'Academic folder'}
         </a>
-        <a href="https://drive.google.com/file/d/16cdRmnzf0drNv9c5848N6ZedgYX9WhwV/view" target="_blank" rel="noopener" class="block text-sm hover:text-amber transition-colors">
-          CV
-        </a>
-        <a href="https://drive.google.com/drive/folders/1fQXrnQaQckXr5nBcOWvSptJGdcixYVO8" target="_blank" rel="noopener" class="block text-sm hover:text-amber transition-colors">
-          Drive
+        <a href="https://drive.google.com/drive/folders/1M7KZaFbTw19vDoA-AeusJDkL--nnAwEN?usp=sharing" target="_blank" rel="noopener" class="block text-sm hover:text-amber transition-colors">
+          {lang === 'es' ? 'Apuntes sueltos' : 'Miscellaneous notes'}
         </a>
       </div>
       <div class="text-sm text-cream/50">
