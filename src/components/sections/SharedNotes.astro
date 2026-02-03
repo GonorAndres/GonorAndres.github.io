@@ -43,6 +43,38 @@ const notes: Note[] = lang === 'es' ? [
     ],
     tags: ['Estadistica', 'Bayes', 'Python'],
   },
+  {
+    title: 'GLM para Modelos Actuariales',
+    description: 'De la teoria a la produccion: como las aseguradoras realmente estiman frecuencia de siniestros, severidad y caida de polizas. Este apunte recorre desde la familia exponencial y funciones liga hasta validacion con curvas ROC, coeficiente de Gini y tablas de relatividad. Tres casos de estudio completos: autos, vida y riesgos de trabajo. Apunte personal de sintesis actuarial.',
+    urls: [
+      { label: 'Ver PDF', url: 'https://drive.google.com/file/d/1jJ2eJ9ceVogmDLPf6nAtY4JAo-XEiAOE/view?usp=sharing' },
+    ],
+    tags: ['GLM', 'Actuaria', 'Seguros'],
+  },
+  {
+    title: 'Black-Scholes y la Log-Normal',
+    description: 'Por que la volatilidad no es solo ruido sino una fuerza que separa la mediana del promedio, y como eso hace que las opciones valgan mas de lo que la intuicion sugiere. Un recorrido por el movimiento browniano geometrico, la distribucion del precio terminal y el efecto del "volatility drag". Apunte personal de finanzas cuantitativas.',
+    urls: [
+      { label: 'Ver PDF', url: 'https://drive.google.com/file/d/10jLATDsw39CHDKb7T04gqy3GUezJRx6D/view?usp=drive_link' },
+    ],
+    tags: ['Black-Scholes', 'Log-Normal', 'Volatilidad'],
+  },
+  {
+    title: 'Ajuste Parametrico de Rendimientos Financieros',
+    description: 'El camino completo para modelar rendimientos: desde elegir entre normal y log-normal, pasando por momentos y maxima verosimilitud, hasta llegar al VaR parametrico. Con pruebas de bondad de ajuste, Q-Q plots y criterios de informacion para no quedarse solo con la primera distribucion que parezca funcionar. Apunte del curso de Mercados Financieros, UNAM.',
+    urls: [
+      { label: 'Ver PDF', url: 'https://drive.google.com/file/d/1229dImQ9xEY2tZdh4Wr5KIyNUIRgv3Vz/view?usp=sharing' },
+    ],
+    tags: ['VaR', 'MLE', 'Finanzas'],
+  },
+  {
+    title: 'Prediccion Probabilistica de Erupciones Volcanicas',
+    description: 'Que tienen en comun un actuario y un volcanolog? Que ambos intentan predecir eventos raros con consecuencias enormes. Este apunte revisa como se modelan los intervalos entre erupciones del Popocatepetl y el Galeras con distribuciones log-normal, modelos de Markov y procesos de renovacion. Las preguntas abiertas al final son genuinamente fascinantes. Apunte personal de probabilidad aplicada.',
+    urls: [
+      { label: 'Ver PDF', url: 'https://drive.google.com/file/d/1eaQmrc0HuQ5fXli6E5HQ54N5vRNkFT9o/view?usp=sharing' },
+    ],
+    tags: ['Probabilidad', 'Volcanes', 'Modelos'],
+  },
 ] : [
   {
     title: 'Black-Scholes, FRA & IRS',
@@ -68,6 +100,38 @@ const notes: Note[] = lang === 'es' ? [
       { label: 'Summary EN', url: 'https://drive.google.com/file/d/1kguG7XKBYd6OLJ3nI1z-Syt7Ozcq0mUB/view?usp=drive_link' },
     ],
     tags: ['Statistics', 'Bayes', 'Python'],
+  },
+  {
+    title: 'GLM for Actuarial Models',
+    description: 'From theory to production: how insurers actually estimate claim frequency, severity, and policy lapse. This note walks from exponential families and link functions through validation with ROC curves, Gini coefficients, and relativity tables. Three full case studies: auto, life, and workers\' comp. Personal actuarial synthesis note.',
+    urls: [
+      { label: 'View PDF', url: 'https://drive.google.com/file/d/1jJ2eJ9ceVogmDLPf6nAtY4JAo-XEiAOE/view?usp=sharing' },
+    ],
+    tags: ['GLM', 'Actuarial', 'Insurance'],
+  },
+  {
+    title: 'Black-Scholes and the Log-Normal',
+    description: 'Why volatility isn\'t just noise but a force that pulls the median away from the mean, and how that makes options worth more than intuition suggests. A walkthrough of geometric Brownian motion, the terminal price distribution, and the "volatility drag" effect. Personal quantitative finance note.',
+    urls: [
+      { label: 'View PDF', url: 'https://drive.google.com/file/d/10jLATDsw39CHDKb7T04gqy3GUezJRx6D/view?usp=drive_link' },
+    ],
+    tags: ['Black-Scholes', 'Log-Normal', 'Volatility'],
+  },
+  {
+    title: 'Parametric Fitting of Financial Returns',
+    description: 'The full path to modeling returns: from choosing between normal and log-normal, through moments and maximum likelihood, all the way to parametric VaR. With goodness-of-fit tests, Q-Q plots, and information criteria so you don\'t settle for the first distribution that looks right. Financial Markets course note, UNAM.',
+    urls: [
+      { label: 'View PDF', url: 'https://drive.google.com/file/d/1229dImQ9xEY2tZdh4Wr5KIyNUIRgv3Vz/view?usp=sharing' },
+    ],
+    tags: ['VaR', 'MLE', 'Finance'],
+  },
+  {
+    title: 'Probabilistic Forecasting of Volcanic Eruptions',
+    description: 'What do an actuary and a volcanologist have in common? Both try to predict rare events with enormous consequences. This note reviews how eruption intervals for Popocatepetl and Galeras are modeled with log-normal distributions, Markov models, and renewal processes. The open questions at the end are genuinely fascinating. Personal applied probability note.',
+    urls: [
+      { label: 'View PDF', url: 'https://drive.google.com/file/d/1eaQmrc0HuQ5fXli6E5HQ54N5vRNkFT9o/view?usp=sharing' },
+    ],
+    tags: ['Probability', 'Volcanoes', 'Models'],
   },
 ];
 ---
