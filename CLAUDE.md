@@ -39,13 +39,66 @@ When converting academic notes to blog posts:
 5. Add a "what I'd do differently" or "next steps" section
 6. Link the original PDF as supplementary material, not as the main content
 
+## Session Log -- 2026-02-02
+
+### What Was Done
+- Explored Google Drive (G:\Mi unidad\PortafolioPDF and G:\Mi unidad\01_educacion\Apuntes\MisApuntes) via PowerShell from WSL
+- Read and assessed all PDFs for portfolio relevance
+- Created "Notas para Compartir" / "Worth Sharing Notes" section with 7 documents: Black-Scholes/FRA/IRS exam, Delhi time series, A/B testing (ES+EN), GLM actuarial models, Black-Scholes log-normal, parametric returns fitting, volcanic eruption forecasting
+- Added 3 DataCamp certificate links under Education section
+- Created English blog category route (was missing, caused 404s on /en/blog/categoria/)
+- Fixed English blog index category links (pointed to wrong URL pattern)
+- Added email to Contact section, changed to 2x2 grid layout
+- Updated hero: name split into two lines (Andres / Gonzalez Ortega), personalized description
+- Adjusted background color to #EDE6DD with header contrast at #E8E0D7
+- Changed GMM Explorer from recreational to academic category
+- Cleaned footer: removed duplicate contact links, added academic folder + apuntes sueltos Drive links
+- Created docs/portfolio-review-recommendations.md with full honest assessment
+- Created project-level CLAUDE.md with content guidelines
+- All descriptions written in hook-style prose, not homework tone
+
+### Current State
+- Branch: new-design (2 commits pushed to origin)
+- Homepage sections: Hero -> Projects (12) -> SharedNotes (7) -> Skills -> Education (+ certs) -> Contact -> Footer
+- Blog: 1 post per language + interactive math visualizations page + category routes for ES and EN
+- All Drive PDF links are direct file links (not folder links)
+
+### Known Issues
+- Node 18.19.1 (system default) is too old for Astro 5 -- must use `nvm use 22` before dev/build
+- The `new-design` branch has not been merged to main yet
+
+## Future Scope
+
+### High Priority
+1. **Convert actuarial technical notes to blog posts** -- Life insurance, property insurance, collective insurance notes from PortafolioPDF/Escolares/Matematicas_Actuariales. Rewrite from homework tone to professional with sensitivity analysis and regulatory context (see docs/portfolio-review-recommendations.md)
+2. **Michoacan demographic analysis blog post** -- Connect the mortality tables to life insurance pricing. This turns two school assignments into one meaningful actuarial analysis
+3. **GMM Explorer blog post** -- Technical breakdown of pricing methodology, already planned in docs/future-plans.md
+4. **Research article blog post** -- Non-technical summary of data science internship paper
+
+### Medium Priority
+5. **Redo Markowitz portfolio in Python** -- Currently Excel-only, should show scipy.optimize efficient frontier + compare VaR methods
+6. **SIMA web platform** -- Phase 2 engine complete, needs frontend (see docs/future-plans.md item 5)
+7. **Reserving project with CNSF data** -- Chain-ladder and Bornhuetter-Ferguson on public siniestralidad data. Single most impressive project for Mexican actuarial employers
+8. **TIIE/CETES interactive dashboard** -- Banxico API, planned in docs/future-plans.md item 1
+
+### Low Priority
+9. **Mortality table visualizer** -- Interactive CONAPO/INEGI explorer, planned in docs/future-plans.md item 2
+10. **Promote second-tier MisApuntes** -- Concave vs Convex and Evolution of Probability could become blog posts with more context
+11. **SOA exam P exercises** -- There's a subfolder with practice material that could become a study resource blog series
+
+### Content to NOT Share Standalone
+- Amortizador/Instrucciones_Examen.pdf (exam instructions, not original work)
+- Formulario_MetodosCuantitativosParcial1.pdf (cheat sheet)
+- Covarianza_Regresion.pdf (2-page proof, too brief)
+- EticaActuarialEnsayo.pdf (opinion essay, not technical)
+
 ## Technical Preferences
 
 - Framework: Astro 5 + Tailwind + React islands + MDX
 - Deployment: GitHub Pages (GonorAndres.github.io)
 - i18n: ES (default, no prefix) / EN (/en/)
 - Blog categories: actuaria-para-todos, proyectos-y-analisis, herramientas, mercado-mexicano
-- Color palette: cream (#FFF8F0), navy (#1B2A4A), amber (#D4A574), terracotta (#C17654), sage (#7A8B6F)
+- Color palette: cream (#EDE6DD), header (#E8E0D7), navy (#1B2A4A), amber (#D4A574), terracotta (#C17654), sage (#7A8B6F)
 - Fonts: Lora (headings), Inter (body)
 
 ## File Organization

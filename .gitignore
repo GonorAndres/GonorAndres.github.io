@@ -3,3 +3,29 @@ dist/
 .astro/
 .DS_Store
 *.log
+*.Zone.Identifier
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Subagent outputs
+subagents_outputs/
+
+# Claude ephemeral (config files ARE tracked)
+.claude/cache/
+.claude/debug/
+.claude/downloads/
+.claude/file-history/
+.claude/session-env/
+.claude/shell-snapshots/
+.claude/todos/
+.claude/tasks/
+.claude/history.jsonl
+.claude/stats-cache.json
+.claude/.credentials.json
+.claude/*.backup.*
