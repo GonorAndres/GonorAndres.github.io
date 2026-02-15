@@ -7,49 +7,13 @@ lang: "es"
 tags: ["deep-learning", "transformers", "NLP", "PyTorch", "NumPy"]
 ---
 
-# Construyendo un Transformer desde cero
+Hay una diferencia entre *usar* un transformer y *entender* un transformer. Llevaba meses llamando a `nn.TransformerEncoder` como si fuera una caja negra confiable, hasta que un dia el loss se estanco, la generacion producia basura y los gradientes explotaban sin que yo pudiera diagnosticar por que. En ese momento decidi que necesitaba bajar al nivel de las multiplicaciones de matrices y reconstruir todo a mano.
 
-Hay una diferencia entre *usar* un transformer y *entender* un transformer. Los frameworks modernos abstraen toda la maquinaria interna: llamas `nn.TransformerEncoder` y funciona. Pero cuando algo falla -- cuando el loss no baja, cuando la generacion produce basura, cuando los gradientes explotan -- necesitas saber que esta pasando adentro.
+El plan era simple en concepto y ambicioso en ejecucion: implementar cada operacion de atencion primero en NumPy puro -- sin autograd, sin magia -- y despues portarla mecanicamente a PyTorch para poder entrenar con GPU. Necesitaba un corpus exigente, y los 7 volumenes de "En busca del tiempo perdido" de Marcel Proust en espanol resultaron ideales. Sus oraciones se extienden por parrafos enteros, con clausulas subordinadas que se abren dentro de otras clausulas, lo que fuerza al mecanismo de atencion a funcionar a distancias largas dentro de la ventana de contexto. Ademas, conozco la obra lo suficiente para evaluar cualitativamente si el modelo captura algo del estilo. Elegi trabajar a nivel de caracter en lugar de usar un tokenizador BPE porque queria eliminar toda complejidad que no fuera atencion misma: con un vocabulario de apenas 94 simbolos (letras, acentos, puntuacion), el modelo tiene que aprender *todo* -- desde ortografia hasta sintaxis -- puramente a partir de patrones estadisticos. El resultado fue un transformer de 419,840 parametros entrenado sobre 7.15 millones de caracteres de prosa compleja.
 
-Este proyecto nacio de esa necesidad: implementar cada operacion de atencion a mano, primero en NumPy puro (sin autograd, sin magia) y despues portarlo a PyTorch para entrenarlo con GPU. El corpus: los 7 volumenes de "En busca del tiempo perdido" de Marcel Proust en espanol -- 7.15 millones de caracteres de prosa compleja, con oraciones que se extienden por parrafos enteros.
+## Construyendolo desde los fundamentos
 
-## Por que character-level y por que Proust
-
-**Character-level** por simplicidad pedagogica. Un tokenizador BPE (como el de GPT) introduce complejidad que distrae del objetivo: entender atencion. Con caracteres, el vocabulario son 94 simbolos (letras, acentos, puntuacion) y el modelo tiene que aprender *todo* -- desde ortografia hasta sintaxis -- puramente a partir de patrones estadisticos.
-
-**Proust** por tres razones. Primera: la longitud de sus oraciones exige que el mecanismo de atencion funcione bien a distancias largas dentro del contexto. Segunda: el texto es de dominio publico y nacido digital (extraido de ebooks MOBI, no OCR ruidoso). Tercera: es literatura que conozco, asi que puedo evaluar cualitativamente si el modelo captura algo del estilo.
-
-## Arquitectura: lo minimo necesario
-
-| Parametro | Valor | Razon |
-|-----------|-------|-------|
-| `d_model` | 128 | Balance entre capacidad y lo que cabe en Colab free tier |
-| `n_heads` | 2 | Suficiente para que el modelo aprenda patrones de atencion paralelos |
-| `n_layers` | 2 | Mas capas = mas parametros; con 2 ya se pueden componer representaciones |
-| `d_ff` | 512 | Convencion estandar: 4x `d_model` |
-| `max_seq_len` | 256 | Ventana de contexto en caracteres |
-| `dropout` | 0.1 | Regularizacion estandar |
-| **Total parametros** | **419,840** | Entrenable en ~30 min con T4 de Colab |
-
-El flujo de shapes es el corazon del proyecto. Cada operacion esta anotada:
-
-```
-Input tokens:           (batch, 256)
-Embedding + posicion:   (batch, 256, 128)
-2x TransformerBlocks:   (batch, 256, 128)  -- la shape se preserva
-Proyeccion final:       (batch, 256, 94)   -- logits sobre vocabulario
-```
-
-## El enfoque NumPy-first
-
-Antes de escribir una sola linea de PyTorch, implemente toda la arquitectura en NumPy:
-
-- **Embedding**: lookup table + codificacion posicional sinusoidal (la formula original del paper "Attention Is All You Need")
-- **Atencion multi-cabeza**: proyecciones Q, K, V, el producto escalado con mascara causal, y la concatenacion de cabezas
-- **Bloques transformer**: atencion + feedforward + residual connections + layer normalization
-- **Mascara causal**: una matriz triangular superior con `-inf` para que la posicion `i` solo pueda atender a posiciones `0, 1, ..., i`
-
-Cada archivo incluye "Class Notes" -- bloques de comentario que explican el concepto *antes* del codigo. El objetivo era que cualquier persona con algebra lineal basica pudiera seguir la logica:
+Todo empezo en NumPy. Antes de escribir una sola linea de PyTorch, implemente la arquitectura completa: la lookup table de embeddings con codificacion posicional sinusoidal (la formula original del paper "Attention Is All You Need"), las proyecciones Q, K, V de la atencion multi-cabeza, el producto escalado con mascara causal, la concatenacion de cabezas, los bloques transformer con feedforward y residual connections, y la layer normalization. Cada archivo incluye lo que llame "Class Notes" -- bloques de comentario que explican el concepto *antes* del codigo, con la intencion de que cualquier persona con algebra lineal basica pueda seguir la logica completa.
 
 ```python
 # Atencion: softmax(QK^T / sqrt(d_k)) * V
@@ -60,105 +24,48 @@ Cada archivo incluye "Class Notes" -- bloques de comentario que explican el conc
 #    con gradientes cercanos a cero)
 ```
 
-Despues, el port a PyTorch fue mecanico: mismos nombres de variables, misma estructura, solo cambiando `np.ndarray` por `torch.Tensor` y operaciones manuales por `nn.Linear`.
+El corazon del proyecto fue rastrear las shapes en cada operacion. Los tokens de entrada con shape (batch, 256) pasan por embedding y codificacion posicional para convertirse en (batch, 256, 128), atraviesan 2 bloques transformer que preservan esa misma shape, y finalmente se proyectan a (batch, 256, 94) -- los logits sobre el vocabulario de 94 caracteres. Cada una de esas transformaciones esta anotada linea por linea en el codigo NumPy, lo que hace explicito exactamente donde cambia la geometria del tensor y por que.
 
-## Pipeline de datos
+La arquitectura es deliberadamente modesta: un `d_model` de 128 por ser el balance entre capacidad expresiva y lo que cabe en el free tier de Colab, 2 cabezas de atencion para que el modelo pueda aprender patrones paralelos sin complicar el debug, 2 capas de transformer porque con dos ya se pueden componer representaciones no triviales, una dimension feedforward de 512 siguiendo la convencion estandar de 4 veces `d_model`, una ventana de contexto de 256 caracteres, y dropout de 0.1 como regularizacion. Todo el modelo suma 419,840 parametros -- entrenable en unos 30 minutos con una T4 de Colab.
 
-El corpus paso por varias iteraciones:
+Una vez que la implementacion NumPy estaba completa y cada operacion se sentia solida en mi cabeza, el port a PyTorch fue mecanico. Mismos nombres de variables, misma estructura, solo cambiando `np.ndarray` por `torch.Tensor` y reemplazando las operaciones manuales por `nn.Linear`. No hubo ninguna decision de diseno nueva en esa etapa; todo el pensamiento ya habia ocurrido en NumPy.
 
-1. **Primera version**: 2 volumenes descargados de Gutenberg. Problemas: ruido OCR, marcas de agua del editor, metadata filtrandose al texto
-2. **Version final**: 7 volumenes completos extraidos de archivos MOBI (born-digital). Limpieza por whitelist de caracteres validos, verificacion de que no se filtren metadatos del editor
+## Datos, entrenamiento y lo que salio
 
-Resultado: **7.15 MB de texto limpio**, 94 caracteres de vocabulario. El `ProustDataset` genera ventanas deslizantes de 256 caracteres con sus targets desplazados un caracter (teacher forcing estandar).
+El corpus tuvo su propia historia de iteraciones. La primera version usaba 2 volumenes descargados de Project Gutenberg, y fue un desastre: ruido de OCR por todas partes, marcas de agua del editor filtrandose al texto, metadata que aparecia como si fuera prosa. El vocabulario se inflo a mas de 200 caracteres, lleno de artefactos que el modelo aprendia fielmente como si fueran lenguaje real. La leccion fue directa -- born-digital siempre es superior a OCR. La version final usa los 7 volumenes completos extraidos de archivos MOBI, que al ser nacidos digitales tienen texto perfecto. Despues de una limpieza por whitelist de caracteres validos y verificacion contra metadatos del editor, quedo un corpus de 7.15 MB de texto limpio con un vocabulario de exactamente 94 caracteres. El `ProustDataset` genera ventanas deslizantes de 256 caracteres con sus targets desplazados un caracter, siguiendo el esquema estandar de teacher forcing.
 
-## Entrenamiento
-
-Configuracion del loop de entrenamiento:
-
-- **Optimizador**: AdamW (lr=3e-4, weight decay=0.01)
-- **Schedule**: Cosine annealing con warmup de 500 pasos
-- **Gradient clipping**: norma maxima 1.0
-- **Validacion**: split 90/10
-
-Resultados despues de 1 epoca completa (**201,104 pasos** sobre todo el corpus):
+Para el entrenamiento use AdamW con learning rate de 3e-4 y weight decay de 0.01, un schedule de cosine annealing con warmup lineal de 500 pasos, gradient clipping con norma maxima de 1.0, y un split 90/10 entre entrenamiento y validacion. Despues de 1 epoca completa -- 201,104 pasos sobre todo el corpus -- obtuve estos resultados:
 
 | Metrica | Valor |
 |---------|-------|
 | Loss de entrenamiento | 1.348 |
 | Loss de validacion | 1.192 |
 
-Que el loss de validacion sea *menor* que el de entrenamiento puede parecer contraintuitivo, pero se explica por el dropout: durante entrenamiento se desactivan neuronas aleatoriamente (regularizacion), mientras que en validacion el modelo usa toda su capacidad.
+Que el loss de validacion sea *menor* que el de entrenamiento puede parecer contraintuitivo, pero se explica por el dropout: durante entrenamiento se desactivan neuronas aleatoriamente como regularizacion, mientras que en validacion el modelo usa toda su capacidad.
 
-## Resultados: texto generado
+Con temperatura 0.8 y top-k 40, el modelo genera texto que revela tanto lo que aprendio como lo que no. Con el prompt "Mucho tiempo":
 
-Con temperatura 0.8 y top-k 40, el modelo genera texto como este:
-
-**Prompt**: "Mucho tiempo"
 > Mucho tiempo verdad, sin sus muchos que esa cortina de los personas con las que el senor. Es que lo que el amor que acababa de propio de la imaginacion y que habia causado una gran modo de olvidarla o de vida reductamente el mio). Por eso, mi madre sistencia desconocida con frecuencia, no hubiera ido a consider
 
-**Prompt**: "La memoria"
+Y con el prompt "La memoria":
+
 > La memoria y su pasad se sigue, por ejemplo, senora aun sin embargo, al menos encontrar a la Sra. de Guermantes me permanecia yo saber que el mismo seguro, pero en el que, si bien buscar con frecuencia venir a veces a un cual se debe tanto para salir y no podia hacer ella su disposicion con la sociedad, por l
 
-**Prompt**: "En aquella epoca"
-> En aquella epoca a su salon de mi abuelo lo del pintor por el debo de hombre conciencia para lo que podia acostar su futuro de su celo, con la menor en lugar de aquel modo el nombre de la ultima de la floresco de la mano, inteligencia de las cuales ya la Sra. Swann -- por lo demas, en el que mismo, en cambio, no cesa
+Lo notable es lo que un modelo de apenas 420K parametros logra con solo 1 epoca de entrenamiento. Los nombres de personajes aparecen correctamente -- Swann, Guermantes, Sra. -- aprendidos puramente de frecuencia estadistica. La estructura gramatical del espanol esta presente: sujeto-verbo-complemento, genero gramatical mayormente correcto. Se percibe algo del estilo proustiano en las oraciones largas con clausulas subordinadas, parentesis y digresiones. El vocabulario tematico -- salon, sociedad, imaginacion, memoria -- refleja fielmente el lexico de la novela. Pero la coherencia semantica se desvanece a medida que la oracion se alarga: las frases empiezan bien y pierden el hilo, la concordancia de genero y numero falla intermitentemente, y los parentesis y signos de puntuacion no siempre se cierran. Son exactamente las limitaciones que esperaria de un modelo tan pequeno con una sola pasada por los datos.
 
-Lo que el modelo aprendio (con solo 420K parametros y 1 epoca):
+## Lo que realmente aprendi
 
-- **Nombres de personajes**: Swann, Guermantes, Sra. -- aprendidos puramente de frecuencia estadistica
-- **Estructura gramatical**: sujeto-verbo-complemento del espanol, genero gramatical mayormente correcto
-- **Estilo proustiano**: oraciones largas con clausulas subordinadas, parentesis, digresiones
-- **Vocabulario tematico**: salon, sociedad, imaginacion, memoria -- el lexico de la novela
+Las anotaciones matematicas que fui dejando en el codigo se convirtieron en el recurso mas valioso del proyecto. El escalamiento por la raiz cuadrada de `d_k` no es un detalle cosmico -- es crucial. Sin el, los productos punto en la atencion crecen en magnitud proporcional a la dimension, el softmax satura en sus extremos, y los gradientes desaparecen. Derive la justificacion completa como un ejercicio de varianza de sumas de variables aleatorias, y ese derivacion aclaro para mi por que tantos modelos de atencion necesitan esta correccion que parece tan arbitraria. La mascara causal resulto ser de una elegancia sorprendente: es simplemente una matriz triangular superior llena de `-inf` que, al sumarse a los scores de atencion, hace que el softmax convierta en cero toda posicion futura. No se necesita logica condicional ni flujo de control complejo -- todo el concepto de causalidad se reduce a una suma y una propiedad del softmax. Las residual connections, por su parte, son mas importantes de lo que aparentan en los diagramas de arquitectura. Sin ellas, la senal del gradiente tiene que atravesar todas las capas secuencialmente; con ellas, hay un atajo directo que explica por que los transformers profundos son entrenables donde otras arquitecturas profundas no lo son.
 
-Lo que *no* logro:
+Sobre el entrenamiento, cada decision que parecia un hiperparametro mas resulto tener una justificacion que solo entendi al experimentar sin ella. El warmup del learning rate es esencial porque sin el, los primeros pasos con tasa de aprendizaje alta destruyen los pesos inicializados aleatoriamente -- esos 500 pasos de calentamiento lineal antes del cosine decay son proteccion, no burocracia. El gradient clipping con norma 1.0 previene explosiones que con textos largos y mecanismos de atencion ocurren mas rapido de lo que uno esperaria. Y una sola epoca resulto suficiente para resultados interesantes: con 7.15 MB de texto y ventanas de 256, hay aproximadamente 28,000 batches por epoca, lo que le da al modelo material de sobra para capturar los patrones linguisticos fundamentales sin llegar al overfitting.
 
-- Coherencia semantica a largo plazo (las oraciones empiezan bien pero pierden el hilo)
-- Concordancia de genero/numero consistente
-- Cierre de parentesis y puntuacion balanceada
+La leccion mas pragmatica fue sobre datos. La primera iteracion con OCR ruidoso no solo producia resultados peores -- producia un modelo que aprendia con igual fidelidad los errores y los patrones reales, inflando el vocabulario con basura y creando asociaciones espurias. Cambiar a extraccion MOBI born-digital redujo el vocabulario de mas de 200 a 94 caracteres y mejoro todo el pipeline downstream. En proyectos futuros, la calidad de los datos va antes que la cantidad, y born-digital siempre es preferible a OCR.
 
-## Anotaciones y puntos clave
+De aqui en adelante, el camino esta claro. El modelo no llego a convergencia -- 5 a 10 epocas probablemente mejorarian la coherencia de manera significativa. Quiero probar pre-norm en lugar de post-norm para mayor estabilidad si escalo a mas capas, experimentar con un tokenizador BPE para capturar la morfologia del espanol, y explorar las attention maps que ya tengo implementadas para entender que patrones aprende cada cabeza. Eso ultimo -- la visualizacion de atencion -- es la fase pendiente que mas me entusiasma, porque promete mostrar empiricamente si las cabezas se especializan en tipos diferentes de dependencia linguistica.
 
-### Sobre la implementacion
+## Cerrando el circulo
 
-1. **El escalamiento por sqrt(d_k) es crucial**. Sin el, los productos punto en la atencion crecen con la dimension, el softmax satura, y los gradientes desaparecen. Derive la justificacion matematica completa -- es un ejercicio de varianza de sumas de variables aleatorias.
-
-2. **La mascara causal es solo una matriz triangular con -inf**. Es elegante: al sumar `-inf` a los scores de atencion futuros, el softmax los convierte en cero. No se necesita logica condicional.
-
-3. **Las residual connections son mas importantes de lo que parecen**. Sin ellas, la senal del gradiente tiene que atravesar todas las capas; con ellas, hay un "atajo" directo. Esto explica por que transformers profundos son entrenables.
-
-4. **Layer normalization antes o despues** (pre-norm vs post-norm) cambia la estabilidad del entrenamiento. Use post-norm (como el paper original) pero pre-norm tiende a ser mas estable para modelos mas profundos.
-
-### Sobre el entrenamiento
-
-5. **El warmup del learning rate es esencial**. Sin warmup, los primeros pasos con learning rate alto destruyen los pesos inicializados aleatoriamente. 500 pasos de warmup lineal antes del cosine decay.
-
-6. **Gradient clipping previene explosiones**. Con textos largos y atencion, los gradientes pueden crecer rapido. Clipear la norma a 1.0 lo mantiene estable.
-
-7. **1 epoca fue suficiente para resultados interesantes**. Con 7.15 MB de texto y ventanas de 256, hay ~28K batches por epoca. El modelo captura patrones linguisticos sin overfitting.
-
-### Sobre el corpus
-
-8. **La calidad de datos importa mas que la cantidad**. La primera version con OCR ruidoso producia vocabularios inflados y patrones espurios. Cambiar a extraccion MOBI limpia redujo el vocabulario de ~200+ a 94 caracteres y mejoro todo downstream.
-
-9. **Born-digital > OCR siempre**. Los ebooks extraidos de MOBI tienen texto perfecto. El OCR de PDFs escaneados introduce errores que el modelo aprende fielmente.
-
-## Que haria diferente
-
-- **Mas epocas**: el modelo claramente no llego a convergencia. 5-10 epocas probablemente mejorarian la coherencia significativamente.
-- **Pre-norm en vez de post-norm**: para estabilidad, especialmente si escalo a mas capas.
-- **Embedding dimension mayor**: 256 o incluso 384 cabria en el T4 de Colab y le daria al modelo mas capacidad.
-- **BPE tokenizacion**: character-level fue perfecto para aprender, pero para resultados mas coherentes, un tokenizador de subpalabras captaria morfologia espanola.
-- **Visualizacion de atencion**: las attention maps estan implementadas pero no explore que patrones aprende cada cabeza. Eso es Phase 3 pendiente.
-
-## Conexion con otros proyectos
-
-Este proyecto refuerza fundamentos que aparecen en el resto de mi portafolio. La logica de **decision bajo incertidumbre** -- central en el modelo de riesgo crediticio (GLM para predecir incumplimiento) y en el framework bayesiano vs frecuentista del test A/B -- es la misma que gobierna como un transformer pondera su atencion: asigna probabilidades y elige. La manipulacion de datos del corpus (limpieza, validacion, splits) sigue la misma disciplina que aplico en el analisis demografico de Michoacan y en los pipelines de datos de seguros del GMM Explorer.
-
-## Codigo y recursos
-
-- [Repositorio en GitHub](https://github.com/GonorAndres/proust-attention) -- codigo completo con anotaciones de shapes en cada operacion
-- Implementacion NumPy: `src/attention.py`, `src/model.py`
-- Implementacion PyTorch: `src/model_torch.py`
-- Documentacion matematica: `docs/linear_algebra_of_attention.md`
+Este proyecto refuerza fundamentos que aparecen en el resto de mi portafolio. La logica de decision bajo incertidumbre -- central tanto en el modelo de riesgo crediticio con GLM como en el framework bayesiano vs frecuentista del test A/B -- es la misma que gobierna como un transformer pondera su atencion: asigna probabilidades y elige. El codigo completo con anotaciones de shapes en cada operacion esta en el [repositorio de GitHub](https://github.com/GonorAndres/proust-attention).
 
 ---
 

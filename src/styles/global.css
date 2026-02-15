@@ -67,4 +67,45 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* Blog post content styles */
+  .blog-content pre {
+    background: #F7F3EE !important;
+    border: 1px solid rgba(27, 42, 74, 0.08);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1.5rem !important;
+    overflow-x: auto;
+  }
+
+  .blog-content pre code {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none;
+  }
+
+  .blog-content table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid rgba(212, 165, 116, 0.25);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .blog-content thead tr {
+    background: rgba(212, 165, 116, 0.08);
+  }
+
+  .blog-content th,
+  .blog-content td {
+    border-bottom: 1px solid rgba(212, 165, 116, 0.15);
+    padding: 0.5rem 1rem;
+  }
+
+  .blog-content tr:last-child td {
+    border-bottom: none;
+  }
+
+  .blog-content blockquote {
+    padding: 1rem 1.25rem;
+  }
 }
