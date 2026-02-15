@@ -7,7 +7,7 @@ export async function getStaticPaths() {
   return posts
     .filter((p) => p.data.lang === 'en')
     .map((post) => ({
-      params: { slug: post.slug },
+      params: { slug: post.slug.replace(/^en\//, '') },
       props: { post },
     }));
 }

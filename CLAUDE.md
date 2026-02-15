@@ -22,6 +22,15 @@ Key connections to maintain:
 - A/B testing decision framework <-> credit model (both are decision-making under uncertainty)
 - SIMA engine <-> all insurance technical notes (SIMA is the implementation of the theory)
 
+## Blog i18n Filename Convention
+
+All blog posts MUST use the **English slug** as the filename in both `src/content/blog/es/` and `src/content/blog/en/`. The LanguageSwitcher toggles URLs by adding/removing the `/en` prefix, so both language versions of a post must produce the same slug.
+
+- Correct: `es/welcome.md` + `en/welcome.md` (same filename, Spanish content inside the ES file)
+- Wrong: `es/bienvenida.md` + `en/welcome.md` (different filenames = 404 on language switch)
+
+The title, description, and body content are fully localized -- only the filename must match.
+
 ## Writing Standards
 
 - Bilingual: all major content should exist in both ES and EN

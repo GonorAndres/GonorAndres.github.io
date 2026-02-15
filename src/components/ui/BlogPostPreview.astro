@@ -13,6 +13,7 @@ interface Props {
 }
 
 const { title, description, slug, date, category, lang } = Astro.props;
+const cleanSlug = slug.replace(/^(es|en)\//, '');
 const tp = useTranslatedPath(lang);
 const formattedDate = new Date(date).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', {
   year: 'numeric',
@@ -27,13 +28,13 @@ const formattedDate = new Date(date).toLocaleDateString(lang === 'es' ? 'es-MX' 
     <time class="text-xs text-navy/40">{formattedDate}</time>
   </div>
   <h3 class="font-serif text-lg font-bold text-navy mb-2 group-hover:text-terracotta transition-colors">
-    <a href={tp(`/blog/${slug}/`)}>
+    <a href={tp(`/blog/${cleanSlug}/`)}>
       {title}
     </a>
   </h3>
   <p class="text-sm text-navy/60 mb-3">{description}</p>
   <a
-    href={tp(`/blog/${slug}/`)}
+    href={tp(`/blog/${cleanSlug}/`)}
     class="text-sm font-medium text-terracotta hover:text-terracotta/80 transition-colors"
   >
     {t(lang, 'blog.readMore')} &rarr;
