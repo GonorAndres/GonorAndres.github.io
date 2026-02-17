@@ -2,6 +2,7 @@
 import { t } from '../../i18n';
 import type { Lang } from '../../i18n';
 import OrganicBlob from '../decorations/OrganicBlob.astro';
+import { getEducation, getCertificates } from '../../data/education';
 
 interface Props {
   lang: Lang;
@@ -9,29 +10,8 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const certificates = lang === 'es' ? [
-  { name: 'Associate Data Analyst (SQL)', issuer: 'DataCamp', date: 'Ago 2024', url: 'https://drive.google.com/file/d/1EqzyjRkWOJBlU9zUTpkcUcj6QtuXRZfK/view?usp=drive_link' },
-  { name: 'Associate Data Scientist R', issuer: 'DataCamp', date: 'Sep 2024', url: 'https://drive.google.com/file/d/1xVLk15A1LBbyXH1fZnd4eBTaJ4d8FLLO/view?usp=drive_link' },
-  { name: 'Data Scientist in R', issuer: 'DataCamp', date: 'Oct 2024', url: 'https://drive.google.com/file/d/1Woe6xqxofloFZ9uM2f5VsdGxY-WQWCRI/view?usp=drive_link' },
-] : [
-  { name: 'Associate Data Analyst (SQL)', issuer: 'DataCamp', date: 'Aug 2024', url: 'https://drive.google.com/file/d/1EqzyjRkWOJBlU9zUTpkcUcj6QtuXRZfK/view?usp=drive_link' },
-  { name: 'Associate Data Scientist R', issuer: 'DataCamp', date: 'Sep 2024', url: 'https://drive.google.com/file/d/1xVLk15A1LBbyXH1fZnd4eBTaJ4d8FLLO/view?usp=drive_link' },
-  { name: 'Data Scientist in R', issuer: 'DataCamp', date: 'Oct 2024', url: 'https://drive.google.com/file/d/1Woe6xqxofloFZ9uM2f5VsdGxY-WQWCRI/view?usp=drive_link' },
-];
-
-const education = lang === 'es' ? [
-  {
-    degree: 'Licenciatura en Actuaria',
-    school: 'Universidad Nacional Autonoma de Mexico (UNAM)',
-    details: 'Facultad de Ciencias',
-  },
-] : [
-  {
-    degree: 'B.S. in Actuarial Science',
-    school: 'National Autonomous University of Mexico (UNAM)',
-    details: 'Faculty of Sciences',
-  },
-];
+const certificates = getCertificates(lang);
+const education = getEducation(lang);
 ---
 
 <section class="relative py-20 px-6 overflow-hidden">

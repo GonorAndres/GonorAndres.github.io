@@ -3,16 +3,9 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogPostPreview from '../../../components/ui/BlogPostPreview.astro';
 import { t } from '../../../i18n';
-
-const categoryLabels: Record<string, string> = {
-  'actuaria-para-todos': 'Actuaria para todos',
-  'proyectos-y-analisis': 'Proyectos y analisis',
-  'herramientas': 'Herramientas',
-  'mercado-mexicano': 'Mercado mexicano',
-};
+import { categories, categoryLabels, type Category } from '../../../data/categories';
 
 export async function getStaticPaths() {
-  const categories = ['actuaria-para-todos', 'proyectos-y-analisis', 'herramientas', 'mercado-mexicano'];
   return categories.map((cat) => ({ params: { cat } }));
 }
 
@@ -22,32 +15,14 @@ const posts = (await getCollection('blog'))
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
 
-<BaseLayout title={`${categoryLabels[cat!]} | Blog`} lang="es">
+<BaseLayout title={`${categoryLabels['es'][cat as Category]} | Blog`} lang="es">
   <section class="py-16 px-6">
     <div class="max-w-4xl mx-auto">
       <a href="/blog/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; {t('es', 'blog.allPosts')}</a>
-      <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{categoryLabels[cat!]}</h1>
+      <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{categoryLabels['es'][cat as Category]}</h1>
 
       <div class="space-y-6">
-        {cat === 'herramientas' && (
-          <article class="group p-6 rounded-2xl border border-terracotta/30 bg-terracotta/5 hover:shadow-md hover:-translate-y-0.5 transition-all fade-up">
-            <div class="flex items-center gap-3 mb-3">
-              <span class="text-xs px-2 py-0.5 rounded-full bg-terracotta/20 text-terracotta font-medium">Interactivo</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-sage/15 text-sage font-medium">herramientas</span>
-            </div>
-            <h3 class="font-serif text-lg font-bold text-navy mb-2 group-hover:text-terracotta transition-colors">
-              <a href="/blog/visualizaciones-matematicas/">
-                Visualizaciones Matemáticas Interactivas
-              </a>
-            </h3>
-            <p class="text-sm text-navy/60 mb-3">Demostraciones interactivas de conceptos fundamentales del análisis: límite sin(x)/x, derivada del seno y la fórmula de Euler. Con visualizaciones SVG manipulables.</p>
-            <a href="/blog/visualizaciones-matematicas/" class="text-sm font-medium text-terracotta hover:text-terracotta/80 transition-colors">
-              Explorar demostraciones &rarr;
-            </a>
-          </article>
-        )}
-
-        {posts.map((post) => (
+{posts.map((post) => (
           <BlogPostPreview
             title={post.data.title}
             description={post.data.description}
@@ -59,7 +34,7 @@ const posts = (await getCollection('blog'))
         ))}
       </div>
 
-      {posts.length === 0 && cat !== 'herramientas' && (
+      {posts.length === 0 && (
         <p class="text-navy/50 text-center py-12">No hay articulos en esta categoria aun.</p>
       )}
     </div>

@@ -76,6 +76,18 @@ When converting academic notes to blog posts:
 - Node 18.19.1 (system default) is too old for Astro 5 -- must use `nvm use 22` before dev/build
 - The `new-design` branch has not been merged to main yet
 
+## Session Log -- 2026-02-07
+
+- Added editorial blog styling and rewrote Proust Attention Machine post as personal essay
+- Added bilingual blog post for Proust Attention Machine project
+
+## Session Log -- 2026-02-15
+
+- Fixed blog language switcher 404s: stripped es/en directory prefixes from slugs in route files and BlogPostPreview
+- Renamed es/bienvenida.md to es/welcome.md to enforce shared English slug convention
+- Added "Blog i18n Filename Convention" section to CLAUDE.md
+- All blog posts now use matching filenames across languages so the LanguageSwitcher works correctly
+
 ## Future Scope
 
 ### High Priority
@@ -100,6 +112,50 @@ When converting academic notes to blog posts:
 - Formulario_MetodosCuantitativosParcial1.pdf (cheat sheet)
 - Covarianza_Regresion.pdf (2-page proof, too brief)
 - EticaActuarialEnsayo.pdf (opinion essay, not technical)
+
+## How to Add a Blog Post
+
+1. **Pick an English slug** for the filename (e.g. `credit-risk-model`). Both languages use the same filename.
+
+2. **Create two files** with identical names:
+   - `src/content/blog/es/<slug>.md` -- Spanish content
+   - `src/content/blog/en/<slug>.md` -- English content
+
+3. **Frontmatter** (required fields):
+   ```yaml
+   ---
+   title: "Your Title Here"
+   description: "2-3 sentence summary."
+   date: "2026-03-01"
+   category: "proyectos-y-analisis"
+   lang: "es"
+   tags: ["optional", "tags"]
+   ---
+   ```
+   - `category` must be one of: `actuaria-para-todos`, `proyectos-y-analisis`, `herramientas`, `mercado-mexicano`
+   - `lang` must match the directory (`es` or `en`)
+   - `date` format: `YYYY-MM-DD` as a quoted string
+
+4. **Write the body** in standard Markdown. For inline HTML (buttons, styled links), use inline `style=""` attributes -- Tailwind classes are purged from markdown content.
+
+5. **Verify**: run `npx astro build` from the project root. The new post should appear in the page count.
+
+The post will automatically show up in:
+- The blog index (`/blog/` and `/en/blog/`)
+- Its category page (`/blog/categoria/<category>/`)
+- The "Latest posts" card in the Hero section (if it's recent enough)
+- The language switcher will work as long as both filenames match
+
+## Claude Code Agents (`.claude/agents/`)
+
+Four persistent agents are defined for periodic maintenance. Claude auto-delegates based on task context, or you can invoke them by name.
+
+- **data-architect** -- Maintains `src/data/` (projects, notes, skills, education, categories). Use when adding/editing/removing data entries or updating TypeScript interfaces.
+- **project-organizer** -- Manages how projects appear to visitors: categories, grid layout, narrative order, visual prominence, cross-project connections. Use when rethinking project display or adding new categories.
+- **blog-organizer** -- Maintains the blog section: adding posts, managing categories, fixing structure, ensuring ES/EN parity. Use when creating blog posts or fixing blog issues.
+- **code-quality** -- Handles SEO, accessibility, performance, bug fixes, TypeScript safety, and dead code removal. Use for technical health checks, meta tag updates, or fixing broken behavior.
+
+All agents save work reports to `subagents_outputs/`.
 
 ## Technical Preferences
 

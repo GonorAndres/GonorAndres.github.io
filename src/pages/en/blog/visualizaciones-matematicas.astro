@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import MathVisualizationHub from '../../../components/interactive/MathVisualizationHub.jsx';
+import OrganicBlob from '../../../components/decorations/OrganicBlob.astro';
+import Squiggle from '../../../components/decorations/Squiggle.astro';
+---
+
+<BaseLayout title="Math Visualizations | Andres Gonzalez Ortega" lang="en">
+  <section class="relative py-16 px-6 min-h-screen">
+    <OrganicBlob variant={2} color="#D4A574" class="w-[400px] h-[400px] -top-16 -right-20 opacity-20" />
+    <OrganicBlob variant={4} color="#7A8B6F" class="w-[300px] h-[300px] bottom-0 -left-16 opacity-15" />
+
+    <div class="max-w-5xl mx-auto relative z-10">
+      <div class="mb-8">
+        <a href="/en/blog/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; Back to blog</a>
+        <h1 class="text-3xl md:text-5xl font-bold text-navy mb-4 font-serif">
+          Math Visualizations
+        </h1>
+        <p class="text-navy/60 text-lg max-w-2xl">
+          Interactive demonstrations of fundamental concepts in mathematical analysis
+        </p>
+      </div>
+      <Squiggle class="w-full h-4 mb-8" color="#D4A574" />
+
+      <MathVisualizationHub client:load />
+    </div>
+  </section>
+
+  <style is:global>
+    /* Custom range slider styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #C17654;
+      cursor: pointer;
+      border: 2px solid #FFF8F0;
+      box-shadow: 0 2px 6px rgba(27, 42, 74, 0.3);
+      transition: transform 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #C17654;
+      cursor: pointer;
+      border: 2px solid #FFF8F0;
+      box-shadow: 0 2px 6px rgba(27, 42, 74, 0.3);
+    }
+
+    input[type="range"]::-moz-range-thumb:hover {
+      transform: scale(1.2);
+    }
+  </style>
+</BaseLayout>

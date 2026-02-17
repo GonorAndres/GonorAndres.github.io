@@ -3,22 +3,15 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogPostPreview from '../../../components/ui/BlogPostPreview.astro';
 import { t } from '../../../i18n';
+import { categories, categoryLabels } from '../../../data/categories';
 import OrganicBlob from '../../../components/decorations/OrganicBlob.astro';
 
 const posts = (await getCollection('blog'))
   .filter((p) => p.data.lang === 'en')
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
-
-const categories = ['actuaria-para-todos', 'proyectos-y-analisis', 'herramientas', 'mercado-mexicano'];
-const categoryLabels: Record<string, string> = {
-  'actuaria-para-todos': 'Actuarial for everyone',
-  'proyectos-y-analisis': 'Projects & analysis',
-  'herramientas': 'Tools',
-  'mercado-mexicano': 'Mexican market',
-};
 ---
 
-<BaseLayout title="Blog | Andrés González Ortega" lang="en">
+<BaseLayout title="Blog | Andres Gonzalez Ortega" lang="en">
   <section class="relative py-16 px-6">
     <OrganicBlob variant={1} color="#D4A574" class="w-[400px] h-[400px] -top-16 -right-20 opacity-20" />
 
@@ -31,13 +24,13 @@ const categoryLabels: Record<string, string> = {
         </a>
         {categories.map((cat) => (
           <a href={`/en/blog/categoria/${cat}/`} class="text-sm px-3 py-1 rounded-full bg-sage/15 text-sage hover:bg-sage/25 transition-colors">
-            {categoryLabels[cat]}
+            {categoryLabels['en'][cat]}
           </a>
         ))}
       </div>
 
       <div class="space-y-6">
-        {posts.map((post) => (
+{posts.map((post) => (
           <BlogPostPreview
             title={post.data.title}
             description={post.data.description}

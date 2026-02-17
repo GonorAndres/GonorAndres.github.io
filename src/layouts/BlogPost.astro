@@ -20,7 +20,7 @@ const formattedDate = new Date(date).toLocaleDateString(lang === 'es' ? 'es-MX' 
 });
 ---
 
-<BaseLayout title={`${title} | AGO Blog`} description={description} lang={lang}>
+<BaseLayout title={`${title} | AGO Blog`} description={description} lang={lang} ogType="article" datePublished={date}>
   <article class="py-16 px-6">
     <div class="max-w-2xl mx-auto">
       <div class="mb-8">

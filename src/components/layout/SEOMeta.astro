@@ -1,0 +1,73 @@
+---
+import type { Lang } from '../../i18n';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  url?: string;
+  type?: 'website' | 'article';
+  lang?: Lang;
+  datePublished?: string;
+}
+
+const siteUrl = 'https://GonorAndres.github.io';
+const {
+  title,
+  description,
+  image = `${siteUrl}/og-default.png`,
+  url = Astro.url.href,
+  type = 'website',
+  lang = 'es',
+  datePublished,
+} = Astro.props;
+
+const canonicalUrl = new URL(url, siteUrl).href;
+const imageUrl = image.startsWith('http') ? image : new URL(image, siteUrl).href;
+
+const jsonLd = type === 'article'
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      image: imageUrl,
+      url: canonicalUrl,
+      inLanguage: lang,
+      ...(datePublished ? { datePublished } : {}),
+      author: {
+        '@type': 'Person',
+        name: 'Andres Gonzalez Ortega',
+        url: siteUrl,
+      },
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'Andres Gonzalez Ortega',
+      url: siteUrl,
+      jobTitle: lang === 'es' ? 'Actuario y Analista de Datos' : 'Actuary & Data Analyst',
+      description,
+    };
+---
+
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:type" content={type} />
+<meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
+<meta property="og:site_name" content="Andres Gonzalez Ortega" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

@@ -1,6 +1,8 @@
 ---
 import type { Lang } from '../../i18n';
 import { t } from '../../i18n';
+import type { ProjectCategory } from '../../data/projects';
+import { getRelatedProjectNames } from '../../data/projects';
 import CategoryBadge from './CategoryBadge.astro';
 
 interface Props {
@@ -8,13 +10,14 @@ interface Props {
   description: string;
   url: string;
   platform: string;
-  category: 'recreational' | 'academic';
+  category: ProjectCategory;
   tags?: string[];
   variant?: 'standard' | 'tall' | 'wide';
   lang: Lang;
+  relatedTo?: string[];
 }
 
-const { title, description, url, platform, category, tags = [], variant = 'standard', lang } = Astro.props;
+const { title, description, url, platform, category, tags = [], variant = 'standard', lang, relatedTo } = Astro.props;
 
 const variantClasses: Record<string, string> = {
   standard: '',
@@ -22,10 +25,23 @@ const variantClasses: Record<string, string> = {
   wide: 'md:col-span-2',
 };
 
-const categoryColors: Record<string, string> = {
-  recreational: 'bg-terracotta/10 border-terracotta/30',
-  academic: 'bg-sage/10 border-sage/30',
+const categoryColors: Record<ProjectCategory, string> = {
+  'actuarial': 'bg-terracotta/10 border-terracotta/30',
+  'data-science': 'bg-sage/10 border-sage/30',
+  'quant-finance': 'bg-amber/10 border-amber/30',
+  'applied-math': 'bg-navy/10 border-navy/30',
 };
+
+const categoryBadgeColors: Record<ProjectCategory, string> = {
+  'actuarial': 'bg-terracotta/20 text-terracotta',
+  'data-science': 'bg-sage/20 text-sage',
+  'quant-finance': 'bg-amber/20 text-amber',
+  'applied-math': 'bg-navy/20 text-navy',
+};
+
+const categoryKey = `projects.${category}` as keyof typeof import('../../i18n/es').default;
+
+const relatedNames = relatedTo ? getRelatedProjectNames(relatedTo, lang) : [];
 ---
 
 <article
@@ -39,9 +55,9 @@ const categoryColors: Record<string, string> = {
   <div class="flex items-center gap-2 mb-3">
     <span class:list={[
       'text-xs font-medium px-2 py-0.5 rounded-full',
-      category === 'recreational' ? 'bg-terracotta/20 text-terracotta' : 'bg-sage/20 text-sage',
+      categoryBadgeColors[category],
     ]}>
-      {t(lang, category === 'recreational' ? 'projects.recreational' : 'projects.academic')}
+      {t(lang, categoryKey)}
     </span>
     <span class="text-xs text-navy/40">{platform}</span>
   </div>
@@ -60,6 +76,12 @@ const categoryColors: Record<string, string> = {
         <CategoryBadge label={tag} />
       ))}
     </div>
+  )}
+
+  {relatedNames.length > 0 && (
+    <p class="text-xs text-navy/40 mb-3 italic">
+      {t(lang, 'projects.seeAlso')} {relatedNames.join(', ')}
+    </p>
   )}
 
   <a

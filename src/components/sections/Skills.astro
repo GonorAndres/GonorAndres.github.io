@@ -2,6 +2,7 @@
 import { t } from '../../i18n';
 import type { Lang } from '../../i18n';
 import Squiggle from '../decorations/Squiggle.astro';
+import { getSkillGroups } from '../../data/skills';
 
 interface Props {
   lang: Lang;
@@ -9,41 +10,7 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const skillGroups = lang === 'es' ? [
-  {
-    title: 'Lenguajes & Herramientas',
-    skills: ['Python', 'R', 'SQL', 'Excel Avanzado', 'VBA', 'Git'],
-  },
-  {
-    title: 'Ciencia Actuarial',
-    skills: ['Seguros de Vida', 'Seguros de Danos', 'Reservas', 'Regulacion (LISF)', 'Tablas de Mortalidad'],
-  },
-  {
-    title: 'Analisis de Datos',
-    skills: ['Machine Learning', 'Simulacion Montecarlo', 'Inferencia Bayesiana', 'GLM', 'Visualizacion'],
-  },
-  {
-    title: 'Finanzas Cuantitativas',
-    skills: ['Derivados', 'Portafolios (Markowitz)', 'VaR', 'Curvas Forward', 'Matematicas Financieras'],
-  },
-] : [
-  {
-    title: 'Languages & Tools',
-    skills: ['Python', 'R', 'SQL', 'Advanced Excel', 'VBA', 'Git'],
-  },
-  {
-    title: 'Actuarial Science',
-    skills: ['Life Insurance', 'Property Insurance', 'Reserves', 'Regulation (LISF)', 'Mortality Tables'],
-  },
-  {
-    title: 'Data Analysis',
-    skills: ['Machine Learning', 'Monte Carlo Simulation', 'Bayesian Inference', 'GLM', 'Visualization'],
-  },
-  {
-    title: 'Quantitative Finance',
-    skills: ['Derivatives', 'Portfolios (Markowitz)', 'VaR', 'Forward Curves', 'Financial Mathematics'],
-  },
-];
+const skillGroups = getSkillGroups(lang);
 ---
 
 <section class="py-20 px-6 bg-navy text-cream">
