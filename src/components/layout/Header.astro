@@ -38,8 +38,9 @@ const tp = useTranslatedPath(lang);
       id="mobile-menu-btn"
       class="md:hidden p-2 text-navy"
       aria-label="Menu"
+      aria-expanded="false"
     >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
     </button>
@@ -65,6 +66,10 @@ const tp = useTranslatedPath(lang);
   <script>
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
-    btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+    btn?.addEventListener('click', () => {
+      menu?.classList.toggle('hidden');
+      const expanded = btn?.getAttribute('aria-expanded') === 'true';
+      btn?.setAttribute('aria-expanded', String(!expanded));
+    });
   </script>
 </header>

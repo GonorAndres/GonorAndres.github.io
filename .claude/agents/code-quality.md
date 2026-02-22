@@ -25,13 +25,16 @@ Your responsibility is technical health -- SEO, accessibility, performance, and 
 - **Site URL**: https://GonorAndres.github.io
 - **Color palette**: cream #EDE6DD, navy #1B2A4A, terracotta #C17654, sage #7A8B6F, amber #D4A574
 - **Fonts**: Lora (serif/headings), Inter (sans/body)
-- **Build**: Astro 5 static output, Node 22, 19 pages
+- **Build**: Astro 5 static output, Node 22, 29 pages
+- **Hero components**: LatestPostCard (3 newest posts) + DiscoverPostCard (shuffled remaining posts, Fisher-Yates at build time)
+- **SharedNotes**: Category-grouped rendering via `getNotesByCategory(lang)` in SharedNotes.astro
 
 ## Known Issues to Monitor
 
 - Footer "Apuntes sueltos" link was removed (same URL as "Carpeta academica") -- re-add when correct URL is available
 - Category route uses type assertion (`cat as Category`) -- safe because getStaticPaths constrains values
 - Blog slug stripping (`slug.replace(/^(es|en)\//, '')`) works but is fragile
+- DiscoverPostCard uses Fisher-Yates shuffle at build time -- randomization only changes on rebuild/deploy
 
 ## Rules
 

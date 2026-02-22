@@ -8,6 +8,7 @@ const blog = defineCollection({
     date: z.string(),
     category: z.enum([
       'actuaria-para-todos',
+      'fundamentos-actuariales',
       'proyectos-y-analisis',
       'herramientas',
       'mercado-mexicano',

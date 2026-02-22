@@ -20,7 +20,7 @@ export const education: Education[] = [
       en: 'B.S. in Actuarial Science',
     },
     school: {
-      es: 'Universidad Nacional Autonoma de Mexico (UNAM)',
+      es: 'Universidad Nacional Autónoma de México (UNAM)',
       en: 'National Autonomous University of Mexico (UNAM)',
     },
     details: {

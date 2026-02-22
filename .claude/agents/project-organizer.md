@@ -22,6 +22,8 @@ Your responsibility is how projects appear to visitors -- the narrative, groupin
 - **Grid variants**: standard (1x1), tall (row-span-2), wide (col-span-2)
 - **Connections**: Projects have `relatedTo` slugs; ProjectCard shows italic "See also: [names]"
 - **12 projects** ordered by narrative impact (GMM Explorer and Credit Risk lead)
+- **Hero right column**: LatestPostCard (3 newest) + DiscoverPostCard (shuffled remaining) stacked vertically with `md:flex-col md:gap-4`
+- **SharedNotes section**: 10 notes in 3 category groups (Actuarial 4, Quant Finance 3, Statistics 3) with category subheadings
 
 ## Portfolio Narrative Principles (from CLAUDE.md)
 

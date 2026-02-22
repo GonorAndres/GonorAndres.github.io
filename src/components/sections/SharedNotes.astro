@@ -3,7 +3,7 @@ import { t } from '../../i18n';
 import type { Lang } from '../../i18n';
 import OrganicBlob from '../decorations/OrganicBlob.astro';
 import Squiggle from '../decorations/Squiggle.astro';
-import { getNotes } from '../../data/notes';
+import { getNotesByCategory } from '../../data/notes';
 
 interface Props {
   lang: Lang;
@@ -11,7 +11,7 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const notes = getNotes(lang);
+const groups = getNotesByCategory(lang);
 ---
 
 <section class="relative py-20 px-6 overflow-hidden">
@@ -26,35 +26,42 @@ const notes = getNotes(lang);
       <Squiggle class="w-32 h-4 mt-2" color="#D4A574" />
     </div>
 
-    <div class="md:ml-16 space-y-4">
-      {notes.map((note) => (
-        <div class="p-5 rounded-lg border border-amber/20 hover:border-amber/50 hover:shadow-sm transition-all duration-300 fade-up group">
-          <div class="flex items-start justify-between gap-4">
-            <div class="flex-1">
-              <h3 class="font-serif text-lg font-bold text-navy group-hover:text-terracotta transition-colors">
-                {note.title}
-              </h3>
-              <p class="text-navy/70 text-sm mt-1">{note.description}</p>
-              <div class="flex flex-wrap gap-2 mt-3">
-                {note.tags.map((tag) => (
-                  <span class="text-xs px-2 py-0.5 rounded-full bg-sage/20 text-sage">{tag}</span>
-                ))}
+    <div class="md:ml-16 space-y-10">
+      {groups.map((group) => (
+        <div>
+          <h3 class="text-lg font-bold text-terracotta mb-4 fade-up">{group.label}</h3>
+          <div class="space-y-4">
+            {group.notes.map((note) => (
+              <div class="p-5 rounded-lg border border-amber/20 hover:border-amber/50 hover:shadow-sm transition-all duration-300 fade-up group">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="flex-1">
+                    <h4 class="font-serif text-lg font-bold text-navy group-hover:text-terracotta transition-colors">
+                      {note.title}
+                    </h4>
+                    <p class="text-navy/70 text-sm mt-1">{note.description}</p>
+                    <div class="flex flex-wrap gap-2 mt-3">
+                      {note.tags.map((tag) => (
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-sage/20 text-sage">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-wrap gap-3 mt-4">
+                  {note.urls.map((link) => (
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1.5 text-sm font-medium text-terracotta hover:text-terracotta/80 transition-colors"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-3 mt-4">
-            {note.urls.map((link) => (
-              <a
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-1.5 text-sm font-medium text-terracotta hover:text-terracotta/80 transition-colors"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                {link.label}
-              </a>
             ))}
           </div>
         </div>

@@ -88,6 +88,26 @@ When converting academic notes to blog posts:
 - Added "Blog i18n Filename Convention" section to CLAUDE.md
 - All blog posts now use matching filenames across languages so the LanguageSwitcher works correctly
 
+## Session Log -- 2026-02-18
+
+### What Was Done
+- **DiscoverPostCard**: Created `src/components/ui/DiscoverPostCard.astro` -- shows random (build-time shuffled) blog posts excluding the 3 newest. Added below LatestPostCard in Hero with `md:flex-col md:gap-4` stacking. i18n keys: `hero.discoverPosts` in both langs.
+- **SOA blog post Drive links**: Added "Material de estudio" / "Study materials" sections to all 6 SOA blog post files (3 ES + 3 EN) with Google Drive download links to study PDFs.
+- **Uploaded exam_p_reference.pdf to Drive**: Uploaded `/home/andtega349/soa_exams/p/exam_p_reference.pdf` as `exam_p_basic_guide_v2.pdf` to MisApuntes/SOA_P__resources folder.
+- **Google Drive API access established**: Set up persistent ADC credentials with Drive scope on this VM. See agent memory `drive-files.md` for full Drive file ID mapping.
+- **SharedNotes reorganization**: Expanded from 7 flat notes to 10 notes organized in 3 categories (Actuarial 4, Quant Finance 3, Statistics 3). Added `NoteCategory` type, `getNotesByCategory()` function, and category group rendering in `SharedNotes.astro`. New notes added: SOA Exam P v2 reference, Eve's Law, Lee-Carter Mortality.
+- **Agent memory**: Created `MEMORY.md` and `drive-files.md` in agent memory directory with project context and Drive ID mappings.
+
+### Files Modified
+- `src/i18n/es.ts`, `src/i18n/en.ts` -- added `hero.discoverPosts` and `sharedNotes.cat.*` keys
+- `src/components/ui/DiscoverPostCard.astro` -- NEW
+- `src/components/sections/Hero.astro` -- added DiscoverPostCard import and flex-col wrapper
+- `src/components/sections/SharedNotes.astro` -- category-grouped rendering
+- `src/data/notes.ts` -- 10 notes with category system, `getNotesByCategory()`
+- `src/content/blog/{es,en}/soa-probability-foundations.md` -- added study materials section
+- `src/content/blog/{es,en}/soa-random-variables-insurance.md` -- added study materials, removed broken local PDF link
+- `src/content/blog/{es,en}/soa-multivariate-clt.md` -- added 5 study material links
+
 ## Future Scope
 
 ### High Priority
@@ -132,7 +152,7 @@ When converting academic notes to blog posts:
    tags: ["optional", "tags"]
    ---
    ```
-   - `category` must be one of: `actuaria-para-todos`, `proyectos-y-analisis`, `herramientas`, `mercado-mexicano`
+   - `category` must be one of: `actuaria-para-todos`, `fundamentos-actuariales`, `proyectos-y-analisis`, `herramientas`, `mercado-mexicano`
    - `lang` must match the directory (`es` or `en`)
    - `date` format: `YYYY-MM-DD` as a quoted string
 
@@ -162,7 +182,7 @@ All agents save work reports to `subagents_outputs/`.
 - Framework: Astro 5 + Tailwind + React islands + MDX
 - Deployment: GitHub Pages (GonorAndres.github.io)
 - i18n: ES (default, no prefix) / EN (/en/)
-- Blog categories: actuaria-para-todos, proyectos-y-analisis, herramientas, mercado-mexicano
+- Blog categories: actuaria-para-todos, fundamentos-actuariales, proyectos-y-analisis, herramientas, mercado-mexicano
 - Color palette: cream (#EDE6DD), header (#E8E0D7), navy (#1B2A4A), amber (#D4A574), terracotta (#C17654), sage (#7A8B6F)
 - Fonts: Lora (headings), Inter (body)
 

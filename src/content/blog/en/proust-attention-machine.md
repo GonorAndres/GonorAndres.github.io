@@ -1,23 +1,29 @@
 ---
 title: "Building a Transformer from Scratch: The Proust Attention Machine"
-description: "How I built a character-level language model with multi-head attention, trained on Proust's complete work in Spanish. NumPy first to understand the math, PyTorch second to train."
+description: "I wanted to understand what really happens inside a language model. I built one from the first matrix multiplication, trained it on all 7 volumes of Proust, and what taught me the most wasn't the architecture -- it was realizing that everything is just numbers."
 date: "2026-02-15"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["deep-learning", "transformers", "NLP", "PyTorch", "NumPy"]
 ---
 
-There is a difference between using a transformer and understanding a transformer. Modern frameworks abstract all the internal machinery: you call `nn.TransformerEncoder` and it works. But when something breaks -- when the loss refuses to decrease, when generation produces garbage, when gradients explode -- you need to know what is happening inside. I wanted that knowledge, and the only way I trusted myself to get it was to build the whole thing by hand.
+The AI revolution is here. But what hit me wasn't that models could generate text -- it was that talking to a frontier model feels like talking to someone more intellectually capable than most people I know. Not in terms of creativity or free spirit, but in reasoning ability, in connecting ideas, in sustaining an argument. That made me think: something complex has to be happening on those GPUs. Something I want to understand.
 
-That meant two decisions up front. First, character-level tokenization instead of BPE. A subword tokenizer like GPT's introduces its own complexity -- merge tables, vocabulary construction, encoding edge cases -- and all of that distracts from the real goal: understanding attention. With characters, the vocabulary is just 94 symbols (letters, accents, punctuation), and the model has to learn everything from spelling to syntax purely from statistical patterns. It is a harder task for the model but a cleaner one for the person studying it. Second, the corpus had to be long, syntactically demanding, and something I actually knew well enough to judge the output. Marcel Proust's "In Search of Lost Time" in Spanish fit perfectly: seven volumes of famously long sentences full of subordinate clauses and parenthetical digressions, all public domain and available as born-digital ebooks. If the attention mechanism could handle Proust's prose across a 256-character context window, it was working. The result: a 419,840-parameter decoder-only transformer trained on 7.15 million characters, producing recognizably Proustian Spanish after a single epoch.
+My first attempt was with TensorFlow. I followed tutorials, used high-level functions, trained models that "worked." But everything felt like a "hello world" -- I was using tools without understanding what they did inside. I knew the general theory: language models predict the next token based on trained weights, and gradients are the tool that adjusts those weights iteration after iteration. I found it curious that something as mechanical as gradient descent could produce something that *looks* like intelligence. But the process is slow, requires millions of operations, and that's where GPUs come in. I wanted to see all of it with my own hands.
 
-## Building it from first principles
+So I decided to build a transformer from scratch. Not using `nn.TransformerEncoder` as a black box, but implementing every matrix multiplication first in pure NumPy -- no autograd, no magic -- to force myself to understand each operation before porting it to PyTorch.
 
-The architecture is deliberately minimal -- just enough to learn, not so much that it becomes opaque. The model uses an embedding dimension of 128, two attention heads, two transformer blocks, a feedforward inner dimension of 512 (the standard 4x convention), a context window of 256 characters, and dropout at 0.1. That gives 419,840 trainable parameters, small enough to train in about thirty minutes on a free Colab T4 GPU. The shape flow tells the whole story: input tokens come in as (batch, 256), embedding and positional encoding expand them to (batch, 256, 128), the two transformer blocks preserve that shape, and the final projection produces (batch, 256, 94) -- logits over the full character vocabulary.
+## Why Proust
 
-Before writing a single line of PyTorch, I implemented the full architecture in NumPy. No autograd, no magic. The embedding layer is a lookup table plus sinusoidal positional encoding using the original formula from "Attention Is All You Need." Multi-head attention means computing Q, K, and V projections, applying scaled dot-product attention with a causal mask, then concatenating the heads back together. The transformer blocks combine attention with a feedforward network, residual connections, and layer normalization. The causal mask itself is just an upper triangular matrix filled with negative infinity so that position i can only attend to positions 0 through i -- softmax turns those negative-infinity scores into zeros, no conditional logic needed.
+Proust is my favorite book. "In Search of Lost Time" has a style that exists in nobody alive today -- not even in personal writing. Those sentences that stretch across entire paragraphs, with subordinate clauses opening inside other subordinate clauses, that sentimental, melancholic, artistic way of weaving ideas... it's not in me, and I'd say it's not in most people. No matter how hard I try, I can't imitate that style. The length of the sentences, the tone -- it's something particular to Proust.
 
-Every file includes what I call "Class Notes" -- comment blocks that explain the concept before the code appears. The goal was for anyone with basic linear algebra to follow the logic:
+That made the test high. I knew I wasn't going to create a Proust machine from scratch using GPUs alone. But I wanted to know how far it would get. If the attention mechanism could capture something of that particular style, it meant it was really working. And if it couldn't -- which is what I expected from a small model -- the limitations would teach me as much as the successes.
+
+I chose to work at the character level instead of using a BPE tokenizer. With a vocabulary of just 94 symbols (letters, accents, punctuation), the model has to learn *everything* -- from spelling to syntax -- purely from statistical patterns. Less complexity unrelated to attention, more clarity about what the model is actually learning.
+
+## The build
+
+Everything started in NumPy. I implemented the full architecture: the embedding lookup table with sinusoidal positional encoding (the original formula from "Attention Is All You Need"), the Q, K, V projections for multi-head attention, scaled dot-product with causal masking, head concatenation, transformer blocks with feedforward and residual connections, and layer normalization. Every file includes what I called "Class Notes" -- comment blocks that explain the concept *before* the code, so anyone with basic linear algebra can follow the logic.
 
 ```python
 # Attention: softmax(QK^T / sqrt(d_k)) * V
@@ -28,47 +34,49 @@ Every file includes what I call "Class Notes" -- comment blocks that explain the
 #    with near-zero gradients)
 ```
 
-Every operation carries shape annotations so you can trace the tensor dimensions through the entire forward pass. Once the NumPy version worked and I understood each matrix multiplication, the PyTorch port was mechanical: same variable names, same structure, only swapping `np.ndarray` for `torch.Tensor` and manual operations for `nn.Linear`. The understanding came from NumPy; PyTorch just gave me a GPU.
+The architecture is deliberately modest: `d_model` of 128, 2 attention heads, 2 transformer layers, feedforward dimension of 512, context window of 256 characters, and dropout of 0.1. The whole model is 419,840 parameters -- trainable in about 30 minutes on a Colab T4, which is incredible that it's a free resource available to everyone.
 
-## Data, training, and what came out
+What helped me understand the most was tracing the shapes. Tokens come in as (batch, 256), pass through embedding and positional encoding to become (batch, 256, 128), go through 2 transformer blocks that preserve that shape, and project to (batch, 256, 94) -- logits over the vocabulary. Every transformation is annotated line by line in the NumPy code.
 
-The corpus went through two distinct lives. The first version pulled two volumes from Project Gutenberg, but OCR noise, publisher watermarks, and metadata leaking into the text inflated the vocabulary to over 200 characters and planted spurious patterns everywhere. The final version came from all seven volumes extracted directly from MOBI ebooks -- born-digital text with no scanning artifacts. After cleaning through a character whitelist and verifying that no publisher metadata leaked through, I had 7.15 MB of clean text and a tight 94-character vocabulary. The `ProustDataset` class generates sliding windows of 256 characters with targets shifted by one position, standard teacher forcing.
+Once the NumPy implementation was complete and each operation felt solid, the PyTorch port was mechanical. Same variable names, same structure, just swapping `np.ndarray` for `torch.Tensor`. All the thinking had already happened in NumPy.
 
-Training used AdamW with a learning rate of 3e-4 and weight decay of 0.01, a cosine annealing schedule with 500 steps of linear warmup, and gradient clipping at a max norm of 1.0. The data was split 90/10 for training and validation. After one full epoch -- 201,104 steps across the entire corpus -- the results looked like this:
+## Data, training, and the hours of waiting
+
+The corpus had its own story. The first version used 2 volumes from Project Gutenberg, and it was a disaster: OCR noise everywhere, publisher watermarks, metadata leaking into the text. The vocabulary inflated to over 200 characters full of garbage that the model learned with the same fidelity as real patterns. The final version uses all 7 volumes extracted from MOBI files -- born-digital, no scanning artifacts. After whitelist cleaning: 7.15 million characters with a vocabulary of exactly 94 symbols.
+
+Training used AdamW with learning rate 3e-4 and weight decay 0.01, cosine annealing with 500 steps of linear warmup, gradient clipping at max norm 1.0, and a 90/10 split. After 201,104 steps across the full corpus:
 
 | Metric | Value |
 |--------|-------|
 | Training loss | 1.348 |
 | Validation loss | 1.192 |
 
-Validation loss being lower than training loss looks counterintuitive at first, but it makes sense once you remember dropout: during training, random neurons are deactivated as regularization, while during validation the model uses its full capacity.
+Validation loss being lower than training loss is explained by dropout: during training, random neurons are deactivated, while during validation the model uses its full capacity.
 
-At temperature 0.8 with top-k 40, the model generates text that is recognizably Spanish and recognizably Proustian in its cadence, even if it cannot sustain coherence for long.
+The hours of waiting while the model trained were part of the learning. Watching the loss drop, watching the writing gradually improve -- at first pure noise, then isolated Spanish words, then phrases with structure. At temperature 0.8 with top-k 40, the trained model generates this:
 
 **Prompt**: "Mucho tiempo" (A long time)
-
 > Mucho tiempo verdad, sin sus muchos que esa cortina de los personas con las que el senor. Es que lo que el amor que acababa de propio de la imaginacion y que habia causado una gran modo de olvidarla o de vida reductamente el mio). Por eso, mi madre sistencia desconocida con frecuencia, no hubiera ido a consider
 
-The opening phrase is one of the most famous in all of French literature -- "Longtemps, je me suis couche de bonne heure" -- and the model picks up the thread with vocabulary that belongs squarely in Proust's world: imaginacion, amor, frecuencia, madre. It produces subordinate clauses and parenthetical asides that mirror the original style. The grammar is mostly correct -- subject-verb-complement order, reasonable gender agreement -- but the sentence loses its semantic thread after the first few clauses. It starts well and drifts.
-
 **Prompt**: "La memoria" (Memory)
-
 > La memoria y su pasad se sigue, por ejemplo, senora aun sin embargo, al menos encontrar a la Sra. de Guermantes me permanecia yo saber que el mismo seguro, pero en el que, si bien buscar con frecuencia venir a veces a un cual se debe tanto para salir y no podia hacer ella su disposicion con la sociedad, por l
 
-Here the model surfaces actual character names -- Sra. de Guermantes -- learned purely from statistical frequency. It deploys "sin embargo" and "por ejemplo" as connective tissue, just as Proust does, and builds a sentence that keeps subordinating itself deeper, which is the signature Proustian move. But it cannot close its own structures: the parentheses stay open, the sentence never resolves. With 420K parameters and a single epoch of training, that is roughly what you would expect. The model has captured the music of the prose without yet learning its grammar of resolution.
+Character names appear correctly -- Swann, Guermantes, Sra. -- learned purely from statistical frequency. Spanish grammar is present. You can sense something Proustian in the long sentences with subordinate clauses. But semantic coherence fades as the sentence gets longer: it starts well and loses the thread. With 420K parameters and a single training epoch, that was expected.
 
-## What I actually learned
+## What I actually understood
 
-The mathematical elegance of transformers only becomes visible when you implement them by hand. Scaling attention scores by the square root of the key dimension is not just a convention -- it is an exercise in the variance of sums of random variables. Without it, dot products grow with the dimension, softmax saturates, and gradients vanish. Deriving that justification from first principles was one of the most satisfying parts of the project. The causal mask is similarly elegant: adding negative infinity to future positions and letting softmax do the rest means autoregressive generation requires no conditional logic at all, just linear algebra. And residual connections, which I had always thought of as a nice-to-have, turn out to be the reason deep transformers are trainable in the first place. Without them, the gradient signal has to traverse every layer; with them, there is a direct shortcut that keeps information flowing.
+All the technical details -- embeddings, tokenization, attention operations -- are documented in the [repository](https://github.com/GonorAndres/proust-attention) with the Class Notes. There are too many details to lay out in a blog post, and the repo explains them better than I could here. What I want to talk about is what I understood *after* building all of that.
 
-On the training side, I learned that warmup is not optional. Without those first 500 steps of gradually increasing the learning rate, the initial high-rate updates destroy the randomly initialized weights before they have a chance to organize. Gradient clipping at a norm of 1.0 was similarly essential -- with long sequences and attention, gradients can grow fast, and clipping keeps the whole process stable. Perhaps the most surprising lesson was that a single epoch was enough for interesting results. With 7.15 MB of text and 256-character windows generating roughly 28,000 batches, the model captures genuine linguistic patterns without overfitting. More epochs would almost certainly improve coherence, but one was enough to demonstrate that the architecture works.
+The first thing that hit me is how simple it is when you think about it. The model is a tensor. Numbers. And the relationships and connections between those numbers create outputs that have structure, logic, message. It all comes down to matrix multiplications and an activation function. It's too simple if you think about it from a distance.
 
-The data quality lesson was the starkest of all. The first corpus version, built from noisy OCR scans, produced an inflated vocabulary and taught the model to faithfully reproduce scanning artifacts. Switching to born-digital MOBI extraction cut the vocabulary from over 200 characters to 94 and improved everything downstream. Born-digital text is always better than OCR, full stop. If the next version of this project teaches me anything new, it will probably come from training more epochs (five to ten would likely improve long-range coherence significantly), switching to pre-norm layer normalization for better stability when scaling to more layers, experimenting with BPE tokenization to capture Spanish morphology, and finally visualizing the attention maps to see what patterns each head actually learns -- the infrastructure for that is built but unexplored.
+But that's where it gets important. If these weights are just interconnected numbers, then they have enormous vulnerabilities. It's like with bombs: if you know how to deactivate one, you know how to build one. The tensors of a language model have such vast combinatorial potential that it will always be impossible to be completely sure that all the connections between weights don't have something harmful hidden in them. It's not a question of finding the vulnerability -- it's that the space of possibilities is larger than what we can inspect.
 
-## Closing
+This made me much more conscious of why Anthropic takes the position it takes on AI safety. It's not paranoia or marketing. When you build a model from scratch and see that everything is numbers and gradients, you understand that the boundary between "useful" and "dangerous" is a question of weights -- literally. There is no clear line in the architecture separating good from bad. Everything depends on what those numbers learned during training, and verifying that exhaustively is computationally impossible.
 
-This project connects to a thread that runs through my other work. The logic of decision under uncertainty -- central in the credit risk model where a GLM assigns default probabilities, and in the Bayesian versus frequentist A/B testing framework where you choose between two options with incomplete information -- is the same logic governing how a transformer weighs its attention: it assigns probabilities and chooses. The data handling discipline (cleaning, validation, splits) carries over from every data project in the portfolio. The complete code, with shape annotations on every operation, is in the [GitHub repository](https://github.com/GonorAndres/proust-attention).
+The project didn't leave me as an expert in embeddings or tokenization classification. It wasn't about the free Colab T4 or the hours waiting for each epoch to finish. What I took away was understanding the causes and consequences that are invisible when you use a language model as a user -- the ones hidden in the weights of the computational beasts we have today.
 
----
+The scaling by the square root of `d_k`, the causal mask as a triangular matrix of `-inf`, the residual connections that make deep transformers trainable -- I derived and documented all of that in the code. But if I had to choose a single lesson from the entire project, it wouldn't be any of those. It would be the understanding that something as simple as a tensor can produce something that feels intellectual, and that this same simplicity is the reason AI safety is such a hard problem.
 
-*A 420K-parameter model won't write like Proust. But building it from the first matrix multiplication to the last generated sample gave me something more valuable: the intuition to know what's happening when a language model fails -- and how to fix it.*
+## What's next
+
+The model didn't reach convergence -- 5 to 10 epochs would likely improve coherence. I want to try pre-norm instead of post-norm, experiment with a BPE tokenizer to capture Spanish morphology, and explore the attention maps to understand what patterns each head learns. The complete code with shape annotations is in the [GitHub repository](https://github.com/GonorAndres/proust-attention).

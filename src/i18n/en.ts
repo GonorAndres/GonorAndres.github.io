@@ -10,6 +10,7 @@ export default {
   'hero.cta': 'View projects',
   'hero.cv': 'Download CV',
   'hero.latestPost': 'Latest posts',
+  'hero.discoverPosts': 'Discover more',
   'hero.readPost': 'Read',
   'section.featured': 'Featured Projects',
   'section.skills': 'Skills',
@@ -35,5 +36,8 @@ export default {
   'section.sharedNotes': 'Worth Sharing Notes',
   'sharedNotes.subtitle': 'Ready-to-read documents: analyses, reports, and technical summaries.',
   'sharedNotes.viewPdf': 'View PDF',
+  'sharedNotes.cat.actuarial': 'Actuarial Science & Insurance',
+  'sharedNotes.cat.quant': 'Quantitative Finance',
+  'sharedNotes.cat.stats': 'Statistics & Probability',
   'education.certificates': 'Certifications',
 } as const;

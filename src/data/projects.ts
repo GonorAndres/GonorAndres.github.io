@@ -42,7 +42,7 @@ export const projects: Project[] = [
       en: 'Credit Default Prediction Model',
     },
     description: {
-      es: 'Machine learning con 85.19% de precision (AUC) para predecir incumplimiento en prestamos. GLM en Python con 32,000+ registros.',
+      es: 'Machine learning con 85.19% de precisión (AUC) para predecir incumplimiento en préstamos. GLM en Python con 32,000+ registros.',
       en: 'Machine learning with 85.19% AUC to predict loan defaults. GLM in Python with 32,000+ records.',
     },
     url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model',
@@ -62,7 +62,7 @@ export const projects: Project[] = [
       en: 'Bayesian vs Frequentist - A/B Test',
     },
     description: {
-      es: 'Evaluacion de tasa de conversion con metodos frecuentistas y bayesianos, incluyendo PyMC y distribucion Beta.',
+      es: 'Evaluación de tasa de conversión con métodos frecuentistas y bayesianos, incluyendo PyMC y distribución Beta.',
       en: 'Conversion rate evaluation using frequentist and Bayesian methods, including PyMC and Beta distribution.',
     },
     url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Bayesian_vs_Frequentist',
@@ -78,18 +78,18 @@ export const projects: Project[] = [
   {
     slug: 'life-insurance',
     title: {
-      es: 'Nota Tecnica - Seguro de Vida',
+      es: 'Nota Técnica - Seguro de Vida',
       en: 'Technical Note - Life Insurance',
     },
     description: {
-      es: 'Documento tecnico sobre seguro de vida individual ajustado a regulacion mexicana (Circular Unica y LISF).',
-      en: 'Technical document on individual life insurance adjusted to Mexican regulation (Circular Unica and LISF).',
+      es: 'Documento técnico sobre seguro de vida individual ajustado a regulación mexicana (Circular Única y LISF).',
+      en: 'Technical document on individual life insurance adjusted to Mexican regulation (Circular Única and LISF).',
     },
     url: 'https://drive.google.com/drive/folders/1PfotLUbidzwk8gdW4kbqQfLB4PbkuYBj',
     platform: 'Drive',
     category: 'actuarial',
     tags: {
-      es: ['Actuaria', 'Seguros', 'Regulacion'],
+      es: ['Actuaría', 'Seguros', 'Regulación'],
       en: ['Actuarial', 'Insurance', 'Regulation'],
     },
     variant: 'standard',
@@ -98,18 +98,18 @@ export const projects: Project[] = [
   {
     slug: 'property-insurance',
     title: {
-      es: 'Nota Tecnica - Seguro de Danos',
+      es: 'Nota Técnica - Seguro de Daños',
       en: 'Technical Note - Property Insurance',
     },
     description: {
-      es: 'Seguro de danos para autos con datos de la CNSF. Nota tecnica comparativa con ramo vida y cotizador en Excel.',
+      es: 'Seguro de daños para autos con datos de la CNSF. Nota técnica comparativa con ramo vida y cotizador en Excel.',
       en: 'Auto property insurance with CNSF data. Comparative technical note with life insurance and Excel quoter.',
     },
     url: 'https://drive.google.com/drive/folders/12tF-Ma_sWtDM5k6zYzNx8btUGS78b-0W',
     platform: 'Drive',
     category: 'actuarial',
     tags: {
-      es: ['Actuaria', 'Autos', 'CNSF'],
+      es: ['Actuaría', 'Autos', 'CNSF'],
       en: ['Actuarial', 'Auto', 'CNSF'],
     },
     variant: 'standard',
@@ -122,7 +122,7 @@ export const projects: Project[] = [
       en: 'Currency Derivatives - QMF',
     },
     description: {
-      es: 'Analisis del mercado de divisas: curva forward, precios forwards, spread bid/offer y superficie de volatilidad.',
+      es: 'Análisis del mercado de divisas: curva forward, precios forwards, spread bid/offer y superficie de volatilidad.',
       en: 'Currency market analysis: forward curve, forward prices, bid/offer spread and volatility surface.',
     },
     url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Evaluaci%C3%B3nDerivadosDivisas',
@@ -138,11 +138,11 @@ export const projects: Project[] = [
   {
     slug: 'markowitz',
     title: {
-      es: 'Optimizacion de Portafolio - Markowitz',
+      es: 'Optimización de Portafolio - Markowitz',
       en: 'Portfolio Optimization - Markowitz',
     },
     description: {
-      es: 'Teoria moderna de portafolios con 10 activos del mercado mexicano, logrando 110% de rendimiento anualizado en prueba.',
+      es: 'Teoría moderna de portafolios con 10 activos del mercado mexicano, logrando 110% de rendimiento anualizado en prueba.',
       en: 'Modern portfolio theory with 10 Mexican market assets, achieving 110% annualized return in test period.',
     },
     url: 'https://drive.google.com/drive/folders/1Dz54zcTpa9quMFCkgddBN5GWQfy6CIXv',
@@ -158,18 +158,18 @@ export const projects: Project[] = [
   {
     slug: 'michoacan',
     title: {
-      es: 'Analisis Demografico - Michoacan',
+      es: 'Análisis Demográfico - Michoacán',
       en: 'Demographic Analysis - Michoacan',
     },
     description: {
-      es: 'Estudio de la poblacion de Michoacan usando datos del censo 2020 de INEGI: mortalidad, fecundidad y estructura por edades.',
+      es: 'Estudio de la población de Michoacán usando datos del censo 2020 de INEGI: mortalidad, fecundidad y estructura por edades.',
       en: 'Population study of Michoacan using INEGI 2020 census data: mortality, fertility and age structure.',
     },
     url: 'https://drive.google.com/drive/folders/1U_KrCv0g6o-JWNv0l6RHoPCWZBr0-exu',
     platform: 'Drive',
     category: 'applied-math',
     tags: {
-      es: ['Excel', 'INEGI', 'Demografia'],
+      es: ['Excel', 'INEGI', 'Demografía'],
       en: ['Excel', 'INEGI', 'Demographics'],
     },
     variant: 'standard',
@@ -178,11 +178,11 @@ export const projects: Project[] = [
   {
     slug: 'data-cleaning',
     title: {
-      es: 'Limpieza de Datos - Deuda Publica CDMX',
+      es: 'Limpieza de Datos - Deuda Pública CDMX',
       en: 'Data Cleaning - CDMX Public Debt',
     },
     description: {
-      es: 'Limpieza de base de deuda publica del Gobierno CDMX. Reconstruccion de tasa TIIE con funciones avanzadas de Excel.',
+      es: 'Limpieza de base de deuda pública del Gobierno CDMX. Reconstrucción de tasa TIIE con funciones avanzadas de Excel.',
       en: 'Public debt database cleaning for Mexico City Government. TIIE rate reconstruction with advanced Excel functions.',
     },
     url: 'https://drive.google.com/drive/folders/1qOYJXgcIiZUyhf2OQTCRu_bgskaZ06AE',
@@ -202,46 +202,48 @@ export const projects: Project[] = [
       en: 'Monte Carlo Simulation - Poker',
     },
     description: {
-      es: 'Estimacion de probabilidades en Texas Hold\'em usando simulacion Montecarlo para comprender el comportamiento del azar.',
-      en: 'Probability estimation in Texas Hold\'em using Monte Carlo simulation to understand randomness behavior.',
+      es: 'Simulación Montecarlo aplicada a Texas Hold\'em para estimar probabilidades de mano por fuerza bruta computacional. Demuestra convergencia de la simulación, intervalos de confianza sobre las estimaciones y cómo la metodología se extiende a pricing y análisis de riesgo.',
+      en: 'Monte Carlo simulation applied to Texas Hold\'em to estimate hand probabilities through computational brute force. Demonstrates simulation convergence, confidence intervals on estimates, and how the methodology extends to derivatives pricing and risk analysis.',
     },
     url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/TexasPokerCaseStudy',
     platform: 'GitHub',
     category: 'data-science',
     tags: {
-      es: ['Python', 'Simulacion', 'Probabilidad'],
+      es: ['Python', 'Simulación', 'Probabilidad'],
       en: ['Python', 'Simulation', 'Probability'],
     },
     variant: 'standard',
+    relatedTo: ['ab-testing'],
   },
   {
     slug: 'amortization',
     title: {
-      es: 'Tabla de Amortizaciones Dinamica',
+      es: 'Tabla de Amortizaciones Dinámica',
       en: 'Dynamic Amortization Table',
     },
     description: {
-      es: 'Amortizador en Excel basado en parametros del usuario: monto, tasa y tipo de pago. Proyecto de Matematicas Financieras.',
-      en: 'Excel amortization tool based on user parameters: amount, rate and payment type. Financial Mathematics project.',
+      es: 'Herramienta dinámica en Excel para construir y comparar tablas de amortización bajo distintos esquemas de pago. Permite ajustar monto, tasa y plazo para analizar cómo cambia la distribución entre capital e intereses a lo largo del crédito.',
+      en: 'Dynamic Excel tool for building and comparing amortization schedules under different payment schemes. Adjust principal, rate, and term to analyze how the split between capital and interest evolves over the life of a loan.',
     },
     url: 'https://drive.google.com/drive/folders/15Zyl2XKcXKnmrrFLtlctQwYeVz_C9EdW',
     platform: 'Drive',
     category: 'actuarial',
     tags: {
-      es: ['Excel', 'Amortizacion'],
+      es: ['Excel', 'Amortización'],
       en: ['Excel', 'Amortization'],
     },
     variant: 'standard',
+    relatedTo: ['derivatives'],
   },
   {
     slug: 'euler-method',
     title: {
-      es: 'Metodo de Euler - EDOs',
+      es: 'Método de Euler - EDOs',
       en: 'Euler Method - ODEs',
     },
     description: {
-      es: 'Implementacion del Metodo de Euler para EDOs de primer orden con demostracion de existencia y unicidad (Picard-Lindelof).',
-      en: 'Euler Method implementation for first-order ODEs with existence and uniqueness proof (Picard-Lindelof).',
+      es: 'Método numérico para resolver ecuaciones diferenciales ordinarias de primer orden, implementado en Python. Incluye demostración del teorema de existencia y unicidad (Picard-Lindelöf) y análisis del error de discretización.',
+      en: 'Numerical method for solving first-order ordinary differential equations, implemented in Python. Includes existence and uniqueness theorem proof (Picard-Lindelöf) and discretization error analysis.',
     },
     url: 'https://colab.research.google.com/drive/1g6uDqBaJoHbx2MyNeh2tgP5nwKOgqPkA',
     platform: 'Colab',
@@ -251,6 +253,7 @@ export const projects: Project[] = [
       en: ['Python', 'ODEs', 'Euler'],
     },
     variant: 'standard',
+    relatedTo: ['michoacan'],
   },
 ];
 
