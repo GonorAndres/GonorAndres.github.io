@@ -16,6 +16,9 @@ Thumbs.db
 # Subagent outputs
 subagents_outputs/
 
+# Interview study materials
+skills-info/
+
 # Claude ephemeral (config files ARE tracked)
 .claude/cache/
 .claude/debug/

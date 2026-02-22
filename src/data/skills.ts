@@ -8,12 +8,22 @@ export interface SkillGroup {
 export const skillGroups: SkillGroup[] = [
   {
     title: {
-      es: 'Lenguajes & Herramientas',
+      es: 'Lenguajes y Herramientas',
       en: 'Languages & Tools',
     },
     skills: {
-      es: ['Python', 'R', 'SQL', 'Excel Avanzado', 'VBA', 'Git'],
-      en: ['Python', 'R', 'SQL', 'Advanced Excel', 'VBA', 'Git'],
+      es: ['Python', 'TypeScript', 'R', 'SQL', 'Bash', 'Excel Avanzado', 'Git', 'LaTeX'],
+      en: ['Python', 'TypeScript', 'R', 'SQL', 'Bash', 'Advanced Excel', 'Git', 'LaTeX'],
+    },
+  },
+  {
+    title: {
+      es: 'Cloud & DevOps',
+      en: 'Cloud & DevOps',
+    },
+    skills: {
+      es: ['GCP Cloud Run', 'Cloud SQL', 'BigQuery', 'Docker', 'GitHub Actions', 'Secret Manager', 'PostgreSQL'],
+      en: ['GCP Cloud Run', 'Cloud SQL', 'BigQuery', 'Docker', 'GitHub Actions', 'Secret Manager', 'PostgreSQL'],
     },
   },
   {
@@ -22,18 +32,28 @@ export const skillGroups: SkillGroup[] = [
       en: 'Actuarial Science',
     },
     skills: {
-      es: ['Seguros de Vida', 'Seguros de Danos', 'Reservas', 'Regulacion (LISF)', 'Tablas de Mortalidad'],
-      en: ['Life Insurance', 'Property Insurance', 'Reserves', 'Regulation (LISF)', 'Mortality Tables'],
+      es: ['Seguros de Vida', 'Seguros de Daños', 'Lee-Carter', 'Reservas (BEL)', 'RCS/SCR', 'Regulación (LISF/CUSF)', 'Tablas de Mortalidad', 'Pensiones IMSS'],
+      en: ['Life Insurance', 'Property Insurance', 'Lee-Carter', 'Reserves (BEL)', 'SCR', 'Regulation (LISF/CUSF)', 'Mortality Tables', 'IMSS Pensions'],
     },
   },
   {
     title: {
-      es: 'Analisis de Datos',
-      en: 'Data Analysis',
+      es: 'Ciencia de Datos & ML',
+      en: 'Data Science & ML',
     },
     skills: {
-      es: ['Machine Learning', 'Simulacion Montecarlo', 'Inferencia Bayesiana', 'GLM', 'Visualizacion'],
-      en: ['Machine Learning', 'Monte Carlo Simulation', 'Bayesian Inference', 'GLM', 'Visualization'],
+      es: ['scikit-learn', 'PyTorch', 'XGBoost', 'GLM', 'Simulación Montecarlo', 'Inferencia Bayesiana', 'Pandas', 'Streamlit'],
+      en: ['scikit-learn', 'PyTorch', 'XGBoost', 'GLM', 'Monte Carlo Simulation', 'Bayesian Inference', 'Pandas', 'Streamlit'],
+    },
+  },
+  {
+    title: {
+      es: 'Desarrollo Web & IA',
+      en: 'Web Development & AI',
+    },
+    skills: {
+      es: ['FastAPI', 'React', 'Astro', 'Tailwind CSS', 'Claude Code', 'Anthropic API', 'Plotly'],
+      en: ['FastAPI', 'React', 'Astro', 'Tailwind CSS', 'Claude Code', 'Anthropic API', 'Plotly'],
     },
   },
   {
@@ -42,8 +62,8 @@ export const skillGroups: SkillGroup[] = [
       en: 'Quantitative Finance',
     },
     skills: {
-      es: ['Derivados', 'Portafolios (Markowitz)', 'VaR', 'Curvas Forward', 'Matematicas Financieras'],
-      en: ['Derivatives', 'Portfolios (Markowitz)', 'VaR', 'Forward Curves', 'Financial Mathematics'],
+      es: ['Derivados', 'Black-Scholes', 'Portafolios (Markowitz)', 'VaR', 'Curvas Forward', 'Matemáticas Financieras'],
+      en: ['Derivatives', 'Black-Scholes', 'Portfolios (Markowitz)', 'VaR', 'Forward Curves', 'Financial Mathematics'],
     },
   },
 ];

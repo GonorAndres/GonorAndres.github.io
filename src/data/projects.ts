@@ -7,7 +7,7 @@ export interface Project {
   title: Record<Lang, string>;
   description: Record<Lang, string>;
   url: string;
-  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab';
+  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP';
   category: ProjectCategory;
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
@@ -15,6 +15,26 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    slug: 'sima',
+    title: {
+      es: 'SIMA - Sistema Integral de Modelación Actuarial',
+      en: 'SIMA - Integrated Actuarial Modeling System',
+    },
+    description: {
+      es: 'Plataforma de modelación actuarial de punta a punta para seguros de vida: proyección de mortalidad Lee-Carter con datos demográficos, tablas de conmutación, valuación de reservas para tres productos (temporal, vitalicio, dotal) y cálculo de requerimientos de capital por solvencia (RCS) con pruebas de estrés bajo regulación mexicana (LISF, CUSF). Motor de cálculo en Python con API REST desplegada en Google Cloud.',
+      en: 'End-to-end actuarial modeling platform for life insurance: Lee-Carter mortality projection from demographic data, commutation tables, reserve valuation for three products (term, whole life, endowment), and solvency capital requirement (SCR) calculations with stress testing under Mexican regulation (LISF, CUSF). Python calculation engine with REST API deployed on Google Cloud.',
+    },
+    url: 'https://sima-451451662791.us-central1.run.app/',
+    platform: 'GCP',
+    category: 'actuarial',
+    tags: {
+      es: ['Python', 'FastAPI', 'Lee-Carter', 'LISF', 'Reservas', 'GCP'],
+      en: ['Python', 'FastAPI', 'Lee-Carter', 'LISF', 'Reserves', 'GCP'],
+    },
+    variant: 'wide',
+    relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan'],
+  },
   {
     slug: 'gmm-explorer',
     title: {
@@ -33,7 +53,7 @@ export const projects: Project[] = [
       en: ['Next.js', 'Actuarial', 'GMM', 'Pricing', 'CNSF'],
     },
     variant: 'wide',
-    relatedTo: ['life-insurance', 'property-insurance'],
+    relatedTo: ['sima', 'life-insurance', 'property-insurance'],
   },
   {
     slug: 'credit-risk',
@@ -93,7 +113,7 @@ export const projects: Project[] = [
       en: ['Actuarial', 'Insurance', 'Regulation'],
     },
     variant: 'standard',
-    relatedTo: ['property-insurance', 'michoacan', 'gmm-explorer'],
+    relatedTo: ['sima', 'property-insurance', 'michoacan', 'gmm-explorer'],
   },
   {
     slug: 'property-insurance',
@@ -113,7 +133,7 @@ export const projects: Project[] = [
       en: ['Actuarial', 'Auto', 'CNSF'],
     },
     variant: 'standard',
-    relatedTo: ['life-insurance', 'gmm-explorer'],
+    relatedTo: ['sima', 'life-insurance', 'gmm-explorer'],
   },
   {
     slug: 'derivatives',
@@ -173,7 +193,7 @@ export const projects: Project[] = [
       en: ['Excel', 'INEGI', 'Demographics'],
     },
     variant: 'standard',
-    relatedTo: ['life-insurance'],
+    relatedTo: ['sima', 'life-insurance'],
   },
   {
     slug: 'data-cleaning',
