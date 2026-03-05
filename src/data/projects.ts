@@ -33,7 +33,7 @@ export const projects: Project[] = [
       en: ['Python', 'FastAPI', 'Lee-Carter', 'LISF', 'Reserves', 'GCP'],
     },
     variant: 'wide',
-    relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan'],
+    relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan', 'insurance-claims'],
   },
   {
     slug: 'gmm-explorer',
@@ -53,7 +53,49 @@ export const projects: Project[] = [
       en: ['Next.js', 'Actuarial', 'GMM', 'Pricing', 'CNSF'],
     },
     variant: 'wide',
-    relatedTo: ['sima', 'life-insurance', 'property-insurance'],
+    relatedTo: ['sima', 'life-insurance', 'property-insurance', 'insurance-claims'],
+  },
+  {
+    slug: 'analytics-dashboards',
+    title: {
+      es: 'Dashboards Interactivos: Airbnb CDMX y Olist E-Commerce',
+      en: 'Interactive Dashboards: Airbnb CDMX & Olist E-Commerce',
+    },
+    description: {
+      es: 'Dos dashboards de analisis exploratorio construidos con React (Next.js), Recharts y Python: mercado de rentas cortas en CDMX (27K+ listings, segmentacion de anfitriones, scatter geografico) y cohortes de e-commerce en Brasil (retencion, LTV, RFM, revenue timeline). Pipeline ETL en Python, backend FastAPI, dark/light mode.',
+      en: 'Two exploratory analysis dashboards built with React (Next.js), Recharts, and Python: Mexico City short-term rental market (27K+ listings, host segmentation, geo scatter) and Brazilian e-commerce cohorts (retention, LTV, RFM, revenue timeline). Python ETL pipeline, FastAPI backend, dark/light mode.',
+    },
+    // TODO: Replace with deployed dashboard URL once live
+    url: 'https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics',
+    platform: 'GitHub',
+    category: 'data-science',
+    tags: {
+      es: ['Next.js', 'Recharts', 'Python', 'FastAPI', 'ETL'],
+      en: ['Next.js', 'Recharts', 'Python', 'FastAPI', 'ETL'],
+    },
+    variant: 'wide',
+    relatedTo: ['insurance-claims', 'data-cleaning', 'michoacan'],
+  },
+  {
+    slug: 'insurance-claims',
+    title: {
+      es: 'Dashboard de Reservas y Siniestralidad P&C',
+      en: 'P&C Insurance Claims & Reserving Dashboard',
+    },
+    description: {
+      es: 'Reservas actuariales con Chain-Ladder y Bornhuetter-Ferguson sobre datos regulatorios NAIC Schedule P. Dashboard interactivo con triangulos de perdida, estimaciones IBNR y ratios combinados para 6 ramos. Pipeline de datos en Python, 5 notebooks analiticos, 5 queries SQL y ~50K siniestros sinteticos con distribuciones actuarialmente realistas.',
+      en: 'Actuarial reserves using Chain-Ladder and Bornhuetter-Ferguson on NAIC Schedule P regulatory data. Interactive dashboard with loss triangles, IBNR estimates, and combined ratios across 6 lines of business. Python data pipeline, 5 analytical notebooks, 5 SQL queries, and ~50K synthetic claims with actuarially-realistic distributions.',
+    },
+    // TODO: Replace with deployed dashboard URL once live
+    url: 'https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard',
+    platform: 'GitHub',
+    category: 'actuarial',
+    tags: {
+      es: ['Python', 'SQL', 'Chain-Ladder', 'BF', 'IBNR', 'Next.js', 'FastAPI'],
+      en: ['Python', 'SQL', 'Chain-Ladder', 'BF', 'IBNR', 'Next.js', 'FastAPI'],
+    },
+    variant: 'wide',
+    relatedTo: ['sima', 'life-insurance', 'property-insurance', 'gmm-explorer'],
   },
   {
     slug: 'credit-risk',
