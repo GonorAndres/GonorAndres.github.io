@@ -2,7 +2,7 @@
 title: "Transforming a Random Variable Doesn't Move the Probability: The Inverse Function Trick"
 description: "When an insurance policy modifies the payment based on the loss, what you have is a transformed random variable. Finding its percentiles doesn't require deriving a new distribution from scratch — it only requires inverting the transformation and using the CDF you already have."
 date: "2026-03-05"
-category: "actuarial-foundations"
+category: "fundamentos-actuariales"
 lang: "en"
 tags: ["transformations", "percentiles", "exam-P", "SOA", "insurance", "CDF"]
 ---
