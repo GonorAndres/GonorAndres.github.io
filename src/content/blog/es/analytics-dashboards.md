@@ -1,6 +1,6 @@
 ---
 title: "Dashboards con React: Por que construir reportes analiticos con codigo"
-description: "Dos dashboards de analisis exploratorio -- Airbnb CDMX y Olist E-Commerce -- como caso de estudio de por que Next.js y Recharts son una alternativa seria a Power BI y Tableau para reportes analiticos de produccion."
+description: "Dos dashboards de analisis exploratorio (Airbnb CDMX y Olist E-Commerce) como caso de estudio de por que Next.js y Recharts son una alternativa seria a Power BI y Tableau para reportes analiticos de produccion."
 date: "2026-03-05"
 category: "herramientas"
 lang: "es"
@@ -19,7 +19,7 @@ El punto de partida es el dataset de Inside Airbnb para Ciudad de México, corre
 
 La arquitectura es deliberadamente minimalista: no hay API, no hay base de datos. El ETL produce 5 archivos JSON con un tamaño total menor a 500 KB, que se cargan en el build de Next.js mediante `fs.readFileSync`. El resultado es una aplicación estática que carga instantáneamente y no requiere ninguna infraestructura de servidor en producción.
 
-Los hallazgos que el dashboard hace visibles: Cuauhtémoc concentra el 46% de los listings (12,514), impulsado por Roma Norte, Condesa y Centro Histórico. Los alojamientos de tipo "entire home/apartment" representan el 71% de la oferta y tienen una distribución de precios que se concentra entre MXN 1,000 y MXN 1,500 por noche, el doble que las habitaciones privadas que se agrupan alrededor de MXN 500. El dato más revelador sobre la estructura del mercado: el 7% de los hosts controla el 40% de la oferta. Blueground (221 listings), Mr. W (164) y Clau (156) son los tres operadores más grandes. No son anfitriones particulares rentando su departamento -- son empresas de hospitalidad operando a escala industrial en una plataforma diseñada originalmente para particulares.
+Los hallazgos que el dashboard hace visibles: Cuauhtémoc concentra el 46% de los listings (12,514), impulsado por Roma Norte, Condesa y Centro Histórico. Los alojamientos de tipo "entire home/apartment" representan el 71% de la oferta y tienen una distribución de precios que se concentra entre MXN 1,000 y MXN 1,500 por noche, el doble que las habitaciones privadas que se agrupan alrededor de MXN 500. El dato más revelador sobre la estructura del mercado: el 7% de los hosts controla el 40% de la oferta. Blueground (221 listings), Mr. W (164) y Clau (156) son los tres operadores más grandes. No son anfitriones particulares rentando su departamento, son empresas de hospitalidad operando a escala industrial en una plataforma diseñada originalmente para particulares.
 
 Las alcaldías periféricas muestran el patrón inverso: Tlalpan (MXN 2,493 promedio) y Cuajimalpa (MXN 2,151) tienen precios superiores a la media del mercado pero volumen bajo. El pricing premium con oferta escasa, probablemente casas de mayor superficie para grupos, que no compite directamente con la densidad hotelera del centro.
 
@@ -69,9 +69,9 @@ Este mismo patrón es el que usa el [dashboard de reservas actuariales](https://
 
 ## Conexiones con otros proyectos
 
-El ETL de este proyecto y el de [SIMA](https://sima-451451662791.us-central1.run.app/) comparten un problema estructural: datos de entrada que requieren limpieza no trivial antes de poder calcular cualquier cosa. En SIMA, las tablas de mortalidad y las tasas técnicas tienen que validarse antes de alimentar el motor de reservas. Aquí, los precios de Airbnb llegan como strings malformados y los timestamps de Olist necesitan parsing cuidadoso para construir las cohortes correctamente. La metodología de limpieza -- validación de tipos, manejo explícito de nulos, logging de registros descartados -- es transferible entre dominios.
+El ETL de este proyecto y el de [SIMA](https://sima-451451662791.us-central1.run.app/) comparten un problema estructural: datos de entrada que requieren limpieza no trivial antes de poder calcular cualquier cosa. En SIMA, las tablas de mortalidad y las tasas técnicas tienen que validarse antes de alimentar el motor de reservas. Aquí, los precios de Airbnb llegan como strings malformados y los timestamps de Olist necesitan parsing cuidadoso para construir las cohortes correctamente. La metodología de limpieza (validación de tipos, manejo explícito de nulos, logging de registros descartados) es transferible entre dominios.
 
-La segmentación de hosts en el dashboard de Airbnb (enterprise vs casual) usa la misma lógica de clasificación por percentiles que aparece en el análisis de segmentos RFM del dashboard de Olist: definir umbrales sobre una distribución para asignar etiquetas de comportamiento. En seguros, esa misma operación es la tarificación por segmento -- el [GMM Explorer](https://gmm-explorer.vercel.app/contexto) hace exactamente eso para GMM. El patrón es recurrente en análisis de datos: definir grupos a partir de una distribución, medir diferencias entre grupos, tomar decisiones basadas en esa heterogeneidad.
+La segmentación de hosts en el dashboard de Airbnb (enterprise vs casual) usa la misma lógica de clasificación por percentiles que aparece en el análisis de segmentos RFM del dashboard de Olist: definir umbrales sobre una distribución para asignar etiquetas de comportamiento. En seguros, esa misma operación es la tarificación por segmento; el [GMM Explorer](https://gmm-explorer.vercel.app/contexto) hace exactamente eso para GMM. El patrón es recurrente en análisis de datos: definir grupos a partir de una distribución, medir diferencias entre grupos, tomar decisiones basadas en esa heterogeneidad.
 
 ## Material de referencia
 

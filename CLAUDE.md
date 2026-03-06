@@ -33,6 +33,10 @@ The title, description, and body content are fully localized -- only the filenam
 
 ## Writing Standards
 
+- **No double-dash em-dashes**: Never use `--` as punctuation in blog posts or descriptions. This is a known AI writing pattern and reads unnaturally. Instead, use proper punctuation: commas, semicolons, colons, or restructure the sentence. For example:
+  - Wrong: "Not formulas to memorize -- the mental toolkit an actuary uses"
+  - Right: "Not formulas to memorize, but the mental toolkit an actuary uses"
+  - Right: "Not formulas to memorize; they are the mental toolkit an actuary uses"
 - Bilingual: all major content should exist in both ES and EN
 - Professional but accessible -- imagine the reader is a hiring manager at an insurance company or consultancy who has 2 minutes
 - Technical depth is good but must serve a point, not just demonstrate you can do math

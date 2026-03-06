@@ -11,11 +11,11 @@ Tres demostraciones interactivas construidas con React y SVG que permiten manipu
 
 ## Por qué importan estos conceptos
 
-Estos tres resultados no son solo curiosidades del análisis matemático -- aparecen directamente en el trabajo actuarial y financiero:
+Estos tres resultados no son solo curiosidades del análisis matemático; aparecen directamente en el trabajo actuarial y financiero:
 
 - El **límite sin(x)/x** es la base de las aproximaciones lineales que usamos al calcular sensibilidades. Si no entiendes por qué sin(θ) ≈ θ para ángulos pequeños, estás usando fórmulas de aproximación sin saber cuándo dejan de funcionar.
 - La **derivada del seno** conecta con el análisis de funciones periódicas: estacionalidad en siniestros, ciclos de tasas de interés, patrones demográficos. La relación entre una función y su tasa de cambio es la esencia del cálculo aplicado.
-- La **fórmula de Euler** unifica las funciones trigonométricas con la exponencial compleja. Esto es exactamente lo que hace funcionar las funciones características en probabilidad -- herramienta clave para demostrar el Teorema Central del Límite y para analizar distribuciones de sumas de variables aleatorias.
+- La **fórmula de Euler** unifica las funciones trigonométricas con la exponencial compleja. Esto es exactamente lo que hace funcionar las funciones características en probabilidad, herramienta clave para demostrar el Teorema Central del Límite y para analizar distribuciones de sumas de variables aleatorias.
 
 ## Qué incluye
 
