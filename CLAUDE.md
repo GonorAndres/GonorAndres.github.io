@@ -108,6 +108,27 @@ When converting academic notes to blog posts:
 - `src/content/blog/{es,en}/soa-random-variables-insurance.md` -- added study materials, removed broken local PDF link
 - `src/content/blog/{es,en}/soa-multivariate-clt.md` -- added 5 study material links
 
+## Session Log -- 2026-03-05
+
+### What Was Done
+- **Scanned `data-analyst-path/projects/`**: Assessed 7 projects (00-06). Two completed (00-demo Airbnb CDMX, 01-insurance-claims), one in progress (02-ecommerce), four planned only.
+- **Added insurance-claims project to portfolio**: New entry in `src/data/projects.ts` with slug `insurance-claims`, category `actuarial`, variant `wide`. GitHub URL as primary link; TODO comment for deployed dashboard URL once live.
+- **Created blog posts**: ES + EN blog post pair at `src/content/blog/{es,en}/insurance-claims-dashboard.md` covering reserving methodology, findings, and dashboard features.
+- **Cross-references updated**: SIMA and GMM Explorer now link back to `insurance-claims` via `relatedTo`.
+- **Added analytics-dashboards project to portfolio**: Airbnb CDMX + Olist E-Commerce dual dashboard. New entry in `src/data/projects.ts` with slug `analytics-dashboards`, category `data-science`, variant `wide`. GitHub URL; TODO for deployed URL.
+- **Created blog posts for analytics dashboards**: ES + EN blog post pair at `src/content/blog/{es,en}/analytics-dashboards.md`. Editorial angle: why React (Next.js + Recharts) beats traditional BI tools for production-grade analytical reports.
+
+### Pending / In Progress
+- **Deploy insurance dashboard**: Next.js + FastAPI dashboard needs deployment (Vercel + Cloud Run or similar). Once live, update `url` in projects.ts and change `platform` from `'GitHub'` to `'Vercel'` or `'GCP'`.
+- **Airbnb CDMX + Olist project (00-demo)**: Added to portfolio as `analytics-dashboards`. Deploy pending -- once live, update `url` in projects.ts and change `platform` to `'Vercel'`.
+- **E-commerce cohort analysis (02)**: In progress (notebook 01 started, Streamlit scaffold exists). Not portfolio-ready yet.
+- **Projects 03-06**: Planned only, no code. 03 (A/B test) overlaps existing portfolio project. 05 (financial tracker) overlaps Markowitz.
+
+### data-analyst-path Repository
+- Repo: `https://github.com/GonorAndres/data-analyst-path`
+- All projects under `projects/` directory
+- Shared architecture: Next.js 14 + FastAPI backend with proxy pattern, Recharts, dark/light mode
+
 ## Future Scope
 
 ### High Priority
@@ -119,7 +140,7 @@ When converting academic notes to blog posts:
 ### Medium Priority
 5. **Redo Markowitz portfolio in Python** -- Currently Excel-only, should show scipy.optimize efficient frontier + compare VaR methods
 6. **SIMA web platform** -- Phase 2 engine complete, needs frontend (see docs/future-plans.md item 5)
-7. **Reserving project with CNSF data** -- Chain-ladder and Bornhuetter-Ferguson on public siniestralidad data. Single most impressive project for Mexican actuarial employers
+7. ~~**Reserving project with CNSF data**~~ -- DONE: `insurance-claims` project added (NAIC Schedule P data, CL + BF, interactive dashboard). Deploy pending.
 8. **TIIE/CETES interactive dashboard** -- Banxico API, planned in docs/future-plans.md item 1
 
 ### Low Priority

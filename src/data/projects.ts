@@ -7,7 +7,7 @@ export interface Project {
   title: Record<Lang, string>;
   description: Record<Lang, string>;
   url: string;
-  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab';
+  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP';
   category: ProjectCategory;
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
@@ -15,6 +15,26 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    slug: 'sima',
+    title: {
+      es: 'SIMA - Sistema Integral de Modelación Actuarial',
+      en: 'SIMA - Integrated Actuarial Modeling System',
+    },
+    description: {
+      es: 'Plataforma de modelación actuarial de punta a punta para seguros de vida: proyección de mortalidad Lee-Carter con datos demográficos, tablas de conmutación, valuación de reservas para tres productos (temporal, vitalicio, dotal) y cálculo de requerimientos de capital por solvencia (RCS) con pruebas de estrés bajo regulación mexicana (LISF, CUSF). Motor de cálculo en Python con API REST desplegada en Google Cloud.',
+      en: 'End-to-end actuarial modeling platform for life insurance: Lee-Carter mortality projection from demographic data, commutation tables, reserve valuation for three products (term, whole life, endowment), and solvency capital requirement (SCR) calculations with stress testing under Mexican regulation (LISF, CUSF). Python calculation engine with REST API deployed on Google Cloud.',
+    },
+    url: 'https://sima-451451662791.us-central1.run.app/',
+    platform: 'GCP',
+    category: 'actuarial',
+    tags: {
+      es: ['Python', 'FastAPI', 'Lee-Carter', 'LISF', 'Reservas', 'GCP'],
+      en: ['Python', 'FastAPI', 'Lee-Carter', 'LISF', 'Reserves', 'GCP'],
+    },
+    variant: 'wide',
+    relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan', 'insurance-claims'],
+  },
   {
     slug: 'gmm-explorer',
     title: {
@@ -33,7 +53,49 @@ export const projects: Project[] = [
       en: ['Next.js', 'Actuarial', 'GMM', 'Pricing', 'CNSF'],
     },
     variant: 'wide',
-    relatedTo: ['life-insurance', 'property-insurance'],
+    relatedTo: ['sima', 'life-insurance', 'property-insurance', 'insurance-claims'],
+  },
+  {
+    slug: 'analytics-dashboards',
+    title: {
+      es: 'Dashboards Interactivos: Airbnb CDMX y Olist E-Commerce',
+      en: 'Interactive Dashboards: Airbnb CDMX & Olist E-Commerce',
+    },
+    description: {
+      es: 'Dos dashboards de analisis exploratorio construidos con React (Next.js), Recharts y Python: mercado de rentas cortas en CDMX (27K+ listings, segmentacion de anfitriones, scatter geografico) y cohortes de e-commerce en Brasil (retencion, LTV, RFM, revenue timeline). Pipeline ETL en Python, backend FastAPI, dark/light mode.',
+      en: 'Two exploratory analysis dashboards built with React (Next.js), Recharts, and Python: Mexico City short-term rental market (27K+ listings, host segmentation, geo scatter) and Brazilian e-commerce cohorts (retention, LTV, RFM, revenue timeline). Python ETL pipeline, FastAPI backend, dark/light mode.',
+    },
+    // TODO: Replace with deployed dashboard URL once live
+    url: 'https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics',
+    platform: 'GitHub',
+    category: 'data-science',
+    tags: {
+      es: ['Next.js', 'Recharts', 'Python', 'FastAPI', 'ETL'],
+      en: ['Next.js', 'Recharts', 'Python', 'FastAPI', 'ETL'],
+    },
+    variant: 'wide',
+    relatedTo: ['insurance-claims', 'data-cleaning', 'michoacan'],
+  },
+  {
+    slug: 'insurance-claims',
+    title: {
+      es: 'Dashboard de Reservas y Siniestralidad P&C',
+      en: 'P&C Insurance Claims & Reserving Dashboard',
+    },
+    description: {
+      es: 'Reservas actuariales con Chain-Ladder y Bornhuetter-Ferguson sobre datos regulatorios NAIC Schedule P. Dashboard interactivo con triangulos de perdida, estimaciones IBNR y ratios combinados para 6 ramos. Pipeline de datos en Python, 5 notebooks analiticos, 5 queries SQL y ~50K siniestros sinteticos con distribuciones actuarialmente realistas.',
+      en: 'Actuarial reserves using Chain-Ladder and Bornhuetter-Ferguson on NAIC Schedule P regulatory data. Interactive dashboard with loss triangles, IBNR estimates, and combined ratios across 6 lines of business. Python data pipeline, 5 analytical notebooks, 5 SQL queries, and ~50K synthetic claims with actuarially-realistic distributions.',
+    },
+    // TODO: Replace with deployed dashboard URL once live
+    url: 'https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard',
+    platform: 'GitHub',
+    category: 'actuarial',
+    tags: {
+      es: ['Python', 'SQL', 'Chain-Ladder', 'BF', 'IBNR', 'Next.js', 'FastAPI'],
+      en: ['Python', 'SQL', 'Chain-Ladder', 'BF', 'IBNR', 'Next.js', 'FastAPI'],
+    },
+    variant: 'wide',
+    relatedTo: ['sima', 'life-insurance', 'property-insurance', 'gmm-explorer'],
   },
   {
     slug: 'credit-risk',
@@ -93,7 +155,7 @@ export const projects: Project[] = [
       en: ['Actuarial', 'Insurance', 'Regulation'],
     },
     variant: 'standard',
-    relatedTo: ['property-insurance', 'michoacan', 'gmm-explorer'],
+    relatedTo: ['sima', 'property-insurance', 'michoacan', 'gmm-explorer'],
   },
   {
     slug: 'property-insurance',
@@ -113,7 +175,7 @@ export const projects: Project[] = [
       en: ['Actuarial', 'Auto', 'CNSF'],
     },
     variant: 'standard',
-    relatedTo: ['life-insurance', 'gmm-explorer'],
+    relatedTo: ['sima', 'life-insurance', 'gmm-explorer'],
   },
   {
     slug: 'derivatives',
@@ -173,7 +235,7 @@ export const projects: Project[] = [
       en: ['Excel', 'INEGI', 'Demographics'],
     },
     variant: 'standard',
-    relatedTo: ['life-insurance'],
+    relatedTo: ['sima', 'life-insurance'],
   },
   {
     slug: 'data-cleaning',
