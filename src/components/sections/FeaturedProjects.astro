@@ -18,19 +18,29 @@ const projects = getProjects(lang);
 <section id="proyectos" class="relative py-20 px-6">
   <OrganicBlob variant={2} color="#C17654" class="w-[400px] h-[400px] -top-20 right-0 opacity-30" />
 
-  <div class="max-w-6xl mx-auto relative z-10">
-    <div class="mb-12 md:ml-12">
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="mb-14 md:ml-6">
       <h2 class="text-3xl md:text-4xl font-bold text-navy fade-up">
         {t(lang, 'section.featured')}
       </h2>
       <Squiggle class="w-32 h-4 mt-2" color="#C17654" />
     </div>
 
-    <!-- Asymmetric grid: NOT uniform 3-column -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-auto">
-      {projects.map((project) => (
-        <ProjectCard {...project} lang={lang} />
-      ))}
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 auto-rows-auto">
+      {projects.map((project) => {
+        const spanClass =
+          project.variant === 'wide'
+            ? 'md:col-span-8'
+            : project.variant === 'tall'
+              ? 'md:col-span-4 md:row-span-2'
+              : 'md:col-span-4';
+
+        return (
+          <div class:list={[spanClass]}>
+            <ProjectCard {...project} lang={lang} />
+          </div>
+        );
+      })}
     </div>
   </div>
 </section>

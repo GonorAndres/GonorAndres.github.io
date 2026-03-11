@@ -11,6 +11,7 @@ export interface Project {
   category: ProjectCategory;
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
+  screenshot?: string;
   relatedTo?: string[];
 }
 
@@ -329,6 +330,7 @@ export function getProjects(lang: Lang) {
     category: p.category,
     tags: p.tags[lang],
     variant: p.variant,
+    screenshot: p.screenshot,
     relatedTo: p.relatedTo,
   }));
 }
