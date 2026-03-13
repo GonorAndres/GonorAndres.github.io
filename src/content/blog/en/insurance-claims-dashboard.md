@@ -7,6 +7,8 @@ lang: "en"
 tags: ["reserves", "chain-ladder", "BF", "IBNR", "P&C", "dashboard", "Python", "SQL"]
 ---
 
+> **Note:** This post is a legacy version focused on a single project. For the complete and updated data analyst portfolio, see [Data Analyst Portfolio: 7 End-to-End Projects](/en/blog/data-analyst-portfolio).
+
 Every quarter, an insurance CFO faces the same uncomfortable question: are our reserves enough? Not "probably enough," but actually enough, with a defensible methodology that will hold up under regulatory scrutiny and survive an adverse development year. Getting that answer wrong in either direction is costly. Under-reserving invites insolvency and regulatory sanction. Over-reserving freezes capital that could be deployed elsewhere and misrepresents the company's financial position to investors.
 
 This project builds the full pipeline from raw regulatory data to an interactive dashboard designed to answer that question clearly and honestly across six lines of business.

@@ -7,6 +7,8 @@ lang: "en"
 tags: ["React", "Next.js", "Recharts", "dashboards", "data-analytics", "Airbnb", "Olist"]
 ---
 
+> **Note:** This post is a legacy version focused on a single project. For the complete and updated data analyst portfolio, see [Data Analyst Portfolio: 7 End-to-End Projects](/en/blog/data-analyst-portfolio).
+
 Power BI is excellent at what it does. Drag a field onto a canvas, choose a chart type, connect to a live data source, publish to a workspace, and someone non-technical can have a working report in an afternoon. That is a genuine advantage, and I am not going to pretend otherwise.
 
 But at some point the report needs to ship as a finished product, not a workspace artifact. It needs to look like it was designed, not generated. It needs to work on mobile, load in under a second, handle interactions that go beyond slicers, and be maintained by developers who want to use git, not upload `.pbix` files to SharePoint. At that point, the drag-and-drop tools start fighting you.

@@ -69,7 +69,8 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
       <div className="h-1 w-full shrink-0" style={{ backgroundColor: accent }} />
 
       {/* Visual area */}
-      <a href={project.url} target="_blank" rel="noopener noreferrer"
+      <a href={project.url}
+        {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
         className="block relative overflow-hidden h-44">
         {project.screenshot ? (
           <div className="w-full h-full flex items-center justify-center bg-[#F8F5F1] p-3">
@@ -115,7 +116,8 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
             )}
           </div>
         )}
-        <a href={project.url} target="_blank" rel="noopener noreferrer"
+        <a href={project.url}
+          {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
           className="inline-flex items-center gap-1.5 text-sm font-medium mt-auto transition-colors duration-200"
           style={{ color: accent }}>
           {labels.viewProject}
@@ -133,7 +135,8 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
   const accent = categoryAccent[project.category];
 
   return (
-    <a href={project.url} target="_blank" rel="noopener noreferrer"
+    <a href={project.url}
+      {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
       className="group flex items-center gap-4 md:gap-6 bg-white rounded-xl border border-[#1B2A4A]/8 p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
       style={{ borderLeftColor: accent, borderLeftWidth: '3px' }}>
 
