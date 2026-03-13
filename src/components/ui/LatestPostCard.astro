@@ -47,7 +47,7 @@ function formatDate(date: string) {
       {recentPosts.map((post) => (
         <a
           href={getPostUrl(post.slug)}
-          class="flex flex-col gap-1 rounded-lg border-l-2 border-l-terracotta border border-navy/8 bg-white shadow-sm px-4 py-3 hover:shadow-md hover:border-l-amber transition-all group"
+          class="flex flex-col gap-0.5 rounded-lg border-l-2 border-l-terracotta border border-navy/8 bg-white shadow-sm px-3 py-2 hover:shadow-md hover:border-l-amber transition-all group"
         >
           <div class="flex items-center gap-2">
             <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-sage/15 text-sage font-medium">
@@ -55,7 +55,7 @@ function formatDate(date: string) {
             </span>
             <time class="text-xs text-navy/50 ml-auto">{formatDate(post.data.date)}</time>
           </div>
-          <span class="font-serif text-sm font-bold text-navy leading-snug line-clamp-2 group-hover:text-terracotta transition-colors">
+          <span class="font-serif text-xs font-bold text-navy leading-snug group-hover:text-terracotta transition-colors">
             {post.data.title}
           </span>
         </a>

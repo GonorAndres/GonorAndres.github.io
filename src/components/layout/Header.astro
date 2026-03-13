@@ -9,6 +9,13 @@ interface Props {
 
 const { lang } = Astro.props;
 const tp = useTranslatedPath(lang);
+
+const pathname = Astro.url.pathname;
+const isHome = pathname === '/' || pathname === '/en' || pathname === '/en/';
+const isBlog = pathname.startsWith('/blog') || pathname.startsWith('/en/blog');
+
+const activeClass = 'text-sm font-medium text-terracotta border-b-2 border-terracotta pb-0.5 transition-colors';
+const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta transition-colors';
 ---
 
 <header class="sticky top-0 z-50 bg-[#E8E0D7]/95 backdrop-blur-sm border-b border-amber/20">
@@ -18,16 +25,16 @@ const tp = useTranslatedPath(lang);
     </a>
 
     <div class="hidden md:flex items-center gap-8">
-      <a href={tp('/')} class="text-sm font-medium text-navy/70 hover:text-terracotta transition-colors">
+      <a href={tp('/')} class={isHome ? activeClass : inactiveClass}>
         {t(lang, 'nav.home')}
       </a>
-      <a href={tp('/#proyectos')} class="text-sm font-medium text-navy/70 hover:text-terracotta transition-colors">
+      <a href={tp('/#proyectos')} class={inactiveClass}>
         {t(lang, 'nav.projects')}
       </a>
-      <a href={tp('/blog/')} class="text-sm font-medium text-navy/70 hover:text-terracotta transition-colors">
+      <a href={tp('/blog/')} class={isBlog ? activeClass : inactiveClass}>
         {t(lang, 'nav.blog')}
       </a>
-      <a href={tp('/#contacto')} class="text-sm font-medium text-navy/70 hover:text-terracotta transition-colors">
+      <a href={tp('/#contacto')} class={inactiveClass}>
         {t(lang, 'nav.contact')}
       </a>
       <LanguageSwitcher lang={lang} />
@@ -48,13 +55,13 @@ const tp = useTranslatedPath(lang);
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-3">
-    <a href={tp('/')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">
+    <a href={tp('/')} class={`block ${isHome ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`}>
       {t(lang, 'nav.home')}
     </a>
     <a href={tp('/#proyectos')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">
       {t(lang, 'nav.projects')}
     </a>
-    <a href={tp('/blog/')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">
+    <a href={tp('/blog/')} class={`block ${isBlog ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`}>
       {t(lang, 'nav.blog')}
     </a>
     <a href={tp('/#contacto')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">

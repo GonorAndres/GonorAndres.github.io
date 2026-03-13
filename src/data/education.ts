@@ -4,6 +4,7 @@ export interface Education {
   degree: Record<Lang, string>;
   school: Record<Lang, string>;
   details: Record<Lang, string>;
+  note?: Record<Lang, string>;
 }
 
 export interface Certificate {
@@ -11,6 +12,7 @@ export interface Certificate {
   issuer: string;
   date: Record<Lang, string>;
   url: string;
+  note?: Record<Lang, string>;
 }
 
 export const education: Education[] = [
@@ -24,13 +26,24 @@ export const education: Education[] = [
       en: 'National Autonomous University of Mexico (UNAM)',
     },
     details: {
-      es: 'Facultad de Ciencias',
-      en: 'Faculty of Sciences',
+      es: 'Facultad de Ciencias · 2021 – 2025',
+      en: 'Faculty of Sciences · 2021 – 2025',
+    },
+    note: {
+      es: '100% créditos completados, en proceso de titulación',
+      en: '100% credits completed, degree in progress',
     },
   },
 ];
 
 export const certificates: Certificate[] = [
+  {
+    name: 'SOA Exam P',
+    issuer: 'Society of Actuaries',
+    date: { es: 'Mar 2026', en: 'Mar 2026' },
+    url: 'https://drive.google.com/file/d/1rt3emgBnPpQi7NiXkBQeA5WwJTV0JuAf/view?usp=drive_link',
+    note: { es: 'Resultado preliminar aprobado', en: 'Preliminary approved result' },
+  },
   {
     name: 'Associate Data Analyst (SQL)',
     issuer: 'DataCamp',
@@ -56,6 +69,7 @@ export function getEducation(lang: Lang) {
     degree: e.degree[lang],
     school: e.school[lang],
     details: e.details[lang],
+    note: e.note ? e.note[lang] : undefined,
   }));
 }
 
@@ -65,5 +79,6 @@ export function getCertificates(lang: Lang) {
     issuer: c.issuer,
     date: c.date[lang],
     url: c.url,
+    note: c.note ? c.note[lang] : undefined,
   }));
 }
