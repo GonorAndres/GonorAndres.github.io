@@ -6,6 +6,7 @@ interface ProjectData {
   title: string;
   description: string;
   url: string;
+  repo?: string;
   platform: string;
   category: ProjectCategory;
   tags: string[];
@@ -19,6 +20,8 @@ interface Props {
   projects: ProjectData[];
   labels: {
     viewProject: string;
+    viewRepo: string;
+    viewLive: string;
     seeAlso: string;
     showAll: string;
     showLess: string;
@@ -64,7 +67,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
   const accent = categoryAccent[project.category];
 
   return (
-    <article className="group flex flex-col h-full bg-white rounded-xl border border-[#1B2A4A]/8 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+    <article className="group flex flex-col h-full bg-[#F5F0EA] rounded-xl border border-[#1B2A4A]/10 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
       {/* Category accent bar */}
       <div className="h-1 w-full shrink-0" style={{ backgroundColor: accent }} />
 
@@ -116,15 +119,27 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
             )}
           </div>
         )}
-        <a href={project.url}
-          {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
-          className="inline-flex items-center gap-1.5 text-sm font-medium mt-auto transition-colors duration-200"
-          style={{ color: accent }}>
-          {labels.viewProject}
-          <svg className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </a>
+        <div className="flex items-center gap-4 mt-auto flex-wrap">
+          {project.repo && (
+            <a href={project.repo}
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1B2A4A]/45 hover:text-[#1B2A4A]/75 transition-colors duration-200">
+              <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+              </svg>
+              {labels.viewRepo}
+            </a>
+          )}
+          <a href={project.url}
+            {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
+            className="inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-200"
+            style={{ color: accent }}>
+            {project.repo ? labels.viewLive : labels.viewProject}
+            <svg className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
       </div>
     </article>
   );
@@ -137,7 +152,7 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
   return (
     <a href={project.url}
       {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
-      className="group flex items-center gap-4 md:gap-6 bg-white rounded-xl border border-[#1B2A4A]/8 p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+      className="group flex items-center gap-4 md:gap-6 bg-[#F5F0EA] rounded-xl border border-[#1B2A4A]/10 p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
       style={{ borderLeftColor: accent, borderLeftWidth: '3px' }}>
 
       {/* Icon */}
@@ -171,10 +186,23 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
         ))}
       </div>
 
-      {/* Arrow */}
-      <svg className="w-4 h-4 shrink-0 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: accent }}>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
+      {/* Repo icon + arrow */}
+      <div className="flex items-center gap-3 shrink-0">
+        {project.repo && (
+          <a href={project.repo}
+            target="_blank" rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="text-[#1B2A4A]/30 hover:text-[#1B2A4A]/65 transition-colors"
+            aria-label={labels.viewRepo}>
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+            </svg>
+          </a>
+        )}
+        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: accent }}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
     </a>
   );
 }

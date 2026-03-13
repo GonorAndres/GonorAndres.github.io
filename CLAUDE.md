@@ -135,6 +135,13 @@ When converting academic notes to blog posts:
 
 ## Future Scope
 
+### Cards Added, Blog Posts Pending (2026-03-13)
+These projects already have cards in the portfolio. Next step is a blog post for each:
+- `lisf-agent` (slug: `lisf-agent`) -- Claude SDK + LISF regulatory chatbot. Also needs a public GCP URL added to projects.ts (currently `#`).
+- `b-tree-explorer` (slug: `b-tree-explorer`) -- Rust + WASM B-tree visualization. GitHub: https://github.com/GonorAndres/b-trees
+- `flight-analytics` (slug: `flight-analytics`) -- PostgreSQL airline delay analysis. GitHub: https://github.com/GonorAndres/learning-posgre
+- `eruption-forecasting` (slug: `eruption-forecasting`) -- Time series volcanic forecasting. GitHub: https://github.com/GonorAndres/forecasting
+
 ### High Priority
 1. **Convert actuarial technical notes to blog posts** -- Life insurance, property insurance, collective insurance notes from PortafolioPDF/Escolares/Matematicas_Actuariales. Rewrite from homework tone to professional with sensitivity analysis and regulatory context (see docs/portfolio-review-recommendations.md)
 2. **Michoacan demographic analysis blog post** -- Connect the mortality tables to life insurance pricing. This turns two school assignments into one meaningful actuarial analysis
@@ -193,11 +200,12 @@ The post will automatically show up in:
 
 ## Claude Code Agents (`.claude/agents/`)
 
-Four persistent agents are defined for periodic maintenance. Claude auto-delegates based on task context, or you can invoke them by name.
+Five persistent agents are defined for periodic maintenance. Claude auto-delegates based on task context, or you can invoke them by name.
 
 - **data-architect** -- Maintains `src/data/` (projects, notes, skills, education, categories). Use when adding/editing/removing data entries or updating TypeScript interfaces.
 - **project-organizer** -- Manages how projects appear to visitors: categories, grid layout, narrative order, visual prominence, cross-project connections. Use when rethinking project display or adding new categories.
 - **blog-organizer** -- Maintains the blog section: adding posts, managing categories, fixing structure, ensuring ES/EN parity. Use when creating blog posts or fixing blog issues.
+- **blog-writer** -- Writes new blog posts from scratch (project slug, topic, or source material). Drafts both ES and EN versions with natural, honest voice. Use when you want to go from "I have this project/topic" to two ready-to-publish markdown files.
 - **code-quality** -- Handles SEO, accessibility, performance, bug fixes, TypeScript safety, and dead code removal. Use for technical health checks, meta tag updates, or fixing broken behavior.
 
 All agents save work reports to `subagents_outputs/`.

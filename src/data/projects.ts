@@ -6,7 +6,8 @@ export interface Project {
   slug: string;
   title: Record<Lang, string>;
   description: Record<Lang, string>;
-  url: string;
+  url: string;           // primary link: live app, Drive folder, Colab, or GitHub if no live version
+  repo?: string;         // GitHub repo URL — only set when url points to a live deployment
   platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP';
   category: ProjectCategory;
   tags: Record<Lang, string[]>;
@@ -16,6 +17,10 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  // repo: https://github.com/GonorAndres/SIMA
+  // live: https://sima-451451662791.us-central1.run.app/
+  // local: /home/andtega349/SIMA
+  // source: original work, demographic data from CONAPO/INEGI for mortality projection
   {
     slug: 'sima',
     title: {
@@ -27,6 +32,7 @@ export const projects: Project[] = [
       en: 'End-to-end actuarial modeling platform for life insurance: Lee-Carter mortality projection from demographic data, commutation tables, reserve valuation for three products (term, whole life, endowment), and solvency capital requirement (SCR) calculations with stress testing under Mexican regulation (LISF, CUSF). Python calculation engine with REST API deployed on Google Cloud.',
     },
     url: 'https://sima-451451662791.us-central1.run.app/',
+    repo: 'https://github.com/GonorAndres/SIMA',
     platform: 'GCP',
     category: 'actuarial',
     tags: {
@@ -37,6 +43,11 @@ export const projects: Project[] = [
     screenshot: '/screenshots/sima.png',
     relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan', 'data-analyst-portfolio'],
   },
+
+  // repo: https://github.com/GonorAndres/gmm-explorer
+  // live: https://gmm-explorer.vercel.app/contexto
+  // local: /home/andtega349/gmm-explorer
+  // source: CNSF open data — 5.1M GMM claims, 95.9M insured-years (2020-2024)
   {
     slug: 'gmm-explorer',
     title: {
@@ -48,6 +59,7 @@ export const projects: Project[] = [
       en: 'Interactive system for classifying and pricing Major Medical Expenses insurance claims. Analysis of 5.1M claims and 95.9M insured-years (2020-2024). UNAM academic project.',
     },
     url: 'https://gmm-explorer.vercel.app/contexto',
+    repo: 'https://github.com/GonorAndres/gmm-explorer',
     platform: 'Vercel',
     category: 'actuarial',
     tags: {
@@ -58,6 +70,11 @@ export const projects: Project[] = [
     screenshot: '/screenshots/gmm-explorer.png',
     relatedTo: ['sima', 'life-insurance', 'property-insurance', 'data-analyst-portfolio'],
   },
+
+  // repo: https://github.com/GonorAndres/data-analyst-path
+  // live: url points to internal blog post (no deployed app yet — TODO update when dashboards are live)
+  // local: /home/andtega349/data-analyst-path
+  // source: NAIC Schedule P (insurance reserves), Olist e-commerce (Kaggle), Airbnb CDMX (Inside Airbnb)
   {
     slug: 'data-analyst-portfolio',
     title: {
@@ -69,6 +86,7 @@ export const projects: Project[] = [
       en: '7 end-to-end data analysis projects: e-commerce cohorts, actuarial reserves, A/B testing, executive KPIs, financial portfolio, and operational efficiency. SQL, Python, Streamlit, Next.js, and Power BI.',
     },
     url: '/blog/data-analyst-portfolio',
+    repo: 'https://github.com/GonorAndres/data-analyst-path',
     platform: 'GCP',
     category: 'data-science',
     tags: {
@@ -79,6 +97,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/data-analyst-portafolio.png',
     relatedTo: ['sima', 'gmm-explorer', 'ab-testing', 'credit-risk'],
   },
+
+  // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Credit_Risk_Model)
+  // source: Kaggle credit default dataset (~32,000 records)
   {
     slug: 'credit-risk',
     title: {
@@ -100,6 +121,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/credit-risk.png',
     relatedTo: ['ab-testing', 'data-cleaning'],
   },
+
+  // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Bayesian_vs_Frequentist)
+  // source: synthetic conversion rate experiment data
   {
     slug: 'ab-testing',
     title: {
@@ -121,6 +145,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/ab-testing.png',
     relatedTo: ['credit-risk'],
   },
+
+  // repo: no public GitHub repo — Drive folder IS the deliverable
+  // source: original technical note (UNAM coursework), aligned to LISF/CUSF regulation
   {
     slug: 'life-insurance',
     title: {
@@ -142,6 +169,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/vida-tecnica.png',
     relatedTo: ['sima', 'property-insurance', 'michoacan', 'gmm-explorer'],
   },
+
+  // repo: no public GitHub repo — Drive folder IS the deliverable
+  // source: original technical note (UNAM coursework), CNSF auto insurance data
   {
     slug: 'property-insurance',
     title: {
@@ -163,6 +193,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/danos-tecnica.png',
     relatedTo: ['sima', 'life-insurance', 'gmm-explorer'],
   },
+
+  // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: EvaluaciónDerivadosDivisas)
+  // source: real FX market data (MXN/USD forward curve)
   {
     slug: 'derivatives',
     title: {
@@ -184,6 +217,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/derivatives.png',
     relatedTo: ['markowitz'],
   },
+
+  // repo: no public GitHub repo — Drive folder IS the deliverable
+  // source: Mexican stock market price data (10 assets, historical prices)
   {
     slug: 'markowitz',
     title: {
@@ -205,6 +241,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/markowitz.png',
     relatedTo: ['derivatives'],
   },
+
+  // repo: no public GitHub repo — Drive folder IS the deliverable
+  // source: INEGI Census 2020, Michoacán state demographic data
   {
     slug: 'michoacan',
     title: {
@@ -226,6 +265,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/demografia-michoacan.png',
     relatedTo: ['sima', 'life-insurance'],
   },
+
+  // repo: no public GitHub repo — Drive folder IS the deliverable
+  // source: Mexico City Government open data — public debt registry with TIIE rate series
   {
     slug: 'data-cleaning',
     title: {
@@ -247,6 +289,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/deuda-cdmx.png',
     relatedTo: ['credit-risk'],
   },
+
+  // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: TexasPokerCaseStudy)
+  // source: original simulation, no external dataset
   {
     slug: 'monte-carlo-poker',
     title: {
@@ -268,6 +313,9 @@ export const projects: Project[] = [
     screenshot: '/screenshots/monte-carlo-poker.png',
     relatedTo: ['ab-testing'],
   },
+
+  // repo: no public GitHub repo — Drive folder IS the deliverable
+  // source: original Excel model (UNAM coursework)
   {
     slug: 'amortization',
     title: {
@@ -289,6 +337,203 @@ export const projects: Project[] = [
     screenshot: '/screenshots/amortizacion.png',
     relatedTo: ['derivatives'],
   },
+
+  // repo: https://github.com/GonorAndres/Analisis_Seguros_Mexico
+  // local: /home/andtega349/seguridad_social (different path — note the repo is Analisis_Seguros_Mexico)
+  // source: EMSSA-09 Mexican mortality tables, original actuarial calculations, no external dataset required
+  {
+    slug: 'actuarial-suite',
+    title: {
+      es: 'Suite Actuarial Mexicana - Python',
+      en: 'Mexican Actuarial Suite - Python',
+    },
+    description: {
+      es: 'Librería actuarial en Python con 6 fases completas: tablas de mortalidad EMSSA-09, primas de seguros de vida (temporal, vitalicio, dotal), reservas técnicas, reaseguro (Chain Ladder, Bornhuetter-Ferguson, Bootstrap), cálculo de RCS bajo LISF y reportes trimestrales CNSF automatizados. Cobertura de tests superior al 90%.',
+      en: 'Python actuarial library with 6 complete phases: EMSSA-09 mortality tables, life insurance premiums (term, whole, endowment), technical reserves, reinsurance (Chain Ladder, Bornhuetter-Ferguson, Bootstrap), RCS capital requirements under LISF, and automated CNSF quarterly reports. Over 90% test coverage.',
+    },
+    url: 'https://github.com/GonorAndres/Analisis_Seguros_Mexico',
+    platform: 'GitHub',
+    category: 'actuarial',
+    tags: {
+      es: ['Python', 'LISF', 'Reservas', 'RCS', 'CNSF', 'Reaseguro'],
+      en: ['Python', 'LISF', 'Reserves', 'RCS', 'CNSF', 'Reinsurance'],
+    },
+    variant: 'wide',
+    relatedTo: ['sima', 'life-insurance', 'property-insurance'],
+  },
+
+  // repo: https://github.com/GonorAndres/CarteraSeguroAutos
+  // local: /home/andtega349/seguridad_social (not present locally — GitHub only)
+  // source: synthetic data generated with R, calibrated to AMIS and CONDUSEF market parameters
+  {
+    slug: 'cartera-autos',
+    title: {
+      es: 'Cartera de Seguro de Autos - Siniestralidad',
+      en: 'Auto Insurance Portfolio - Claims Analytics',
+    },
+    description: {
+      es: 'Datos sintéticos de 52,000 pólizas y 2,332 siniestros de seguro de autos calibrados con parámetros reales del mercado mexicano (AMIS y CONDUSEF). Incluye análisis de tendencias temporales, segmentación geográfica de riesgo y dashboard Shiny interactivo para explorar la siniestralidad por zona y tipo de vehículo.',
+      en: 'Synthetic dataset of 52,000 auto insurance policies and 2,332 claims calibrated to real Mexican market parameters (AMIS and CONDUSEF). Includes temporal trend analysis, geographic risk segmentation, and an interactive Shiny dashboard to explore loss ratios by region and vehicle type.',
+    },
+    url: 'https://github.com/GonorAndres/CarteraSeguroAutos',
+    platform: 'GitHub',
+    category: 'actuarial',
+    tags: {
+      es: ['R', 'Shiny', 'Siniestralidad', 'AMIS', 'Autos'],
+      en: ['R', 'Shiny', 'Claims', 'AMIS', 'Auto'],
+    },
+    variant: 'standard',
+    relatedTo: ['property-insurance', 'data-analyst-portfolio'],
+  },
+
+  // repo: https://github.com/GonorAndres/proust-attention
+  // local: /home/andtega349/proust-attention
+  // source: Project Gutenberg — full text of "À la recherche du temps perdu" (7 volumes)
+  {
+    slug: 'proust-attention',
+    title: {
+      es: 'La Máquina de Atención de Proust',
+      en: 'The Proust Attention Machine',
+    },
+    description: {
+      es: 'Transformer character-level entrenado con los 7 volúmenes de En busca del tiempo perdido, construido desde cero en PyTorch. El proyecto no es sobre literatura, es sobre entender qué pasa realmente dentro de un modelo de lenguaje: embeddings, atención multi-cabeza y por qué todo es multiplicación de matrices.',
+      en: 'Character-level transformer trained on all 7 volumes of In Search of Lost Time, built from scratch in PyTorch. The project is not about literature but about understanding what actually happens inside a language model: embeddings, multi-head attention, and why everything is matrix multiplication.',
+    },
+    url: 'https://github.com/GonorAndres/proust-attention',
+    platform: 'GitHub',
+    category: 'applied-math',
+    tags: {
+      es: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
+      en: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
+    },
+    variant: 'standard',
+    relatedTo: ['lisf-agent'],
+  },
+
+  // repo: https://github.com/GonorAndres/seguridad-social
+  // local: /home/andtega349/seguridad_social/fondo_bienestar
+  // source: original calculations based on LSS (Ley del Seguro Social), UMA historical values, AFORE commission data
+  {
+    slug: 'pension-simulator',
+    title: {
+      es: 'Simulador de Pensión IMSS + Fondo Bienestar',
+      en: 'IMSS Pension Simulator + Fondo Bienestar',
+    },
+    description: {
+      es: 'Aplicación R Shiny que estima la pensión de retiro bajo Ley 73, Ley 97 y el Fondo de Pensiones para el Bienestar (2024). Incluye proyección de saldo AFORE, elegibilidad al complemento del Fondo Bienestar y análisis de sensibilidad bajo escenarios conservador, base y optimista.',
+      en: 'R Shiny app that estimates Mexican retirement pension under Ley 73, Ley 97, and the Fondo de Pensiones para el Bienestar (2024). Includes AFORE balance projection, Fondo Bienestar eligibility check, and sensitivity analysis under conservative, base, and optimistic scenarios.',
+    },
+    url: 'https://github.com/GonorAndres/seguridad-social',
+    platform: 'GitHub',
+    category: 'actuarial',
+    tags: {
+      es: ['R', 'Shiny', 'IMSS', 'AFORE', 'Pensiones'],
+      en: ['R', 'Shiny', 'IMSS', 'AFORE', 'Pensions'],
+    },
+    variant: 'standard',
+    relatedTo: ['sima', 'life-insurance'],
+  },
+
+  // repo: no GitHub repo — code lives only on the GCP VM
+  // local: /home/andtega349/lisf-agent
+  // live: TODO — currently accessible only via SSH tunnel to GCP VM (port 8000), not publicly exposed yet
+  // source: LISF PDF from https://www.diputados.gob.mx/LeyesBiblio/pdf/LISF.pdf
+  {
+    slug: 'lisf-agent',
+    title: {
+      es: 'Agente LISF - Consultor Regulatorio',
+      en: 'LISF Agent - Regulatory Consultant',
+    },
+    description: {
+      es: 'Chatbot regulatorio construido con el Claude Agent SDK que responde preguntas sobre la Ley de Instituciones de Seguros y Fianzas (LISF). Indexa el texto completo de la ley y genera respuestas contextualizadas con referencias al artículo correspondiente. Backend FastAPI desplegado en GCP.',
+      en: 'Regulatory chatbot built with the Claude Agent SDK that answers questions about the Mexican Insurance and Surety Law (LISF). Indexes the full law text and generates contextualized responses with article references. FastAPI backend deployed on GCP.',
+    },
+    url: '#', // TODO: replace with public GCP URL once VM port is exposed
+    platform: 'GCP',
+    category: 'actuarial',
+    tags: {
+      es: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
+      en: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
+    },
+    variant: 'standard',
+    relatedTo: ['sima'],
+  },
+
+  // repo: https://github.com/GonorAndres/b-trees
+  // local: /home/andtega349/b-trees
+  // source: original Rust implementation, no external dataset — motivated by PostgreSQL index internals study
+  {
+    slug: 'b-tree-explorer',
+    title: {
+      es: 'B-Tree Explorer - Visualización en Rust + WASM',
+      en: 'B-Tree Explorer - Rust + WASM Visualization',
+    },
+    description: {
+      es: 'Visualización interactiva de árboles B implementada en Rust y compilada a WebAssembly. Surge del estudio de índices en PostgreSQL: anima inserciones, búsquedas y divisiones de nodos para demostrar visualmente por qué los árboles B garantizan búsqueda O(log n) en almacenamiento en disco.',
+      en: 'Interactive B-tree visualization implemented in Rust and compiled to WebAssembly. Born from studying PostgreSQL indexes: animates insertions, searches, and node splits to visually demonstrate why B-trees guarantee O(log n) search on disk-based storage.',
+    },
+    url: 'https://github.com/GonorAndres/b-trees',
+    platform: 'GitHub',
+    category: 'applied-math',
+    tags: {
+      es: ['Rust', 'WASM', 'Estructuras de Datos', 'PostgreSQL'],
+      en: ['Rust', 'WASM', 'Data Structures', 'PostgreSQL'],
+    },
+    variant: 'standard',
+    relatedTo: ['data-analyst-portfolio'],
+  },
+
+  // repo: https://github.com/GonorAndres/learning-posgre
+  // local: /home/andtega349/learning_posgre
+  // source: Russian Airlines open dataset (~2.5GB, 8 relational tables) — available on Kaggle
+  {
+    slug: 'flight-analytics',
+    title: {
+      es: 'Análisis de Vuelos - SQL a Escala',
+      en: 'Flight Analytics - SQL at Scale',
+    },
+    description: {
+      es: 'Análisis de 2.5GB de datos reales de vuelos de aerolíneas rusas en PostgreSQL: 8 tablas relacionales, millones de registros. Identifica rutas con mayor tasa de retraso, patrones por franja horaria y oportunidades de optimización de flota con consultas SQL avanzadas.',
+      en: 'Analysis of 2.5GB of real Russian airline flight data in PostgreSQL: 8 relational tables, millions of records. Identifies routes with the highest delay rates, time-of-day patterns, and fleet optimization opportunities using advanced SQL queries.',
+    },
+    url: 'https://github.com/GonorAndres/learning-posgre',
+    platform: 'GitHub',
+    category: 'data-science',
+    tags: {
+      es: ['PostgreSQL', 'SQL', 'Análisis Operacional'],
+      en: ['PostgreSQL', 'SQL', 'Operational Analytics'],
+    },
+    variant: 'standard',
+    relatedTo: ['data-analyst-portfolio', 'credit-risk'],
+  },
+
+  // repo: https://github.com/GonorAndres/forecasting
+  // local: /home/andtega349/forecasting
+  // source: historical global volcanic eruption catalog (Smithsonian GVP or equivalent public dataset)
+  // advisor: Dr. Hugo Delgado (UNAM)
+  {
+    slug: 'eruption-forecasting',
+    title: {
+      es: 'Pronóstico de Erupciones Volcánicas',
+      en: 'Volcanic Eruption Forecasting',
+    },
+    description: {
+      es: 'Análisis de series de tiempo aplicado a datos históricos de erupciones volcánicas. Ajusta modelos de pronóstico (ARIMA, suavizamiento exponencial) para estimar frecuencia de eventos, evalúa intervalos de predicción y discute los límites inherentes de pronosticar fenómenos geofísicos extremos.',
+      en: 'Time series analysis applied to historical volcanic eruption data. Fits forecasting models (ARIMA, exponential smoothing) to estimate event frequency, evaluates prediction intervals, and discusses the inherent limits of forecasting extreme geophysical events.',
+    },
+    url: 'https://github.com/GonorAndres/forecasting',
+    platform: 'GitHub',
+    category: 'applied-math',
+    tags: {
+      es: ['Python', 'Series de Tiempo', 'ARIMA', 'Pronóstico'],
+      en: ['Python', 'Time Series', 'ARIMA', 'Forecasting'],
+    },
+    variant: 'standard',
+    relatedTo: ['michoacan', 'ab-testing'],
+  },
+
+  // repo: Google Colab notebook (url IS the source)
+  // source: original Python implementation (UNAM coursework, Numerical Analysis)
   {
     slug: 'euler-method',
     title: {
@@ -318,6 +563,7 @@ export function getProjects(lang: Lang) {
     title: p.title[lang],
     description: p.description[lang],
     url: p.url,
+    repo: p.repo,
     platform: p.platform,
     category: p.category,
     tags: p.tags[lang],

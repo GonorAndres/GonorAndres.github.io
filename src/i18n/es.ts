@@ -32,6 +32,8 @@ export default {
   'contact.linkedin': 'LinkedIn',
   'footer.rights': 'Todos los derechos reservados.',
   'projects.viewProject': 'Ver proyecto',
+  'projects.viewRepo': 'Ver repositorio',
+  'projects.viewLive': 'Usar página en vivo',
   'projects.actuarial': 'Actuarial',
   'projects.data-science': 'Ciencia de Datos',
   'projects.quant-finance': 'Finanzas Cuantitativas',
