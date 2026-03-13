@@ -34,6 +34,7 @@ export const projects: Project[] = [
       en: ['Python', 'FastAPI', 'Lee-Carter', 'LISF', 'Reserves', 'GCP'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/sima.png',
     relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan', 'insurance-claims'],
   },
   {
@@ -54,6 +55,7 @@ export const projects: Project[] = [
       en: ['Next.js', 'Actuarial', 'GMM', 'Pricing', 'CNSF'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/gmm-explorer.png',
     relatedTo: ['sima', 'life-insurance', 'property-insurance', 'insurance-claims'],
   },
   {
@@ -96,6 +98,7 @@ export const projects: Project[] = [
       en: ['Python', 'SQL', 'Chain-Ladder', 'BF', 'IBNR', 'Next.js', 'FastAPI'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/insurance-claims.png',
     relatedTo: ['sima', 'life-insurance', 'property-insurance', 'gmm-explorer'],
   },
   {
@@ -116,6 +119,7 @@ export const projects: Project[] = [
       en: ['ML', 'GLM', 'Risk'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/credit-risk.png',
     relatedTo: ['ab-testing', 'data-cleaning'],
   },
   {
@@ -136,6 +140,7 @@ export const projects: Project[] = [
       en: ['Python', 'Bayes', 'PyMC'],
     },
     variant: 'tall',
+    screenshot: '/screenshots/ab-testing.png',
     relatedTo: ['credit-risk'],
   },
   {
@@ -196,6 +201,7 @@ export const projects: Project[] = [
       en: ['Python', 'Derivatives', 'Options'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/derivatives.png',
     relatedTo: ['markowitz'],
   },
   {
@@ -216,6 +222,7 @@ export const projects: Project[] = [
       en: ['Excel', 'VaR', 'Finance'],
     },
     variant: 'standard',
+    screenshot: '/screenshots/markowitz.png',
     relatedTo: ['derivatives'],
   },
   {
@@ -276,6 +283,7 @@ export const projects: Project[] = [
       en: ['Python', 'Simulation', 'Probability'],
     },
     variant: 'standard',
+    screenshot: '/screenshots/monte-carlo-poker.png',
     relatedTo: ['ab-testing'],
   },
   {
@@ -316,6 +324,7 @@ export const projects: Project[] = [
       en: ['Python', 'ODEs', 'Euler'],
     },
     variant: 'standard',
+    screenshot: '/screenshots/euler-method.png',
     relatedTo: ['michoacan'],
   },
 ];

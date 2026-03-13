@@ -1,10 +1,11 @@
 ---
 import { t } from '../../i18n';
 import type { Lang } from '../../i18n';
-import ProjectCard from '../ui/ProjectCard.astro';
 import OrganicBlob from '../decorations/OrganicBlob.astro';
 import Squiggle from '../decorations/Squiggle.astro';
-import { getProjects } from '../../data/projects';
+import { getProjects, getRelatedProjectNames } from '../../data/projects';
+import type { ProjectCategory } from '../../data/projects';
+import ProjectsGrid from '../ui/ProjectsGrid';
 
 interface Props {
   lang: Lang;
@@ -12,7 +13,25 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const projects = getProjects(lang);
+const projects = getProjects(lang).map((p) => ({
+  ...p,
+  relatedNames: p.relatedTo ? getRelatedProjectNames(p.relatedTo, lang) : [],
+}));
+
+const labels = {
+  viewProject: t(lang, 'projects.viewProject'),
+  seeAlso: t(lang, 'projects.seeAlso'),
+  showAll: t(lang, 'projects.showAll'),
+  showLess: t(lang, 'projects.showLess'),
+  gridView: t(lang, 'projects.gridView'),
+  listView: t(lang, 'projects.listView'),
+  categories: {
+    'actuarial': t(lang, 'projects.actuarial'),
+    'data-science': t(lang, 'projects.data-science'),
+    'quant-finance': t(lang, 'projects.quant-finance'),
+    'applied-math': t(lang, 'projects.applied-math'),
+  } as Record<ProjectCategory, string>,
+};
 ---
 
 <section id="proyectos" class="relative py-20 px-6">
@@ -26,21 +45,6 @@ const projects = getProjects(lang);
       <Squiggle class="w-32 h-4 mt-2" color="#C17654" />
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 auto-rows-auto">
-      {projects.map((project) => {
-        const spanClass =
-          project.variant === 'wide'
-            ? 'md:col-span-8'
-            : project.variant === 'tall'
-              ? 'md:col-span-4 md:row-span-2'
-              : 'md:col-span-4';
-
-        return (
-          <div class:list={[spanClass]}>
-            <ProjectCard {...project} lang={lang} />
-          </div>
-        );
-      })}
-    </div>
+    <ProjectsGrid client:load projects={projects} labels={labels} />
   </div>
 </section>

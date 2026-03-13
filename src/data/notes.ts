@@ -26,8 +26,8 @@ export const notes: Note[] = [
       en: 'SOA Exam P -- Complete Study Reference (v2)',
     },
     description: {
-      es: 'Más de 8,500 líneas cubriendo los tres temas del Examen P: probabilidad general, variables aleatorias univariadas y distribuciones multivariadas. Explicaciones técnicas, intuiciones actuariales y problemas resueltos con análisis de distractores. La referencia con la que preparé mi examen.',
-      en: 'Over 8,500 lines covering all three Exam P topics: general probability, univariate random variables, and multivariate distributions. Technical explanations, actuarial intuitions, and solved problems with distractor analysis. The reference I built to prepare for my exam.',
+      es: 'La referencia que construí para prepararme al Examen P. Cubre probabilidad general, variables aleatorias y distribuciones multivariadas — cada tema con intuición actuarial, no solo fórmulas. Incluye problemas resueltos con análisis de por qué los distractores engañan.',
+      en: 'The reference I built to prepare for Exam P. Covers general probability, random variables, and multivariate distributions — each topic with actuarial intuition, not just formulas. Includes solved problems with analysis of why the distractors mislead.',
     },
     urls: [
       { label: { es: 'Ver PDF', en: 'View PDF' }, url: 'https://drive.google.com/file/d/1YRa658huJEPi_X1GUXaZPMJI5zaNKy7p/view' },

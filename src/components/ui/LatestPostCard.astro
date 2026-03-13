@@ -38,13 +38,16 @@ function formatDate(date: string) {
   <>
     {/* Desktop: stacked list */}
     <div class="hidden md:flex flex-col gap-2 w-full fade-up">
-      <span class="text-xs font-medium text-sage uppercase tracking-wider mb-1">
-        {t(lang, 'hero.latestPost')}
-      </span>
+      <div class="mb-2">
+        <span class="text-sm font-bold text-navy uppercase tracking-widest">
+          {t(lang, 'hero.latestPost')}
+        </span>
+        <div class="mt-1 h-0.5 w-10 bg-terracotta rounded-full"></div>
+      </div>
       {recentPosts.map((post) => (
         <a
           href={getPostUrl(post.slug)}
-          class="flex flex-col gap-1 rounded-lg border border-amber/20 bg-cream/50 backdrop-blur-sm px-4 py-3 hover:border-terracotta/40 hover:shadow-sm transition-all group"
+          class="flex flex-col gap-1 rounded-lg border-l-2 border-l-terracotta border border-navy/8 bg-white shadow-sm px-4 py-3 hover:shadow-md hover:border-l-amber transition-all group"
         >
           <div class="flex items-center gap-2">
             <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-sage/15 text-sage font-medium">
@@ -59,15 +62,18 @@ function formatDate(date: string) {
       ))}
     </div>
 
-    {/* Mobile: horizontal scrollable */}
+    {/* Mobile: stacked list */}
     <div class="md:hidden flex flex-col gap-2 fade-up">
-      <span class="text-xs font-medium text-sage uppercase tracking-wider mb-1">
-        {t(lang, 'hero.latestPost')}
-      </span>
+      <div class="mb-1">
+        <span class="text-sm font-bold text-navy uppercase tracking-widest">
+          {t(lang, 'hero.latestPost')}
+        </span>
+        <div class="mt-1 h-0.5 w-10 bg-terracotta rounded-full"></div>
+      </div>
       {recentPosts.map((post) => (
         <a
           href={getPostUrl(post.slug)}
-          class="flex items-center gap-3 rounded-lg border border-amber/20 bg-cream/50 px-4 py-3 hover:border-terracotta/40 hover:shadow-sm transition-all group"
+          class="flex items-center gap-3 rounded-lg border-l-2 border-l-terracotta border border-navy/8 bg-white shadow-sm px-4 py-3 hover:shadow-md transition-all group"
         >
           <div class="flex-1 min-w-0">
             <span class="font-serif text-sm font-bold text-navy leading-snug line-clamp-1 group-hover:text-terracotta transition-colors">

@@ -12,14 +12,14 @@ interface Props {
 const { lang } = Astro.props;
 ---
 
-<section class="relative overflow-hidden py-20 md:py-32 px-6">
+<section class="relative overflow-hidden py-10 md:py-12 px-6">
   <!-- Decorative blobs -->
   <OrganicBlob variant={1} color="#D4A574" class="w-[500px] h-[500px] -top-20 -right-40 opacity-60" />
   <OrganicBlob variant={3} color="#7A8B6F" class="w-[350px] h-[350px] bottom-0 -left-24 opacity-40" />
 
   <div class="max-w-6xl mx-auto relative z-10">
     <!-- Asymmetric layout: text offset to the left, not centered -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
       <div class="md:col-span-7 md:col-start-1">
         <p class="text-sage font-medium text-lg mb-2 fade-up">
           {t(lang, 'hero.greeting')}
@@ -61,9 +61,13 @@ const { lang } = Astro.props;
       </div>
 
       <!-- Latest blog post card (right) -->
-      <div class="md:col-span-3 md:col-start-10 md:flex md:flex-col md:gap-4 md:items-center">
-        <LatestPostCard lang={lang} />
-        <DiscoverPostCard lang={lang} />
+      <div class="md:col-span-3 md:col-start-10 md:flex md:flex-col md:gap-5 md:items-stretch">
+        <div class="rounded-xl border border-navy/10 bg-white/70 shadow-md backdrop-blur-sm px-4 py-4 flex flex-col gap-3">
+          <LatestPostCard lang={lang} />
+        </div>
+        <div class="rounded-xl border border-amber/30 bg-white/60 shadow-sm backdrop-blur-sm px-4 py-4 flex flex-col gap-3">
+          <DiscoverPostCard lang={lang} />
+        </div>
       </div>
     </div>
   </div>
