@@ -135,29 +135,39 @@ When converting academic notes to blog posts:
 
 ## Future Scope
 
-### Cards Added, Blog Posts Pending (2026-03-13)
-These projects already have cards in the portfolio. Next step is a blog post for each:
-- `lisf-agent` (slug: `lisf-agent`) -- Claude SDK + LISF regulatory chatbot. Also needs a public GCP URL added to projects.ts (currently `#`).
-- `b-tree-explorer` (slug: `b-tree-explorer`) -- Rust + WASM B-tree visualization. GitHub: https://github.com/GonorAndres/b-trees
-- `flight-analytics` (slug: `flight-analytics`) -- PostgreSQL airline delay analysis. GitHub: https://github.com/GonorAndres/learning-posgre
-- `eruption-forecasting` (slug: `eruption-forecasting`) -- Time series volcanic forecasting. GitHub: https://github.com/GonorAndres/forecasting
+### Blog Posts: use blog-writer agent for all of these
+Invoke with: "use blog-writer to write a post about [slug or topic]"
 
-### High Priority
-1. **Convert actuarial technical notes to blog posts** -- Life insurance, property insurance, collective insurance notes from PortafolioPDF/Escolares/Matematicas_Actuariales. Rewrite from homework tone to professional with sensitivity analysis and regulatory context (see docs/portfolio-review-recommendations.md)
-2. **Michoacan demographic analysis blog post** -- Connect the mortality tables to life insurance pricing. This turns two school assignments into one meaningful actuarial analysis
-3. **GMM Explorer blog post** -- Technical breakdown of pricing methodology, already planned in docs/future-plans.md
-4. **Research article blog post** -- Non-technical summary of data science internship paper
+#### Cards exist, blog post missing
+- [ ] `lisf-agent`: Claude SDK + LISF regulatory chatbot. Also needs public GCP URL in projects.ts (currently `#`).
+- [ ] `b-tree-explorer`: Rust + WASM visualization. Concept post done (b-trees-optimization); this one should focus on the implementation itself.
+- [ ] `flight-analytics`: PostgreSQL airline delay analysis. GitHub: https://github.com/GonorAndres/learning-posgre
+- [ ] `eruption-forecasting`: Time series volcanic forecasting. GitHub: https://github.com/GonorAndres/forecasting
+- [ ] `actuarial-suite`: 6-phase Python actuarial library. GitHub: https://github.com/GonorAndres/Analisis_Seguros_Mexico
+- [ ] `cartera-autos`: Synthetic auto insurance portfolio. GitHub: https://github.com/GonorAndres/CarteraSeguroAutos
+- [ ] `proust-attention`: Transformer trained on Proust. GitHub: https://github.com/GonorAndres/proust-attention
+- [ ] `pension-simulator`: IMSS + Fondo Bienestar R Shiny app. GitHub: https://github.com/GonorAndres/seguridad-social
 
-### Medium Priority
-5. **Redo Markowitz portfolio in Python** -- Currently Excel-only, should show scipy.optimize efficient frontier + compare VaR methods
-6. **SIMA web platform** -- Phase 2 engine complete, needs frontend (see docs/future-plans.md item 5)
-7. ~~**Reserving project with CNSF data**~~ -- DONE: `insurance-claims` project added (NAIC Schedule P data, CL + BF, interactive dashboard). Deploy pending.
-8. **TIIE/CETES interactive dashboard** -- Banxico API, planned in docs/future-plans.md item 1
+#### Concept / actuarial posts (high priority)
+- [ ] Life insurance technical note: rewrite from homework tone, add regulatory context (LISF/CUSF)
+- [ ] Property insurance technical note: same treatment, CNSF data angle
+- [ ] Michoacan demographic analysis: connect mortality tables to life insurance pricing
+- [ ] GMM Explorer: pricing methodology breakdown
+
+#### Other posts
+- [ ] Research article: non-technical summary of data science internship paper
+- [ ] SOA exam P: frame as professional insight on probabilistic thinking, not study guide
+
+### Project improvements
+- [ ] `lisf-agent`: expose GCP VM port publicly, update url in projects.ts
+- [ ] `data-analyst-portfolio`: update url when dashboards are deployed (currently links to blog post)
+- [ ] Redo Markowitz in Python: scipy.optimize efficient frontier + VaR comparison
+- [ ] SIMA web platform: Phase 2 engine done, needs frontend
+- [ ] TIIE/CETES interactive dashboard: Banxico API
 
 ### Low Priority
-9. **Mortality table visualizer** -- Interactive CONAPO/INEGI explorer, planned in docs/future-plans.md item 2
-10. **Promote second-tier MisApuntes** -- Concave vs Convex and Evolution of Probability could become blog posts with more context
-11. **SOA exam P exercises** -- There's a subfolder with practice material that could become a study resource blog series
+- [ ] Mortality table visualizer: interactive CONAPO/INEGI explorer
+- [ ] Concave vs Convex and Evolution of Probability: could become blog posts with more context
 
 ### Content to NOT Share Standalone
 - Amortizador/Instrucciones_Examen.pdf (exam instructions, not original work)
