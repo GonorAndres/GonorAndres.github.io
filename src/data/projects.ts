@@ -76,6 +76,7 @@ export const projects: Project[] = [
       en: ['Python', 'SQL', 'Streamlit', 'Next.js', 'Plotly', 'Power BI'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/data-analyst-portafolio.png',
     relatedTo: ['sima', 'gmm-explorer', 'ab-testing', 'credit-risk'],
   },
   {

@@ -7,6 +7,8 @@ lang: "en"
 tags: ["portfolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "Power BI"]
 ---
 
+<img src="/screenshots/data-analyst-portafolio.png" alt="Data Analyst Portfolio" style="width:100%;border-radius:0.75rem;margin-bottom:2rem;box-shadow:0 4px 16px rgba(0,0,0,0.08);" />
+
 A data analyst's job is not to produce charts. It is to convert a business question into an informed decision. Every project in this portfolio follows that full arc: a stakeholder has a question, the data exists in some inconvenient format, the analysis produces a finding, and that finding gets delivered in a format the audience can act on.
 
 I built these 7 projects during my transition from actuarial science to hybrid data analyst roles. Actuarial training provides statistical rigor (Kaplan-Meier, severity distributions, reserving methods), but DA roles demand different tools: fluent SQL, interactive dashboards, storytelling for non-technical audiences, and the ability to move across domains without losing depth. These projects demonstrate exactly that.

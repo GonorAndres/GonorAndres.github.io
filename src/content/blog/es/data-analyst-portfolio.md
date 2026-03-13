@@ -7,6 +7,8 @@ lang: "es"
 tags: ["portafolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "Power BI"]
 ---
 
+<img src="/screenshots/data-analyst-portafolio.png" alt="Portafolio de Analista de Datos" style="width:100%;border-radius:0.75rem;margin-bottom:2rem;box-shadow:0 4px 16px rgba(0,0,0,0.08);" />
+
 El trabajo de un analista de datos no es producir graficas. Es convertir una pregunta de negocio en una decision informada. Cada proyecto de este portafolio sigue ese arco completo: un stakeholder tiene una pregunta, los datos existen en algun formato inconveniente, el analisis produce un hallazgo, y el hallazgo se entrega en un formato que la audiencia puede usar para actuar.
 
 Construi estos 7 proyectos durante mi transicion de actuaria a roles hibridos de analisis de datos. La formacion actuarial aporta rigor estadistico (Kaplan-Meier, distribuciones de severidad, metodos de reserva) pero los roles de DA exigen herramientas diferentes: SQL fluido, dashboards interactivos, storytelling para audiencias no tecnicas, y la capacidad de moverse entre dominios sin perder profundidad. Estos proyectos demuestran exactamente eso.
