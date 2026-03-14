@@ -1,0 +1,12 @@
+---
+import NoteLayout from '../../layouts/NoteLayout.astro';
+import { getNoteSlugs } from '../../data/notes';
+
+export function getStaticPaths() {
+  return getNoteSlugs().map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+---
+
+<NoteLayout slug={slug} lang="es" />

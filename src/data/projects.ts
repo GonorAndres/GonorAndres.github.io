@@ -85,7 +85,7 @@ export const projects: Project[] = [
       es: '7 proyectos end-to-end de analisis de datos: cohortes de e-commerce, reservas actuariales, pruebas A/B, KPIs ejecutivos, portafolio financiero y eficiencia operacional. SQL, Python, Streamlit, Next.js y Power BI.',
       en: '7 end-to-end data analysis projects: e-commerce cohorts, actuarial reserves, A/B testing, executive KPIs, financial portfolio, and operational efficiency. SQL, Python, Streamlit, Next.js, and Power BI.',
     },
-    url: '/blog/data-analyst-portfolio',
+    url: '/blog/data-analyst-portfolio/',
     repo: 'https://github.com/GonorAndres/data-analyst-path',
     platform: 'GCP',
     category: 'data-science',

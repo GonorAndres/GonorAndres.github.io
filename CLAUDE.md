@@ -34,15 +34,25 @@ The title, description, and body content are fully localized -- only the filenam
 ## Notes / Shared PDFs Metadata
 
 Every note in `src/data/notes.ts` must include:
-- `createdDate: string` -- YYYY-MM-DD format, sourced from the Google Drive file's `createdTime`. Use the Drive API (`x-goog-user-project` header required) to fetch this when adding new notes.
-- `version: string` -- starts at `'1'`. Increment when the PDF content is meaningfully updated (not just metadata). The SOA Exam P reference is currently at v2; all others are v1.
+- `createdDate: string` -- YYYY-MM-DD format, sourced from the Google Drive file's `createdTime` field.
+- `version: string` -- sourced from the Google Drive file's `version` field (internal revision counter that increments on every save).
+
+Both fields are fetched via the Drive API v3. The API requires the `x-goog-user-project` header set to the GCP project ID:
+```bash
+TOKEN=$(gcloud auth application-default print-access-token)
+PROJECT=$(gcloud config get-value project)
+curl -s "https://www.googleapis.com/drive/v3/files/{FILE_ID}?fields=name,createdTime,version" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "x-goog-user-project: $PROJECT"
+```
 
 When adding a new note:
 1. Upload the PDF to the appropriate MisApuntes subfolder in Google Drive
-2. Fetch the Drive file's `createdTime` via API to set `createdDate`
-3. Set `version` to `'1'`
-4. Fill in `keywords` (5 terms per language, SEO-oriented)
-5. Set `relatedNotes` to at least one other note slug
+2. Fetch `createdTime` and `version` via the API call above
+3. Fill in `keywords` (5 terms per language, SEO-oriented)
+4. Set `relatedNotes` to at least one other note slug
+
+When updating an existing note's PDF, re-fetch the `version` field from Drive to keep it in sync.
 
 The version and creation date are displayed on individual note pages (`/notes/[slug]/`).
 
