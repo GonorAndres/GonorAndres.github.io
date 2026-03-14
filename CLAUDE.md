@@ -31,6 +31,21 @@ All blog posts MUST use the **English slug** as the filename in both `src/conten
 
 The title, description, and body content are fully localized -- only the filename must match.
 
+## Notes / Shared PDFs Metadata
+
+Every note in `src/data/notes.ts` must include:
+- `createdDate: string` -- YYYY-MM-DD format, sourced from the Google Drive file's `createdTime`. Use the Drive API (`x-goog-user-project` header required) to fetch this when adding new notes.
+- `version: string` -- starts at `'1'`. Increment when the PDF content is meaningfully updated (not just metadata). The SOA Exam P reference is currently at v2; all others are v1.
+
+When adding a new note:
+1. Upload the PDF to the appropriate MisApuntes subfolder in Google Drive
+2. Fetch the Drive file's `createdTime` via API to set `createdDate`
+3. Set `version` to `'1'`
+4. Fill in `keywords` (5 terms per language, SEO-oriented)
+5. Set `relatedNotes` to at least one other note slug
+
+The version and creation date are displayed on individual note pages (`/notes/[slug]/`).
+
 ## Writing Standards
 
 - **No double-dash em-dashes**: Never use `--` as punctuation in blog posts or descriptions. This is a known AI writing pattern and reads unnaturally. Instead, use proper punctuation: commas, semicolons, colons, or restructure the sentence. For example:
@@ -174,6 +189,17 @@ Invoke with: "use blog-writer to write a post about [slug or topic]"
 - Formulario_MetodosCuantitativosParcial1.pdf (cheat sheet)
 - Covarianza_Regresion.pdf (2-page proof, too brief)
 - EticaActuarialEnsayo.pdf (opinion essay, not technical)
+
+## Session Log -- 2026-03-14
+
+### What Was Done
+- **Created blog posts for insurance pricing ML project**: ES + EN pair at `src/content/blog/{es,en}/actuarial-ml-pricing.md`. Editorial angle: cross-border analysis of what European ML pricing techniques mean for Mexico's 70% uninsured auto market. Covers frequency-severity decomposition, GLM vs GBM comparison, SHAP explainability, fairness audits, and regulatory comparison (CNSF vs EU AI Act).
+- **Cross-references**: Links to insurance-claims-dashboard (reserving is backward-looking, pricing is forward-looking), SIMA (regulatory layer), GMM Explorer (severity distribution).
+- **Source**: Project lives in `data-science-path` repo at `projects/insurance-pricing/`. Academic PDFs in `docs/references/`.
+
+### Pending
+- **Add `insurance-pricing-ml` project card to `src/data/projects.ts`**: slug `insurance-pricing-ml`, category `actuarial` or `data-science`, variant `wide`. GitHub URL: `https://github.com/GonorAndres/data-science-path/tree/main/projects/insurance-pricing`. Once dashboard is deployed, update URL.
+- **Deploy pricing dashboard**: Next.js (port 3060) + FastAPI (port 2060). Same Cloud Run pattern as other dashboards.
 
 ## How to Add a Blog Post
 
