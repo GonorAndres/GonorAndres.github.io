@@ -1,14 +1,33 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import BlogPostPreview from '../../components/ui/BlogPostPreview.astro';
+import BlogSearch from '../../components/ui/BlogSearch';
 import { t } from '../../i18n';
-import { categories, categoryLabels } from '../../data/categories';
+import { categories, categoryLabels, type Category } from '../../data/categories';
 import OrganicBlob from '../../components/decorations/OrganicBlob.astro';
 
 const posts = (await getCollection('blog'))
   .filter((p) => p.data.lang === 'es')
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const postsData = posts.map((post) => ({
+  title: post.data.title,
+  description: post.data.description,
+  slug: post.slug.replace(/^(es|en)\//, ''),
+  date: post.data.date,
+  category: post.data.category,
+  categoryLabel: categoryLabels['es'][post.data.category as Category] ?? post.data.category,
+  lang: 'es' as const,
+}));
+
+const labels = {
+  searchPlaceholder: t('es', 'blog.searchPlaceholder'),
+  allYears: t('es', 'blog.allYears'),
+  noResults: t('es', 'blog.noResults'),
+  readMore: t('es', 'blog.readMore'),
+  articleSingular: t('es', 'blog.articleSingular'),
+  articlePlural: t('es', 'blog.articlePlural'),
+};
 ---
 
 <BaseLayout title="Blog | Andres Gonzalez Ortega" lang="es">
@@ -29,22 +48,7 @@ const posts = (await getCollection('blog'))
         ))}
       </div>
 
-      <div class="space-y-6">
-{posts.map((post) => (
-          <BlogPostPreview
-            title={post.data.title}
-            description={post.data.description}
-            slug={post.slug}
-            date={post.data.date}
-            category={post.data.category}
-            lang="es"
-          />
-        ))}
-      </div>
-
-      {posts.length === 0 && (
-        <p class="text-navy/50 text-center py-12">Proximamente se publicaran articulos.</p>
-      )}
+      <BlogSearch client:load posts={postsData} labels={labels} />
     </div>
   </section>
 </BaseLayout>

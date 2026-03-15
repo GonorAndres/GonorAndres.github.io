@@ -1,11 +1,13 @@
 ---
-title: "Dashboards con React: Por que construir reportes analiticos con codigo"
-description: "Dos dashboards de analisis exploratorio (Airbnb CDMX y Olist E-Commerce) como caso de estudio de por que Next.js y Recharts son una alternativa seria a Power BI y Tableau para reportes analiticos de produccion."
+title: "Dashboards con React: Por qué construir reportes analíticos con código"
+description: "Dos dashboards de análisis exploratorio (Airbnb CDMX y Olist E-Commerce) como caso de estudio de por qué Next.js y Recharts son una alternativa seria a Power BI y Tableau para reportes analíticos de producción."
 date: "2026-03-05"
 category: "herramientas"
 lang: "es"
 tags: ["React", "Next.js", "Recharts", "dashboards", "data-analytics", "Airbnb", "Olist"]
 ---
+
+> **Nota:** Este post es una versión anterior centrada en un solo proyecto. Para la version completa y actualizada del portafolio de analista de datos, consulta [Portafolio de Analista de Datos: 7 Proyectos End-to-End](/blog/data-analyst-portfolio).
 
 Power BI y Tableau existen por una razón válida: permiten a un analista sin experiencia en frontend construir un reporte funcional en horas. Para exploración ad hoc, para stakeholders internos que necesitan filtros básicos, para el primer borrador de un análisis, son herramientas razonables. El problema aparece cuando ese borrador tiene que convertirse en un producto. Cuando el reporte tiene que ser responsive en móvil. Cuando el modo oscuro es un requisito. Cuando la interacción entre gráficas necesita ser más rica que un simple filtro de segmento. Cuando el diseñador tiene un sistema tipográfico que no encaja en las plantillas de la herramienta. En ese momento, las herramientas drag-and-drop muestran sus límites estructurales.
 

@@ -2,17 +2,37 @@ import type { Lang } from '../i18n';
 
 export type NoteCategory = 'actuarial' | 'quant' | 'stats';
 
+export const noteCategories = ['actuarial', 'quant', 'stats'] as const;
+
+export const noteCategoryLabels: Record<Lang, Record<NoteCategory, string>> = {
+  es: {
+    actuarial: 'Ciencia Actuarial y Seguros',
+    quant: 'Finanzas Cuantitativas',
+    stats: 'Estadística y Probabilidad',
+  },
+  en: {
+    actuarial: 'Actuarial Science & Insurance',
+    quant: 'Quantitative Finance',
+    stats: 'Statistics & Probability',
+  },
+};
+
 export interface NoteLink {
   label: Record<Lang, string>;
   url: string;
 }
 
 export interface Note {
+  slug: string;
   category: NoteCategory;
   title: Record<Lang, string>;
   description: Record<Lang, string>;
   urls: NoteLink[];
   tags: Record<Lang, string[]>;
+  keywords: Record<Lang, string[]>;
+  createdDate: string;
+  version: string;
+  relatedNotes?: string[];
 }
 
 export const categoryOrder: NoteCategory[] = ['actuarial', 'quant', 'stats'];
@@ -20,25 +40,36 @@ export const categoryOrder: NoteCategory[] = ['actuarial', 'quant', 'stats'];
 export const notes: Note[] = [
   // ── Actuarial Science & Insurance ────────────────────────────────
   {
+    slug: 'soa-exam-p-reference',
     category: 'actuarial',
+    createdDate: '2026-02-18',
+    version: '24',
     title: {
-      es: 'SOA Exam P -- Referencia Completa de Estudio (v2)',
-      en: 'SOA Exam P -- Complete Study Reference (v2)',
+      es: 'SOA Exam P : Referencia Inicial de Estudio',
+      en: 'SOA Exam P : Initial Study Reference',
     },
     description: {
-      es: 'Más de 8,500 líneas cubriendo los tres temas del Examen P: probabilidad general, variables aleatorias univariadas y distribuciones multivariadas. Explicaciones técnicas, intuiciones actuariales y problemas resueltos con análisis de distractores. La referencia con la que preparé mi examen.',
-      en: 'Over 8,500 lines covering all three Exam P topics: general probability, univariate random variables, and multivariate distributions. Technical explanations, actuarial intuitions, and solved problems with distractor analysis. The reference I built to prepare for my exam.',
+      es: 'La referencia que construí para prepararme al Examen P. Cubre probabilidad general, variables aleatorias y distribuciones multivariadas, cada tema con intuición actuarial, no solo fórmulas. Incluye problemas resueltos con análisis de por qué los distractores engañan.',
+      en: 'The reference I built to prepare for Exam P. Covers general probability, random variables, and multivariate distributions, each topic with actuarial intuition, not just formulas. Includes solved problems with analysis of why the distractors mislead.',
     },
     urls: [
       { label: { es: 'Ver PDF', en: 'View PDF' }, url: 'https://drive.google.com/file/d/1YRa658huJEPi_X1GUXaZPMJI5zaNKy7p/view' },
     ],
     tags: {
-      es: ['SOA', 'Examen P', 'Probabilidad', 'Actuaría'],
+      es: ['SOA', 'Examen P', 'Probabilidad', 'Actuaria'],
       en: ['SOA', 'Exam P', 'Probability', 'Actuarial'],
     },
+    keywords: {
+      es: ['SOA Exam P', 'probabilidad actuarial', 'guía de estudio', 'variables aleatorias', 'distribuciones'],
+      en: ['SOA Exam P', 'actuarial probability', 'study reference', 'random variables', 'distributions'],
+    },
+    relatedNotes: ['eves-law-total-variance', 'glm-actuarial-models'],
   },
   {
+    slug: 'glm-actuarial-models',
     category: 'actuarial',
+    createdDate: '2025-08-09',
+    version: '13',
     title: {
       es: 'GLM para Modelos Actuariales',
       en: 'GLM for Actuarial Models',
@@ -51,12 +82,20 @@ export const notes: Note[] = [
       { label: { es: 'Ver PDF', en: 'View PDF' }, url: 'https://drive.google.com/file/d/1jJ2eJ9ceVogmDLPf6nAtY4JAo-XEiAOE/view?usp=sharing' },
     ],
     tags: {
-      es: ['GLM', 'Actuaría', 'Seguros'],
+      es: ['GLM', 'Actuaria', 'Seguros'],
       en: ['GLM', 'Actuarial', 'Insurance'],
     },
+    keywords: {
+      es: ['modelos lineales generalizados', 'GLM actuarial', 'frecuencia siniestros', 'severidad', 'tarificación seguros'],
+      en: ['generalized linear models', 'actuarial GLM', 'claim frequency', 'severity', 'insurance pricing'],
+    },
+    relatedNotes: ['soa-exam-p-reference', 'lee-carter-mortality'],
   },
   {
+    slug: 'eves-law-total-variance',
     category: 'actuarial',
+    createdDate: '2026-02-11',
+    version: '10',
     title: {
       es: 'Ley de Eve y Varianza Total',
       en: 'Eve\'s Law and Total Variance',
@@ -72,9 +111,17 @@ export const notes: Note[] = [
       es: ['Varianza Total', 'Credibilidad', 'SOA'],
       en: ['Total Variance', 'Credibility', 'SOA'],
     },
+    keywords: {
+      es: ['ley de Eve', 'varianza total', 'distribuciones mixtas', 'credibilidad actuarial', 'Poisson-Gamma'],
+      en: ['Eve\'s Law', 'total variance', 'mixed distributions', 'actuarial credibility', 'Poisson-Gamma'],
+    },
+    relatedNotes: ['soa-exam-p-reference', 'glm-actuarial-models'],
   },
   {
+    slug: 'lee-carter-mortality',
     category: 'actuarial',
+    createdDate: '2026-02-15',
+    version: '8',
     title: {
       es: 'Reestimación de Mortalidad Lee-Carter',
       en: 'Lee-Carter Mortality Reestimation',
@@ -90,10 +137,18 @@ export const notes: Note[] = [
       es: ['Mortalidad', 'Lee-Carter', 'SVD', 'Tablas de Vida'],
       en: ['Mortality', 'Lee-Carter', 'SVD', 'Life Tables'],
     },
+    keywords: {
+      es: ['Lee-Carter', 'mortalidad México', 'SVD', 'tablas de vida', 'reservas seguros'],
+      en: ['Lee-Carter', 'Mexican mortality', 'SVD', 'life tables', 'insurance reserves'],
+    },
+    relatedNotes: ['glm-actuarial-models'],
   },
   // ── Quantitative Finance ─────────────────────────────────────────
   {
+    slug: 'black-scholes-fra-irs',
     category: 'quant',
+    createdDate: '2025-06-15',
+    version: '11',
     title: {
       es: 'Black-Scholes, FRA & IRS',
       en: 'Black-Scholes, FRA & IRS',
@@ -109,9 +164,17 @@ export const notes: Note[] = [
       es: ['Black-Scholes', 'FRA/IRS', 'CAPM', 'Python'],
       en: ['Black-Scholes', 'FRA/IRS', 'CAPM', 'Python'],
     },
+    keywords: {
+      es: ['Black-Scholes', 'FRA', 'IRS', 'derivados financieros', 'no-arbitraje', 'Python finanzas'],
+      en: ['Black-Scholes', 'FRA', 'IRS', 'financial derivatives', 'no-arbitrage', 'Python finance'],
+    },
+    relatedNotes: ['black-scholes-log-normal', 'parametric-returns-fitting'],
   },
   {
+    slug: 'black-scholes-log-normal',
     category: 'quant',
+    createdDate: '2025-06-27',
+    version: '18',
     title: {
       es: 'Black-Scholes y la Log-Normal',
       en: 'Black-Scholes and the Log-Normal',
@@ -127,9 +190,17 @@ export const notes: Note[] = [
       es: ['Black-Scholes', 'Log-Normal', 'Volatilidad'],
       en: ['Black-Scholes', 'Log-Normal', 'Volatility'],
     },
+    keywords: {
+      es: ['Black-Scholes', 'log-normal', 'volatilidad', 'movimiento browniano', 'precio opciones'],
+      en: ['Black-Scholes', 'log-normal', 'volatility', 'Brownian motion', 'option pricing'],
+    },
+    relatedNotes: ['black-scholes-fra-irs', 'parametric-returns-fitting'],
   },
   {
+    slug: 'parametric-returns-fitting',
     category: 'quant',
+    createdDate: '2025-06-16',
+    version: '11',
     title: {
       es: 'Ajuste Paramétrico de Rendimientos Financieros',
       en: 'Parametric Fitting of Financial Returns',
@@ -145,10 +216,18 @@ export const notes: Note[] = [
       es: ['VaR', 'MLE', 'Finanzas'],
       en: ['VaR', 'MLE', 'Finance'],
     },
+    keywords: {
+      es: ['VaR paramétrico', 'máxima verosimilitud', 'rendimientos financieros', 'bondad de ajuste', 'Q-Q plot'],
+      en: ['parametric VaR', 'maximum likelihood', 'financial returns', 'goodness of fit', 'Q-Q plot'],
+    },
+    relatedNotes: ['black-scholes-fra-irs', 'black-scholes-log-normal'],
   },
   // ── Statistics & Probability ─────────────────────────────────────
   {
+    slug: 'ab-testing-bayesian-frequentist',
     category: 'stats',
+    createdDate: '2025-06-15',
+    version: '10',
     title: {
       es: 'A/B Testing: Bayesiano vs Frecuentista',
       en: 'A/B Testing: Bayesian vs Frequentist',
@@ -165,9 +244,17 @@ export const notes: Note[] = [
       es: ['Estadística', 'Bayes', 'Python'],
       en: ['Statistics', 'Bayes', 'Python'],
     },
+    keywords: {
+      es: ['A/B testing', 'bayesiano vs frecuentista', 'p-valor', 'utilidad esperada', 'pruebas de hipótesis'],
+      en: ['A/B testing', 'Bayesian vs frequentist', 'p-value', 'expected utility', 'hypothesis testing'],
+    },
+    relatedNotes: ['volcanic-eruption-forecasting'],
   },
   {
+    slug: 'time-series-delhi',
     category: 'stats',
+    createdDate: '2025-06-15',
+    version: '16',
     title: {
       es: 'Series de Tiempo: Temperatura en Delhi',
       en: 'Time Series: Delhi Temperature',
@@ -183,15 +270,23 @@ export const notes: Note[] = [
       es: ['R', 'Series de Tiempo', 'ARIMA'],
       en: ['R', 'Time Series', 'ARIMA'],
     },
+    keywords: {
+      es: ['series de tiempo', 'ARIMA', 'estacionalidad', 'R', 'temperatura Delhi'],
+      en: ['time series', 'ARIMA', 'seasonality', 'R', 'Delhi temperature'],
+    },
+    relatedNotes: ['volcanic-eruption-forecasting'],
   },
   {
+    slug: 'volcanic-eruption-forecasting',
     category: 'stats',
+    createdDate: '2025-07-30',
+    version: '12',
     title: {
       es: 'Predicción Probabilística de Erupciones Volcánicas',
       en: 'Probabilistic Forecasting of Volcanic Eruptions',
     },
     description: {
-      es: '¿Qué tienen en común un actuario y un vulcanólogo? Que ambos intentan predecir eventos raros con consecuencias enormes. Este apunte revisa cómo se modelan los intervalos entre erupciones del Popocatépetl y el Galeras con distribuciones log-normal, modelos de Markov y procesos de renovación. Las preguntas abiertas al final son genuinamente fascinantes. Apunte personal de probabilidad aplicada.',
+      es: 'Qué tienen en común un actuario y un vulcanólogo? Que ambos intentan predecir eventos raros con consecuencias enormes. Este apunte revisa cómo se modelan los intervalos entre erupciones del Popocatepetl y el Galeras con distribuciones log-normal, modelos de Markov y procesos de renovación. Las preguntas abiertas al final son genuinamente fascinantes. Apunte personal de probabilidad aplicada.',
       en: 'What do an actuary and a volcanologist have in common? Both try to predict rare events with enormous consequences. This note reviews how eruption intervals for Popocatepetl and Galeras are modeled with log-normal distributions, Markov models, and renewal processes. The open questions at the end are genuinely fascinating. Personal applied probability note.',
     },
     urls: [
@@ -201,40 +296,71 @@ export const notes: Note[] = [
       es: ['Probabilidad', 'Volcanes', 'Modelos'],
       en: ['Probability', 'Volcanoes', 'Models'],
     },
+    keywords: {
+      es: ['erupciones volcánicas', 'predicción probabilística', 'Popocatepetl', 'procesos de renovación', 'Markov'],
+      en: ['volcanic eruptions', 'probabilistic forecasting', 'Popocatepetl', 'renewal processes', 'Markov'],
+    },
+    relatedNotes: ['time-series-delhi', 'ab-testing-bayesian-frequentist'],
   },
 ];
 
 export interface LocalizedNote {
+  slug: string;
   category: NoteCategory;
   title: string;
   description: string;
   urls: { label: string; url: string }[];
   tags: string[];
+  keywords: string[];
+  createdDate: string;
+  version: string;
+  relatedNotes?: string[];
 }
 
 export function getNotes(lang: Lang): LocalizedNote[] {
   return notes.map((n) => ({
+    slug: n.slug,
     category: n.category,
     title: n.title[lang],
     description: n.description[lang],
     urls: n.urls.map((u) => ({ label: u.label[lang], url: u.url })),
     tags: n.tags[lang],
+    keywords: n.keywords[lang],
+    createdDate: n.createdDate,
+    version: n.version,
+    relatedNotes: n.relatedNotes,
   }));
 }
 
 export function getNotesByCategory(lang: Lang): { category: NoteCategory; label: string; notes: Omit<LocalizedNote, 'category'>[] }[] {
   const localized = getNotes(lang);
-  const labelKey: Record<NoteCategory, Record<Lang, string>> = {
-    actuarial: { es: 'Ciencia Actuarial y Seguros', en: 'Actuarial Science & Insurance' },
-    quant: { es: 'Finanzas Cuantitativas', en: 'Quantitative Finance' },
-    stats: { es: 'Estadística y Probabilidad', en: 'Statistics & Probability' },
-  };
 
   return categoryOrder.map((cat) => ({
     category: cat,
-    label: labelKey[cat][lang],
+    label: noteCategoryLabels[lang][cat],
     notes: localized
       .filter((n) => n.category === cat)
       .map(({ category: _cat, ...rest }) => rest),
   })).filter((g) => g.notes.length > 0);
+}
+
+export function getNoteBySlug(slug: string, lang: Lang): LocalizedNote | undefined {
+  const note = notes.find((n) => n.slug === slug);
+  if (!note) return undefined;
+  return {
+    slug: note.slug,
+    category: note.category,
+    title: note.title[lang],
+    description: note.description[lang],
+    urls: note.urls.map((u) => ({ label: u.label[lang], url: u.url })),
+    tags: note.tags[lang],
+    keywords: note.keywords[lang],
+    createdDate: note.createdDate,
+    version: note.version,
+    relatedNotes: note.relatedNotes,
+  };
+}
+
+export function getNoteSlugs(): string[] {
+  return notes.map((n) => n.slug);
 }

@@ -1,10 +1,11 @@
 ---
 import { t } from '../../i18n';
 import type { Lang } from '../../i18n';
-import ProjectCard from '../ui/ProjectCard.astro';
 import OrganicBlob from '../decorations/OrganicBlob.astro';
 import Squiggle from '../decorations/Squiggle.astro';
-import { getProjects } from '../../data/projects';
+import { getProjects, getRelatedProjectNames } from '../../data/projects';
+import type { ProjectCategory } from '../../data/projects';
+import ProjectsGrid from '../ui/ProjectsGrid';
 
 interface Props {
   lang: Lang;
@@ -12,25 +13,40 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const projects = getProjects(lang);
+const projects = getProjects(lang).map((p) => ({
+  ...p,
+  relatedNames: p.relatedTo ? getRelatedProjectNames(p.relatedTo, lang) : [],
+}));
+
+const labels = {
+  viewProject: t(lang, 'projects.viewProject'),
+  viewRepo: t(lang, 'projects.viewRepo'),
+  viewLive: t(lang, 'projects.viewLive'),
+  seeAlso: t(lang, 'projects.seeAlso'),
+  showAll: t(lang, 'projects.showAll'),
+  showLess: t(lang, 'projects.showLess'),
+  gridView: t(lang, 'projects.gridView'),
+  listView: t(lang, 'projects.listView'),
+  categories: {
+    'actuarial': t(lang, 'projects.actuarial'),
+    'data-science': t(lang, 'projects.data-science'),
+    'quant-finance': t(lang, 'projects.quant-finance'),
+    'applied-math': t(lang, 'projects.applied-math'),
+  } as Record<ProjectCategory, string>,
+};
 ---
 
 <section id="proyectos" class="relative py-20 px-6">
   <OrganicBlob variant={2} color="#C17654" class="w-[400px] h-[400px] -top-20 right-0 opacity-30" />
 
-  <div class="max-w-6xl mx-auto relative z-10">
-    <div class="mb-12 md:ml-12">
+  <div class="max-w-7xl mx-auto relative z-10">
+    <div class="mb-14 md:ml-6">
       <h2 class="text-3xl md:text-4xl font-bold text-navy fade-up">
         {t(lang, 'section.featured')}
       </h2>
       <Squiggle class="w-32 h-4 mt-2" color="#C17654" />
     </div>
 
-    <!-- Asymmetric grid: NOT uniform 3-column -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 auto-rows-auto">
-      {projects.map((project) => (
-        <ProjectCard {...project} lang={lang} />
-      ))}
-    </div>
+    <ProjectsGrid client:load projects={projects} labels={labels} />
   </div>
 </section>

@@ -31,6 +31,9 @@ const education = getEducation(lang);
           <h3 class="font-serif text-xl font-bold text-navy">{edu.degree}</h3>
           <p class="text-navy/70 mt-1">{edu.school}</p>
           <p class="text-sm text-sage mt-0.5">{edu.details}</p>
+          {edu.note && (
+            <p class="text-xs text-navy/50 mt-1 italic">{edu.note}</p>
+          )}
         </div>
       ))}
 
@@ -49,9 +52,12 @@ const education = getEducation(lang);
               <svg class="w-4 h-4 shrink-0 text-amber group-hover:text-terracotta transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <div>
+              <div class="flex flex-wrap items-center gap-x-2">
                 <span class="font-medium">{cert.name}</span>
-                <span class="text-sm text-navy/50 ml-2">{cert.issuer} · {cert.date}</span>
+                <span class="text-sm text-navy/50">{cert.issuer} · {cert.date}</span>
+                {cert.note && (
+                  <span class="whitespace-nowrap text-xs px-2 py-0.5 rounded-full bg-sage/20 text-sage font-medium">{cert.note}</span>
+                )}
               </div>
             </a>
           ))}

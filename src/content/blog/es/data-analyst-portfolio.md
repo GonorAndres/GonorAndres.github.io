@@ -1,0 +1,125 @@
+---
+title: "Portafolio de Analista de Datos: 7 Proyectos End-to-End"
+description: "De la pregunta de negocio al insight accionable. 7 proyectos de análisis de datos que cubren e-commerce, seguros, finanzas, pruebas A/B, KPIs ejecutivos y eficiencia operacional. SQL, Python, Streamlit, Next.js y Power BI."
+date: "2026-03-13"
+category: "proyectos-y-analisis"
+lang: "es"
+tags: ["portafolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "Power BI"]
+---
+
+<img src="/screenshots/data-analyst-portafolio.png" alt="Portafolio de Analista de Datos" style="width:100%;border-radius:0.75rem;margin-bottom:2rem;box-shadow:0 4px 16px rgba(0,0,0,0.08);" />
+
+El trabajo de un analista de datos no es producir gráficas. Es convertir una pregunta de negocio en una decisión informada. Cada proyecto de este portafolio sigue ese arco completo: un stakeholder tiene una pregunta, los datos existen en algún formato inconveniente, el análisis produce un hallazgo, y el hallazgo se entrega en un formato que la audiencia puede usar para actuar.
+
+Construí estos 7 proyectos durante mi transición de actuaría a roles híbridos de análisis de datos. La formación actuarial aporta rigor estadístico (Kaplan-Meier, distribuciones de severidad, métodos de reserva) pero los roles de DA exigen herramientas diferentes: SQL fluido, dashboards interactivos, storytelling para audiencias no técnicas, y la capacidad de moverse entre dominios sin perder profundidad. Estos proyectos demuestran exactamente eso.
+
+El hilo conductor es metodológico: ETL cuidadoso, análisis exploratorio antes de cualquier conclusión, segmentación como herramienta recurrente, y entrega en el formato que el stakeholder necesita, ya sea un dashboard interactivo, un PDF automatizado o una app de Streamlit.
+
+## Los 7 proyectos
+
+### 00 - Airbnb CDMX: análisis de mercado
+
+**Pregunta de negocio:** ¿Cómo está estructurado el mercado de rentas cortas en Ciudad de México, y qué tan concentrada está la oferta?
+
+El dataset de Inside Airbnb para CDMX contiene 27,051 listings con 79 columnas. El pipeline ETL limpia precios (llegan como strings con símbolo de moneda), gestiona nulos y segmenta hosts entre operadores enterprise y casuales. El hallazgo central: el 7% de los hosts controla el 40% de la oferta. Blueground, Mr. W y Clau no son anfitriones compartiendo su departamento, son empresas de hospitalidad operando a escala industrial. Cuauhtémoc concentra el 46% de los listings, mientras que las alcaldías periféricas como Tlalpan (MXN 2,493 promedio) muestran pricing premium con oferta escasa.
+
+Dashboard construido con Next.js y Recharts, arquitectura estática (JSON precalculado, zero backend).
+
+**Estado:** Completo | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics" target="_blank" rel="noopener">GitHub</a>
+
+### 01 - Reservas actuariales P&C: IBNR y siniestralidad
+
+**Pregunta de negocio:** De las 6 líneas de negocio del portafolio, ¿cuáles son rentables y cuál es el IBNR total que la aseguradora debe reservar?
+
+Análisis de reservas sobre datos regulatorios NAIC Schedule P con métodos Chain-Ladder y Bornhuetter-Ferguson. El dataset incluye ~50K siniestros sintéticos con distribuciones actuarialmente realistas (lognormal para severidad, Poisson para frecuencia, exponencial para rezago de reporte). El resultado: solo Private Passenger Auto y Product Liability son rentables. Medical Malpractice muestra un ratio de pérdidas de ~280%, una señal clara de pricing estructuralmente insuficiente. El IBNR total del portafolio es ~$20.4M, concentrado desproporcionadamente en las líneas de cola larga.
+
+Dashboard interactivo con Next.js y FastAPI: triángulos de pérdida en heatmap, waterfall de IBNR, frecuencia-severidad y tendencia de ratios combinados.
+
+**Estado:** Completo | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard" target="_blank" rel="noopener">GitHub</a>
+
+### 02 - Cohortes de E-Commerce: retención, RFM y LTV
+
+**Pregunta de negocio:** ¿Qué diferencia al 3% de clientes que recompran en Olist del 97% que no regresa?
+
+El Brazilian E-Commerce Public Dataset tiene ~99K órdenes en 9 CSVs. El caveat crítico: solo ~3% de los clientes son compradores repetidos, lo que transforma el análisis de cohortes clásico en una investigación sobre qué diferencia a ese 3%. El pipeline usa `customer_unique_id` (no `customer_id`) para evitar contar duplicados. El análisis incluye matrices de retención, curvas de supervivencia Kaplan-Meier, segmentación RFM y estimación de LTV.
+
+App de Streamlit desplegada en Cloud Run con pipeline técnico completo visible (notebooks convertidos a HTML embebidos en la app).
+
+**Estado:** Completo | <a href="https://da-cohort-streamlit-451451662791.us-central1.run.app/" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/02-ecommerce-cohort-analysis" target="_blank" rel="noopener">GitHub</a>
+
+### 03 - Pruebas A/B: frecuentista, bayesiano y paradoja de Simpson
+
+**Pregunta de negocio:** Si ejecutamos un test A/B de conversión, ¿qué enfoque estadístico nos da la respuesta más confiable y por qué los resultados agregados pueden mentir?
+
+Evaluación de tasas de conversión con tres enfoques: test frecuentista clásico, inferencia bayesiana con distribución Beta y PyMC, y monitoreo secuencial. El proyecto incluye un análisis explícito de la paradoja de Simpson: cómo los resultados agregados del test pueden invertirse al segmentar por subgrupo, un riesgo real en cualquier experimento de producto.
+
+Dashboard interactivo con Next.js que permite explorar cada enfoque estadístico, calcular potencia de prueba y visualizar la convergencia bayesiana.
+
+**Estado:** En progreso | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/03-ab-test-analysis" target="_blank" rel="noopener">GitHub</a>
+
+### 04 - Reporte KPI Ejecutivo: métricas SaaS automatizadas
+
+**Pregunta de negocio:** ¿Cómo automatizar la generación de reportes ejecutivos mensuales con detección de anomalías y forecast de métricas clave?
+
+Pipeline automatizado que genera reportes ejecutivos en PDF a partir de métricas SaaS (MRR, churn, CAC, LTV). Incluye detección de anomalías sobre series de tiempo y forecast de métricas para el trimestre siguiente. El output es un PDF bilingüe (español/inglés) listo para enviar al C-suite, con visualizaciones Plotly exportadas a imagen.
+
+5 notebooks que cubren desde generación de datos hasta automatización del reporte. Dashboard Next.js complementario.
+
+**Estado:** En progreso | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/04-executive-kpi-report" target="_blank" rel="noopener">GitHub</a>
+
+### 05 - Portafolio Financiero: Monte Carlo y frontera eficiente
+
+**Pregunta de negocio:** Dado un portafolio de activos, ¿cuál es su perfil de riesgo-rendimiento y cómo se compara contra la frontera eficiente?
+
+Análisis de portafolio con simulación Monte Carlo, cálculo de frontera eficiente de Markowitz, métricas de riesgo (VaR, CVaR, Sharpe, Sortino) y atribución de rendimiento. La app de Streamlit permite al usuario definir su portafolio y ver en tiempo real cómo se posiciona respecto a la frontera eficiente y los benchmarks.
+
+4 notebooks cubriendo adquisición de datos, construcción de portafolio, análisis de rendimiento y analítica de riesgo.
+
+**Estado:** En progreso | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/05-financial-portfolio-tracker" target="_blank" rel="noopener">GitHub</a>
+
+### 06 - Eficiencia Operacional: NYC 311, minería de procesos y SLA
+
+**Pregunta de negocio:** ¿Qué patrones de ineficiencia existen en las solicitudes de servicio de NYC 311 y dónde se violan los SLAs sistemáticamente?
+
+Análisis de eficiencia operacional sobre datos de NYC 311 (solicitudes de servicio público). Incluye minería de procesos para identificar cuellos de botella, análisis de cumplimiento de SLAs por agencia y tipo de solicitud, y segmentación geográfica de tiempos de respuesta.
+
+Dashboard Next.js con visualizaciones de flujos de proceso, heatmaps de SLA y rankings de agencias.
+
+**Estado:** En progreso | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/06-operational-efficiency" target="_blank" rel="noopener">GitHub</a>
+
+## Decisiones de arquitectura
+
+La elección de herramienta de entrega no es arbitraria. Depende de tres factores: quién es la audiencia, qué tan interactivo necesita ser el output, y cuál es el ciclo de actualización.
+
+**Next.js** (proyectos 00, 01, 03, 04, 06) cuando el dashboard es un producto terminado que necesita control total sobre la estética, modo oscuro, responsive en móvil, y componentes reutilizables entre proyectos. El costo es mayor: requiere conocimiento de React, TypeScript y un pipeline de build. Se justifica cuando el dashboard tiene vida larga o cuando los componentes se reutilizan (KPICard, ChartContainer y ThemeToggle se comparten entre todos los dashboards de Next.js).
+
+**Streamlit** (proyectos 02, 05) cuando el análisis vive en Python y la prioridad es pasar de notebook a app interactiva con mínimo overhead. Streamlit es la opción correcta cuando el analista es la misma persona que va a mantener la app y el stack de Python ya está establecido. El patrón de notebook-en-Streamlit (convertir notebooks a HTML y embederlos como página de proceso técnico) añade valor de portafolio: el viewer ve el código completo detrás de cada visualización sin salir de la app.
+
+**Power BI** aparece en el plan para los proyectos 04 y 06 como formato complementario, orientado a stakeholders que ya trabajan en el ecosistema Microsoft y esperan filtros de segmentación drag-and-drop.
+
+La decisión entre **JSON estático** (Airbnb, zero backend) y **API con FastAPI** (Olist, Insurance) depende de si los filtros del usuario cambian el cómputo subyacente. Si los datos caben en memoria y las agregaciones son fijas, JSON estático elimina toda la complejidad de infraestructura. Si el análisis de cohortes o los triángulos de pérdida dependen de los filtros aplicados, el backend es necesario.
+
+## Aprendizajes transversales
+
+Después de construir 7 proyectos en dominios diferentes, los patrones recurrentes son más instructivos que cualquier hallazgo individual.
+
+**El ETL consume la mayor parte del tiempo real.** En todos los proyectos, la limpieza y transformación de datos tomó más tiempo que el análisis. Los precios de Airbnb llegan como strings con símbolo de moneda y comas. Los timestamps de Olist necesitan parsing cuidadoso para construir cohortes correctas. Los datos del NAIC Schedule P requieren validación cruzada entre tablas antes de construir triángulos confiables. Los datos de NYC 311 tienen inconsistencias entre agencias en cómo registran los tipos de solicitud. La metodología es transferible: validación de tipos, manejo explícito de nulos, logging de registros descartados.
+
+**La segmentación por percentiles aparece en todos los dominios.** Clasificar hosts de Airbnb en enterprise vs casual (por número de listings), segmentar clientes de Olist en clusters RFM (por recencia, frecuencia y monto), clasificar líneas de negocio de seguros por perfil de cola, segmentar agencias de NYC por cumplimiento de SLA. El patrón es idéntico: definir umbrales sobre una distribución, asignar etiquetas, medir diferencias entre grupos, tomar decisiones basadas en la heterogeneidad.
+
+**El 3% de recompra de Olist cambia cómo se enmarca un análisis de cohortes.** Cuando la gran mayoría de clientes son one-time buyers, la pregunta no es "qué tan bien retenemos" sino "qué diferencia a los que regresan." Ese reencuadre aplica en seguros (qué diferencia a las pólizas que renuevan), en SaaS (qué diferencia a los usuarios que no hacen churn) y en cualquier negocio con alta tasa de abandono.
+
+**El rigor estadístico de la formación actuarial se aplica directamente a producto.** Kaplan-Meier para curvas de supervivencia de clientes. Distribuciones de severidad para modelar LTV. Bornhuetter-Ferguson como ejemplo de cómo combinar datos observados con un prior cuando la experiencia es escasa. Estos no son métodos exclusivos de seguros; son herramientas estadísticas que la mayoría de analistas de producto no usa porque no las conoce.
+
+## Conexiones con el portafolio actuarial
+
+Este portafolio de DA no existe en aislamiento. Los proyectos actuariales en el portafolio principal complementan directamente el trabajo aquí:
+
+- **SIMA** (Sistema Integral de Modelación Actuarial) comparte con el proyecto 01 la lógica de cálculo de reservas, aunque para productos de vida en lugar de daños. Los mismos factores de descuento y patrones de desarrollo que aparecen en los triángulos del NAIC viven como funciones modulares en el motor de SIMA.
+- **GMM Explorer** conecta con la segmentación de este portafolio: definir grupos a partir de distribuciones de siniestros de Gastos Médicos Mayores es el mismo patrón de clasificación por percentiles que aparece en RFM, segmentación de hosts y análisis de SLA.
+- Las **notas técnicas de seguros** (vida y daños) son el referente regulatorio: los marcos de la CNSF que gobiernan cómo se calculan reservas en el mercado mexicano. La metodología del proyecto 01 es análoga, adaptada al contexto americano (NAIC).
+
+## Material de referencia
+
+- <a href="https://github.com/GonorAndres/data-analyst-path" target="_blank" rel="noopener">Repositorio principal en GitHub</a>: Código completo de los 7 proyectos, notebooks numerados, queries SQL, pipelines ETL y configuración de despliegue.
+- <a href="https://da-cohort-streamlit-451451662791.us-central1.run.app/" target="_blank" rel="noopener">E-Commerce Cohort Analysis (App en vivo)</a>: Streamlit desplegado en Cloud Run con pipeline técnico completo.

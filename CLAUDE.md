@@ -1,5 +1,11 @@
 # Portfolio Project Guidelines
 
+## Session Start Checklist
+
+At the start of every session, read `to-do.md` in the repo root before proposing or starting any work.
+It tracks: missing blog posts, missing screenshots, broken/placeholder links, and development status for the 8 priority projects.
+Update `to-do.md` when tasks are completed (check off items, add new ones as discovered).
+
 ## Content Tone -- NEVER Homework Style
 
 When writing or editing any content for this portfolio (blog posts, project descriptions, section text):
@@ -31,12 +37,38 @@ All blog posts MUST use the **English slug** as the filename in both `src/conten
 
 The title, description, and body content are fully localized -- only the filename must match.
 
+## Notes / Shared PDFs Metadata
+
+Every note in `src/data/notes.ts` must include:
+- `createdDate: string` -- YYYY-MM-DD format, sourced from the Google Drive file's `createdTime` field.
+- `version: string` -- sourced from the Google Drive file's `version` field (internal revision counter that increments on every save).
+
+Both fields are fetched via the Drive API v3. The API requires the `x-goog-user-project` header set to the GCP project ID:
+```bash
+TOKEN=$(gcloud auth application-default print-access-token)
+PROJECT=$(gcloud config get-value project)
+curl -s "https://www.googleapis.com/drive/v3/files/{FILE_ID}?fields=name,createdTime,version" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "x-goog-user-project: $PROJECT"
+```
+
+When adding a new note:
+1. Upload the PDF to the appropriate MisApuntes subfolder in Google Drive
+2. Fetch `createdTime` and `version` via the API call above
+3. Fill in `keywords` (5 terms per language, SEO-oriented)
+4. Set `relatedNotes` to at least one other note slug
+
+When updating an existing note's PDF, re-fetch the `version` field from Drive to keep it in sync.
+
+The version and creation date are displayed on individual note pages (`/notes/[slug]/`).
+
 ## Writing Standards
 
 - **No double-dash em-dashes**: Never use `--` as punctuation in blog posts or descriptions. This is a known AI writing pattern and reads unnaturally. Instead, use proper punctuation: commas, semicolons, colons, or restructure the sentence. For example:
   - Wrong: "Not formulas to memorize -- the mental toolkit an actuary uses"
   - Right: "Not formulas to memorize, but the mental toolkit an actuary uses"
   - Right: "Not formulas to memorize; they are the mental toolkit an actuary uses"
+- **Spanish diacritics are mandatory**: Every Spanish text (blog posts, descriptions, i18n strings, data files) MUST use proper accents (á, é, í, ó, ú) and tildes (ñ). Missing accents change meaning ("año" vs "ano", "está" vs "esta", "cómo" vs "como") and make the portfolio look unprofessional. When writing or editing Spanish content, always verify accents on: words ending in -ción/-sión, interrogatives (qué, cómo, cuál, dónde, cuándo), past tense verbs (empezó, decidió, construí), and common words (más, también, aquí, así, México, análisis).
 - Bilingual: all major content should exist in both ES and EN
 - Professional but accessible -- imagine the reader is a hiring manager at an insurance company or consultancy who has 2 minutes
 - Technical depth is good but must serve a point, not just demonstrate you can do math
@@ -135,28 +167,56 @@ When converting academic notes to blog posts:
 
 ## Future Scope
 
-### High Priority
-1. **Convert actuarial technical notes to blog posts** -- Life insurance, property insurance, collective insurance notes from PortafolioPDF/Escolares/Matematicas_Actuariales. Rewrite from homework tone to professional with sensitivity analysis and regulatory context (see docs/portfolio-review-recommendations.md)
-2. **Michoacan demographic analysis blog post** -- Connect the mortality tables to life insurance pricing. This turns two school assignments into one meaningful actuarial analysis
-3. **GMM Explorer blog post** -- Technical breakdown of pricing methodology, already planned in docs/future-plans.md
-4. **Research article blog post** -- Non-technical summary of data science internship paper
+### Blog Posts: use blog-writer agent for all of these
+Invoke with: "use blog-writer to write a post about [slug or topic]"
 
-### Medium Priority
-5. **Redo Markowitz portfolio in Python** -- Currently Excel-only, should show scipy.optimize efficient frontier + compare VaR methods
-6. **SIMA web platform** -- Phase 2 engine complete, needs frontend (see docs/future-plans.md item 5)
-7. ~~**Reserving project with CNSF data**~~ -- DONE: `insurance-claims` project added (NAIC Schedule P data, CL + BF, interactive dashboard). Deploy pending.
-8. **TIIE/CETES interactive dashboard** -- Banxico API, planned in docs/future-plans.md item 1
+#### Cards exist, blog post missing
+- [ ] `lisf-agent`: Claude SDK + LISF regulatory chatbot. Also needs public GCP URL in projects.ts (currently `#`).
+- [ ] `b-tree-explorer`: Rust + WASM visualization. Concept post done (b-trees-optimization); this one should focus on the implementation itself.
+- [ ] `flight-analytics`: PostgreSQL airline delay analysis. GitHub: https://github.com/GonorAndres/learning-posgre
+- [ ] `eruption-forecasting`: Time series volcanic forecasting. GitHub: https://github.com/GonorAndres/forecasting
+- [ ] `actuarial-suite`: 6-phase Python actuarial library. GitHub: https://github.com/GonorAndres/Analisis_Seguros_Mexico
+- [ ] `cartera-autos`: Synthetic auto insurance portfolio. GitHub: https://github.com/GonorAndres/CarteraSeguroAutos
+- [ ] `proust-attention`: Transformer trained on Proust. GitHub: https://github.com/GonorAndres/proust-attention
+- [ ] `pension-simulator`: IMSS + Fondo Bienestar R Shiny app. GitHub: https://github.com/GonorAndres/seguridad-social
+
+#### Concept / actuarial posts (high priority)
+- [ ] Life insurance technical note: rewrite from homework tone, add regulatory context (LISF/CUSF)
+- [ ] Property insurance technical note: same treatment, CNSF data angle
+- [ ] Michoacan demographic analysis: connect mortality tables to life insurance pricing
+- [ ] GMM Explorer: pricing methodology breakdown
+
+#### Other posts
+- [ ] Research article: non-technical summary of data science internship paper
+- [ ] SOA exam P: frame as professional insight on probabilistic thinking, not study guide
+
+### Project improvements
+- [ ] `lisf-agent`: expose GCP VM port publicly, update url in projects.ts
+- [ ] `data-analyst-portfolio`: update url when dashboards are deployed (currently links to blog post)
+- [ ] Redo Markowitz in Python: scipy.optimize efficient frontier + VaR comparison
+- [ ] SIMA web platform: Phase 2 engine done, needs frontend
+- [ ] TIIE/CETES interactive dashboard: Banxico API
 
 ### Low Priority
-9. **Mortality table visualizer** -- Interactive CONAPO/INEGI explorer, planned in docs/future-plans.md item 2
-10. **Promote second-tier MisApuntes** -- Concave vs Convex and Evolution of Probability could become blog posts with more context
-11. **SOA exam P exercises** -- There's a subfolder with practice material that could become a study resource blog series
+- [ ] Mortality table visualizer: interactive CONAPO/INEGI explorer
+- [ ] Concave vs Convex and Evolution of Probability: could become blog posts with more context
 
 ### Content to NOT Share Standalone
 - Amortizador/Instrucciones_Examen.pdf (exam instructions, not original work)
 - Formulario_MetodosCuantitativosParcial1.pdf (cheat sheet)
 - Covarianza_Regresion.pdf (2-page proof, too brief)
 - EticaActuarialEnsayo.pdf (opinion essay, not technical)
+
+## Session Log -- 2026-03-14
+
+### What Was Done
+- **Created blog posts for insurance pricing ML project**: ES + EN pair at `src/content/blog/{es,en}/actuarial-ml-pricing.md`. Editorial angle: cross-border analysis of what European ML pricing techniques mean for Mexico's 70% uninsured auto market. Covers frequency-severity decomposition, GLM vs GBM comparison, SHAP explainability, fairness audits, and regulatory comparison (CNSF vs EU AI Act).
+- **Cross-references**: Links to insurance-claims-dashboard (reserving is backward-looking, pricing is forward-looking), SIMA (regulatory layer), GMM Explorer (severity distribution).
+- **Source**: Project lives in `data-science-path` repo at `projects/insurance-pricing/`. Academic PDFs in `docs/references/`.
+
+### Pending
+- **Add `insurance-pricing-ml` project card to `src/data/projects.ts`**: slug `insurance-pricing-ml`, category `actuarial` or `data-science`, variant `wide`. GitHub URL: `https://github.com/GonorAndres/data-science-path/tree/main/projects/insurance-pricing`. Once dashboard is deployed, update URL.
+- **Deploy pricing dashboard**: Next.js (port 3060) + FastAPI (port 2060). Same Cloud Run pattern as other dashboards.
 
 ## How to Add a Blog Post
 
@@ -193,11 +253,12 @@ The post will automatically show up in:
 
 ## Claude Code Agents (`.claude/agents/`)
 
-Four persistent agents are defined for periodic maintenance. Claude auto-delegates based on task context, or you can invoke them by name.
+Five persistent agents are defined for periodic maintenance. Claude auto-delegates based on task context, or you can invoke them by name.
 
 - **data-architect** -- Maintains `src/data/` (projects, notes, skills, education, categories). Use when adding/editing/removing data entries or updating TypeScript interfaces.
 - **project-organizer** -- Manages how projects appear to visitors: categories, grid layout, narrative order, visual prominence, cross-project connections. Use when rethinking project display or adding new categories.
 - **blog-organizer** -- Maintains the blog section: adding posts, managing categories, fixing structure, ensuring ES/EN parity. Use when creating blog posts or fixing blog issues.
+- **blog-writer** -- Writes new blog posts from scratch (project slug, topic, or source material). Drafts both ES and EN versions with natural, honest voice. Use when you want to go from "I have this project/topic" to two ready-to-publish markdown files.
 - **code-quality** -- Handles SEO, accessibility, performance, bug fixes, TypeScript safety, and dead code removal. Use for technical health checks, meta tag updates, or fixing broken behavior.
 
 All agents save work reports to `subagents_outputs/`.

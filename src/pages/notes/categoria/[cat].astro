@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import NotesSearch from '../../../components/ui/NotesSearch';
+import { t } from '../../../i18n';
+import { getNotes, noteCategories, noteCategoryLabels, type NoteCategory } from '../../../data/notes';
+
+export function getStaticPaths() {
+  return noteCategories.map((cat) => ({ params: { cat } }));
+}
+
+const { cat } = Astro.params;
+const allNotes = getNotes('es').filter((n) => n.category === cat);
+
+const notesData = allNotes.map((note) => ({
+  slug: note.slug,
+  category: noteCategoryLabels['es'][note.category],
+  title: note.title,
+  description: note.description,
+  urls: note.urls,
+  tags: note.tags,
+  lang: 'es' as const,
+}));
+
+const categoryOptions = noteCategories.map((c) => ({
+  value: noteCategoryLabels['es'][c],
+  label: noteCategoryLabels['es'][c],
+}));
+
+const labels = {
+  searchPlaceholder: t('es', 'notes.searchPlaceholder'),
+  noResults: t('es', 'notes.noResults'),
+  noteSingular: t('es', 'notes.noteSingular'),
+  notePlural: t('es', 'notes.notePlural'),
+  allCategories: t('es', 'notes.allCategories'),
+  viewPdf: t('es', 'notes.viewPdf'),
+  details: t('es', 'notes.details'),
+};
+---
+
+<BaseLayout title={`${noteCategoryLabels['es'][cat as NoteCategory]} | Notas Tecnicas`} lang="es">
+  <section class="py-16 px-6">
+    <div class="max-w-4xl mx-auto">
+      <a href="/notes/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; {t('es', 'notes.allNotes')}</a>
+      <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{noteCategoryLabels['es'][cat as NoteCategory]}</h1>
+
+      <NotesSearch client:load notes={notesData} labels={labels} categoryOptions={categoryOptions} />
+    </div>
+  </section>
+</BaseLayout>
