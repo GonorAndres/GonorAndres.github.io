@@ -72,7 +72,7 @@ export const projects: Project[] = [
   },
 
   // repo: https://github.com/GonorAndres/data-analyst-path
-  // live: url points to internal blog post (no deployed app yet — TODO update when dashboards are live)
+  // live: 7 dashboards deployed — see blog post for individual URLs
   // local: /home/andtega349/data-analyst-path
   // source: NAIC Schedule P (insurance reserves), Olist e-commerce (Kaggle), Airbnb CDMX (Inside Airbnb)
   {

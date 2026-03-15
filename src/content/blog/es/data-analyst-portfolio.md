@@ -25,7 +25,7 @@ El dataset de Inside Airbnb para CDMX contiene 27,051 listings con 79 columnas. 
 
 Dashboard construido con Next.js y Recharts, arquitectura estática (JSON precalculado, zero backend).
 
-**Estado:** Completo | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics" target="_blank" rel="noopener">GitHub</a>
+**Estado:** Completo | <a href="https://demo-aesthetics.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics" target="_blank" rel="noopener">GitHub</a>
 
 ### 01 - Reservas actuariales P&C: IBNR y siniestralidad
 
@@ -35,7 +35,7 @@ Análisis de reservas sobre datos regulatorios NAIC Schedule P con métodos Chai
 
 Dashboard interactivo con Next.js y FastAPI: triángulos de pérdida en heatmap, waterfall de IBNR, frecuencia-severidad y tendencia de ratios combinados.
 
-**Estado:** Completo | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard" target="_blank" rel="noopener">GitHub</a>
+**Estado:** Completo | <a href="https://insurance-claims-dashboard-pi.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard" target="_blank" rel="noopener">GitHub</a>
 
 ### 02 - Cohortes de E-Commerce: retención, RFM y LTV
 
@@ -55,7 +55,7 @@ Evaluación de tasas de conversión con tres enfoques: test frecuentista clásic
 
 Dashboard interactivo con Next.js que permite explorar cada enfoque estadístico, calcular potencia de prueba y visualizar la convergencia bayesiana.
 
-**Estado:** En progreso | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/03-ab-test-analysis" target="_blank" rel="noopener">GitHub</a>
+**Estado:** Completo | <a href="https://ab-test-analysis.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/03-ab-test-analysis" target="_blank" rel="noopener">GitHub</a>
 
 ### 04 - Reporte KPI Ejecutivo: métricas SaaS automatizadas
 
@@ -65,17 +65,17 @@ Pipeline automatizado que genera reportes ejecutivos en PDF a partir de métrica
 
 5 notebooks que cubren desde generación de datos hasta automatización del reporte. Dashboard Next.js complementario.
 
-**Estado:** En progreso | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/04-executive-kpi-report" target="_blank" rel="noopener">GitHub</a>
+**Estado:** Completo | <a href="https://executive-kpi-report.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/04-executive-kpi-report" target="_blank" rel="noopener">GitHub</a>
 
 ### 05 - Portafolio Financiero: Monte Carlo y frontera eficiente
 
 **Pregunta de negocio:** Dado un portafolio de activos, ¿cuál es su perfil de riesgo-rendimiento y cómo se compara contra la frontera eficiente?
 
-Análisis de portafolio con simulación Monte Carlo, cálculo de frontera eficiente de Markowitz, métricas de riesgo (VaR, CVaR, Sharpe, Sortino) y atribución de rendimiento. La app de Streamlit permite al usuario definir su portafolio y ver en tiempo real cómo se posiciona respecto a la frontera eficiente y los benchmarks.
+Análisis de portafolio con simulación Monte Carlo, cálculo de frontera eficiente de Markowitz, métricas de riesgo (VaR, CVaR, Sharpe, Sortino) y atribución de rendimiento. El dashboard Next.js con FastAPI permite al usuario definir su portafolio y ver en tiempo real cómo se posiciona respecto a la frontera eficiente y los benchmarks, con datos en vivo de yfinance.
 
 4 notebooks cubriendo adquisición de datos, construcción de portafolio, análisis de rendimiento y analítica de riesgo.
 
-**Estado:** En progreso | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/05-financial-portfolio-tracker" target="_blank" rel="noopener">GitHub</a>
+**Estado:** Completo | <a href="https://financial-portfolio-tracker-iota.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/05-financial-portfolio-tracker" target="_blank" rel="noopener">GitHub</a>
 
 ### 06 - Eficiencia Operacional: NYC 311, minería de procesos y SLA
 
@@ -85,7 +85,7 @@ Análisis de eficiencia operacional sobre datos de NYC 311 (solicitudes de servi
 
 Dashboard Next.js con visualizaciones de flujos de proceso, heatmaps de SLA y rankings de agencias.
 
-**Estado:** En progreso | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/06-operational-efficiency" target="_blank" rel="noopener">GitHub</a>
+**Estado:** Completo | <a href="https://operational-efficiency.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/06-operational-efficiency" target="_blank" rel="noopener">GitHub</a>
 
 ## Decisiones de arquitectura
 
@@ -122,4 +122,10 @@ Este portafolio de DA no existe en aislamiento. Los proyectos actuariales en el 
 ## Material de referencia
 
 - <a href="https://github.com/GonorAndres/data-analyst-path" target="_blank" rel="noopener">Repositorio principal en GitHub</a>: Código completo de los 7 proyectos, notebooks numerados, queries SQL, pipelines ETL y configuración de despliegue.
-- <a href="https://da-cohort-streamlit-451451662791.us-central1.run.app/" target="_blank" rel="noopener">E-Commerce Cohort Analysis (App en vivo)</a>: Streamlit desplegado en Cloud Run con pipeline técnico completo.
+- <a href="https://demo-aesthetics.vercel.app" target="_blank" rel="noopener">Airbnb CDMX (App en vivo)</a>: Dashboard Next.js con análisis de mercado de rentas cortas.
+- <a href="https://insurance-claims-dashboard-pi.vercel.app" target="_blank" rel="noopener">Reservas Actuariales P&C (App en vivo)</a>: Dashboard Next.js + FastAPI con triángulos de pérdida y IBNR.
+- <a href="https://da-cohort-streamlit-451451662791.us-central1.run.app/" target="_blank" rel="noopener">Cohortes E-Commerce (App en vivo)</a>: Streamlit desplegado en Cloud Run con pipeline técnico completo.
+- <a href="https://ab-test-analysis.vercel.app" target="_blank" rel="noopener">Pruebas A/B (App en vivo)</a>: Dashboard Next.js con enfoques frecuentista, bayesiano y paradoja de Simpson.
+- <a href="https://executive-kpi-report.vercel.app" target="_blank" rel="noopener">Reporte KPI Ejecutivo (App en vivo)</a>: Dashboard Next.js con métricas SaaS automatizadas.
+- <a href="https://financial-portfolio-tracker-iota.vercel.app" target="_blank" rel="noopener">Portafolio Financiero (App en vivo)</a>: Dashboard Next.js + FastAPI con datos en vivo de yfinance.
+- <a href="https://operational-efficiency.vercel.app" target="_blank" rel="noopener">Eficiencia Operacional (App en vivo)</a>: Dashboard Next.js con minería de procesos y análisis de SLA.
