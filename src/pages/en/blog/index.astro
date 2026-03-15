@@ -48,7 +48,7 @@ const labels = {
         ))}
       </div>
 
-      <BlogSearch client:load posts={postsData} labels={labels} />
+      <BlogSearch client:idle posts={postsData} labels={labels} />
     </div>
   </section>
 </BaseLayout>

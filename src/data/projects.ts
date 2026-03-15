@@ -587,7 +587,7 @@ export function getProjects(lang: Lang) {
     slug: p.slug,
     title: p.title[lang],
     description: p.description[lang],
-    url: p.url,
+    url: p.url.startsWith('/') && lang === 'en' ? `/en${p.url}` : p.url,
     repo: p.repo,
     platform: p.platform,
     category: p.category,

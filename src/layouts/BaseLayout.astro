@@ -28,6 +28,8 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Lora-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <SEOMeta
       title={title}
@@ -46,6 +48,8 @@ const {
     <Footer lang={lang} />
 
     <script>
+      document.documentElement.classList.add('js-ready');
+
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {

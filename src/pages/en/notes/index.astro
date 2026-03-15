@@ -52,7 +52,7 @@ const labels = {
         ))}
       </div>
 
-      <NotesSearch client:load notes={notesData} labels={labels} categoryOptions={categoryOptions} />
+      <NotesSearch client:idle notes={notesData} labels={labels} categoryOptions={categoryOptions} />
     </div>
   </section>
 </BaseLayout>

@@ -40,7 +40,7 @@ const labels = {
       <a href="/blog/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; {t('es', 'blog.allPosts')}</a>
       <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{categoryLabels['es'][cat as Category]}</h1>
 
-      <BlogSearch client:load posts={postsData} labels={labels} />
+      <BlogSearch client:idle posts={postsData} labels={labels} />
     </div>
   </section>
 </BaseLayout>
