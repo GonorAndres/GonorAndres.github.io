@@ -19,6 +19,9 @@ subagents_outputs/
 # Interview study materials
 skills-info/
 
+# Temporary working files
+temp/
+
 # Claude ephemeral (config files ARE tracked)
 .claude/cache/
 .claude/debug/
