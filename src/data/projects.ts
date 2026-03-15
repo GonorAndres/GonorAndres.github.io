@@ -14,6 +14,7 @@ export interface Project {
   variant: 'standard' | 'tall' | 'wide';
   screenshot?: string;
   relatedTo?: string[];
+  blogSlug?: string;     // English slug of the blog post for this project (e.g. 'sima', 'actuarial-ml-pricing')
 }
 
 export const projects: Project[] = [
@@ -42,6 +43,7 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/sima.png',
     relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan', 'data-analyst-portfolio'],
+    blogSlug: 'sima',
   },
 
   // repo: https://github.com/GonorAndres/gmm-explorer
@@ -408,6 +410,7 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['lisf-agent'],
+    blogSlug: 'proust-attention-machine',
   },
 
   // repo: https://github.com/GonorAndres/seguridad-social
@@ -482,6 +485,7 @@ export const projects: Project[] = [
     },
     variant: 'wide',
     relatedTo: ['sima', 'data-analyst-portfolio', 'credit-risk'],
+    blogSlug: 'actuarial-ml-pricing',
   },
 
   // repo: https://github.com/GonorAndres/b-trees
@@ -506,6 +510,7 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['data-analyst-portfolio'],
+    blogSlug: 'b-trees-optimization',
   },
 
   // repo: https://github.com/GonorAndres/learning-posgre
@@ -595,6 +600,7 @@ export function getProjects(lang: Lang) {
     variant: p.variant,
     screenshot: p.screenshot,
     relatedTo: p.relatedTo,
+    blogSlug: p.blogSlug,
   }));
 }
 

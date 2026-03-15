@@ -14,6 +14,7 @@ interface ProjectData {
   screenshot?: string;
   relatedTo?: string[];
   relatedNames: string[];
+  blogUrl?: string;
 }
 
 interface Props {
@@ -21,6 +22,8 @@ interface Props {
   labels: {
     viewProject: string;
     viewRepo: string;
+    viewDrive: string;
+    viewDetails: string;
     viewLive: string;
     seeAlso: string;
     showAll: string;
@@ -30,6 +33,7 @@ interface Props {
     categories: Record<ProjectCategory, string>;
   };
 }
+
 
 const INITIAL_COUNT = 6;
 
@@ -119,26 +123,59 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
             )}
           </div>
         )}
-        <div className="flex items-center gap-4 mt-auto flex-wrap">
-          {project.repo && (
-            <a href={project.repo}
-              target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-[#1B2A4A]/45 hover:text-[#1B2A4A]/75 transition-colors duration-200">
-              <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
-              </svg>
-              {labels.viewRepo}
-            </a>
-          )}
-          <a href={project.url}
-            {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
-            className="inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-200"
-            style={{ color: accent }}>
-            {project.repo ? labels.viewLive : labels.viewProject}
-            <svg className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
+        {/* 3-slot button footer */}
+        <div className="grid grid-cols-3 gap-1 mt-auto pt-3 border-t border-[#1B2A4A]/8">
+          {/* LEFT — source: GitHub or Drive */}
+          <div className="flex justify-start">
+            {(project.repo || project.platform === 'GitHub' || project.platform === 'Drive') && (
+              <a
+                href={project.repo ?? project.url}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1B2A4A]/45 hover:text-[#1B2A4A]/75 transition-colors duration-200"
+              >
+                {project.platform === 'Drive' ? (
+                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+                  </svg>
+                )}
+                {project.platform === 'Drive' ? labels.viewDrive : labels.viewRepo}
+              </a>
+            )}
+          </div>
+          {/* CENTER — blog post */}
+          <div className="flex justify-center">
+            {project.blogUrl && (
+              <a
+                href={project.blogUrl}
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-[#1B2A4A]/45 hover:text-[#1B2A4A]/75 transition-colors duration-200"
+              >
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                {labels.viewDetails}
+              </a>
+            )}
+          </div>
+          {/* RIGHT — live site */}
+          <div className="flex justify-end">
+            {project.platform !== 'GitHub' && project.platform !== 'Drive' && (
+              <a
+                href={project.url}
+                {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
+                className="inline-flex items-center gap-1.5 text-xs font-medium transition-colors duration-200"
+                style={{ color: accent }}
+              >
+                {labels.viewLive}
+                <svg className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </article>
@@ -186,22 +223,47 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
         ))}
       </div>
 
-      {/* Repo icon + arrow */}
-      <div className="flex items-center gap-3 shrink-0">
-        {project.repo && (
-          <a href={project.repo}
+      {/* 3-slot compact icon actions */}
+      <div className="flex items-center gap-2 shrink-0">
+        {/* LEFT — source */}
+        {(project.repo || project.platform === 'GitHub' || project.platform === 'Drive') ? (
+          <a
+            href={project.repo ?? project.url}
             target="_blank" rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
             className="text-[#1B2A4A]/30 hover:text-[#1B2A4A]/65 transition-colors"
-            aria-label={labels.viewRepo}>
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+            aria-label={project.platform === 'Drive' ? labels.viewDrive : labels.viewRepo}
+          >
+            {project.platform === 'Drive' ? (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+              </svg>
+            )}
+          </a>
+        ) : <span className="w-4 h-4" />}
+        {/* CENTER — blog post */}
+        {project.blogUrl ? (
+          <a
+            href={project.blogUrl}
+            onClick={(e) => e.stopPropagation()}
+            className="text-[#1B2A4A]/30 hover:text-[#1B2A4A]/65 transition-colors"
+            aria-label={labels.viewDetails}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </a>
-        )}
-        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: accent }}>
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
+        ) : <span className="w-4 h-4" />}
+        {/* RIGHT — live site */}
+        {project.platform !== 'GitHub' && project.platform !== 'Drive' ? (
+          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: accent }}>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        ) : <span className="w-4 h-4" />}
       </div>
     </a>
   );
