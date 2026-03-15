@@ -1,5 +1,11 @@
 # Portfolio Project Guidelines
 
+## Session Start Checklist
+
+At the start of every session, read `to-do.md` in the repo root before proposing or starting any work.
+It tracks: missing blog posts, missing screenshots, broken/placeholder links, and development status for the 8 priority projects.
+Update `to-do.md` when tasks are completed (check off items, add new ones as discovered).
+
 ## Content Tone -- NEVER Homework Style
 
 When writing or editing any content for this portfolio (blog posts, project descriptions, section text):
@@ -62,6 +68,7 @@ The version and creation date are displayed on individual note pages (`/notes/[s
   - Wrong: "Not formulas to memorize -- the mental toolkit an actuary uses"
   - Right: "Not formulas to memorize, but the mental toolkit an actuary uses"
   - Right: "Not formulas to memorize; they are the mental toolkit an actuary uses"
+- **Spanish diacritics are mandatory**: Every Spanish text (blog posts, descriptions, i18n strings, data files) MUST use proper accents (á, é, í, ó, ú) and tildes (ñ). Missing accents change meaning ("año" vs "ano", "está" vs "esta", "cómo" vs "como") and make the portfolio look unprofessional. When writing or editing Spanish content, always verify accents on: words ending in -ción/-sión, interrogatives (qué, cómo, cuál, dónde, cuándo), past tense verbs (empezó, decidió, construí), and common words (más, también, aquí, así, México, análisis).
 - Bilingual: all major content should exist in both ES and EN
 - Professional but accessible -- imagine the reader is a hiring manager at an insurance company or consultancy who has 2 minutes
 - Technical depth is good but must serve a point, not just demonstrate you can do math

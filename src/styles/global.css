@@ -15,6 +15,14 @@
 }
 
 @font-face {
+  font-family: 'Lora';
+  src: url('/fonts/Lora-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Inter';
   src: url('/fonts/Inter-Regular.woff2') format('woff2');
   font-weight: 400;
@@ -66,6 +74,26 @@
   .fade-up.visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Blog editorial typography */
+  .blog-content {
+    font-family: 'Lora', Georgia, serif;
+  }
+
+  .blog-content > p:first-of-type::first-letter {
+    float: left;
+    font-size: 3.5em;
+    line-height: 0.8;
+    padding-right: 0.08em;
+    margin-top: 0.05em;
+    font-weight: 700;
+    color: #1B2A4A;
+  }
+
+  .blog-content code,
+  .blog-content pre {
+    font-family: 'Inter', system-ui, sans-serif;
   }
 
   /* Blog post content styles */

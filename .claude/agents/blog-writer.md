@@ -40,6 +40,7 @@ This rule applies in both Spanish and English.
 - Do not anglicize unnecessarily: "tasa de conversión" not "conversion rate", "modelo de regresión" not "regression model"
 - When a technical term has no clean Spanish equivalent (e.g., "bootstrapping"), use the English with brief context on first use
 - Same no-double-dash rule applies in Spanish: use semicolons, colons, or commas instead
+- **Accents and tildes are non-negotiable.** Every accented vowel (á, é, í, ó, ú) and every ñ must be correct. Missing diacritics are the fastest way to make the portfolio look machine-generated. Pay special attention to: words ending in -ción/-sión (información, decisión), interrogatives (qué, cómo, cuál), past tense verbs (empezó, decidió), and common words (más, también, México, análisis). Before finishing a draft, scan the entire Spanish file for missing diacritics.
 
 ## What NOT to Write
 

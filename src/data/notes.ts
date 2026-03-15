@@ -8,7 +8,7 @@ export const noteCategoryLabels: Record<Lang, Record<NoteCategory, string>> = {
   es: {
     actuarial: 'Ciencia Actuarial y Seguros',
     quant: 'Finanzas Cuantitativas',
-    stats: 'Estadistica y Probabilidad',
+    stats: 'Estadística y Probabilidad',
   },
   en: {
     actuarial: 'Actuarial Science & Insurance',
@@ -45,11 +45,11 @@ export const notes: Note[] = [
     createdDate: '2026-02-18',
     version: '24',
     title: {
-      es: 'SOA Exam P -- Referencia Completa de Estudio (v2)',
-      en: 'SOA Exam P -- Complete Study Reference (v2)',
+      es: 'SOA Exam P : Referencia Inicial de Estudio',
+      en: 'SOA Exam P : Initial Study Reference',
     },
     description: {
-      es: 'La referencia que construi para prepararme al Examen P. Cubre probabilidad general, variables aleatorias y distribuciones multivariadas, cada tema con intuicion actuarial, no solo formulas. Incluye problemas resueltos con analisis de por que los distractores enganan.',
+      es: 'La referencia que construí para prepararme al Examen P. Cubre probabilidad general, variables aleatorias y distribuciones multivariadas, cada tema con intuición actuarial, no solo fórmulas. Incluye problemas resueltos con análisis de por qué los distractores engañan.',
       en: 'The reference I built to prepare for Exam P. Covers general probability, random variables, and multivariate distributions, each topic with actuarial intuition, not just formulas. Includes solved problems with analysis of why the distractors mislead.',
     },
     urls: [
@@ -60,7 +60,7 @@ export const notes: Note[] = [
       en: ['SOA', 'Exam P', 'Probability', 'Actuarial'],
     },
     keywords: {
-      es: ['SOA Exam P', 'probabilidad actuarial', 'guia de estudio', 'variables aleatorias', 'distribuciones'],
+      es: ['SOA Exam P', 'probabilidad actuarial', 'guía de estudio', 'variables aleatorias', 'distribuciones'],
       en: ['SOA Exam P', 'actuarial probability', 'study reference', 'random variables', 'distributions'],
     },
     relatedNotes: ['eves-law-total-variance', 'glm-actuarial-models'],
@@ -75,7 +75,7 @@ export const notes: Note[] = [
       en: 'GLM for Actuarial Models',
     },
     description: {
-      es: 'De la teoria a la produccion: como las aseguradoras realmente estiman frecuencia de siniestros, severidad y caida de polizas. Este apunte recorre desde la familia exponencial y funciones liga hasta validacion con curvas ROC, coeficiente de Gini y tablas de relatividad. Tres casos de estudio completos: autos, vida y riesgos de trabajo. Apunte personal de sintesis actuarial.',
+      es: 'De la teoría a la producción: cómo las aseguradoras realmente estiman frecuencia de siniestros, severidad y caída de pólizas. Este apunte recorre desde la familia exponencial y funciones liga hasta validación con curvas ROC, coeficiente de Gini y tablas de relatividad. Tres casos de estudio completos: autos, vida y riesgos de trabajo. Apunte personal de síntesis actuarial.',
       en: 'From theory to production: how insurers actually estimate claim frequency, severity, and policy lapse. This note walks from exponential families and link functions through validation with ROC curves, Gini coefficients, and relativity tables. Three full case studies: auto, life, and workers\' comp. Personal actuarial synthesis note.',
     },
     urls: [
@@ -86,7 +86,7 @@ export const notes: Note[] = [
       en: ['GLM', 'Actuarial', 'Insurance'],
     },
     keywords: {
-      es: ['modelos lineales generalizados', 'GLM actuarial', 'frecuencia siniestros', 'severidad', 'tarificacion seguros'],
+      es: ['modelos lineales generalizados', 'GLM actuarial', 'frecuencia siniestros', 'severidad', 'tarificación seguros'],
       en: ['generalized linear models', 'actuarial GLM', 'claim frequency', 'severity', 'insurance pricing'],
     },
     relatedNotes: ['soa-exam-p-reference', 'lee-carter-mortality'],
@@ -101,7 +101,7 @@ export const notes: Note[] = [
       en: 'Eve\'s Law and Total Variance',
     },
     description: {
-      es: 'Documento puente que conecta la Ley de Adam, la Ley de Eve, distribuciones mixtas (Poisson-Gamma, exponencial mixta) y distribuciones compuestas. Incluye problemas resueltos estilo SOA con analisis de por que cada distractor esta mal. La pieza que une la varianza condicional con la teoria de credibilidad.',
+      es: 'Documento puente que conecta la Ley de Adam, la Ley de Eve, distribuciones mixtas (Poisson-Gamma, exponencial mixta) y distribuciones compuestas. Incluye problemas resueltos estilo SOA con análisis de por qué cada distractor está mal. La pieza que une la varianza condicional con la teoría de credibilidad.',
       en: 'Bridge document connecting Adam\'s Law, Eve\'s Law, mixed distributions (Poisson-Gamma, mixed exponential), and compound distributions. Includes SOA-style solved problems with analysis of why each distractor fails. The piece that links conditional variance to credibility theory.',
     },
     urls: [
@@ -123,11 +123,11 @@ export const notes: Note[] = [
     createdDate: '2026-02-15',
     version: '8',
     title: {
-      es: 'Reestimacion de Mortalidad Lee-Carter',
+      es: 'Reestimación de Mortalidad Lee-Carter',
       en: 'Lee-Carter Mortality Reestimation',
     },
     description: {
-      es: 'Reestimacion del modelo Lee-Carter con datos de mortalidad mexicanos. Descomposicion SVD de la matriz de tasas, proyeccion temporal del indice kappa, y su implicacion directa para tablas de vida y reservas de seguros de personas. Conecta la demografia con la practica actuarial.',
+      es: 'Reestimación del modelo Lee-Carter con datos de mortalidad mexicanos. Descomposición SVD de la matriz de tasas, proyección temporal del índice kappa, y su implicación directa para tablas de vida y reservas de seguros de personas. Conecta la demografía con la práctica actuarial.',
       en: 'Lee-Carter model reestimation using Mexican mortality data. SVD decomposition of the rate matrix, time projection of the kappa index, and its direct implication for life tables and life insurance reserves. Connects demography to actuarial practice.',
     },
     urls: [
@@ -138,7 +138,7 @@ export const notes: Note[] = [
       en: ['Mortality', 'Lee-Carter', 'SVD', 'Life Tables'],
     },
     keywords: {
-      es: ['Lee-Carter', 'mortalidad Mexico', 'SVD', 'tablas de vida', 'reservas seguros'],
+      es: ['Lee-Carter', 'mortalidad México', 'SVD', 'tablas de vida', 'reservas seguros'],
       en: ['Lee-Carter', 'Mexican mortality', 'SVD', 'life tables', 'insurance reserves'],
     },
     relatedNotes: ['glm-actuarial-models'],
@@ -154,7 +154,7 @@ export const notes: Note[] = [
       en: 'Black-Scholes, FRA & IRS',
     },
     description: {
-      es: 'Un solo documento que conecta cuatro mundos: como ponerle precio a lo que nadie sabe cuanto vale (derivados exoticos), como leer el futuro en las curvas de tasas del Tesoro, como dos empresas pueden intercambiar riesgo con un swap, y como armar un portafolio que no dependa de la suerte. Todo resuelto con Python y atado por la misma logica de no-arbitraje. Examen integrador de Metodos Cuantitativos en Finanzas, UNAM.',
+      es: 'Un solo documento que conecta cuatro mundos: cómo ponerle precio a lo que nadie sabe cuánto vale (derivados exóticos), cómo leer el futuro en las curvas de tasas del Tesoro, cómo dos empresas pueden intercambiar riesgo con un swap, y cómo armar un portafolio que no dependa de la suerte. Todo resuelto con Python y atado por la misma lógica de no-arbitraje. Examen integrador de Métodos Cuantitativos en Finanzas, UNAM.',
       en: 'One document tying four worlds together: how to price what nobody knows the value of (exotic derivatives), how to read the future in Treasury yield curves, how two firms can swap risk through an IRS, and how to build a portfolio that doesn\'t rely on luck. All solved in Python and bound by the same no-arbitrage logic. Integrative exam for Quantitative Methods in Finance, UNAM.',
     },
     urls: [
@@ -180,7 +180,7 @@ export const notes: Note[] = [
       en: 'Black-Scholes and the Log-Normal',
     },
     description: {
-      es: 'Por que la volatilidad no es solo ruido sino una fuerza que separa la mediana del promedio, y como eso hace que las opciones valgan mas de lo que la intuicion sugiere. Un recorrido por el movimiento browniano geometrico, la distribucion del precio terminal y el efecto del "volatility drag". Apunte personal de finanzas cuantitativas.',
+      es: 'Por qué la volatilidad no es solo ruido sino una fuerza que separa la mediana del promedio, y cómo eso hace que las opciones valgan más de lo que la intuición sugiere. Un recorrido por el movimiento browniano geométrico, la distribución del precio terminal y el efecto del "volatility drag". Apunte personal de finanzas cuantitativas.',
       en: 'Why volatility isn\'t just noise but a force that pulls the median away from the mean, and how that makes options worth more than intuition suggests. A walkthrough of geometric Brownian motion, the terminal price distribution, and the "volatility drag" effect. Personal quantitative finance note.',
     },
     urls: [
@@ -202,11 +202,11 @@ export const notes: Note[] = [
     createdDate: '2025-06-16',
     version: '11',
     title: {
-      es: 'Ajuste Parametrico de Rendimientos Financieros',
+      es: 'Ajuste Paramétrico de Rendimientos Financieros',
       en: 'Parametric Fitting of Financial Returns',
     },
     description: {
-      es: 'El camino completo para modelar rendimientos: desde elegir entre normal y log-normal, pasando por momentos y maxima verosimilitud, hasta llegar al VaR parametrico. Con pruebas de bondad de ajuste, Q-Q plots y criterios de informacion para no quedarse solo con la primera distribucion que parezca funcionar. Apunte del curso de Mercados Financieros, UNAM.',
+      es: 'El camino completo para modelar rendimientos: desde elegir entre normal y log-normal, pasando por momentos y máxima verosimilitud, hasta llegar al VaR paramétrico. Con pruebas de bondad de ajuste, Q-Q plots y criterios de información para no quedarse solo con la primera distribución que parezca funcionar. Apunte del curso de Mercados Financieros, UNAM.',
       en: 'The full path to modeling returns: from choosing between normal and log-normal, through moments and maximum likelihood, all the way to parametric VaR. With goodness-of-fit tests, Q-Q plots, and information criteria so you don\'t settle for the first distribution that looks right. Financial Markets course note, UNAM.',
     },
     urls: [
@@ -217,7 +217,7 @@ export const notes: Note[] = [
       en: ['VaR', 'MLE', 'Finance'],
     },
     keywords: {
-      es: ['VaR parametrico', 'maxima verosimilitud', 'rendimientos financieros', 'bondad de ajuste', 'Q-Q plot'],
+      es: ['VaR paramétrico', 'máxima verosimilitud', 'rendimientos financieros', 'bondad de ajuste', 'Q-Q plot'],
       en: ['parametric VaR', 'maximum likelihood', 'financial returns', 'goodness of fit', 'Q-Q plot'],
     },
     relatedNotes: ['black-scholes-fra-irs', 'black-scholes-log-normal'],
@@ -233,7 +233,7 @@ export const notes: Note[] = [
       en: 'A/B Testing: Bayesian vs Frequentist',
     },
     description: {
-      es: 'La misma pregunta, dos formas de pensar: el enfoque clasico dice que no hay evidencia suficiente, el bayesiano dice que casi seguro B es mejor. Este resumen explora que pasa cuando dejas de depender solo del p-valor y empiezas a pensar en utilidad esperada para decidir. Proyecto personal de exploracion estadistica. Disponible en ambos idiomas.',
+      es: 'La misma pregunta, dos formas de pensar: el enfoque clásico dice que no hay evidencia suficiente, el bayesiano dice que casi seguro B es mejor. Este resumen explora qué pasa cuando dejas de depender solo del p-valor y empiezas a pensar en utilidad esperada para decidir. Proyecto personal de exploración estadística. Disponible en ambos idiomas.',
       en: 'Same question, two ways of thinking: the classical approach says there\'s not enough evidence, the Bayesian one says B is almost certainly better. This summary explores what happens when you stop relying solely on the p-value and start thinking in terms of expected utility to decide. Personal statistical exploration project. Available in both languages.',
     },
     urls: [
@@ -241,11 +241,11 @@ export const notes: Note[] = [
       { label: { es: 'Summary EN', en: 'Summary EN' }, url: 'https://drive.google.com/file/d/1kguG7XKBYd6OLJ3nI1z-Syt7Ozcq0mUB/view?usp=drive_link' },
     ],
     tags: {
-      es: ['Estadistica', 'Bayes', 'Python'],
+      es: ['Estadística', 'Bayes', 'Python'],
       en: ['Statistics', 'Bayes', 'Python'],
     },
     keywords: {
-      es: ['A/B testing', 'bayesiano vs frecuentista', 'p-valor', 'utilidad esperada', 'pruebas de hipotesis'],
+      es: ['A/B testing', 'bayesiano vs frecuentista', 'p-valor', 'utilidad esperada', 'pruebas de hipótesis'],
       en: ['A/B testing', 'Bayesian vs frequentist', 'p-value', 'expected utility', 'hypothesis testing'],
     },
     relatedNotes: ['volcanic-eruption-forecasting'],
@@ -260,7 +260,7 @@ export const notes: Note[] = [
       en: 'Time Series: Delhi Temperature',
     },
     description: {
-      es: 'Cinco anos de temperatura en Delhi contados por los datos: encontrar el patron estacional escondido en el ruido, separar lo que es tendencia real de lo que es variacion aleatoria, y construir un modelo en R que pueda anticipar lo que viene. El tipo de ejercicio donde la estadistica deja de ser abstracta y se vuelve clima. Proyecto del curso de Analisis de Supervivencia y Series de Tiempo, UNAM.',
+      es: 'Cinco años de temperatura en Delhi contados por los datos: encontrar el patrón estacional escondido en el ruido, separar lo que es tendencia real de lo que es variación aleatoria, y construir un modelo en R que pueda anticipar lo que viene. El tipo de ejercicio donde la estadística deja de ser abstracta y se vuelve clima. Proyecto del curso de Análisis de Supervivencia y Series de Tiempo, UNAM.',
       en: 'Five years of Delhi temperature told through data: finding the seasonal pattern hidden in the noise, separating real trend from random variation, and building a model in R that can anticipate what comes next. The kind of exercise where statistics stops being abstract and becomes weather. Course project for Survival Analysis and Time Series, UNAM.',
     },
     urls: [
@@ -282,11 +282,11 @@ export const notes: Note[] = [
     createdDate: '2025-07-30',
     version: '12',
     title: {
-      es: 'Prediccion Probabilistica de Erupciones Volcanicas',
+      es: 'Predicción Probabilística de Erupciones Volcánicas',
       en: 'Probabilistic Forecasting of Volcanic Eruptions',
     },
     description: {
-      es: 'Que tienen en comun un actuario y un vulcanologo? Que ambos intentan predecir eventos raros con consecuencias enormes. Este apunte revisa como se modelan los intervalos entre erupciones del Popocatepetl y el Galeras con distribuciones log-normal, modelos de Markov y procesos de renovacion. Las preguntas abiertas al final son genuinamente fascinantes. Apunte personal de probabilidad aplicada.',
+      es: 'Qué tienen en común un actuario y un vulcanólogo? Que ambos intentan predecir eventos raros con consecuencias enormes. Este apunte revisa cómo se modelan los intervalos entre erupciones del Popocatepetl y el Galeras con distribuciones log-normal, modelos de Markov y procesos de renovación. Las preguntas abiertas al final son genuinamente fascinantes. Apunte personal de probabilidad aplicada.',
       en: 'What do an actuary and a volcanologist have in common? Both try to predict rare events with enormous consequences. This note reviews how eruption intervals for Popocatepetl and Galeras are modeled with log-normal distributions, Markov models, and renewal processes. The open questions at the end are genuinely fascinating. Personal applied probability note.',
     },
     urls: [
@@ -297,7 +297,7 @@ export const notes: Note[] = [
       en: ['Probability', 'Volcanoes', 'Models'],
     },
     keywords: {
-      es: ['erupciones volcanicas', 'prediccion probabilistica', 'Popocatepetl', 'procesos de renovacion', 'Markov'],
+      es: ['erupciones volcánicas', 'predicción probabilística', 'Popocatepetl', 'procesos de renovación', 'Markov'],
       en: ['volcanic eruptions', 'probabilistic forecasting', 'Popocatepetl', 'renewal processes', 'Markov'],
     },
     relatedNotes: ['time-series-delhi', 'ab-testing-bayesian-frequentist'],

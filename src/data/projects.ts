@@ -18,7 +18,7 @@ export interface Project {
 
 export const projects: Project[] = [
   // repo: https://github.com/GonorAndres/SIMA
-  // live: https://sima-451451662791.us-central1.run.app/
+  // live: https://sima-d3qj5vwxtq-uc.a.run.app
   // local: /home/andtega349/SIMA
   // source: original work, demographic data from CONAPO/INEGI for mortality projection
   {
@@ -31,13 +31,13 @@ export const projects: Project[] = [
       es: 'Plataforma de modelación actuarial de punta a punta para seguros de vida: proyección de mortalidad Lee-Carter con datos demográficos, tablas de conmutación, valuación de reservas para tres productos (temporal, vitalicio, dotal) y cálculo de requerimientos de capital por solvencia (RCS) con pruebas de estrés bajo regulación mexicana (LISF, CUSF). Motor de cálculo en Python con API REST desplegada en Google Cloud.',
       en: 'End-to-end actuarial modeling platform for life insurance: Lee-Carter mortality projection from demographic data, commutation tables, reserve valuation for three products (term, whole life, endowment), and solvency capital requirement (SCR) calculations with stress testing under Mexican regulation (LISF, CUSF). Python calculation engine with REST API deployed on Google Cloud.',
     },
-    url: 'https://sima-451451662791.us-central1.run.app/',
+    url: 'https://sima-d3qj5vwxtq-uc.a.run.app',
     repo: 'https://github.com/GonorAndres/SIMA',
     platform: 'GCP',
     category: 'actuarial',
     tags: {
-      es: ['Python', 'FastAPI', 'Lee-Carter', 'LISF', 'Reservas', 'GCP'],
-      en: ['Python', 'FastAPI', 'Lee-Carter', 'LISF', 'Reserves', 'GCP'],
+      es: ['Python', 'FastAPI', 'React', 'Lee-Carter', 'SVD', 'LISF', 'Solvencia II', 'GCP'],
+      en: ['Python', 'FastAPI', 'React', 'Lee-Carter', 'SVD', 'LISF', 'Solvency II', 'GCP'],
     },
     variant: 'wide',
     screenshot: '/screenshots/sima.png',
@@ -82,7 +82,7 @@ export const projects: Project[] = [
       en: 'Data Analyst Portfolio',
     },
     description: {
-      es: '7 proyectos end-to-end de analisis de datos: cohortes de e-commerce, reservas actuariales, pruebas A/B, KPIs ejecutivos, portafolio financiero y eficiencia operacional. SQL, Python, Streamlit, Next.js y Power BI.',
+      es: '7 proyectos end-to-end de análisis de datos: cohortes de e-commerce, reservas actuariales, pruebas A/B, KPIs ejecutivos, portafolio financiero y eficiencia operacional. SQL, Python, Streamlit, Next.js y Power BI.',
       en: '7 end-to-end data analysis projects: e-commerce cohorts, actuarial reserves, A/B testing, executive KPIs, financial portfolio, and operational efficiency. SQL, Python, Streamlit, Next.js, and Power BI.',
     },
     url: '/blog/data-analyst-portfolio/',
@@ -457,6 +457,31 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['sima'],
+  },
+
+  // repo: https://github.com/GonorAndres/data-science-path (subfolder: projects/insurance-pricing)
+  // local: /home/andtega349/data-science-path/projects/insurance-pricing
+  // source: synthetic insurance data generated with actuarial assumptions (Poisson/Gamma frequency-severity)
+  {
+    slug: 'insurance-pricing-ml',
+    title: {
+      es: 'Tarificacion de Seguros con ML',
+      en: 'Insurance Pricing with ML',
+    },
+    description: {
+      es: 'Pipeline completo de tarificacion actuarial: GLMs Poisson/Gamma para frecuencia-severidad, XGBoost y LightGBM con tuning Optuna, interpretabilidad SHAP, auditoria de fairness por genero/edad, tracking MLflow. Backend FastAPI y dashboard interactivo Next.js.',
+      en: 'Complete actuarial pricing pipeline: Poisson/Gamma GLMs for frequency-severity, XGBoost and LightGBM with Optuna tuning, SHAP interpretability, gender/age fairness audit, MLflow tracking. FastAPI backend and interactive Next.js dashboard.',
+    },
+    url: '/blog/actuarial-ml-pricing/',
+    repo: 'https://github.com/GonorAndres/data-science-path',
+    platform: 'GitHub',
+    category: 'data-science',
+    tags: {
+      es: ['Python', 'GLM', 'XGBoost', 'SHAP', 'Fairness', 'FastAPI'],
+      en: ['Python', 'GLM', 'XGBoost', 'SHAP', 'Fairness', 'FastAPI'],
+    },
+    variant: 'wide',
+    relatedTo: ['sima', 'data-analyst-portfolio', 'credit-risk'],
   },
 
   // repo: https://github.com/GonorAndres/b-trees
