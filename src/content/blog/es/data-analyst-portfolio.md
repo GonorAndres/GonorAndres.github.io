@@ -63,7 +63,7 @@ Dashboard interactivo con Next.js que permite explorar cada enfoque estadístico
 
 Pipeline automatizado que genera reportes ejecutivos en PDF a partir de métricas SaaS (MRR, churn, CAC, LTV). Incluye detección de anomalías sobre series de tiempo y forecast de métricas para el trimestre siguiente. El output es un PDF bilingüe (español/inglés) listo para enviar al C-suite, con visualizaciones Plotly exportadas a imagen.
 
-5 notebooks que cubren desde generación de datos hasta automatización del reporte. Dashboard Next.js complementario.
+9 notebooks que cubren generacion de datos, EDA, deteccion de anomalias, forecasting, automatizacion de reportes, arquitectura backend, calculos KPI, algoritmos de analitica y pipeline PDF. Dashboard Next.js complementario.
 
 **Estado:** Completo | <a href="https://executive-kpi-report.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/04-executive-kpi-report" target="_blank" rel="noopener">GitHub</a>
 
@@ -73,7 +73,7 @@ Pipeline automatizado que genera reportes ejecutivos en PDF a partir de métrica
 
 Análisis de portafolio con simulación Monte Carlo, cálculo de frontera eficiente de Markowitz, métricas de riesgo (VaR, CVaR, Sharpe, Sortino) y atribución de rendimiento. El dashboard Next.js con FastAPI permite al usuario definir su portafolio y ver en tiempo real cómo se posiciona respecto a la frontera eficiente y los benchmarks, con datos en vivo de yfinance.
 
-4 notebooks cubriendo adquisición de datos, construcción de portafolio, análisis de rendimiento y analítica de riesgo.
+5 notebooks cubriendo adquisicion de datos, construccion de portafolio, analisis de rendimiento, analitica de riesgo y optimizacion de frontera Monte Carlo.
 
 **Estado:** Completo | <a href="https://financial-portfolio-tracker-iota.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/05-financial-portfolio-tracker" target="_blank" rel="noopener">GitHub</a>
 
