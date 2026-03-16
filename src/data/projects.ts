@@ -148,6 +148,33 @@ export const projects: Project[] = [
     relatedTo: ['credit-risk'],
   },
 
+  // repo: https://github.com/GonorAndres/seguridad-social
+  // local: /home/andtega349/seguridad_social/fondo_bienestar
+  // source: original calculations based on LSS (Ley del Seguro Social), UMA historical values, AFORE commission data
+  {
+    slug: 'pension-simulator',
+    title: {
+      es: 'Simulador de Pensión IMSS + Fondo Bienestar',
+      en: 'IMSS Pension Simulator + Fondo Bienestar',
+    },
+    description: {
+      es: 'Aplicación R Shiny que estima la pensión de retiro bajo Ley 73, Ley 97 y el Fondo de Pensiones para el Bienestar (2024). Incluye proyección de saldo AFORE, elegibilidad al complemento del Fondo Bienestar y análisis de sensibilidad bajo escenarios conservador, base y optimista.',
+      en: 'R Shiny app that estimates Mexican retirement pension under Ley 73, Ley 97, and the Fondo de Pensiones para el Bienestar (2024). Includes AFORE balance projection, Fondo Bienestar eligibility check, and sensitivity analysis under conservative, base, and optimistic scenarios.',
+    },
+    url: 'https://simulador-pension-d3qj5vwxtq-uc.a.run.app/',
+    repo: 'https://github.com/GonorAndres/seguridad-social/tree/main/fondo_bienestar',
+    platform: 'GCP',
+    category: 'actuarial',
+    tags: {
+      es: ['R', 'Shiny', 'IMSS', 'AFORE', 'Pensiones'],
+      en: ['R', 'Shiny', 'IMSS', 'AFORE', 'Pensions'],
+    },
+    variant: 'standard',
+    screenshot: '/screenshots/pension-simulator.png',
+    relatedTo: ['sima', 'life-insurance'],
+    blogSlug: 'pension-simulator',
+  },
+
   // repo: no public GitHub repo — Drive folder IS the deliverable
   // source: original technical note (UNAM coursework), aligned to LISF/CUSF regulation
   {
@@ -411,30 +438,6 @@ export const projects: Project[] = [
     variant: 'standard',
     relatedTo: ['lisf-agent'],
     blogSlug: 'proust-attention-machine',
-  },
-
-  // repo: https://github.com/GonorAndres/seguridad-social
-  // local: /home/andtega349/seguridad_social/fondo_bienestar
-  // source: original calculations based on LSS (Ley del Seguro Social), UMA historical values, AFORE commission data
-  {
-    slug: 'pension-simulator',
-    title: {
-      es: 'Simulador de Pensión IMSS + Fondo Bienestar',
-      en: 'IMSS Pension Simulator + Fondo Bienestar',
-    },
-    description: {
-      es: 'Aplicación R Shiny que estima la pensión de retiro bajo Ley 73, Ley 97 y el Fondo de Pensiones para el Bienestar (2024). Incluye proyección de saldo AFORE, elegibilidad al complemento del Fondo Bienestar y análisis de sensibilidad bajo escenarios conservador, base y optimista.',
-      en: 'R Shiny app that estimates Mexican retirement pension under Ley 73, Ley 97, and the Fondo de Pensiones para el Bienestar (2024). Includes AFORE balance projection, Fondo Bienestar eligibility check, and sensitivity analysis under conservative, base, and optimistic scenarios.',
-    },
-    url: 'https://github.com/GonorAndres/seguridad-social',
-    platform: 'GitHub',
-    category: 'actuarial',
-    tags: {
-      es: ['R', 'Shiny', 'IMSS', 'AFORE', 'Pensiones'],
-      en: ['R', 'Shiny', 'IMSS', 'AFORE', 'Pensions'],
-    },
-    variant: 'standard',
-    relatedTo: ['sima', 'life-insurance'],
   },
 
   // repo: no GitHub repo — code lives only on the GCP VM
