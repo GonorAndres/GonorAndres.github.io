@@ -43,7 +43,7 @@ The gender effect is quantifiable. A woman earning $12,000/month with $150,000 i
 
 The sensitivity analysis across conservative (3%), base (4%), and optimistic (5%) scenarios produces a 30-40% range in projected balance. But the variable that moves the result most for Ley 97 is the contribution reform, which nearly triples employer CEAV rates between 2023 and 2030. The cesantia factor works as expected: at age 62, the Ley 73 pension is 85% of the age-65 calculation ($10,588 vs. ~$12,456 implied at full factor).
 
-One finding from the validation: the simulator does not reject weeks below 500 for Ley 73. With 300 weeks, it produces a calculation that falls to the minimum floor ($8,485), when in reality a worker with fewer than 500 weeks has no pension right under Ley 73, only a lump-sum withdrawal. This is a pending bug, documented in the repository.
+One finding from the validation: the simulator originally did not reject weeks below 500 for Ley 73. With 300 weeks, it produced a calculation that fell to the minimum floor ($8,485), when in reality a worker with fewer than 500 weeks has no pension right under Ley 73, only a lump-sum withdrawal. This is exactly what a CI/CD pipeline with 126 tests is for: the bug was identified, fixed, and deployed in the same cycle. The validation is now live in production.
 
 ## Engineering decisions
 

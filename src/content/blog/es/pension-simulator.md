@@ -43,7 +43,7 @@ El efecto de género es cuantificable. Una mujer con salario de $12,000/mes, $15
 
 El análisis de sensibilidad entre escenarios conservador (3%), base (4%) y optimista (5%) produce un rango de 30-40% en el saldo proyectado. Pero la variable que más mueve el resultado para Ley 97 es la reforma de contribuciones, que casi triplica las tasas CEAV patronales entre 2023 y 2030. El factor de cesantía funciona como se espera: a los 62 años, la pensión Ley 73 es el 85% de la calculada a los 65 ($10,588 vs. ~$12,456 implícitos a factor 100%).
 
-Un hallazgo de la validación: el simulador no rechaza semanas por debajo de 500 para Ley 73. Con 300 semanas, produce un cálculo que cae al piso mínimo ($8,485), cuando en realidad un trabajador con menos de 500 semanas no tiene derecho a pensión bajo Ley 73, solo a devolución de recursos. Esto es un bug pendiente de corrección, documentado en el repositorio.
+Un hallazgo de la validación: el simulador originalmente no rechazaba semanas por debajo de 500 para Ley 73. Con 300 semanas, producía un cálculo que caía al piso mínimo ($8,485), cuando en realidad un trabajador con menos de 500 semanas no tiene derecho a pensión bajo Ley 73, solo a devolución de recursos. Este tipo de detección es exactamente para lo que sirve un pipeline de CI/CD con 126 tests: el bug se identificó, se corrigió y se desplegó en el mismo ciclo. Hoy la validación ya está en producción.
 
 ## Decisiones de ingeniería
 
