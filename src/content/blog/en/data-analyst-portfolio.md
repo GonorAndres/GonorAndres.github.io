@@ -63,7 +63,7 @@ Interactive Next.js dashboard for exploring each statistical approach, calculati
 
 Automated pipeline generating executive PDF reports from SaaS metrics (MRR, churn, CAC, LTV). Includes time series anomaly detection and metric forecasting for the next quarter. The output is a bilingual PDF (Spanish/English) ready for C-suite delivery, with Plotly visualizations exported as images.
 
-5 notebooks covering data generation through report automation. Complementary Next.js dashboard.
+9 notebooks covering data generation, EDA, anomaly detection, forecasting, report automation, backend architecture, KPI calculations, analytics algorithms, and PDF pipeline. Complementary Next.js dashboard.
 
 **Status:** Complete | <a href="https://executive-kpi-report.vercel.app" target="_blank" rel="noopener">Live app</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/04-executive-kpi-report" target="_blank" rel="noopener">GitHub</a>
 
@@ -73,7 +73,7 @@ Automated pipeline generating executive PDF reports from SaaS metrics (MRR, chur
 
 Portfolio analysis with Monte Carlo simulation, Markowitz efficient frontier calculation, risk metrics (VaR, CVaR, Sharpe, Sortino), and return attribution. The Next.js dashboard with FastAPI backend lets users define their portfolio and see in real time how it positions relative to the efficient frontier and benchmarks, with live data from yfinance.
 
-4 notebooks covering data acquisition, portfolio construction, performance analysis, and risk analytics.
+5 notebooks covering data acquisition, portfolio construction, performance analysis, risk analytics, and Monte Carlo frontier optimization.
 
 **Status:** Complete | <a href="https://financial-portfolio-tracker-iota.vercel.app" target="_blank" rel="noopener">Live app</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/05-financial-portfolio-tracker" target="_blank" rel="noopener">GitHub</a>
 
