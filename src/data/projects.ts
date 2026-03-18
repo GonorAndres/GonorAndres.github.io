@@ -488,6 +488,7 @@ export const projects: Project[] = [
       en: ['BigQuery', 'Terraform', 'Pub/Sub', 'Apache Beam', 'Dagster', 'Cloud Run', 'DuckDB', 'Tweedie GLM'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/data-engineering-platform.png',
     relatedTo: ['sima', 'insurance-pricing-ml', 'data-analyst-portfolio'],
     blogSlug: 'data-engineering-platform',
   },
