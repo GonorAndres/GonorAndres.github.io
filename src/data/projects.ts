@@ -616,6 +616,31 @@ export const projects: Project[] = [
     screenshot: '/screenshots/euler-method.png',
     relatedTo: ['michoacan'],
   },
+
+  // repo: https://github.com/GonorAndres/learning-posgre
+  // local: /home/andtega349/learning_posgre
+  // source: PostgresPro Airlines demo database — 5.74M rows of real Russian airline data
+  {
+    slug: 'flight-analytics-pg-bq',
+    title: {
+      es: 'Flight Analytics - PostgreSQL a BigQuery',
+      en: 'Flight Analytics - PostgreSQL to BigQuery',
+    },
+    description: {
+      es: '5.74M filas de datos reales de aerolíneas analizados en PostgreSQL 16, migrados a BigQuery con pipeline ETL en Python, y comparación documentada de rendimiento entre ambos sistemas. Incluye optimización de consultas (13x-1,300x más rápido), 6 scripts de internals avanzados (EXPLAIN, particionamiento, VACUUM, WAL), análisis geoespacial con haversine/ST_DISTANCE, y notebook interactivo con mapas de rutas.',
+      en: '5.74M rows of real airline data analyzed in PostgreSQL 16, migrated to BigQuery via Python ETL pipeline, with documented performance comparison between both systems. Includes query optimization (13x-1,300x speedups), 6 advanced internals scripts (EXPLAIN, partitioning, VACUUM, WAL), geospatial analysis with haversine/ST_DISTANCE, and interactive notebook with route maps.',
+    },
+    url: 'https://github.com/GonorAndres/learning-posgre',
+    platform: 'GitHub',
+    category: 'data-engineering',
+    tags: {
+      es: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Plotly', 'Folium', 'GIS'],
+      en: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Plotly', 'Folium', 'GIS'],
+    },
+    variant: 'wide',
+    relatedTo: ['data-engineering-platform', 'data-analyst-portfolio'],
+    blogSlug: 'flight-analytics-pg-bq',
+  },
 ];
 
 export function getProjects(lang: Lang) {
