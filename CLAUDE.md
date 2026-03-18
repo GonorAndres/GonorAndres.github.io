@@ -263,13 +263,38 @@ Five persistent agents are defined for periodic maintenance. Claude auto-delegat
 
 All agents save work reports to `subagents_outputs/`.
 
+## Local Testing with Playwright MCP
+
+After making changes, use the Playwright MCP browser tools to verify rendering before committing:
+
+1. Build the site: `npx astro build` (must pass with no errors)
+2. Start preview: `npx astro preview --host 0.0.0.0` (runs on port 4321)
+3. Use `mcp__playwright__browser_navigate` to load `http://localhost:4321/`
+4. Use `mcp__playwright__browser_snapshot` to inspect the DOM (better than screenshots for verifying text content, links, and structure)
+5. Use `mcp__playwright__browser_click` to expand sections (e.g., "Ver todos los proyectos" button) and verify new project cards
+6. Navigate to specific pages (`/blog/<slug>/`, `/en/blog/<slug>/`) to verify blog post rendering
+7. Check for: KaTeX math rendering issues (currency `$` signs parsed as math), broken links, missing i18n keys, correct category badges
+8. Kill the preview server when done: `pkill -f "astro preview"`
+
+Common issue: `$` followed by a digit in blog prose (e.g., `$10`, `$400`) gets parsed as inline math by remark-math. Fix by escaping: `\$10`, `\$400`. Actual math expressions like `$p = 1.5$` should NOT be escaped.
+
+## Project Categories
+
+- `actuarial`: terracotta (#C17654)
+- `data-science`: sage (#7A8B6F)
+- `data-engineering`: steel blue (#5B7B9A)
+- `quant-finance`: amber (#D4A574)
+- `applied-math`: navy (#1B2A4A)
+
+Adding a new category requires changes in: `src/data/projects.ts` (type), `src/components/ui/ProjectsGrid.tsx` (accent, badge, gradient, icon), `src/i18n/es.ts` + `en.ts` (translation key), `src/components/sections/FeaturedProjects.astro` (labels object).
+
 ## Technical Preferences
 
 - Framework: Astro 5 + Tailwind + React islands + MDX
 - Deployment: GitHub Pages (GonorAndres.github.io)
 - i18n: ES (default, no prefix) / EN (/en/)
 - Blog categories: actuaria-para-todos, fundamentos-actuariales, proyectos-y-analisis, herramientas, mercado-mexicano
-- Color palette: cream (#EDE6DD), header (#E8E0D7), navy (#1B2A4A), amber (#D4A574), terracotta (#C17654), sage (#7A8B6F)
+- Color palette: cream (#EDE6DD), header (#E8E0D7), navy (#1B2A4A), amber (#D4A574), terracotta (#C17654), sage (#7A8B6F), steel blue (#5B7B9A)
 - Fonts: Lora (headings), Inter (body)
 
 ## File Organization

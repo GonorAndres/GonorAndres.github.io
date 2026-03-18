@@ -1,6 +1,6 @@
 import type { Lang } from '../i18n';
 
-export type ProjectCategory = 'actuarial' | 'data-science' | 'quant-finance' | 'applied-math';
+export type ProjectCategory = 'actuarial' | 'data-science' | 'data-engineering' | 'quant-finance' | 'applied-math';
 
 export interface Project {
   slug: string;
@@ -463,6 +463,33 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['sima'],
+  },
+
+  // repo: https://github.com/GonorAndres/data-engineer-path
+  // local: /home/andtega349/data-engineer-path
+  // source: 6 projects building a complete GCP data platform for insurance claims
+  // 4 deployed to GCP (P01-P04), 2 local-only (P05-P06), total platform cost <$10/month
+  {
+    slug: 'data-engineering-platform',
+    title: {
+      es: 'Plataforma de Datos en GCP para Seguros',
+      en: 'GCP Data Platform for Insurance',
+    },
+    description: {
+      es: '6 proyectos que construyen una plataforma de datos completa sobre GCP: warehouse dimensional en BigQuery, orquestación con Dagster y Cloud Run ($0.10/mes vs $400/mes de Composer), streaming con Pub/Sub y Apache Beam, infraestructura como código con Terraform (24 recursos, 6 módulos), y pricing actuarial con GLM Tweedie. Toda la plataforma opera por menos de $10 al mes.',
+      en: '6 projects building a complete data platform on GCP: dimensional warehouse in BigQuery, orchestration with Dagster and Cloud Run ($0.10/mo vs $400/mo Composer), streaming with Pub/Sub and Apache Beam, infrastructure as code with Terraform (24 resources, 6 modules), and actuarial pricing with Tweedie GLM. The entire platform runs for under $10/month.',
+    },
+    url: '/blog/data-engineering-platform/',
+    repo: 'https://github.com/GonorAndres/data-engineer-path',
+    platform: 'GCP',
+    category: 'data-engineering',
+    tags: {
+      es: ['BigQuery', 'Terraform', 'Pub/Sub', 'Apache Beam', 'Dagster', 'Cloud Run', 'DuckDB', 'GLM Tweedie'],
+      en: ['BigQuery', 'Terraform', 'Pub/Sub', 'Apache Beam', 'Dagster', 'Cloud Run', 'DuckDB', 'Tweedie GLM'],
+    },
+    variant: 'wide',
+    relatedTo: ['sima', 'insurance-pricing-ml', 'data-analyst-portfolio'],
+    blogSlug: 'data-engineering-platform',
   },
 
   // repo: https://github.com/GonorAndres/data-science-path (subfolder: projects/insurance-pricing)

@@ -41,6 +41,7 @@ const INITIAL_COUNT = 6;
 const categoryAccent: Record<ProjectCategory, string> = {
   'actuarial':    '#C17654', // terracotta
   'data-science': '#7A8B6F', // sage
+  'data-engineering': '#5B7B9A', // steel blue
   'quant-finance':'#D4A574', // amber
   'applied-math': '#1B2A4A', // navy
 };
@@ -48,6 +49,7 @@ const categoryAccent: Record<ProjectCategory, string> = {
 const categoryBadge: Record<ProjectCategory, string> = {
   'actuarial':    'bg-[#C17654]/15 text-[#C17654]',
   'data-science': 'bg-[#7A8B6F]/15 text-[#7A8B6F]',
+  'data-engineering': 'bg-[#5B7B9A]/15 text-[#5B7B9A]',
   'quant-finance':'bg-[#D4A574]/25 text-[#8a5e1a]',
   'applied-math': 'bg-[#1B2A4A]/10 text-[#1B2A4A]',
 };
@@ -55,6 +57,7 @@ const categoryBadge: Record<ProjectCategory, string> = {
 const placeholderGradients: Record<ProjectCategory, string> = {
   'actuarial':    'from-[#C17654]/15 via-[#D4A574]/8 to-transparent',
   'data-science': 'from-[#7A8B6F]/15 via-[#7A8B6F]/8 to-transparent',
+  'data-engineering': 'from-[#5B7B9A]/15 via-[#5B7B9A]/8 to-transparent',
   'quant-finance':'from-[#D4A574]/20 via-[#D4A574]/8 to-transparent',
   'applied-math': 'from-[#1B2A4A]/12 via-[#1B2A4A]/6 to-transparent',
 };
@@ -62,6 +65,7 @@ const placeholderGradients: Record<ProjectCategory, string> = {
 const categoryIconPaths: Record<ProjectCategory, string> = {
   'actuarial':    'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z',
   'data-science': 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
+  'data-engineering': 'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01',
   'quant-finance':'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
   'applied-math': 'M4.871 4A17.926 17.926 0 003 12c0 2.874.673 5.59 1.871 8m14.13 0A17.926 17.926 0 0021 12a17.926 17.926 0 00-1.871-8M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
 };

@@ -39,6 +39,7 @@ export default {
   'projects.actuarial': 'Actuarial',
   'projects.data-science': 'Data Science',
   'projects.quant-finance': 'Quantitative Finance',
+  'projects.data-engineering': 'Data Engineering',
   'projects.applied-math': 'Applied Math',
   'projects.seeAlso': 'See also:',
   'projects.showAll': 'See all projects',
