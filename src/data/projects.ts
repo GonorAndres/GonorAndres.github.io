@@ -380,8 +380,9 @@ export const projects: Project[] = [
       es: 'Librería actuarial en Python con 6 fases completas: tablas de mortalidad EMSSA-09, primas de seguros de vida (temporal, vitalicio, dotal), reservas técnicas, reaseguro (Chain Ladder, Bornhuetter-Ferguson, Bootstrap), cálculo de RCS bajo LISF y reportes trimestrales CNSF automatizados. Cobertura de tests superior al 90%.',
       en: 'Python actuarial library with 6 complete phases: EMSSA-09 mortality tables, life insurance premiums (term, whole, endowment), technical reserves, reinsurance (Chain Ladder, Bornhuetter-Ferguson, Bootstrap), RCS capital requirements under LISF, and automated CNSF quarterly reports. Over 90% test coverage.',
     },
-    url: 'https://github.com/GonorAndres/Analisis_Seguros_Mexico',
-    platform: 'GitHub',
+    url: 'https://suite-actuarial-451451662791.us-central1.run.app',
+    repo: 'https://github.com/GonorAndres/Analisis_Seguros_Mexico',
+    platform: 'GCP',
     category: 'actuarial',
     tags: {
       es: ['Python', 'LISF', 'Reservas', 'RCS', 'CNSF', 'Reaseguro'],
