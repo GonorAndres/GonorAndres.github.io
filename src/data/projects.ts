@@ -638,6 +638,7 @@ export const projects: Project[] = [
       en: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Plotly', 'Folium', 'GIS'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/flight-analytics-pg-bq.png',
     relatedTo: ['data-engineering-platform', 'data-analyst-portfolio'],
     blogSlug: 'flight-analytics-pg-bq',
   },
