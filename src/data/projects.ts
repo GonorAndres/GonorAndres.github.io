@@ -388,6 +388,8 @@ export const projects: Project[] = [
       en: ['Python', 'LISF', 'Reserves', 'RCS', 'CNSF', 'Reinsurance'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/actuarial-suite.png',
+    blogSlug: 'suite-actuarial',
     relatedTo: ['sima', 'life-insurance', 'property-insurance'],
   },
 
