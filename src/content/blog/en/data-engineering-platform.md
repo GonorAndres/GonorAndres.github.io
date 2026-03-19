@@ -1,19 +1,19 @@
 ---
 title: "Why an Actuary Builds Data Platforms (and How to Do It for $10 a Month)"
-description: "6 GCP projects that demonstrate how data engineering transforms actuarial work: dimensional claims warehouse in BigQuery, orchestration with Dagster and Cloud Run, streaming with Pub/Sub and Apache Beam, infrastructure as code with Terraform, and pricing with Tweedie GLM. The entire platform runs for under $10/month, compared to the $1,000+ conventional architectures would cost."
+description: "6 GCP projects that demonstrate how data engineering transforms actuarial work. Built a dimensional claims warehouse in BigQuery, orchestration with Dagster and Cloud Run, streaming intake with Pub/Sub and Apache Beam, infrastructure as code with Terraform, and pricing with Tweedie GLM. The entire platform runs for under $10/month; conventional architectures cost $1,000+."
 date: "2026-03-18"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["BigQuery", "Terraform", "Pub/Sub", "Apache Beam", "Dagster", "Cloud Run", "DuckDB", "Tweedie GLM", "GCP", "actuarial"]
 ---
 
-Actuarial models are only as trustworthy as the data that feeds them. In practice, at most Mexican insurers, that data arrives in CSVs attached to emails, gets manually loaded into Excel, transformed through a chain of formulas no one fully understands, and fed into pricing models that produce numbers someone signs off on. When the CNSF asks for a quarterly solvency report, the entire process starts from scratch. <a href="/en/blog/sima/">SIMA</a> demonstrated that an actuary can build the calculation engine: mortality graduation, Lee-Carter projection, commutation functions, reserves, SCR. But a calculation engine without reliable data infrastructure is a Formula 1 engine bolted to a bicycle frame. This project answers the next question: can an actuary build the data platform that makes those engines production-grade? The answer required learning an entirely new discipline, and the result is six interconnected projects that form a complete data platform on Google Cloud.
+Actuarial models are only as trustworthy as the data that feeds them. At most Mexican insurers, that data arrives in CSVs attached to emails, gets loaded into Excel by hand, transformed through formulas no one fully understands, and fed into pricing models that produce the numbers someone signs off on. When the CNSF asks for a quarterly solvency report, the entire process restarts from scratch. <a href="/en/blog/sima/">SIMA</a> showed that an actuary can build the calculation engine: mortality graduation, Lee-Carter projection, commutation functions, reserves, SCR. But a calculation engine without data infrastructure is a Formula 1 engine bolted to a bicycle frame. This project answers the next question. Can an actuary build the data platform that makes those engines production-grade? Learning an entirely new discipline to answer that question resulted in six interconnected projects forming a complete data platform on Google Cloud.
 
 ## The real problem
 
-Insurance companies in Mexico run actuarial workflows on spreadsheets. Claims data arrives in CSVs from adjusters, gets manually loaded into Excel, transformed through formulas that reference other spreadsheets, and fed into pricing templates. When a number looks wrong, the actuary traces it back through three or four files, hoping nobody edited the intermediate one since last quarter.
+Insurance companies in Mexico run actuarial workflows on spreadsheets. Claims data arrives in CSVs from adjusters, gets manually loaded into Excel, transformed through formulas that reference other spreadsheets, and fed into pricing templates. When a number looks wrong, the actuary traces it back through three or four files, hoping nobody touched the intermediate ones since last quarter.
 
-This works with 500 claims and two lines of business. It breaks with 50,000 claims across six coverage types, when the CNSF (the Mexican insurance regulator) requires auditable data lineage in technical notes, and when your pricing actuary needs yesterday's loss triangles, not last month's. The data engineering discipline solves exactly this: automated, tested, version-controlled pipelines that move data from source to decision.
+Spreadsheets scale to 500 claims. At 50,000 claims across six coverage types, the system breaks. Add regulatory requirement for auditable data lineage, and the timing pressure (pricing actuary needs loss triangles from yesterday, not last month), and spreadsheets become unworkable. Data engineering solves this: automated, tested, version-controlled pipelines that move data from source to decision.
 
 ## The platform: six projects, one architecture
 
@@ -21,43 +21,43 @@ This works with 500 claims and two lines of business. It breaks with 50,000 clai
 
 The foundation is a star schema with four dimensions (policyholder, policy, date, coverage) and two fact tables (claims and payments). The dimensional model reflects how actuaries actually query claims data: "show me incurred losses by coverage type and accident quarter" maps directly to a join between `fct_claims`, `dim_coverage`, and `dim_date`.
 
-DuckDB runs locally for free, giving development iteration speed that no cloud service can match. BigQuery serves as the production layer. Dataform manages the SQL-based ELT pipeline through four transformation layers: staging (raw ingestion, type casting, naming conventions), intermediate (business logic, deduplication, derived fields), marts (analytical-ready tables), and reports (pre-aggregated views for dashboards). This is the same layered approach that dbt popularized, implemented with Google's native tooling.
+DuckDB runs locally for free, providing iteration speed no cloud service can match. BigQuery handles production queries. Dataform manages the SQL-based ELT pipeline across four transformation layers: staging (ingestion, type casting, naming conventions); intermediate (business logic, deduplication); marts (analytical tables); and reports (dashboard-ready views). This is dbt's layered approach, but implemented with Google's native tooling.
 
-The warehouse constructs loss triangles and produces claim frequency analyses, the two artifacts that appear in every actuarial reserve review. 52 pytest tests verify schema integrity, referential consistency, and business rules (no negative claim amounts, no policies with end dates before start dates, no orphan payments without a parent claim). The data itself is Mexican throughout: `es_MX` locale names, state codes matching INEGI's catalogue, MXN currency, and five coverage types that reflect the Mexican P&C market.
+The warehouse builds loss triangles and claim frequency analyses; these are the two artifacts in every actuarial reserve review. Fifty-two pytest tests verify schema integrity, referential consistency, and business rules (negative amounts rejected, date logic enforced, orphaned payments caught). The data is Mexican: `es_MX` locale names, INEGI state codes, MXN currency, coverage types reflecting the Mexican P&C market.
 
 The claims dashboard is deployed on Cloud Run: <a href="https://claims-dashboard-451451662791.us-central1.run.app" target="_blank" rel="noopener">claims-dashboard-451451662791.us-central1.run.app</a>. Monthly cost: under \$1, because BigQuery's free tier handles the query volume and Cloud Run scales to zero when nobody is looking at the dashboard.
 
 ### P02: Orchestrated ELT pipeline
 
-The first real infrastructure decision was orchestration. The industry default is Apache Airflow, typically deployed via Cloud Composer on GCP. Composer is a managed Airflow environment, and it costs a minimum of \$400 per month. For a pipeline that runs once daily, ingests a few thousand records, and executes a linear sequence of transformations with no fan-out or conditional branching, that price is indefensible.
+The first real infrastructure decision: orchestration. The industry standard is Apache Airflow, deployed via Cloud Composer on GCP. Composer manages Airflow and costs \$400+ per month minimum. A pipeline that runs once daily, ingests a few thousand records, and executes five linear steps with no fan-out or branching: that cost becomes indefensible.
 
-The alternative: Cloud Run as an HTTP handler triggered by Cloud Scheduler. The scheduler fires a cron job, Cloud Run wakes up, executes the pipeline, and goes back to sleep. Total cost: \$0.10 per month. The pipeline does the same work. The difference is 4,000x in cost, and the trade-off is explicit: you lose Airflow's DAG visualization, retry policies, and SLA monitoring. For a linear pipeline with five steps, those features are overhead, not necessities.
+Cloud Run plus Cloud Scheduler is the alternative. Scheduler fires cron, Cloud Run wakes up, executes the pipeline, sleeps. Total cost: \$0.10 per month. The pipeline produces identical results. That is a 4,000x cost difference. You trade Airflow's DAG visualization, retry policies, and SLA monitoring; for a linear pipeline, those are overhead, not necessities.
 
 For local development, Dagster provides a superior developer experience: software-defined assets, free UI, type-checked IO managers, built-in observability. A reference Airflow DAG is also included, implementing the same pipeline with task decorators and XCom. An employer running Airflow can see that I understand their tool; the deployed version demonstrates the cost-conscious alternative.
 
-CI/CD runs through GitHub Actions: Docker build, push to Artifact Registry, deploy to Cloud Run. The deployment lesson: Cloud Run expects an HTTP server listening on `$PORT`. The initial Dockerfile CMD ran the pipeline as a batch script, so Cloud Run started the container, health-checked it, got no response, and killed it. The fix was adding a proper HTTP entrypoint that triggers batch execution on request.
+CI/CD flows through GitHub Actions: Docker build, push to Artifact Registry, deploy to Cloud Run. The deployment lesson surfaced quickly: Cloud Run expects an HTTP server listening on `$PORT`. The initial Dockerfile CMD executed the pipeline as a batch script and exited. Cloud Run saw the exit, health-checked the non-responsive container, and killed it. The fix: add an HTTP entrypoint that triggers batch execution on request.
 
 ### P03: Streaming claims intake
 
-Insurance claims are events. A policyholder calls the adjuster, the adjuster files a report, the report enters the system. In a spreadsheet workflow, that report sits in an inbox until someone processes the batch. In an event-driven architecture, the report becomes a message on Pub/Sub the moment it is filed.
+Insurance claims are events. Policyholder calls adjuster; adjuster files report; report enters the system. In a spreadsheet workflow, it sits in an inbox until batch processing. In event-driven architecture, it becomes a Pub/Sub message immediately.
 
-Pub/Sub serves as the event bus. A Cloud Run push subscriber receives each claim event, validates the schema (required fields present, coverage type valid, claim amount positive), enriches it with dimensional lookups, and writes it to the warehouse. Messages that fail validation route to a dead-letter topic for inspection and reprocessing.
+Pub/Sub serves as the event bus. A Cloud Run push subscriber receives each claim event and validates schema (fields required, coverage type valid, amount positive), enriches with dimensional lookups, and writes to the warehouse. Invalid messages route to a dead-letter topic for inspection.
 
-Apache Beam handles windowed aggregations: claim counts and amounts grouped into time windows. The critical decision is that Beam runs in batch mode, not streaming. The API is identical; the only difference is the `--streaming` flag. Batch Beam costs ~\$0.01 per run. Streaming Dataflow costs \$1,000+ per month. The portfolio demonstrates the pattern; production would flip that flag. The code does not change. Monthly cost: \$1 to \$5.
+Apache Beam handles windowed aggregations: claim counts and amounts grouped by time window. Critical decision: Beam runs in batch mode, not streaming. API is identical; only difference is the `--streaming` flag. Batch Beam costs \$0.01 per run. Streaming Dataflow costs \$1,000+ per month. The portfolio demonstrates the pattern; production would flip that flag. Code remains unchanged. Monthly cost: \$1 to \$5.
 
 ### P04: GCP infrastructure with Terraform
 
-Every GCP resource across all six projects is defined in Terraform: 24 resources organized into 6 modules (IAM, BigQuery with 5 datasets, GCS, Pub/Sub, Cloud Run, Cloud Scheduler). Nothing was created through the console. If the entire project gets deleted tomorrow, `terraform apply` rebuilds everything in minutes.
+Every GCP resource is defined in Terraform: 24 resources across 6 modules (IAM, BigQuery, GCS, Pub/Sub, Cloud Run, Cloud Scheduler). Nothing was created through the console. If the entire project were deleted, `terraform apply` rebuilds it in minutes.
 
-Workload Identity Federation provides keyless authentication from GitHub Actions. No service account keys stored in repository secrets, no JSON credentials committed anywhere. The CI/CD pipeline runs `terraform plan` on every pull request (so you see what will change before it changes) and `terraform apply` on merge to main.
+Workload Identity Federation enables keyless authentication from GitHub Actions. No service account keys in repository secrets, no JSON credentials committed. The CI/CD pipeline runs `terraform plan` on every pull request (showing changes before they happen) and `terraform apply` on merge to main.
 
-The deployment lesson: the state bucket bootstrap paradox. Terraform stores its state in a GCS bucket, but `terraform init` needs that bucket to exist first. The solution is a two-phase bootstrap: create the bucket with local state, then `terraform init -migrate-state` to move state into the bucket it just created. A well-documented pattern, but the kind of operational detail that only surfaces when you actually deploy infrastructure.
+The deployment lesson is the state bucket bootstrap paradox. Terraform stores state in a GCS bucket, but `terraform init` requires that bucket to exist first. The solution is two-phase: create the bucket with local state, then migrate state into it via `terraform init -migrate-state`. It is documented, but only surfaces when you actually deploy.
 
 ### P05: True streaming pipeline (local only)
 
-P03 demonstrates the streaming pattern in batch mode. P05 implements true streaming semantics: watermarks tracking event-time progress, composite triggers (AfterWatermark with early speculative firings and late corrective firings), accumulating mode that updates results as late data arrives, one-hour allowed lateness windows, and BagState-based deduplication that ensures exactly-once processing per window.
+P03 demonstrates streaming patterns in batch mode. P05 implements true streaming: watermarks tracking event-time, composite triggers (AfterWatermark with early and late firings), accumulating mode (results update as late data arrives), one-hour allowed lateness, and BagState deduplication ensuring exactly-once processing per window.
 
-The distinction from P03 is precise. P03 uses discarding mode (each pane is independent) with no late data handling. P05 uses accumulating mode (each pane includes all prior data for the window) with explicit late data policies. P03 answers "how many claims arrived in this batch?" P05 answers "how many claims belong to this time window, accounting for events that arrived after the window closed?"
+The distinction matters. P03 uses discarding mode (each output is independent, no late data). P05 uses accumulating mode (each output contains all prior data, with explicit late-arrival policies). P03 answers "how many claims arrived in this batch?" P05 answers "how many claims belong to this window, including late arrivals?"
 
 P05 is not deployed because streaming Dataflow costs \$50 to \$100 per day. The code is Dataflow-ready; only the deployment target changes. The code proves the competency; the economics do not justify the deployment.
 
@@ -111,15 +111,15 @@ That is what cloud infrastructure does for actuarial work. It does not replace t
 
 ## What I would change
 
-The most significant limitation is the synthetic data. Every project uses generated claims with calibrated distributions (lognormal severity, Poisson frequency, exponential report lag), but synthetic data does not capture the correlations, seasonality, and tail behavior of real insurance portfolios. The next iteration would replace the synthetic data with freMTPL2, the French motor third-party liability dataset that the global actuarial community uses as its benchmark. It is publicly available, actuarially realistic, and allows direct comparison against published literature.
+The most significant limitation is the synthetic data. Every project generates claims with calibrated distributions (lognormal severity, Poisson frequency, exponential report lag), but synthetic data lacks real correlations, seasonality, and tail behavior. Next iteration: replace with freMTPL2, the French motor third-party liability dataset used as the actuarial benchmark. It is public, realistic, and comparable against published benchmarks.
 
-P05's streaming pipeline should run on Dataflow for at least a short demonstration, even if only for a few hours at \$5 to \$10 of cost. The local execution proves the code works; a Dataflow run proves the deployment works. The difference matters to an employer evaluating whether the candidate can operate in production, not just write code that passes local tests.
+P05's streaming pipeline should run on Dataflow as a short demo, even for a few hours at \$5 to \$10. Local execution proves the code works; Dataflow run proves deployment works. That difference matters: employers need to know the candidate operates in production, not just passes local tests.
 
 Data quality monitoring is the missing layer. Great Expectations or a similar framework between ingestion and transformation would catch schema drift and distribution shifts before they propagate to the warehouse. And a Looker Studio dashboard connecting all six projects into a single executive view would demonstrate the platform as a coherent system rather than six independent repositories.
 
 ## So what?
 
-An actuary who understands data engineering is not a data engineer who happens to know actuarial formulas. The value proposition is different. It is someone who knows that a loss triangle requires accident-quarter granularity and builds the warehouse schema to support it from day one. Someone who knows that CNSF technical notes require auditable data lineage and implements Dataform transformations that provide it. Someone who knows that Tweedie GLMs need exposure offsets and builds the feature engineering SQL to include them.
+An actuary who understands data engineering is not a data engineer who learned actuarial formulas. The value is different. It is knowing that loss triangles require accident-quarter granularity and building the warehouse schema for it from day one. Knowing that CNSF technical notes demand auditable lineage and implementing Dataform transformations to deliver it. Knowing that Tweedie GLMs need exposure offsets and writing the feature SQL to include them.
 
 The six projects in this platform are not exercises. They are the infrastructure layer that makes actuarial work scalable, reproducible, and defensible. And they run for less than \$10 a month.
 
