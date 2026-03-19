@@ -388,6 +388,7 @@ export const projects: Project[] = [
       en: ['Python', 'LISF', 'Reserves', 'RCS', 'CNSF', 'Reinsurance'],
     },
     variant: 'wide',
+    screenshot: '/screenshots/actuarial-suite.png',
     relatedTo: ['sima', 'life-insurance', 'property-insurance'],
   },
 
@@ -458,7 +459,7 @@ export const projects: Project[] = [
       es: 'Chatbot regulatorio construido con el Claude Agent SDK que responde preguntas sobre la Ley de Instituciones de Seguros y Fianzas (LISF). Indexa el texto completo de la ley y genera respuestas contextualizadas con referencias al artículo correspondiente. Backend FastAPI desplegado en GCP.',
       en: 'Regulatory chatbot built with the Claude Agent SDK that answers questions about the Mexican Insurance and Surety Law (LISF). Indexes the full law text and generates contextualized responses with article references. FastAPI backend deployed on GCP.',
     },
-    url: '#', // TODO: replace with public GCP URL once VM port is exposed
+    url: 'https://lisf-agent-451451662791.us-central1.run.app',
     platform: 'GCP',
     category: 'actuarial',
     tags: {
@@ -466,6 +467,7 @@ export const projects: Project[] = [
       en: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
     },
     variant: 'standard',
+    screenshot: '/screenshots/lisf-agent.png',
     relatedTo: ['sima'],
   },
 
@@ -503,11 +505,11 @@ export const projects: Project[] = [
   {
     slug: 'insurance-pricing-ml',
     title: {
-      es: 'Tarificacion de Seguros con ML',
+      es: 'Tarificación de Seguros con ML',
       en: 'Insurance Pricing with ML',
     },
     description: {
-      es: 'Pipeline completo de tarificacion actuarial: GLMs Poisson/Gamma para frecuencia-severidad, XGBoost y LightGBM con tuning Optuna, interpretabilidad SHAP, auditoria de fairness por genero/edad, tracking MLflow. Backend FastAPI y dashboard interactivo Next.js.',
+      es: 'Pipeline completo de tarificación actuarial: GLMs Poisson/Gamma para frecuencia-severidad, XGBoost y LightGBM con tuning Optuna, interpretabilidad SHAP, auditoría de fairness por género/edad, tracking MLflow. Backend FastAPI y dashboard interactivo Next.js.',
       en: 'Complete actuarial pricing pipeline: Poisson/Gamma GLMs for frequency-severity, XGBoost and LightGBM with Optuna tuning, SHAP interpretability, gender/age fairness audit, MLflow tracking. FastAPI backend and interactive Next.js dashboard.',
     },
     url: '/blog/actuarial-ml-pricing/',
