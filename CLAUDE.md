@@ -176,7 +176,7 @@ Invoke with: "use blog-writer to write a post about [slug or topic]"
 - [ ] `flight-analytics`: PostgreSQL airline delay analysis. GitHub: https://github.com/GonorAndres/learning-posgre
 - [ ] `eruption-forecasting`: Time series volcanic forecasting. GitHub: https://github.com/GonorAndres/forecasting
 - [ ] `actuarial-suite`: 6-phase Python actuarial library. GitHub: https://github.com/GonorAndres/Analisis_Seguros_Mexico
-- [ ] `cartera-autos`: Synthetic auto insurance portfolio. GitHub: https://github.com/GonorAndres/CarteraSeguroAutos
+- [x] `cartera-autos`: Synthetic auto insurance portfolio. GitHub: https://github.com/GonorAndres/CarteraSeguroAutos — DONE 2026-03-19
 - [ ] `proust-attention`: Transformer trained on Proust. GitHub: https://github.com/GonorAndres/proust-attention
 - [ ] `pension-simulator`: IMSS + Fondo Bienestar R Shiny app. GitHub: https://github.com/GonorAndres/seguridad-social
 

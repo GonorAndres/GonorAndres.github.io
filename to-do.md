@@ -1,6 +1,6 @@
 # Portfolio To-Do
 
-Last updated: 2026-03-15
+Last updated: 2026-03-19
 
 Read this at the start of every session. Update it when tasks are completed or new ones are discovered.
 Tasks are organized by type — a project may appear in multiple lists.
@@ -12,7 +12,7 @@ Tasks are organized by type — a project may appear in multiple lists.
 Posts that do not exist yet. But we need to create after proyect goes to golden phase or completed enteirely.
 
 - [ ] `actuarial-suite` — Suite Actuarial Mexicana (Python, LISF, CNSF, tablas EMSSA-09)
-- [ ] `cartera-autos` — Cartera de Seguro de Autos (R, Shiny, AMIS, siniestralidad sintética)
+- [x] `cartera-autos` — Cartera de Seguro de Autos (R, Shiny, AMIS, siniestralidad sintética) — DONE 2026-03-19: blog posts (ES+EN), project card updated, deployed to Cloud Run
 - [ ] `lisf-agent` — Agente LISF regulatorio (Claude SDK, FastAPI, GCP) — WAIT until public URL is live
 - [ ] `pension-simulator` — Simulador pensión IMSS + Fondo Bienestar (R Shiny, Ley 73/97)
 - [ ] `flight-analytics` — Análisis de vuelos SQL (PostgreSQL, 2.5GB, aerolíneas rusas)
@@ -38,7 +38,7 @@ Posts that exist but need content alignment or structural fixes.
 Files go in `public/screenshots/`. None of these exist yet.
 
 - [ ] `actuarial-suite.png`
-- [ ] `cartera-autos.png` — Shiny dashboard or R plots
+- [ ] `cartera-autos.png` — Shiny dashboard Resumen tab (pending Cloud Run deploy + screenshot capture)
 - [ ] `proust-attention.png` — generated text sample or training loss curve
 - [ ] `pension-simulator.png` — Shiny app UI
 - [ ] `lisf-agent.png` — chatbot answering a LISF question (do after URL is live)
@@ -77,7 +77,7 @@ For context when writing posts or deciding priority.
 | Project | Dev complete? | Deployed? | Blocker |
 |---------|--------------|-----------|---------|
 | `actuarial-suite` | Check repo (6 phases planned) | No | Blog post, screenshot |
-| `cartera-autos` | Yes (R + Shiny) | No (local only) | Blog post, screenshot, optional shinyapps.io deploy |
+| `cartera-autos` | Yes (R + Shiny) | Yes (Cloud Run) | Screenshot pending |
 | `proust-attention` | Yes | No (GitHub only) | Screenshot |
 | `pension-simulator` | Yes (R Shiny) | No | Blog post, screenshot |
 | `lisf-agent` | Yes | No (VM only, port closed) | Public URL, then blog post + screenshot |
