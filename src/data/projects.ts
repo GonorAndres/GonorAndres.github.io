@@ -395,27 +395,31 @@ export const projects: Project[] = [
   },
 
   // repo: https://github.com/GonorAndres/CarteraSeguroAutos
-  // local: /home/andtega349/seguridad_social (not present locally — GitHub only)
+  // live: https://cartera-autos-d3qj5vwxtq-uc.a.run.app
+  // local: /home/andtega349/carteras-autos-R
   // source: synthetic data generated with R, calibrated to AMIS and CONDUSEF market parameters
   {
     slug: 'cartera-autos',
     title: {
-      es: 'Cartera de Seguro de Autos - Siniestralidad',
-      en: 'Auto Insurance Portfolio - Claims Analytics',
+      es: 'Plataforma de Siniestralidad Auto',
+      en: 'Auto Insurance Claims Platform',
     },
     description: {
-      es: 'Datos sintéticos de 52,000 pólizas y 2,332 siniestros de seguro de autos calibrados con parámetros reales del mercado mexicano (AMIS y CONDUSEF). Incluye análisis de tendencias temporales, segmentación geográfica de riesgo y dashboard Shiny interactivo para explorar la siniestralidad por zona y tipo de vehículo.',
-      en: 'Synthetic dataset of 52,000 auto insurance policies and 2,332 claims calibrated to real Mexican market parameters (AMIS and CONDUSEF). Includes temporal trend analysis, geographic risk segmentation, and an interactive Shiny dashboard to explore loss ratios by region and vehicle type.',
+      es: 'Dashboard actuarial completo para análisis de cartera de seguro de autos: 140K pólizas sintéticas calibradas al mercado mexicano (AMIS/CONDUSEF), motor de tarificación GLM de dos partes (Poisson frecuencia + Gamma severidad), reservas IBNR (Chain Ladder y Bornhuetter-Ferguson), pruebas de estrés Monte Carlo con VaR/TVaR, y detección de fraude por distancia de Mahalanobis. 17 módulos R con arquitectura bslib.',
+      en: 'Full actuarial dashboard for auto insurance portfolio analysis: 140K synthetic policies calibrated to the Mexican market (AMIS/CONDUSEF), two-part GLM pricing engine (Poisson frequency + Gamma severity), IBNR reserves (Chain Ladder and Bornhuetter-Ferguson), Monte Carlo stress testing with VaR/TVaR, and Mahalanobis-based fraud detection. 17 R modules with bslib architecture.',
     },
-    url: 'https://github.com/GonorAndres/CarteraSeguroAutos',
-    platform: 'GitHub',
+    url: 'https://cartera-autos-451451662791.us-central1.run.app',
+    repo: 'https://github.com/GonorAndres/CarteraSeguroAutos',
+    platform: 'GCP',
     category: 'actuarial',
     tags: {
-      es: ['R', 'Shiny', 'Siniestralidad', 'AMIS', 'Autos'],
-      en: ['R', 'Shiny', 'Claims', 'AMIS', 'Auto'],
+      es: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib'],
+      en: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib'],
     },
-    variant: 'standard',
-    relatedTo: ['property-insurance', 'data-analyst-portfolio'],
+    variant: 'wide',
+    screenshot: '/screenshots/cartera-autos.png',
+    blogSlug: 'cartera-autos',
+    relatedTo: ['pension-simulator', 'sima', 'property-insurance'],
   },
 
   // repo: https://github.com/GonorAndres/proust-attention
@@ -457,7 +461,7 @@ export const projects: Project[] = [
       es: 'Chatbot regulatorio construido con el Claude Agent SDK que responde preguntas sobre la Ley de Instituciones de Seguros y Fianzas (LISF). Indexa el texto completo de la ley y genera respuestas contextualizadas con referencias al artículo correspondiente. Backend FastAPI desplegado en GCP.',
       en: 'Regulatory chatbot built with the Claude Agent SDK that answers questions about the Mexican Insurance and Surety Law (LISF). Indexes the full law text and generates contextualized responses with article references. FastAPI backend deployed on GCP.',
     },
-    url: '#', // TODO: replace with public GCP URL once VM port is exposed
+    url: 'https://lisf-agent-451451662791.us-central1.run.app',
     platform: 'GCP',
     category: 'actuarial',
     tags: {
@@ -465,6 +469,7 @@ export const projects: Project[] = [
       en: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
     },
     variant: 'standard',
+    screenshot: '/screenshots/lisf-agent.png',
     relatedTo: ['sima'],
   },
 
@@ -502,11 +507,11 @@ export const projects: Project[] = [
   {
     slug: 'insurance-pricing-ml',
     title: {
-      es: 'Tarificacion de Seguros con ML',
+      es: 'Tarificación de Seguros con ML',
       en: 'Insurance Pricing with ML',
     },
     description: {
-      es: 'Pipeline completo de tarificacion actuarial: GLMs Poisson/Gamma para frecuencia-severidad, XGBoost y LightGBM con tuning Optuna, interpretabilidad SHAP, auditoria de fairness por genero/edad, tracking MLflow. Backend FastAPI y dashboard interactivo Next.js.',
+      es: 'Pipeline completo de tarificación actuarial: GLMs Poisson/Gamma para frecuencia-severidad, XGBoost y LightGBM con tuning Optuna, interpretabilidad SHAP, auditoría de fairness por género/edad, tracking MLflow. Backend FastAPI y dashboard interactivo Next.js.',
       en: 'Complete actuarial pricing pipeline: Poisson/Gamma GLMs for frequency-severity, XGBoost and LightGBM with Optuna tuning, SHAP interpretability, gender/age fairness audit, MLflow tracking. FastAPI backend and interactive Next.js dashboard.',
     },
     url: '/blog/actuarial-ml-pricing/',
@@ -644,6 +649,33 @@ export const projects: Project[] = [
     screenshot: '/screenshots/flight-analytics-pg-bq.png',
     relatedTo: ['data-engineering-platform', 'data-analyst-portfolio'],
     blogSlug: 'flight-analytics-pg-bq',
+  },
+
+  // repo: https://github.com/GonorAndres/risk-analyst
+  // local: /home/andtega349/risk-analyst
+  // source: 13 progressive quant risk projects — yfinance, FRED, synthetic data with actuarial assumptions
+  {
+    slug: 'risk-analyst',
+    title: {
+      es: 'Risk Analyst - Análisis Cuantitativo de Riesgos',
+      en: 'Risk Analyst - Quantitative Risk Analysis',
+    },
+    description: {
+      es: '13 proyectos progresivos de análisis de riesgos financieros: desde VaR y Monte Carlo hasta deep hedging, GNN para contagio sistémico y RL para gestión de portafolios. 192 pruebas, 25,000+ líneas de Python tipado con documentación LaTeX completa.',
+      en: '13 progressive financial risk analysis projects: from VaR and Monte Carlo to deep hedging, GNN for systemic contagion, and RL for portfolio management. 192 tests, 25,000+ lines of typed Python with full LaTeX documentation.',
+    },
+    url: '/blog/risk-analyst/',
+    repo: 'https://github.com/GonorAndres/risk-analyst',
+    platform: 'GitHub',
+    category: 'quant-finance',
+    tags: {
+      es: ['Python', 'VaR', 'CVaR', 'Monte Carlo', 'Deep Learning', 'Copulas', '+7'],
+      en: ['Python', 'VaR', 'CVaR', 'Monte Carlo', 'Deep Learning', 'Copulas', '+7'],
+    },
+    variant: 'standard',
+    screenshot: '/screenshots/risk-analyst.png',
+    relatedTo: ['credit-risk', 'derivatives', 'markowitz'],
+    blogSlug: 'risk-analyst',
   },
 ];
 
