@@ -18,7 +18,7 @@ const { lang } = Astro.props;
   <OrganicBlob variant={3} color="#7A8B6F" class="w-[350px] h-[350px] bottom-0 -left-24 opacity-40" />
 
   <div class="max-w-6xl mx-auto relative z-10">
-    <!-- Asymmetric layout: text offset to the left, not centered -->
+    <!-- Asymmetric layout: text left, circle middle, blog card right -->
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
       <div class="md:col-span-7 md:col-start-1">
         <p class="text-sage font-medium text-lg mb-2 fade-up">
@@ -60,15 +60,65 @@ const { lang } = Astro.props;
         </div>
       </div>
 
-      <!-- Latest blog post card (right) -->
-      <div class="md:col-span-3 md:col-start-10 md:flex md:flex-col md:gap-5 md:items-stretch">
-        <div class="rounded-xl border border-navy/10 bg-white/70 shadow-md backdrop-blur-sm px-4 py-4 flex flex-col gap-3">
-          <LatestPostCard lang={lang} />
-        </div>
-        <div class="rounded-xl border border-amber/30 bg-white/60 shadow-sm backdrop-blur-sm px-4 py-4 flex flex-col gap-3">
-          <DiscoverPostCard lang={lang} />
+      <!-- Blog card with toggle (right) -->
+      <div class="md:col-span-3 md:col-start-10">
+        <div class="rounded-xl border border-navy/10 bg-white/70 shadow-md backdrop-blur-sm px-4 py-4 flex flex-col gap-3 fade-up" id="blog-bar">
+          <div class="flex items-center gap-1">
+            <button
+              type="button"
+              id="tab-latest"
+              class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full transition-colors bg-terracotta text-cream"
+            >
+              {t(lang, 'hero.latestPost')}
+            </button>
+            <button
+              type="button"
+              id="tab-discover"
+              class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full transition-colors bg-transparent text-navy/50 hover:text-navy/70"
+            >
+              {t(lang, 'hero.discoverPosts')}
+            </button>
+          </div>
+          <div id="panel-latest" class="flex flex-col gap-2">
+            <LatestPostCard lang={lang} />
+          </div>
+          <div id="panel-discover" class="hidden flex-col gap-2">
+            <DiscoverPostCard lang={lang} />
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  const tabLatest = document.getElementById('tab-latest');
+  const tabDiscover = document.getElementById('tab-discover');
+  const panelLatest = document.getElementById('panel-latest');
+  const panelDiscover = document.getElementById('panel-discover');
+
+  function activate(tab: 'latest' | 'discover') {
+    if (tab === 'latest') {
+      panelLatest!.classList.remove('hidden');
+      panelLatest!.classList.add('flex');
+      panelDiscover!.classList.add('hidden');
+      panelDiscover!.classList.remove('flex');
+      tabLatest!.classList.add('bg-terracotta', 'text-cream');
+      tabLatest!.classList.remove('bg-transparent', 'text-navy/50');
+      tabDiscover!.classList.remove('bg-terracotta', 'text-cream');
+      tabDiscover!.classList.add('bg-transparent', 'text-navy/50');
+    } else {
+      panelDiscover!.classList.remove('hidden');
+      panelDiscover!.classList.add('flex');
+      panelLatest!.classList.add('hidden');
+      panelLatest!.classList.remove('flex');
+      tabDiscover!.classList.add('bg-terracotta', 'text-cream');
+      tabDiscover!.classList.remove('bg-transparent', 'text-navy/50');
+      tabLatest!.classList.remove('bg-terracotta', 'text-cream');
+      tabLatest!.classList.add('bg-transparent', 'text-navy/50');
+    }
+  }
+
+  tabLatest?.addEventListener('click', () => activate('latest'));
+  tabDiscover?.addEventListener('click', () => activate('discover'));
+</script>

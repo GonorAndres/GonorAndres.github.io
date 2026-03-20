@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import type { Lang } from '../../i18n';
-import { t, useTranslatedPath } from '../../i18n';
+import { useTranslatedPath } from '../../i18n';
 import { categoryLabels } from '../../data/categories';
 import type { Category } from '../../data/categories';
 
@@ -34,57 +34,19 @@ function formatDate(date: string) {
 }
 ---
 
-{recentPosts.length > 0 ? (
-  <>
-    {/* Desktop: stacked list */}
-    <div class="hidden md:flex flex-col gap-2 w-full fade-up">
-      <div class="mb-2">
-        <span class="text-sm font-bold text-navy uppercase tracking-widest">
-          {t(lang, 'hero.latestPost')}
-        </span>
-        <div class="mt-1 h-0.5 w-10 bg-terracotta rounded-full"></div>
-      </div>
-      {recentPosts.map((post) => (
-        <a
-          href={getPostUrl(post.slug)}
-          class="flex flex-col gap-0.5 rounded-lg border-l-2 border-l-terracotta border border-navy/8 bg-white shadow-sm px-3 py-2 hover:shadow-md hover:border-l-amber transition-all group"
-        >
-          <div class="flex items-center gap-2">
-            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-sage/15 text-sage font-medium">
-              {getCategory(post.data.category)}
-            </span>
-            <time class="text-xs text-navy/50 ml-auto">{formatDate(post.data.date)}</time>
-          </div>
-          <span class="font-serif text-xs font-bold text-navy leading-snug group-hover:text-terracotta transition-colors">
-            {post.data.title}
-          </span>
-        </a>
-      ))}
+{recentPosts.map((post) => (
+  <a
+    href={getPostUrl(post.slug)}
+    class="flex flex-col gap-0.5 rounded-lg border-l-2 border-l-terracotta border border-navy/8 bg-white shadow-sm px-3 py-2 hover:shadow-md hover:border-l-amber transition-all group flex-1 min-w-0"
+  >
+    <div class="flex items-center gap-2">
+      <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-sage/15 text-sage font-medium whitespace-nowrap">
+        {getCategory(post.data.category)}
+      </span>
+      <time class="text-xs text-navy/50 ml-auto whitespace-nowrap">{formatDate(post.data.date)}</time>
     </div>
-
-    {/* Mobile: stacked list */}
-    <div class="md:hidden flex flex-col gap-2 fade-up">
-      <div class="mb-1">
-        <span class="text-sm font-bold text-navy uppercase tracking-widest">
-          {t(lang, 'hero.latestPost')}
-        </span>
-        <div class="mt-1 h-0.5 w-10 bg-terracotta rounded-full"></div>
-      </div>
-      {recentPosts.map((post) => (
-        <a
-          href={getPostUrl(post.slug)}
-          class="flex items-center gap-3 rounded-lg border-l-2 border-l-terracotta border border-navy/8 bg-white shadow-sm px-4 py-3 hover:shadow-md transition-all group"
-        >
-          <div class="flex-1 min-w-0">
-            <span class="font-serif text-sm font-bold text-navy leading-snug line-clamp-1 group-hover:text-terracotta transition-colors">
-              {post.data.title}
-            </span>
-          </div>
-          <time class="text-xs text-navy/50 shrink-0">{formatDate(post.data.date)}</time>
-        </a>
-      ))}
-    </div>
-  </>
-) : (
-  <div />
-)}
+    <span class="font-serif text-xs font-bold text-navy leading-snug group-hover:text-terracotta transition-colors">
+      {post.data.title}
+    </span>
+  </a>
+))}

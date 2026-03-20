@@ -98,6 +98,7 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/data-analyst-portafolio.png',
     relatedTo: ['sima', 'gmm-explorer', 'ab-testing', 'credit-risk'],
+    blogSlug: 'data-analyst-portfolio',
   },
 
   // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Credit_Risk_Model)
@@ -550,30 +551,6 @@ export const projects: Project[] = [
     variant: 'standard',
     relatedTo: ['data-analyst-portfolio'],
     blogSlug: 'b-trees-optimization',
-  },
-
-  // repo: https://github.com/GonorAndres/learning-posgre
-  // local: /home/andtega349/learning_posgre
-  // source: Russian Airlines open dataset (~2.5GB, 8 relational tables) — available on Kaggle
-  {
-    slug: 'flight-analytics',
-    title: {
-      es: 'Análisis de Vuelos - SQL a Escala',
-      en: 'Flight Analytics - SQL at Scale',
-    },
-    description: {
-      es: 'Análisis de 2.5GB de datos reales de vuelos de aerolíneas rusas en PostgreSQL: 8 tablas relacionales, millones de registros. Identifica rutas con mayor tasa de retraso, patrones por franja horaria y oportunidades de optimización de flota con consultas SQL avanzadas.',
-      en: 'Analysis of 2.5GB of real Russian airline flight data in PostgreSQL: 8 relational tables, millions of records. Identifies routes with the highest delay rates, time-of-day patterns, and fleet optimization opportunities using advanced SQL queries.',
-    },
-    url: 'https://github.com/GonorAndres/learning-posgre',
-    platform: 'GitHub',
-    category: 'data-science',
-    tags: {
-      es: ['PostgreSQL', 'SQL', 'Análisis Operacional'],
-      en: ['PostgreSQL', 'SQL', 'Operational Analytics'],
-    },
-    variant: 'standard',
-    relatedTo: ['data-analyst-portfolio', 'credit-risk'],
   },
 
   // repo: https://github.com/GonorAndres/forecasting
