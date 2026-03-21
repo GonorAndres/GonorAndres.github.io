@@ -2,6 +2,7 @@
 title: "IMSS Pension Simulator: Ley 73, Ley 97, and Fondo Bienestar in One Tool"
 description: "An R Shiny app that calculates Mexican retirement pensions under all three active IMSS regimes. Implements the Article 167 salary bracket table for Ley 73, the tiered DOF 2020 reform contribution rates for Ley 97, and the Fondo de Pensiones para el Bienestar supplement (2024). Includes AFORE projection under three return scenarios, sensitivity analysis, and downloadable PDF report. 126 unit tests, Docker and Cloud Run deployment."
 date: "2026-03-16"
+lastModified: "2026-03-19"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["R", "Shiny", "IMSS", "AFORE", "Pensions", "Ley 73", "Ley 97", "Fondo Bienestar", "social security", "CONSAR"]

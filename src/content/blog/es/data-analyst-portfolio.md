@@ -2,6 +2,7 @@
 title: "Portafolio de Analista de Datos: 7 Proyectos End-to-End"
 description: "De la pregunta de negocio al insight accionable. 7 proyectos de análisis de datos que cubren e-commerce, seguros, finanzas, pruebas A/B, KPIs ejecutivos y eficiencia operacional. SQL, Python, Streamlit, Next.js y Power BI."
 date: "2026-03-13"
+lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "es"
 tags: ["portafolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "Power BI"]

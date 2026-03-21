@@ -15,6 +15,8 @@ export interface Project {
   screenshot?: string;
   relatedTo?: string[];
   blogSlug?: string;     // English slug of the blog post for this project (e.g. 'sima', 'actuarial-ml-pricing')
+  creation_date: string;           // YYYY-MM-DD — when the project was built/started
+  last_modification_date?: string; // YYYY-MM-DD — last significant update (optional)
 }
 
 export const projects: Project[] = [
@@ -44,6 +46,8 @@ export const projects: Project[] = [
     screenshot: '/screenshots/sima.png',
     relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan', 'data-analyst-portfolio'],
     blogSlug: 'sima',
+    creation_date: '2026-01-23',
+    last_modification_date: '2026-03-21',
   },
 
   // repo: https://github.com/GonorAndres/gmm-explorer
@@ -72,6 +76,8 @@ export const projects: Project[] = [
     screenshot: '/screenshots/gmm-explorer.png',
     blogSlug: 'gmm-explorer',
     relatedTo: ['sima', 'life-insurance', 'property-insurance', 'data-analyst-portfolio'],
+    creation_date: '2025-12-07',
+    last_modification_date: '2026-03-21',
   },
 
   // repo: https://github.com/GonorAndres/data-analyst-path
@@ -100,6 +106,8 @@ export const projects: Project[] = [
     screenshot: '/screenshots/data-analyst-portafolio.png',
     relatedTo: ['sima', 'gmm-explorer', 'ab-testing', 'credit-risk'],
     blogSlug: 'data-analyst-portfolio',
+    creation_date: '2026-02-21',
+    last_modification_date: '2026-03-21',
   },
 
   // repo: https://github.com/GonorAndres/data-engineer-path
@@ -128,30 +136,36 @@ export const projects: Project[] = [
     screenshot: '/screenshots/data-engineering-platform.png',
     relatedTo: ['sima', 'insurance-pricing-ml', 'data-analyst-portfolio'],
     blogSlug: 'data-engineering-platform',
+    creation_date: '2026-02-21',
+    last_modification_date: '2026-03-21',
   },
 
-  // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Bayesian_vs_Frequentist)
-  // source: synthetic conversion rate experiment data
+  // repo: no GitHub repo — code lives only on the GCP VM
+  // local: /home/andtega349/lisf-agent
+  // live: TODO — currently accessible only via SSH tunnel to GCP VM (port 8000), not publicly exposed yet
+  // source: LISF PDF from https://www.diputados.gob.mx/LeyesBiblio/pdf/LISF.pdf
   {
-    slug: 'ab-testing',
+    slug: 'lisf-agent',
     title: {
-      es: 'Inferencia Bayesiana vs Frecuentista - Test A/B',
-      en: 'Bayesian vs Frequentist - A/B Test',
+      es: 'Agente LISF - Consultor Regulatorio',
+      en: 'LISF Agent - Regulatory Consultant',
     },
     description: {
-      es: 'Evaluación de tasa de conversión con métodos frecuentistas y bayesianos, incluyendo PyMC y distribución Beta.',
-      en: 'Conversion rate evaluation using frequentist and Bayesian methods, including PyMC and Beta distribution.',
+      es: 'Chatbot regulatorio construido con el Claude Agent SDK que responde preguntas sobre la Ley de Instituciones de Seguros y Fianzas (LISF). Indexa el texto completo de la ley y genera respuestas contextualizadas con referencias al artículo correspondiente. Backend FastAPI desplegado en GCP.',
+      en: 'Regulatory chatbot built with the Claude Agent SDK that answers questions about the Mexican Insurance and Surety Law (LISF). Indexes the full law text and generates contextualized responses with article references. FastAPI backend deployed on GCP.',
     },
-    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Bayesian_vs_Frequentist',
-    platform: 'GitHub',
-    category: 'data-science',
+    url: 'https://lisf-agent-451451662791.us-central1.run.app',
+    platform: 'GCP',
+    category: 'actuarial',
     tags: {
-      es: ['Python', 'Bayes', 'PyMC'],
-      en: ['Python', 'Bayes', 'PyMC'],
+      es: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
+      en: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
     },
-    variant: 'tall',
-    screenshot: '/screenshots/ab-testing.png',
-    relatedTo: ['credit-risk'],
+    variant: 'standard',
+    screenshot: '/screenshots/lisf-agent.png',
+    relatedTo: ['sima'],
+    creation_date: '2026-02-01',
+    last_modification_date: '2026-03-19',
   },
 
   // repo: https://github.com/GonorAndres/seguridad-social
@@ -179,6 +193,8 @@ export const projects: Project[] = [
     screenshot: '/screenshots/pension-simulator.png',
     relatedTo: ['sima', 'life-insurance'],
     blogSlug: 'pension-simulator',
+    creation_date: '2026-02-07',
+    last_modification_date: '2026-03-17',
   },
 
   // repo: no public GitHub repo — Drive folder IS the deliverable
@@ -203,6 +219,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/vida-tecnica.png',
     relatedTo: ['sima', 'property-insurance', 'michoacan', 'gmm-explorer'],
+    creation_date: '2024-12-01',
   },
 
   // repo: no public GitHub repo — Drive folder IS the deliverable
@@ -227,6 +244,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/danos-tecnica.png',
     relatedTo: ['sima', 'life-insurance', 'gmm-explorer'],
+    creation_date: '2025-06-01',
   },
 
   // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: EvaluaciónDerivadosDivisas)
@@ -251,6 +269,8 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/derivatives.png',
     relatedTo: ['markowitz'],
+    creation_date: '2025-06-12',
+    last_modification_date: '2025-08-09',
   },
 
   // repo: no public GitHub repo — Drive folder IS the deliverable
@@ -275,6 +295,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/markowitz.png',
     relatedTo: ['derivatives'],
+    creation_date: '2025-06-01',
   },
 
   // repo: no public GitHub repo — Drive folder IS the deliverable
@@ -299,6 +320,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/demografia-michoacan.png',
     relatedTo: ['sima', 'life-insurance'],
+    creation_date: '2023-12-01',
   },
 
   // repo: no public GitHub repo — Drive folder IS the deliverable
@@ -323,6 +345,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/deuda-cdmx.png',
     relatedTo: ['credit-risk'],
+    creation_date: '2025-06-01',
   },
 
   // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: TexasPokerCaseStudy)
@@ -347,6 +370,8 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/monte-carlo-poker.png',
     relatedTo: ['ab-testing'],
+    creation_date: '2025-06-12',
+    last_modification_date: '2025-08-09',
   },
 
   // repo: no public GitHub repo — Drive folder IS the deliverable
@@ -371,6 +396,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/amortizacion.png',
     relatedTo: ['derivatives'],
+    creation_date: '2024-06-01',
   },
 
   // repo: https://github.com/GonorAndres/Analisis_Seguros_Mexico
@@ -398,6 +424,8 @@ export const projects: Project[] = [
     screenshot: '/screenshots/actuarial-suite.png',
     blogSlug: 'suite-actuarial',
     relatedTo: ['sima', 'life-insurance', 'property-insurance'],
+    creation_date: '2025-11-18',
+    last_modification_date: '2026-03-19',
   },
 
   // repo: https://github.com/GonorAndres/CarteraSeguroAutos
@@ -426,6 +454,8 @@ export const projects: Project[] = [
     screenshot: '/screenshots/cartera-autos.png',
     blogSlug: 'cartera-autos',
     relatedTo: ['pension-simulator', 'sima', 'property-insurance'],
+    creation_date: '2025-08-30',
+    last_modification_date: '2026-03-19',
   },
 
   // repo: https://github.com/GonorAndres/proust-attention
@@ -451,32 +481,34 @@ export const projects: Project[] = [
     variant: 'standard',
     relatedTo: ['lisf-agent'],
     blogSlug: 'proust-attention-machine',
+    creation_date: '2026-02-07',
+    last_modification_date: '2026-03-14',
   },
 
-  // repo: no GitHub repo — code lives only on the GCP VM
-  // local: /home/andtega349/lisf-agent
-  // live: TODO — currently accessible only via SSH tunnel to GCP VM (port 8000), not publicly exposed yet
-  // source: LISF PDF from https://www.diputados.gob.mx/LeyesBiblio/pdf/LISF.pdf
+  // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Bayesian_vs_Frequentist)
+  // source: synthetic conversion rate experiment data
   {
-    slug: 'lisf-agent',
+    slug: 'ab-testing',
     title: {
-      es: 'Agente LISF - Consultor Regulatorio',
-      en: 'LISF Agent - Regulatory Consultant',
+      es: 'Inferencia Bayesiana vs Frecuentista - Test A/B',
+      en: 'Bayesian vs Frequentist - A/B Test',
     },
     description: {
-      es: 'Chatbot regulatorio construido con el Claude Agent SDK que responde preguntas sobre la Ley de Instituciones de Seguros y Fianzas (LISF). Indexa el texto completo de la ley y genera respuestas contextualizadas con referencias al artículo correspondiente. Backend FastAPI desplegado en GCP.',
-      en: 'Regulatory chatbot built with the Claude Agent SDK that answers questions about the Mexican Insurance and Surety Law (LISF). Indexes the full law text and generates contextualized responses with article references. FastAPI backend deployed on GCP.',
+      es: 'Evaluación de tasa de conversión con métodos frecuentistas y bayesianos, incluyendo PyMC y distribución Beta.',
+      en: 'Conversion rate evaluation using frequentist and Bayesian methods, including PyMC and Beta distribution.',
     },
-    url: 'https://lisf-agent-451451662791.us-central1.run.app',
-    platform: 'GCP',
-    category: 'actuarial',
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Bayesian_vs_Frequentist',
+    platform: 'GitHub',
+    category: 'data-science',
     tags: {
-      es: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
-      en: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
+      es: ['Python', 'Bayes', 'PyMC'],
+      en: ['Python', 'Bayes', 'PyMC'],
     },
-    variant: 'standard',
-    screenshot: '/screenshots/lisf-agent.png',
-    relatedTo: ['sima'],
+    variant: 'tall',
+    screenshot: '/screenshots/ab-testing.png',
+    relatedTo: ['credit-risk'],
+    creation_date: '2025-06-12',
+    last_modification_date: '2025-08-09',
   },
 
   // repo: https://github.com/GonorAndres/data-science-path (subfolder: projects/insurance-pricing)
@@ -503,6 +535,8 @@ export const projects: Project[] = [
     variant: 'wide',
     relatedTo: ['sima', 'data-analyst-portfolio', 'credit-risk'],
     blogSlug: 'actuarial-ml-pricing',
+    creation_date: '2026-02-21',
+    last_modification_date: '2026-03-15',
   },
 
   // repo: https://github.com/GonorAndres/b-trees
@@ -528,6 +562,7 @@ export const projects: Project[] = [
     variant: 'standard',
     relatedTo: ['data-analyst-portfolio'],
     blogSlug: 'b-trees-optimization',
+    creation_date: '2026-02-07',
   },
 
   // repo: https://github.com/GonorAndres/forecasting
@@ -553,6 +588,7 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['michoacan', 'ab-testing'],
+    creation_date: '2026-02-07',
   },
 
   // repo: Google Colab notebook (url IS the source)
@@ -577,6 +613,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/euler-method.png',
     relatedTo: ['michoacan'],
+    creation_date: '2024-04-01',
   },
 
   // repo: https://github.com/GonorAndres/learning-posgre
@@ -603,6 +640,8 @@ export const projects: Project[] = [
     screenshot: '/screenshots/flight-analytics-pg-bq.png',
     relatedTo: ['data-engineering-platform', 'data-analyst-portfolio'],
     blogSlug: 'flight-analytics-pg-bq',
+    creation_date: '2026-02-07',
+    last_modification_date: '2026-03-19',
   },
 
   // repo: https://github.com/GonorAndres/risk-analyst
@@ -630,6 +669,8 @@ export const projects: Project[] = [
     screenshot: '/screenshots/risk-analyst.png',
     relatedTo: ['credit-risk', 'derivatives', 'markowitz'],
     blogSlug: 'risk-analyst',
+    creation_date: '2026-03-18',
+    last_modification_date: '2026-03-19',
   },
 
   // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Credit_Risk_Model)
@@ -654,6 +695,8 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/credit-risk.png',
     relatedTo: ['ab-testing', 'data-cleaning'],
+    creation_date: '2025-06-12',
+    last_modification_date: '2025-08-09',
   },
 ];
 
@@ -671,6 +714,8 @@ export function getProjects(lang: Lang) {
     screenshot: p.screenshot,
     relatedTo: p.relatedTo,
     blogSlug: p.blogSlug,
+    creation_date: p.creation_date,
+    last_modification_date: p.last_modification_date,
   }));
 }
 

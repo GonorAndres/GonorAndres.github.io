@@ -2,6 +2,7 @@
 title: "Data Analyst Portfolio: 7 End-to-End Projects"
 description: "From business question to actionable insight. 7 data analysis projects covering e-commerce, insurance, finance, A/B testing, executive KPIs, and operational efficiency. SQL, Python, Streamlit, Next.js, and Power BI."
 date: "2026-03-13"
+lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["portfolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "Power BI"]

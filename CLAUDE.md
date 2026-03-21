@@ -235,11 +235,13 @@ Invoke with: "use blog-writer to write a post about [slug or topic]"
    category: "proyectos-y-analisis"
    lang: "es"
    tags: ["optional", "tags"]
+   lastModified: "2026-03-21"  # optional, add when editing an existing post
    ---
    ```
    - `category` must be one of: `actuaria-para-todos`, `fundamentos-actuariales`, `proyectos-y-analisis`, `herramientas`, `mercado-mexicano`
    - `lang` must match the directory (`es` or `en`)
-   - `date` format: `YYYY-MM-DD` as a quoted string
+   - `date` format: `YYYY-MM-DD` as a quoted string. **This is the publication date and must NEVER be changed after a post is first published.**
+   - `lastModified`: optional. When editing an existing post, add or update this field with today's date (`YYYY-MM-DD`). Internal metadata only, not displayed in UI.
 
 4. **Write the body** in standard Markdown. For inline HTML (buttons, styled links), use inline `style=""` attributes -- Tailwind classes are purged from markdown content.
 

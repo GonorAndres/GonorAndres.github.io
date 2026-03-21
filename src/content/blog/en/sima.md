@@ -2,6 +2,7 @@
 title: "SIMA: From Raw INEGI Data to Solvency Capital Requirements Under Mexican LISF, End-to-End"
 description: "SIMA centralizes actuarial techniques for pricing life insurance: it takes raw mortality data from INEGI/CONAPO, graduates it with methods like Whittaker-Henderson and Lee-Carter to obtain curves that respect human biology, and projects forward to calculate premiums, reserves, and capital requirements under LISF. Everything exposed as an API, allowing it to connect with other systems, automate sensitivity analysis, and meet CNSF requirements. Open source and built to expand into other lines of business."
 date: "2026-03-15"
+lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["Lee-Carter", "mortality", "LISF", "CUSF", "CNSF", "Whittaker-Henderson", "SVD", "reserves", "SCR", "commutation-functions", "INEGI", "CONAPO", "FastAPI", "React"]

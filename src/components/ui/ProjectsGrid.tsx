@@ -15,6 +15,8 @@ interface ProjectData {
   relatedTo?: string[];
   relatedNames: string[];
   blogUrl?: string;
+  creation_date: string;
+  last_modification_date?: string;
 }
 
 interface Props {
@@ -30,6 +32,12 @@ interface Props {
     showLess: string;
     gridView: string;
     listView: string;
+    filterAll: string;
+    sortNewest: string;
+    sortOldest: string;
+    sortUpdated: string;
+    sortLabel: string;
+    filterLabel: string;
     categories: Record<ProjectCategory, string>;
   };
 }
@@ -274,15 +282,64 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
 }
 
 // --- Main Component ---
+type SortMode = 'newest' | 'oldest' | 'updated';
+type FilterCat = ProjectCategory | 'all';
+
+const CATEGORY_ORDER: ProjectCategory[] = ['actuarial', 'data-science', 'data-engineering', 'quant-finance', 'applied-math'];
+
 export default function ProjectsGrid({ projects, labels }: Props) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showAll, setShowAll] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<FilterCat>('all');
+  const [sortMode, setSortMode] = useState<SortMode>('newest');
 
-  const visible = showAll ? projects : projects.slice(0, INITIAL_COUNT);
-  const hasMore = projects.length > INITIAL_COUNT;
+  const handleCategoryChange = (cat: FilterCat) => { setActiveCategory(cat); setShowAll(false); };
+  const handleSortChange = (mode: SortMode) => { setSortMode(mode); setShowAll(false); };
+
+  const presentCategories = CATEGORY_ORDER.filter(c => projects.some(p => p.category === c));
+
+  const filtered = activeCategory === 'all' ? projects : projects.filter(p => p.category === activeCategory);
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortMode === 'newest') return a.creation_date < b.creation_date ? 1 : -1;
+    if (sortMode === 'oldest') return a.creation_date > b.creation_date ? 1 : -1;
+    const aDate = a.last_modification_date ?? a.creation_date;
+    const bDate = b.last_modification_date ?? b.creation_date;
+    return aDate < bDate ? 1 : -1;
+  });
+
+  const visible = showAll ? sorted : sorted.slice(0, INITIAL_COUNT);
+  const hasMore = sorted.length > INITIAL_COUNT;
 
   return (
     <div>
+      {/* Category filter pills */}
+      <div className="flex flex-wrap gap-2 mb-5">
+        <button
+          onClick={() => handleCategoryChange('all')}
+          className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border ${
+            activeCategory === 'all'
+              ? 'bg-[#1B2A4A] text-white border-[#1B2A4A]'
+              : 'bg-transparent text-[#1B2A4A]/60 border-[#1B2A4A]/20 hover:border-[#1B2A4A]/40 hover:text-[#1B2A4A]/80'
+          }`}
+        >{labels.filterAll}</button>
+        {presentCategories.map((cat) => {
+          const accent = categoryAccent[cat];
+          const isActive = activeCategory === cat;
+          return (
+            <button
+              key={cat}
+              onClick={() => handleCategoryChange(cat)}
+              className="px-3.5 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border"
+              style={isActive
+                ? { backgroundColor: accent, color: 'white', borderColor: accent }
+                : { color: accent, borderColor: `${accent}40`, backgroundColor: 'transparent' }
+              }
+            >{labels.categories[cat]}</button>
+          );
+        })}
+      </div>
+
       {/* Controls bar */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center bg-[#1B2A4A]/5 rounded-lg p-1 gap-0.5">
@@ -312,9 +369,23 @@ export default function ProjectsGrid({ projects, labels }: Props) {
           </button>
         </div>
 
-        <span className="text-xs text-[#1B2A4A]/40">
-          {visible.length}/{projects.length}
-        </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-[#1B2A4A]/40 hidden sm:inline">{labels.sortLabel}</span>
+            <select
+              value={sortMode}
+              onChange={(e) => handleSortChange(e.target.value as SortMode)}
+              className="text-xs text-[#1B2A4A]/70 bg-transparent border border-[#1B2A4A]/15 rounded-md px-2 py-1 focus:outline-none focus:border-[#1B2A4A]/30 cursor-pointer"
+            >
+              <option value="newest">{labels.sortNewest}</option>
+              <option value="oldest">{labels.sortOldest}</option>
+              <option value="updated">{labels.sortUpdated}</option>
+            </select>
+          </div>
+          <span className="text-xs text-[#1B2A4A]/40">
+            {visible.length}/{sorted.length}
+          </span>
+        </div>
       </div>
 
       {/* Grid view — clean 2-col */}
@@ -329,7 +400,7 @@ export default function ProjectsGrid({ projects, labels }: Props) {
       {/* List view */}
       {viewMode === 'list' && (
         <div className="flex flex-col gap-3">
-          {(showAll ? projects : projects.slice(0, INITIAL_COUNT)).map((project) => (
+          {visible.map((project) => (
             <ListRow key={project.slug} project={project} labels={labels} />
           ))}
         </div>

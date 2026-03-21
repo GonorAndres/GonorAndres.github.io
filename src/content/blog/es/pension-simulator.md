@@ -2,6 +2,7 @@
 title: "Simulador de Pensión IMSS: Ley 73, Ley 97 y Fondo Bienestar en una Sola Herramienta"
 description: "Aplicación R Shiny que calcula la pensión de retiro bajo los tres regímenes vigentes del IMSS. Implementa la tabla del Artículo 167 para Ley 73, las tasas escalonadas de la reforma DOF 2020 para Ley 97, y el complemento del Fondo de Pensiones para el Bienestar (2024). Incluye proyección AFORE bajo tres escenarios de rendimiento, análisis de sensibilidad y reporte PDF descargable. 126 tests unitarios, Docker y despliegue en Cloud Run."
 date: "2026-03-16"
+lastModified: "2026-03-19"
 category: "proyectos-y-analisis"
 lang: "es"
 tags: ["R", "Shiny", "IMSS", "AFORE", "Pensiones", "Ley 73", "Ley 97", "Fondo Bienestar", "seguridad social", "CONSAR"]

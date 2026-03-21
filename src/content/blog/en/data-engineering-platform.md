@@ -2,6 +2,7 @@
 title: "Why an Actuary Builds Data Platforms (and How to Do It for $10 a Month)"
 description: "6 GCP projects that demonstrate how data engineering transforms actuarial work. Built a dimensional claims warehouse in BigQuery, orchestration with Dagster and Cloud Run, streaming intake with Pub/Sub and Apache Beam, infrastructure as code with Terraform, and pricing with Tweedie GLM. The entire platform runs for under $10/month; conventional architectures cost $1,000+."
 date: "2026-03-18"
+lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["BigQuery", "Terraform", "Pub/Sub", "Apache Beam", "Dagster", "Cloud Run", "DuckDB", "Tweedie GLM", "GCP", "actuarial"]

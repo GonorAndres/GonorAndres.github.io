@@ -2,6 +2,7 @@
 title: "What 5.74 Million Flights Taught Me About PostgreSQL, BigQuery, and Knowing When to Use Each"
 description: "A deep dive into building production-grade SQL analytics on real airline data, migrating to BigQuery via Python ETL, and the honest trade-offs between both systems: real timing, real costs, and real query plans."
 date: "2026-03-18"
+lastModified: "2026-03-19"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["PostgreSQL", "BigQuery", "Python", "ETL", "EXPLAIN ANALYZE", "Docker", "GIS", "Plotly", "Folium", "data-engineering"]

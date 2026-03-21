@@ -2,6 +2,7 @@
 title: "SIMA: De Datos Crudos del INEGI a Requerimientos de Capital bajo LISF, End-to-End"
 description: "SIMA centraliza las técnicas actuariales para valuar seguros de vida: toma mortalidad cruda de INEGI/CONAPO, la gradúa con métodos como Whittaker-Henderson y Lee-Carter para obtener curvas que respetan la biología humana, y proyecta hacia el futuro para calcular primas, reservas y requerimientos de capital bajo LISF. Todo expuesto como API, lo que permite conectarlo con otros sistemas, automatizar análisis de sensibilidad y cumplir con los requisitos de la CNSF. Código abierto y diseñado para crecer hacia otros ramos."
 date: "2026-03-15"
+lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "es"
 tags: ["Lee-Carter", "mortalidad", "LISF", "CUSF", "CNSF", "Whittaker-Henderson", "SVD", "reservas", "SCR", "funciones-de-conmutación", "INEGI", "CONAPO", "FastAPI", "React"]

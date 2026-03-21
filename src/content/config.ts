@@ -15,6 +15,7 @@ const blog = defineCollection({
     ]),
     lang: z.enum(['es', 'en']),
     tags: z.array(z.string()).optional(),
+    lastModified: z.string().optional(),
   }),
 });
 

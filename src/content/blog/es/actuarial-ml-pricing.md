@@ -2,6 +2,7 @@
 title: "Pricing de Seguros con ML: Lo que México Puede Aprender de la Revolución Actuarial Europea"
 description: "Modelos de frecuencia-severidad sobre freMTPL2: Poisson GLM vs XGBoost vs LightGBM con explicabilidad SHAP, auditorías de fairness y un análisis transfronterizo de lo que las técnicas europeas de pricing con ML significan para el mercado mexicano donde el 70% de los autos no tiene seguro."
 date: "2026-03-14"
+lastModified: "2026-03-19"
 category: "proyectos-y-analisis"
 lang: "es"
 tags: ["pricing", "GLM", "XGBoost", "LightGBM", "SHAP", "freMTPL2", "actuarial", "frecuencia-severidad", "Optuna", "MLflow", "fairness"]
