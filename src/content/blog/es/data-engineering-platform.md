@@ -23,9 +23,11 @@ Los 6 proyectos no son ejercicios independientes. Son capas de una plataforma: w
 
 El punto de partida es la pregunta más básica: ¿dónde viven los datos de siniestros y cómo se consultan? En México, la respuesta convencional es "en una hoja de Excel que alguien mantiene actualizada". La respuesta de ingeniería de datos es diferente: un warehouse dimensional.
 
-El esquema estrella tiene 4 dimensiones (pólizas, coberturas, fechas, geografía) y 2 tablas de hechos (transacciones y snapshots mensuales). Dataform orquesta SQL en 4 capas: staging (limpieza, tipado); intermediate (joins, enriquecimiento); marts (métricas); reports (vistas de consumo). Los nombres están en español mexicano, los códigos en INEGI, los montos en MXN. Esto no es cosmético: un warehouse con datos reales demuestra comprensión del dominio, no solo movimiento de columnas.
+La idea central es organizar los datos para que un actuario pueda hacer preguntas directamente: "muéstrame los siniestros incurridos por cobertura y trimestre de ocurrencia". Un esquema estrella hace exactamente eso: 4 dimensiones (pólizas, coberturas, fechas, geografía) rodean 2 tablas de hechos (transacciones y snapshots mensuales). En lugar de buscar entre hojas de Excel, escribes una consulta y obtienes la respuesta.
 
-Desarrollo local en DuckDB: sin instalación, en proceso, cero servidor. El mismo SQL se ejecuta en BigQuery sin cambios. El dashboard está en Cloud Run: <a href="https://claims-dashboard-451451662791.us-central1.run.app" target="_blank" rel="noopener">claims-dashboard</a>. Muestra triángulos, frecuencia por cobertura, desarrollo temporal. Cincuenta y dos tests de pytest cubren esquema, integridad referencial, reglas de negocio (montos positivos, fechas consistentes, sumas validadas entre capas).
+Los datos crudos pasan por 4 capas de transformación orquestadas con Dataform: primero se limpian y estandarizan (staging), luego se cruzan y enriquecen con catálogos (intermediate), después se calculan métricas como triángulos de pérdida y frecuencia (marts), y finalmente se preparan vistas listas para el dashboard (reports). Cada capa alimenta la siguiente, y cualquier error se detecta antes de llegar al modelo. Todo con nombres en español mexicano, códigos INEGI, montos en MXN, porque un warehouse que refleja el dominio real demuestra comprensión del negocio, no solo capacidad de mover columnas.
+
+Para desarrollo local se usa DuckDB: se ejecuta directamente en tu máquina, sin instalar servidores ni pagar nada. Lo valioso es que el mismo SQL corre en BigQuery sin cambios, así que lo que funciona en local funciona en producción. El dashboard está en Cloud Run: <a href="https://claims-dashboard-451451662791.us-central1.run.app" target="_blank" rel="noopener">claims-dashboard</a>. Muestra triángulos, frecuencia por cobertura, desarrollo temporal. Cincuenta y dos tests de pytest verifican que el esquema sea correcto, que las referencias entre tablas sean consistentes y que las reglas de negocio se cumplan (montos positivos, fechas coherentes, sumas que cuadran entre capas).
 
 Costo: menos de \$1 USD al mes. BigQuery free tier cubre 10 GB de almacenamiento y 1 TB de consultas. GCS para los archivos fuente cuesta centavos.
 
@@ -33,33 +35,43 @@ Costo: menos de \$1 USD al mes. BigQuery free tier cubre 10 GB de almacenamiento
 
 Con el warehouse construido: ¿quién lo alimenta y cuándo? En la industria, el estándar es Apache Airflow; en GCP, Cloud Composer. Cloud Composer cuesta \$400+ USD/mes porque mantiene Kubernetes corriendo permanentemente, incluso sin DAGs ejecutándose. Un pipeline lineal sin fan-out: es como alquilar un autobús para una persona.
 
-La alternativa: Cloud Run + Cloud Scheduler. Un contenedor que se ejecuta bajo demanda vía HTTP, programado con cron. Costo: \$0.10 USD/mes. La lógica es idéntica, el resultado es idéntico, 4,000 veces más barato. Localmente corre Dagster: interfaz gratuita, lineage de assets, logs y materialización incremental. Un DAG de referencia en Airflow está en el repositorio como evidencia de competencia con herramientas estándar. La economía simplemente no justifica desplogarlas para este volumen.
+La alternativa es Cloud Run + Cloud Scheduler: un contenedor que se despierta cuando toca, ejecuta el pipeline, y se apaga. Como un empleado que llega, hace su trabajo y se va, en lugar de quedarse sentado 24 horas esperando instrucciones. Costo: \$0.10 USD al mes. La lógica es idéntica, el resultado es idéntico, 4,000 veces más barato. Este patrón aplica a cualquier pipeline pequeño o mediano que corra en horarios predecibles.
 
-La ruptura durante despliegue: Cloud Run esperaba un servidor HTTP escuchando. El Dockerfile original ejecutaba el pipeline como script batch que terminaba. Cloud Run interpretaba la terminación como crash y reiniciaba en loop. La solución fue agregar un endpoint HTTP que dispara ejecución. Error simple, pero ilustrativo de la diferencia entre "funciona local" y "funciona en producción".
+Para desarrollo local se usa Dagster, que ofrece algo que Cloud Run no tiene: una interfaz visual donde ves el flujo de tus datos, rastrear qué se ejecutó y cuándo, y depurar fallos sin leer logs en terminal. Un DAG de referencia en Airflow también está en el repositorio, porque si un empleador usa Airflow, puede ver que conozco su herramienta. La decisión de no desplegarlo es económica, no técnica.
+
+La lección de despliegue ilustra bien qué pasa cuando las suposiciones locales chocan con la realidad de la nube. Cloud Run espera un servidor HTTP escuchando permanentemente. El Dockerfile original ejecutaba el pipeline como script que terminaba al acabar. Cloud Run interpretaba esa terminación como un fallo y reiniciaba en loop. La solución fue agregar un endpoint HTTP que dispara la ejecución bajo demanda. Error simple, pero exactamente el tipo de problema que solo aparece en producción.
 
 ### P03: Ingesta de siniestros en streaming
 
-Los siniestros no llegan en batch diario. Un ajustador registra a las 3pm; otro a las 3:15. El modelo real es flujo continuo. Pub/Sub actúa como bus de eventos: cada siniestro es un mensaje con cobertura, deducible, estado, monto. Un subscriber en Cloud Run valida esquema, enriquece con catálogos, escribe al warehouse. Mensajes inválidos van a dead-letter para revisión.
+En la realidad, los siniestros no esperan a que alguien corra un proceso al final del día. Un ajustador registra un caso a las 3pm, otro a las 3:15, otro a las 4. La pregunta es: ¿puede el sistema reaccionar a cada uno conforme llega, en lugar de esperar a que se acumulen?
 
-Apache Beam procesa agregaciones ventaneadas: frecuencia por hora, montos por cobertura, conteos por estado. El punto sutil: este pipeline corre en batch, no streaming. La API de Beam es idéntica; la diferencia es el flag `--streaming` en la línea de comandos. El código demuestra ventanas, timestamps, triggers sin el costo de Dataflow streaming (\$1,000+/mes continuo). En producción, activar streaming es cambiar un parámetro.
+Pub/Sub funciona como un buzón que nunca pierde una carta. Cada siniestro se convierte en un mensaje con su cobertura, deducible, estado y monto. Un servicio en Cloud Run recibe cada mensaje, verifica que los campos estén completos y sean válidos, lo enriquece con información de catálogos (tipo de cobertura, entidad federativa), y lo escribe al warehouse. Si un mensaje llega mal formado, se separa automáticamente para revisión en lugar de contaminar los datos.
+
+Apache Beam se encarga de agrupar esos eventos por ventanas de tiempo: ¿cuántos siniestros llegaron en esta hora? ¿Cuál es el monto acumulado por cobertura en este turno? ¿Cuántos casos abiertos por estado hoy? El detalle importante: el código está escrito con la misma lógica que usaría un sistema en tiempo real, pero corre en batch para ahorrar costos. Dataflow en modo streaming cuesta \$1,000+ al mes de forma continua. En batch, cuesta centavos por ejecución. El código es idéntico; pasar a tiempo real es cambiar un parámetro de configuración, no reescribir nada.
 
 Costo: entre \$1 y \$5 USD al mes. Pub/Sub cobra por mensaje (los primeros 10 GB son gratuitos), Cloud Run cobra por invocación, Beam batch corre como un job efímero que cuesta centavos por ejecución.
 
 ### P04: Infraestructura como código con Terraform
 
-Cada recurso de GCP está definido en Terraform: 24 recursos en 6 módulos (IAM, BigQuery, GCS, Pub/Sub, Cloud Run, Scheduler). El beneficio es concreto: si todo se elimina, `terraform apply` lo reconstruye en minutos. Cada cambio pasa por PR con `terraform plan` en CI y `terraform apply` automático.
+¿Qué pasa si toda la plataforma desaparece? ¿Se puede reconstruir? Terraform responde esa pregunta. Es una herramienta que permite describir toda tu infraestructura en archivos de texto: en lugar de entrar a la consola de Google Cloud y crear recursos uno por uno haciendo clic, escribes qué necesitas (bases de datos, almacenamiento, servicios, permisos) y Terraform lo crea por ti. Si algo se borra o se rompe, un solo comando (`terraform apply`) lo reconstruye en minutos.
 
-Workload Identity Federation elimina llaves de servicio: GitHub Actions se autentica sin secretos estáticos, usando tokens OIDC de corta duración. No es sofisticación innecesaria; es el estándar Google desde 2021 y lo que exigen las auditorías.
+Esto importa por tres razones concretas. Reproducibilidad: cualquier persona con acceso al repositorio puede levantar la plataforma completa desde cero. Auditabilidad: cada cambio en la infraestructura queda registrado en Git, igual que el código. Colaboración: los cambios se revisan en pull requests antes de aplicarse, con `terraform plan` mostrando exactamente qué va a cambiar antes de que suceda.
 
-La ruptura: la paradoja del bootstrap. Terraform almacena estado en un bucket de GCS. Ese bucket es un recurso que Terraform debería crear. No puedes ejecutar `terraform init` sin el bucket, ni crear el bucket sin Terraform. La solución es bootstrap local: crear el bucket con estado en disco, luego migrar con `terraform init -migrate-state`. Documentado, reproducible, 10 minutos una vez que entiiendes el problema.
+La plataforma tiene 24 recursos organizados en 6 módulos (permisos, base de datos, almacenamiento, mensajería, servicios y programación). Para el despliegue automático, GitHub Actions se conecta a GCP sin necesidad de guardar contraseñas ni llaves de servicio: usa Workload Identity Federation, que genera tokens temporales de corta duración. En la práctica esto significa que nadie tiene credenciales que puedan filtrarse.
+
+La lección aprendida: Terraform guarda el estado de tu infraestructura en un archivo remoto (un bucket en GCS). Pero ese bucket es parte de la infraestructura que Terraform debería crear. No puedes inicializar Terraform sin el bucket, ni crear el bucket sin Terraform. La solución es crear el bucket primero con estado local en disco, y luego migrar. Una paradoja que parece trivial, pero que solo descubres cuando despliegas de verdad.
 
 Costo: \$0. Terraform es open source. El bucket de estado cuesta fracciones de centavo.
 
 ### P05: Streaming verdadero (solo local)
 
-P03 usa Beam en batch para demostrar patrones. P05 implementa streaming real: watermarks, triggers compuestos, modo acumulativo, 1 hora de latencia permitida, deduplicación por ventana. La diferencia es fundamental. P03 usa DISCARDING (emite solo nuevos) sin late data. P05 usa ACCUMULATING (emite acumulado completo), acepta datos hasta 1 hora después del cierre, garantiza exactly-once.
+P03 responde "¿qué pasó hoy?" después de que los hechos ocurrieron. P05 responde "¿qué está pasando ahora mismo?" mientras ocurre. La diferencia importa en producción: detectar fraude necesita segundos, no horas. Monitorear la suficiencia de reservas se beneficia de ver oleadas de siniestros conforme suceden, no al día siguiente.
 
-Este proyecto no está desplegado. Dataflow streaming cuesta \$50-100 USD/día (workers permanentes). El código es Dataflow-ready: solo cambia el runner. No desplegarlo es decisión de costo, no limitación técnica. Un demo de 2 horas costaría menos de \$10 USD si fuera necesario.
+¿Qué ganas con streaming verdadero que no tienes con batch? Tres cosas. Primera: los datos que llegan tarde se manejan correctamente. Un siniestro registrado con retraso de 40 minutos se incorpora a la ventana temporal correcta, no se pierde ni se cuenta doble. Segunda: los resultados se actualizan conforme llega nueva información. En lugar de un número final al cierre del día, tienes estimaciones que se refinan hora por hora. Tercera: deduplicación garantizada, cada evento se procesa exactamente una vez por ventana, sin importar si el mensaje se reenvió.
+
+Técnicamente, P03 usa modo descarte (cada resultado es independiente, sin datos tardíos). P05 usa modo acumulativo (cada resultado incluye todo lo anterior), acepta datos hasta 1 hora después del cierre de ventana, y garantiza procesamiento exactamente una vez mediante deduplicación por estado.
+
+Este proyecto no está desplegado porque Dataflow en modo streaming cuesta entre \$50 y \$100 USD al día, ya que requiere workers corriendo permanentemente. El código está listo para Dataflow, solo cambia el destino de ejecución. No desplegarlo es una decisión de costos, no una limitación técnica. Un demo de 2 horas costaría menos de \$10 USD si fuera necesario para demostrar que funciona en producción.
 
 ### P06: Pipeline de pricing con ML
 
@@ -100,11 +112,13 @@ Cada trade-off tiene respuesta diferente en otro contexto. Una aseguradora con 2
 
 ## Conexión con el trabajo actuarial
 
-Esta no es una plataforma genérica. Cada dataset contiene datos de seguros. Cada pipeline procesa siniestros. El warehouse construye triángulos. El pricing tarifica coberturas. El topic de Pub/Sub transporta eventos con cobertura, deducibles, códigos de entidad federativa.
+El trabajo actuarial, en el fondo, consiste en tomar grandes volúmenes de eventos inciertos (siniestros, pagos, reclamaciones) y convertirlos en números confiables: reservas, primas, requerimientos de capital. Una plataforma de datos hace exactamente lo mismo, pero automatizado.
 
-Equipo actuarial tradicional recibe un CSV y construye fórmulas. Esta plataforma recibe un evento, lo valida contra esquema, lo enriquece con catálogos, lo almacena en warehouse dimensional, lo agrega en ventanas temporales, lo alimenta al modelo de pricing. Todo automático, todo testado, todo versionado. Esa es la diferencia que la infraestructura cloud aporta: hace que los modelos sean confiables porque el pipeline es confiable.
+Piénsalo así: los siniestros llegan uno por uno (streaming), se agrupan por período (warehouse), se agregan en triángulos de desarrollo (marts), y alimentan modelos de pricing. Ese flujo es el proceso actuarial. La diferencia es que en lugar de depender de que alguien copie columnas correctamente entre archivos, cada paso está automatizado, verificado con tests, y registrado en Git. Cuando la CNSF pregunta cómo llegaste a un número, la respuesta es un commit, un log de ejecución, y 52 pruebas pasando.
 
-Las conexiones con el portafolio son directas. <a href="/blog/sima/">SIMA</a> es el motor de cálculo que esta plataforma podría alimentar. Las tablas graduadas, funciones de conmutación, cálculos de SCR que SIMA expone necesitan datos limpios como input. El <a href="/blog/actuarial-ml-pricing/">proyecto de pricing con ML</a> usa la misma descomposición frecuencia-severidad que P06, pero explora modelos con mayor complejidad. El <a href="/blog/data-analyst-portfolio/">portafolio de analista de datos</a> es la capa de análisis sobre esta infraestructura: dashboards, segmentaciones, reportes que consumen los marts.
+Las conexiones con el resto del portafolio son naturales. <a href="/blog/sima/">SIMA</a> calcula mortalidad graduada, funciones de conmutación y requerimientos de capital bajo LISF; todo eso necesita datos limpios como insumo, exactamente lo que esta plataforma produce. El <a href="/blog/actuarial-ml-pricing/">proyecto de pricing con ML</a> usa la misma descomposición frecuencia-severidad que P06, pero explora modelos de mayor complejidad para comparar contra el baseline regulatorio. El <a href="/blog/data-analyst-portfolio/">portafolio de analista de datos</a> es la capa de análisis sobre esta infraestructura: los dashboards y reportes que consumen lo que los marts producen.
+
+Cuando la infraestructura de datos es confiable, el juicio actuarial se concentra en lo que realmente importa: elegir supuestos, calibrar modelos, interpretar resultados. No en limpiar datos.
 
 ## Lo que cambiaría
 

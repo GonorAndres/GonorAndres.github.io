@@ -19,47 +19,51 @@ Spreadsheets scale to 500 claims. At 50,000 claims across six coverage types, th
 
 ### P01: Claims data warehouse
 
-The foundation is a star schema with four dimensions (policyholder, policy, date, coverage) and two fact tables (claims and payments). The dimensional model reflects how actuaries actually query claims data: "show me incurred losses by coverage type and accident quarter" maps directly to a join between `fct_claims`, `dim_coverage`, and `dim_date`.
+The core idea is to organize data so that an actuary can ask questions directly: "show me incurred losses by coverage type and accident quarter." A star schema does exactly that: four dimensions (policyholder, policy, date, coverage) surround two fact tables (claims and payments). Instead of hunting through spreadsheets, you write a query and get the answer.
 
-DuckDB runs locally for free, providing iteration speed no cloud service can match. BigQuery handles production queries. Dataform manages the SQL-based ELT pipeline across four transformation layers: staging (ingestion, type casting, naming conventions); intermediate (business logic, deduplication); marts (analytical tables); and reports (dashboard-ready views). This is dbt's layered approach, but implemented with Google's native tooling.
+Raw data flows through four transformation layers managed by Dataform: first it gets cleaned and standardized (staging), then joined and enriched with reference catalogs (intermediate), then aggregated into metrics like loss triangles and claim frequency (marts), and finally shaped into dashboard-ready views (reports). Each layer feeds the next, and errors get caught before reaching the model. Everything uses Mexican locale names, INEGI state codes, and MXN currency, because a warehouse that reflects the real domain demonstrates business understanding, not just the ability to move columns around.
 
-The warehouse builds loss triangles and claim frequency analyses; these are the two artifacts in every actuarial reserve review. Fifty-two pytest tests verify schema integrity, referential consistency, and business rules (negative amounts rejected, date logic enforced, orphaned payments caught). The data is Mexican: `es_MX` locale names, INEGI state codes, MXN currency, coverage types reflecting the Mexican P&C market.
+For local development, DuckDB runs directly on your machine with no servers to install or pay for. The valuable part: the same SQL runs on BigQuery without changes, so what works locally works in production. Fifty-two pytest tests verify that the schema is correct, that references between tables are consistent, and that business rules hold (positive amounts, coherent dates, sums that balance across layers).
 
-The claims dashboard is deployed on Cloud Run: <a href="https://claims-dashboard-451451662791.us-central1.run.app" target="_blank" rel="noopener">claims-dashboard-451451662791.us-central1.run.app</a>. Monthly cost: under \$1, because BigQuery's free tier handles the query volume and Cloud Run scales to zero when nobody is looking at the dashboard.
+The claims dashboard is deployed on Cloud Run: <a href="https://claims-dashboard-451451662791.us-central1.run.app" target="_blank" rel="noopener">claims-dashboard</a>. Monthly cost: under \$1, because BigQuery's free tier handles the query volume and Cloud Run scales to zero when nobody is looking at the dashboard.
 
 ### P02: Orchestrated ELT pipeline
 
 The first real infrastructure decision: orchestration. The industry standard is Apache Airflow, deployed via Cloud Composer on GCP. Composer manages Airflow and costs \$400+ per month minimum. A pipeline that runs once daily, ingests a few thousand records, and executes five linear steps with no fan-out or branching: that cost becomes indefensible.
 
-Cloud Run plus Cloud Scheduler is the alternative. Scheduler fires cron, Cloud Run wakes up, executes the pipeline, sleeps. Total cost: \$0.10 per month. The pipeline produces identical results. That is a 4,000x cost difference. You trade Airflow's DAG visualization, retry policies, and SLA monitoring; for a linear pipeline, those are overhead, not necessities.
+The alternative is Cloud Run + Cloud Scheduler: a container that wakes up when scheduled, runs the pipeline, and goes back to sleep. Like an employee who shows up, does the job, and leaves, instead of sitting idle 24 hours waiting for instructions. Total cost: \$0.10 per month. The logic is identical, the results are identical, 4,000 times cheaper. This pattern works for any small-to-medium pipeline that runs on a predictable schedule.
 
-For local development, Dagster provides a superior developer experience: software-defined assets, free UI, type-checked IO managers, built-in observability. A reference Airflow DAG is also included, implementing the same pipeline with task decorators and XCom. An employer running Airflow can see that I understand their tool; the deployed version demonstrates the cost-conscious alternative.
+For local development, Dagster offers something Cloud Run does not: a visual interface where you can see your data flow, track what ran and when, and debug failures without reading terminal logs. A reference Airflow DAG is also included in the repository, so that an employer using Airflow can see I understand their tool. The decision not to deploy it is economic, not technical.
 
-CI/CD flows through GitHub Actions: Docker build, push to Artifact Registry, deploy to Cloud Run. The deployment lesson surfaced quickly: Cloud Run expects an HTTP server listening on `$PORT`. The initial Dockerfile CMD executed the pipeline as a batch script and exited. Cloud Run saw the exit, health-checked the non-responsive container, and killed it. The fix: add an HTTP entrypoint that triggers batch execution on request.
+The deployment lesson illustrates what happens when local assumptions meet cloud reality. Cloud Run expects an HTTP server listening permanently. The original Dockerfile executed the pipeline as a batch script that exited when finished. Cloud Run interpreted that exit as a crash and restarted in a loop. The fix was adding an HTTP endpoint that triggers execution on demand. A simple error, but exactly the kind of problem that only surfaces in production.
 
 ### P03: Streaming claims intake
 
-Insurance claims are events. Policyholder calls adjuster; adjuster files report; report enters the system. In a spreadsheet workflow, it sits in an inbox until batch processing. In event-driven architecture, it becomes a Pub/Sub message immediately.
+In practice, claims do not wait for someone to run a process at the end of the day. One adjuster files a report at 3pm, another at 3:15, another at 4. The question is: can the system react to each claim as it arrives, instead of waiting for them to accumulate?
 
-Pub/Sub serves as the event bus. A Cloud Run push subscriber receives each claim event and validates schema (fields required, coverage type valid, amount positive), enriches with dimensional lookups, and writes to the warehouse. Invalid messages route to a dead-letter topic for inspection.
+Pub/Sub works like a mailbox that never loses a letter. Each claim becomes a message with its coverage type, deductible, status, and amount. A Cloud Run service receives each message, checks that all fields are present and valid, enriches it with catalog information (coverage type, state code), and writes it to the warehouse. If a message arrives malformed, it gets routed to a separate queue for review instead of contaminating the data.
 
-Apache Beam handles windowed aggregations: claim counts and amounts grouped by time window. Critical decision: Beam runs in batch mode, not streaming. API is identical; only difference is the `--streaming` flag. Batch Beam costs \$0.01 per run. Streaming Dataflow costs \$1,000+ per month. The portfolio demonstrates the pattern; production would flip that flag. Code remains unchanged. Monthly cost: \$1 to \$5.
+Apache Beam groups those events into time windows: how many claims arrived this hour? What is the total amount by coverage this shift? How many open cases by state today? The important detail: the code is written with the same logic a real-time system would use, but runs in batch to save costs. Streaming Dataflow costs \$1,000+ per month continuously. In batch, it costs pennies per run. The code is identical; switching to real-time means changing a configuration parameter, not rewriting anything. Monthly cost: \$1 to \$5.
 
 ### P04: GCP infrastructure with Terraform
 
-Every GCP resource is defined in Terraform: 24 resources across 6 modules (IAM, BigQuery, GCS, Pub/Sub, Cloud Run, Cloud Scheduler). Nothing was created through the console. If the entire project were deleted, `terraform apply` rebuilds it in minutes.
+What happens if the entire platform disappears? Can you rebuild it? Terraform answers that question. It is a tool that lets you describe all your infrastructure in text files: instead of going into the Google Cloud console and creating resources one by one through clicks, you write what you need (databases, storage, services, permissions) and Terraform creates it for you. If something gets deleted or breaks, a single command (`terraform apply`) rebuilds it in minutes.
 
-Workload Identity Federation enables keyless authentication from GitHub Actions. No service account keys in repository secrets, no JSON credentials committed. The CI/CD pipeline runs `terraform plan` on every pull request (showing changes before they happen) and `terraform apply` on merge to main.
+This matters for three concrete reasons. Reproducibility: anyone with access to the repository can stand up the complete platform from scratch. Auditability: every infrastructure change is recorded in Git, just like code. Collaboration: changes are reviewed in pull requests before being applied, with `terraform plan` showing exactly what will change before it happens.
 
-The deployment lesson is the state bucket bootstrap paradox. Terraform stores state in a GCS bucket, but `terraform init` requires that bucket to exist first. The solution is two-phase: create the bucket with local state, then migrate state into it via `terraform init -migrate-state`. It is documented, but only surfaces when you actually deploy.
+The platform has 24 resources organized in 6 modules (permissions, database, storage, messaging, services, and scheduling). For automated deployment, GitHub Actions connects to GCP without storing passwords or service account keys: it uses Workload Identity Federation, which generates short-lived temporary tokens. In practice, this means nobody holds credentials that could leak.
+
+The lesson learned: Terraform stores infrastructure state in a remote file (a GCS bucket). But that bucket is part of the infrastructure Terraform should create. You cannot initialize Terraform without the bucket, and you cannot create the bucket without Terraform. The solution is to create the bucket first with local state on disk, then migrate. A paradox that seems trivial, but that you only discover when you actually deploy.
 
 ### P05: True streaming pipeline (local only)
 
-P03 demonstrates streaming patterns in batch mode. P05 implements true streaming: watermarks tracking event-time, composite triggers (AfterWatermark with early and late firings), accumulating mode (results update as late data arrives), one-hour allowed lateness, and BagState deduplication ensuring exactly-once processing per window.
+P03 answers "what happened today?" after the fact. P05 answers "what is happening right now?" as it unfolds. The difference matters in production: fraud detection needs seconds, not hours. Monitoring reserve adequacy benefits from seeing claim surges as they happen, not the next day.
 
-The distinction matters. P03 uses discarding mode (each output is independent, no late data). P05 uses accumulating mode (each output contains all prior data, with explicit late-arrival policies). P03 answers "how many claims arrived in this batch?" P05 answers "how many claims belong to this window, including late arrivals?"
+What does true streaming give you that batch does not? Three things. First: late-arriving data is handled correctly. A claim registered 40 minutes late gets incorporated into the right time window instead of being lost or double-counted. Second: results update as new information arrives. Instead of a single final number at end of day, you get estimates that refine hour by hour. Third: guaranteed deduplication, each event is processed exactly once per window, regardless of whether the message was resent.
 
-P05 is not deployed because streaming Dataflow costs \$50 to \$100 per day. The code is Dataflow-ready; only the deployment target changes. The code proves the competency; the economics do not justify the deployment.
+Technically, P03 uses discarding mode (each result is independent, no late data). P05 uses accumulating mode (each result includes everything before it), accepts data up to one hour after window close, and guarantees exactly-once processing through state-based deduplication.
+
+P05 is not deployed because streaming Dataflow costs \$50 to \$100 per day, since it requires workers running permanently. The code is Dataflow-ready; only the deployment target changes. Not deploying it is a cost decision, not a technical limitation. A two-hour demo would cost under \$10 if needed to prove it works in production.
 
 ### P06: Insurance pricing ML pipeline
 
@@ -101,13 +105,13 @@ This is not about being cheap. It is about understanding what you are paying for
 
 ## The connection to actuarial work
 
-This is not a generic data engineering portfolio. Every dataset uses insurance domain data. The warehouse builds loss triangles. The ML pipeline prices coverage with frequency-severity decomposition. The Pub/Sub topic carries claim events with coverage types, deductibles, and Mexican state codes. The Dataform layers (staging, intermediate, marts) map to how actuarial teams actually organize data.
+Actuarial work, at its core, is about taking large volumes of uncertain events (claims, payments, recoveries) and turning them into reliable numbers: reserves, premiums, capital requirements. A data platform does exactly the same thing, but automated.
 
-A traditional actuarial team receives a CSV, opens Excel, and starts building formulas. This platform receives a claim event, validates it, routes invalid messages to a dead-letter queue, enriches valid ones with dimensional lookups, stores them in a star-schema warehouse, materializes loss triangles through SQL, and feeds the results to a pricing model. All automatically. All tested. All version-controlled.
+Think of it this way: claims arrive one by one (streaming), get grouped by period (warehouse), get aggregated into development triangles (marts), and feed pricing models. That flow is the actuarial process. The difference is that instead of relying on someone copying columns correctly between files, every step is automated, verified with tests, and recorded in Git. When the CNSF asks how you arrived at a number, the answer is a commit hash, a pipeline execution log, and 52 passing tests.
 
-That is what cloud infrastructure does for actuarial work. It does not replace the actuary's judgment about graduation methods or projection models. It makes that judgment trustworthy because the data pipeline underneath is trustworthy. When the CNSF asks how you arrived at a number, the answer is a Git commit hash, a CI/CD pipeline log, and 52 passing tests.
+The connections to the rest of the portfolio are natural. <a href="/en/blog/sima/">SIMA</a> computes graduated mortality, commutation functions, and capital requirements under LISF; all of that needs clean data as input, exactly what this platform produces. The <a href="/en/blog/actuarial-ml-pricing/">insurance pricing ML project</a> uses the same frequency-severity decomposition as P06, but explores more complex models to compare against the regulatory baseline. The <a href="/en/blog/data-analyst-portfolio/">data analyst portfolio</a> is the analysis layer on top of this infrastructure: dashboards and reports that consume what the marts produce.
 
-<a href="/en/blog/sima/">SIMA</a> is the calculation engine this platform feeds. The <a href="/en/blog/actuarial-ml-pricing/">insurance pricing ML project</a> uses the same frequency-severity decomposition as P06, applied to freMTPL2 with gradient boosting and SHAP explainability. The <a href="/en/blog/data-analyst-portfolio/">data analyst portfolio</a> is the analysis layer on top of this infrastructure. Together, these four bodies of work cover the full pipeline from raw data to regulatory filing.
+When data infrastructure is reliable, actuarial judgment can focus on what actually matters: choosing assumptions, calibrating models, interpreting results. Not cleaning data.
 
 ## What I would change
 
