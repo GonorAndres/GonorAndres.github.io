@@ -88,7 +88,7 @@ La implementacion incluye **reinstatements**: la posibilidad de reinstalar el li
 
 ### Stop Loss (Limitacion de Perdidas)
 
-Proteccion agregada sobre toda la cartera. El Stop Loss se activa cuando la siniestralidad total (siniestros / primas) excede un umbral llamado **attachment point**. Un contrato "80% xs 20%" sobre $10M de primas sujetas significa: si la siniestralidad supera 80%, el reasegurador cubre hasta 20 puntos porcentuales adicionales. Si los siniestros suman $9M (90% de siniestralidad), el reasegurador paga $1M (el 10% de exceso sobre 80%, aplicado a $10M de primas). Si los siniestros llegan a $11M (110%), el reasegurador paga el maximo de $2M (20% de $10M).
+Proteccion agregada sobre toda la cartera. El Stop Loss se activa cuando la siniestralidad total (siniestros / primas) excede un umbral llamado **attachment point**. Un contrato "80% xs 20%" sobre \$10M de primas sujetas significa: si la siniestralidad supera 80%, el reasegurador cubre hasta 20 puntos porcentuales adicionales. Si los siniestros suman \$9M (90% de siniestralidad), el reasegurador paga \$1M (el 10% de exceso sobre 80%, aplicado a \$10M de primas). Si los siniestros llegan a \$11M (110%), el reasegurador paga el maximo de \$2M (20% de \$10M).
 
 Pydantic valida que el attachment point este en un rango razonable (50%-200%) -- puntos de activacion fuera de ese rango indican un error de captura, no un contrato real.
 
@@ -112,7 +112,7 @@ El modulo Bootstrap responde con una distribucion completa. El proceso es:
 4. Ejecutar Chain Ladder en cada triangulo sintetico.
 5. Obtener la distribucion de reservas posibles y calcular percentiles.
 
-La diferencia entre el percentil 50 (mediana) y el percentil 75 revela la incertidumbre del proceso. Si P50 = $2.5M y P75 = $3.1M, hay un 25% de probabilidad de que la reserva necesaria sea al menos $600,000 mayor que la mediana. Esa diferencia es directamente relevante para la decision de cuanto capital mantener. En un `ConfiguracionBootstrap`, Pydantic valida que los percentiles solicitados esten entre 1 y 99, y que el numero de simulaciones este entre 100 y 10,000.
+La diferencia entre el percentil 50 (mediana) y el percentil 75 revela la incertidumbre del proceso. Si P50 = \$2.5M y P75 = \$3.1M, hay un 25% de probabilidad de que la reserva necesaria sea al menos \$600,000 mayor que la mediana. Esa diferencia es directamente relevante para la decision de cuanto capital mantener. En un `ConfiguracionBootstrap`, Pydantic valida que los percentiles solicitados esten entre 1 y 99, y que el numero de simulaciones este entre 100 y 10,000.
 
 ## Cumplimiento Regulatorio -- RCS, CNSF, S-11.4, SAT
 
