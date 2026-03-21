@@ -29,9 +29,13 @@ Dashboard built with Next.js and Recharts, static architecture (precomputed JSON
 
 ### 01 - P&C actuarial reserves: IBNR and loss experience
 
-**Business question:** Of the 6 lines of business in the portfolio, which are profitable and what is the total IBNR the insurer must reserve?
+**Business question:** Of the 6 lines of business in the portfolio, which are profitable and what is the total IBNR (incurred but not reported) the insurer must reserve?
 
-Reserve analysis on NAIC Schedule P regulatory data using Chain-Ladder and Bornhuetter-Ferguson methods. The dataset includes ~50K synthetic claims with actuarially realistic distributions (lognormal severity, Poisson frequency, exponential report lag). The result: only Private Passenger Auto and Product Liability are profitable. Medical Malpractice shows a loss ratio of ~280%, a clear signal of structurally inadequate pricing. Total portfolio IBNR is ~$20.4M, disproportionately concentrated in long-tail lines.
+US insurers are required to file their claims history with regulators in a standardized format called NAIC Schedule P: essentially a table showing, for each accident year, how much has been paid and how much is still outstanding. The challenge is that many claims take years to surface. Medical Malpractice insurance, which covers medical errors like a botched surgery or a missed diagnosis, can produce lawsuits that emerge 5 to 7 years after the incident. Compare that to auto insurance, where you know the damage the same day the accident happens.
+
+Chain-Ladder and Bornhuetter-Ferguson address that problem differently: the first extrapolates historical claim development patterns to project what is still outstanding; the second blends that projection with an industry-wide prior when the insurer's own data is thin. Both produce an estimate of the IBNR: the money the insurer must set aside today for accidents that have already happened but have not yet been filed as claims.
+
+The most revealing finding: Medical Malpractice shows a loss ratio of ~280%, meaning for every \$100 in premiums collected, the insurer paid \$280 in claims. That is not a bad year; it is a structural pricing problem. Only Private Passenger Auto and Product Liability are profitable. Total portfolio IBNR is ~\$20.4M, concentrated in the lines where claims take the longest to resolve.
 
 Interactive dashboard with Next.js and FastAPI: loss triangle heatmap, IBNR waterfall, frequency-severity and combined ratio trend.
 
@@ -41,7 +45,11 @@ Interactive dashboard with Next.js and FastAPI: loss triangle heatmap, IBNR wate
 
 **Business question:** What differentiates the 3% of Olist customers who repurchase from the 97% who never return?
 
-The Brazilian E-Commerce Public Dataset has ~99K orders across 9 CSVs. The critical caveat: only ~3% of customers are repeat buyers, which transforms classic cohort analysis into an investigation of what makes that 3% different. The pipeline uses `customer_unique_id` (not `customer_id`) to avoid counting duplicates. The analysis includes retention matrices, Kaplan-Meier survival curves, RFM segmentation, and LTV estimation.
+The Olist dataset has ~99K orders across 9 data files. The finding that reframes everything: only ~3% of customers come back for a second purchase. In a typical e-commerce business that would be a crisis; here it is the reality of the Brazilian market in that period, and it shifts the question from "how well do we retain?" to "what is different about that 3%?"
+
+One technical detail that matters: the dataset has two customer identifier fields, and using the wrong one makes every order look like a new customer, artificially inflating retention numbers. Getting that right is the first step before any analysis is trustworthy.
+
+The analysis builds four views of that 3%: a heatmap showing how many customers from each purchase month returned in the following months; a survival curve tracing how quickly buyers are lost over time; an RFM segmentation (Recency, Frequency, Monetary value) grouping customers by how recently they bought, how often, and how much they spent; and an estimate of the total revenue each segment will generate over their lifetime as a customer.
 
 Streamlit app deployed on Cloud Run with full technical pipeline visible (notebooks converted to HTML embedded in the app).
 
@@ -51,7 +59,9 @@ Streamlit app deployed on Cloud Run with full technical pipeline visible (notebo
 
 **Business question:** If we run a conversion A/B test, which statistical approach gives us the most reliable answer and why can aggregated results lie?
 
-Conversion rate evaluation using three approaches: classic frequentist testing, Bayesian inference with Beta distribution and PyMC, and sequential monitoring. The project includes an explicit analysis of Simpson's Paradox: how aggregated test results can reverse when segmented by subgroup, a real risk in any product experiment.
+Imagine a product team wants to know whether changing the checkout button from blue to green increases conversions. They run the experiment for two weeks, and the global result shows the green version wins by 2 percentage points. Do you ship it? That depends on how you answer three questions: is that difference real or is it noise? How much confidence do you need before making the call? And if you split the result by mobile vs desktop users, does green still win in both groups?
+
+The project evaluates that exact situation using three statistical approaches: classic frequentist testing (is the p-value below 0.05?), Bayesian inference with PyMC (what is the probability that B beats A, and by how much?), and sequential monitoring (can you stop early if the answer is already obvious?). The central analysis is Simpson's Paradox: how a result that looks clear at the aggregate level can reverse completely when you segment by subgroup, a real risk in any product experiment.
 
 Interactive Next.js dashboard for exploring each statistical approach, calculating test power, and visualizing Bayesian convergence.
 
@@ -61,7 +71,9 @@ Interactive Next.js dashboard for exploring each statistical approach, calculati
 
 **Business question:** How to automate monthly executive report generation with anomaly detection and key metric forecasting?
 
-Automated pipeline generating executive PDF reports from SaaS metrics (MRR, churn, CAC, LTV). Includes time series anomaly detection and metric forecasting for the next quarter. The output is a bilingual PDF (Spanish/English) ready for C-suite delivery, with Plotly visualizations exported as images.
+CEOs and VPs do not live in dashboards. They receive a PDF or slide deck once a month. The problem with the manual process: it takes a full day to assemble, the numbers are always slightly stale, and anomalies only get caught if someone happens to be looking at the right chart at the right time. A month with unusually high churn can slip through unnoticed.
+
+This pipeline replaces that process. A single command generates the complete report: calculates the key SaaS metrics (MRR, churn, customer acquisition cost, lifetime value), automatically flags any metric that deviates from its historical trend, forecasts the next quarter, and produces a bilingual PDF ready to send. The analyst spends their time interpreting findings, not copying numbers between spreadsheets.
 
 9 notebooks covering data generation, EDA, anomaly detection, forecasting, report automation, backend architecture, KPI calculations, analytics algorithms, and PDF pipeline. Complementary Next.js dashboard.
 
@@ -69,9 +81,11 @@ Automated pipeline generating executive PDF reports from SaaS metrics (MRR, chur
 
 ### 05 - Financial Portfolio: Monte Carlo and efficient frontier
 
-**Business question:** Given a portfolio of assets, what is its risk-return profile and how does it compare against the efficient frontier?
+**Business question:** Given a diversified ETF portfolio, does that diversification actually pay off compared to simply buying the S&P 500?
 
-Portfolio analysis with Monte Carlo simulation, Markowitz efficient frontier calculation, risk metrics (VaR, CVaR, Sharpe, Sortino), and return attribution. The Next.js dashboard with FastAPI backend lets users define their portfolio and see in real time how it positions relative to the efficient frontier and benchmarks, with live data from yfinance.
+The dashboard analyzes a real 6-ETF portfolio spanning different asset classes, with live data from Yahoo Finance and the S&P 500 as the benchmark. The central question is simple but uncomfortable: if your diversified portfolio had worse risk-adjusted performance than a single index ETF, diversification cost you money rather than protecting you.
+
+To answer that rigorously, the analysis calculates the Markowitz efficient frontier (the set of portfolios that maximize return for each level of risk), runs Monte Carlo simulations to map the range of plausible future outcomes, and measures risk in multiple ways: VaR (maximum expected loss under normal conditions), CVaR (expected loss in worst-case scenarios), and the Sharpe and Sortino ratios (return per unit of risk). The result is a quantitative answer to whether your asset mix makes mathematical sense.
 
 5 notebooks covering data acquisition, portfolio construction, performance analysis, risk analytics, and Monte Carlo frontier optimization.
 
@@ -81,7 +95,11 @@ Portfolio analysis with Monte Carlo simulation, Markowitz efficient frontier cal
 
 **Business question:** What inefficiency patterns exist in NYC 311 service requests and where are SLAs systematically violated?
 
-Operational efficiency analysis on NYC 311 data (public service requests). Includes process mining to identify bottlenecks, SLA compliance analysis by agency and request type, and geographic segmentation of response times.
+NYC 311 is New York City's public service complaint system: residents report potholes, noise, rat infestations, building code violations, broken heating, accumulated garbage. Over 30 million records since 2010, spanning 40+ complaint types across 20+ agencies. It is a massive dataset, but what makes it interesting for operational analysis is not the volume — it is what it captures implicitly.
+
+The data records when each complaint was opened and when it was closed, but not the steps in between. Process mining reconstructs those hidden workflows: if a building violation complaint takes 14 days on average but the fastest ones close in 2, the algorithm looks for what the fast resolutions have in common. That surfaces the real bottlenecks, not the reported ones.
+
+What the analysis makes visible that simple averages miss: some agencies have SLA (service level agreement) commitments that are structurally impossible to meet given their complaint volume — not because they are slow, but because the target was set without accounting for actual demand. Response times in certain neighborhoods are systematically slower for identical complaints compared to other areas. Certain complaint types have predictable seasonal spikes that pile up into backlogs when agencies do not adjust capacity. The dashboard makes those patterns navigable by agency, complaint type, neighborhood, and time period.
 
 Next.js dashboard with process flow visualizations, SLA heatmaps, and agency rankings.
 
@@ -109,7 +127,7 @@ After building 7 projects across different domains, the recurring patterns are m
 
 **Olist's 3% repurchase rate changes how you frame cohort analysis.** When the vast majority of customers are one-time buyers, the question is not "how well do we retain" but "what differentiates those who return." That reframing applies in insurance (what differentiates policies that renew), in SaaS (what differentiates users who don't churn), and in any business with high attrition.
 
-**Actuarial statistical rigor applies directly to product analytics.** Kaplan-Meier for customer survival curves. Severity distributions for modeling LTV. Bornhuetter-Ferguson as an example of combining observed data with a prior when experience is sparse. These are not insurance-exclusive methods; they are statistical tools that most product analysts do not use because they have not encountered them.
+**Actuarial statistical rigor applies directly to product analytics.** Kaplan-Meier is a curve showing what fraction of customers remained active at each point in time, without needing everyone to have left before you can estimate the trend — in insurance it models how many policyholders are still alive; in product analytics, how many users are still buying. Severity distributions describe not just the average transaction amount but the full shape of the distribution: how many customers spend \$50, how many spend \$500, how many spend \$5,000, which is exactly what you need to estimate customer lifetime value without outliers distorting the average. Bornhuetter-Ferguson blends what your current data says with what industry-wide historical experience suggests — useful when you have too few observations to trust your own data alone. The point is not the names. It is that insurance analytics and product analytics solve the same underlying problem: estimating what has not yet happened from what you have already observed.
 
 ## Connections to the actuarial portfolio
 

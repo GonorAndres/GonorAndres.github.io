@@ -29,9 +29,13 @@ Dashboard construido con Next.js y Recharts, arquitectura estática (JSON precal
 
 ### 01 - Reservas actuariales P&C: IBNR y siniestralidad
 
-**Pregunta de negocio:** De las 6 líneas de negocio del portafolio, ¿cuáles son rentables y cuál es el IBNR total que la aseguradora debe reservar?
+**Pregunta de negocio:** De las 6 líneas de negocio del portafolio, ¿cuáles son rentables y cuál es el IBNR (incurred but not reported, siniestros ocurridos pero no reportados) total que la aseguradora debe reservar?
 
-Análisis de reservas sobre datos regulatorios NAIC Schedule P con métodos Chain-Ladder y Bornhuetter-Ferguson. El dataset incluye ~50K siniestros sintéticos con distribuciones actuarialmente realistas (lognormal para severidad, Poisson para frecuencia, exponencial para rezago de reporte). El resultado: solo Private Passenger Auto y Product Liability son rentables. Medical Malpractice muestra un ratio de pérdidas de ~280%, una señal clara de pricing estructuralmente insuficiente. El IBNR total del portafolio es ~$20.4M, concentrado desproporcionadamente en las líneas de cola larga.
+Las aseguradoras en EE.UU. están obligadas a reportar su historial de siniestros al regulador en un formato estandarizado llamado NAIC Schedule P: básicamente una tabla que muestra, para cada año, cuánto se ha pagado en siniestros y cuánto falta por pagar. El problema es que muchos siniestros tardan años en reportarse. Un seguro de responsabilidad médica (Medical Malpractice, que cubre errores médicos como una cirugía fallida o un diagnóstico incorrecto) puede tener demandas que emergen 5 o 7 años después del evento. Muy diferente al seguro de auto, donde sabes el daño el mismo día del accidente.
+
+Los métodos Chain-Ladder y Bornhuetter-Ferguson atacan ese problema de formas distintas: el primero extrapola los patrones históricos de desarrollo de siniestros para proyectar lo que falta; el segundo combina esa proyección con un supuesto externo del sector cuando los datos propios son escasos. Ambos producen una estimación del IBNR: el dinero que la aseguradora debe reservar hoy para siniestros que ya ocurrieron pero todavía no llegaron a la mesa.
+
+El hallazgo más revelador: Medical Malpractice muestra un ratio de pérdidas de ~280%, lo que significa que por cada \$100 de prima cobrada, la aseguradora pagó \$280 en siniestros. No es una mala racha, es un problema estructural de tarificación. Solo Private Passenger Auto y Product Liability son rentables. El IBNR total del portafolio es ~\$20.4M, concentrado en las líneas donde los siniestros toman más tiempo en resolverse.
 
 Dashboard interactivo con Next.js y FastAPI: triángulos de pérdida en heatmap, waterfall de IBNR, frecuencia-severidad y tendencia de ratios combinados.
 
@@ -41,7 +45,11 @@ Dashboard interactivo con Next.js y FastAPI: triángulos de pérdida en heatmap,
 
 **Pregunta de negocio:** ¿Qué diferencia al 3% de clientes que recompran en Olist del 97% que no regresa?
 
-El Brazilian E-Commerce Public Dataset tiene ~99K órdenes en 9 CSVs. El caveat crítico: solo ~3% de los clientes son compradores repetidos, lo que transforma el análisis de cohortes clásico en una investigación sobre qué diferencia a ese 3%. El pipeline usa `customer_unique_id` (no `customer_id`) para evitar contar duplicados. El análisis incluye matrices de retención, curvas de supervivencia Kaplan-Meier, segmentación RFM y estimación de LTV.
+El dataset de Olist tiene ~99K órdenes en 9 archivos de datos. El hallazgo que reencuadra todo el análisis: solo ~3% de los clientes vuelven a comprar. En un negocio de e-commerce normal eso sería una alarma; aquí es la realidad del mercado brasileño en ese período, y cambia la pregunta de "¿qué tan bien retenemos?" a "¿qué tiene de diferente ese 3%?".
+
+Un detalle técnico que importa: el dataset tiene dos identificadores de cliente, y usar el equivocado hace que cada orden parezca un cliente nuevo, inflando artificialmente la retención. Eso cambia los resultados completos, así que el primer paso es asegurarse de contar personas, no transacciones.
+
+El análisis construye cuatro vistas sobre ese 3%: un mapa de calor que muestra cuántos clientes de cada mes de compra regresaron en los meses siguientes; una curva de supervivencia que traza a qué velocidad se van perdiendo los compradores con el tiempo; una segmentación RFM (Recencia, Frecuencia, Monto) que agrupa a los clientes por qué tan recientemente compraron, con qué frecuencia y cuánto gastaron; y una estimación del valor total que cada segmento generará durante su vida como cliente.
 
 App de Streamlit desplegada en Cloud Run con pipeline técnico completo visible (notebooks convertidos a HTML embebidos en la app).
 
@@ -51,7 +59,9 @@ App de Streamlit desplegada en Cloud Run con pipeline técnico completo visible 
 
 **Pregunta de negocio:** Si ejecutamos un test A/B de conversión, ¿qué enfoque estadístico nos da la respuesta más confiable y por qué los resultados agregados pueden mentir?
 
-Evaluación de tasas de conversión con tres enfoques: test frecuentista clásico, inferencia bayesiana con distribución Beta y PyMC, y monitoreo secuencial. El proyecto incluye un análisis explícito de la paradoja de Simpson: cómo los resultados agregados del test pueden invertirse al segmentar por subgrupo, un riesgo real en cualquier experimento de producto.
+Imagina que el equipo de producto quiere saber si cambiar el botón de checkout de azul a verde aumenta las conversiones. Corren el experimento dos semanas y el resultado global dice que la versión verde gana por 2 puntos porcentuales. ¿La lanzamos? Depende de cómo respondas tres preguntas: ¿es esa diferencia real o es ruido estadístico? ¿Cuánta confianza necesitas antes de tomar la decisión? Y si separas el resultado por usuarios móviles contra escritorio, ¿el verde sigue ganando en ambos grupos?
+
+El proyecto evalúa esa misma situación con tres enfoques estadísticos: el test frecuentista clásico (¿el p-value está por debajo de 0.05?), inferencia bayesiana con PyMC (¿cuál es la probabilidad de que B sea mejor que A, y por cuánto?) y monitoreo secuencial (¿podemos parar antes si ya es obvio?). El análisis central es la paradoja de Simpson: cómo un resultado que parece claro a nivel global puede invertirse por completo al segmentar por subgrupo, un riesgo real en cualquier experimento de producto.
 
 Dashboard interactivo con Next.js que permite explorar cada enfoque estadístico, calcular potencia de prueba y visualizar la convergencia bayesiana.
 
@@ -61,19 +71,23 @@ Dashboard interactivo con Next.js que permite explorar cada enfoque estadístico
 
 **Pregunta de negocio:** ¿Cómo automatizar la generación de reportes ejecutivos mensuales con detección de anomalías y forecast de métricas clave?
 
-Pipeline automatizado que genera reportes ejecutivos en PDF a partir de métricas SaaS (MRR, churn, CAC, LTV). Incluye detección de anomalías sobre series de tiempo y forecast de métricas para el trimestre siguiente. El output es un PDF bilingüe (español/inglés) listo para enviar al C-suite, con visualizaciones Plotly exportadas a imagen.
+Los CEOs y directores no viven en dashboards. Reciben un PDF o una presentación una vez al mes. El problema con el proceso manual: tarda un día completo armarlo, los números siempre tienen algo de retraso, y las anomalías solo se detectan si alguien las nota. Un mes con churn inusualmente alto puede pasar desapercibido si nadie está mirando la gráfica correcta en el momento correcto.
 
-9 notebooks que cubren generacion de datos, EDA, deteccion de anomalias, forecasting, automatizacion de reportes, arquitectura backend, calculos KPI, algoritmos de analitica y pipeline PDF. Dashboard Next.js complementario.
+Este pipeline reemplaza ese proceso. Un solo comando genera el reporte completo: calcula las métricas SaaS clave (MRR, churn, costo de adquisición, valor de vida del cliente), detecta automáticamente cualquier métrica que se desvíe de su tendencia histórica, proyecta el trimestre siguiente y produce un PDF bilingüe listo para enviar. El analista pasa su tiempo interpretando los hallazgos, no copiando números entre hojas de cálculo.
+
+9 notebooks que cubren generación de datos, análisis exploratorio, detección de anomalías, forecasting, automatización de reportes, arquitectura backend, cálculos KPI, algoritmos de analítica y pipeline PDF. Dashboard Next.js complementario.
 
 **Estado:** Completo | <a href="https://executive-kpi-report.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/04-executive-kpi-report" target="_blank" rel="noopener">GitHub</a>
 
 ### 05 - Portafolio Financiero: Monte Carlo y frontera eficiente
 
-**Pregunta de negocio:** Dado un portafolio de activos, ¿cuál es su perfil de riesgo-rendimiento y cómo se compara contra la frontera eficiente?
+**Pregunta de negocio:** Dado un portafolio diversificado de ETFs, ¿realmente vale la pena esa diversificación comparada con simplemente comprar el S&P 500?
 
-Análisis de portafolio con simulación Monte Carlo, cálculo de frontera eficiente de Markowitz, métricas de riesgo (VaR, CVaR, Sharpe, Sortino) y atribución de rendimiento. El dashboard Next.js con FastAPI permite al usuario definir su portafolio y ver en tiempo real cómo se posiciona respecto a la frontera eficiente y los benchmarks, con datos en vivo de yfinance.
+El dashboard analiza un portafolio real de 6 ETFs que cubren distintas clases de activos, con datos en vivo de Yahoo Finance y el S&P 500 como benchmark. La pregunta central es simple pero incómoda: si tu portafolio diversificado tuvo peor rendimiento ajustado por riesgo que un solo ETF del índice, la diversificación te costó dinero en lugar de protegerte.
 
-5 notebooks cubriendo adquisicion de datos, construccion de portafolio, analisis de rendimiento, analitica de riesgo y optimizacion de frontera Monte Carlo.
+Para responder eso con rigor, el análisis calcula la frontera eficiente de Markowitz (el conjunto de portafolios que maximizan rendimiento para cada nivel de riesgo), corre simulaciones Monte Carlo para ver el rango de escenarios futuros posibles, y mide el riesgo de distintas formas: el VaR (pérdida máxima esperada en condiciones normales), el CVaR (pérdida esperada en los peores escenarios) y los ratios Sharpe y Sortino (rendimiento por unidad de riesgo). El resultado es una respuesta cuantitativa a si tu mezcla de activos tiene sentido matemático.
+
+5 notebooks cubriendo adquisición de datos, construcción de portafolio, análisis de rendimiento, analítica de riesgo y optimización de frontera Monte Carlo.
 
 **Estado:** Completo | <a href="https://financial-portfolio-tracker-iota.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/05-financial-portfolio-tracker" target="_blank" rel="noopener">GitHub</a>
 
@@ -81,7 +95,11 @@ Análisis de portafolio con simulación Monte Carlo, cálculo de frontera eficie
 
 **Pregunta de negocio:** ¿Qué patrones de ineficiencia existen en las solicitudes de servicio de NYC 311 y dónde se violan los SLAs sistemáticamente?
 
-Análisis de eficiencia operacional sobre datos de NYC 311 (solicitudes de servicio público). Incluye minería de procesos para identificar cuellos de botella, análisis de cumplimiento de SLAs por agencia y tipo de solicitud, y segmentación geográfica de tiempos de respuesta.
+NYC 311 es el sistema de quejas de servicio público de Nueva York: los residentes reportan baches, ruido, plagas de ratas, violaciones de construcción, calefacción rota, basura acumulada. Más de 30 millones de registros desde 2010, repartidos entre más de 40 tipos de queja y más de 20 agencias distintas. Es un dataset enorme, pero lo que lo hace interesante para análisis operacional no es el volumen, es lo que captura de forma implícita.
+
+Los datos registran cuándo se abrió cada queja y cuándo se cerró, pero no los pasos intermedios. La minería de procesos reconstruye esos flujos ocultos: si una queja de edificio en mal estado tarda 14 días en promedio pero las más rápidas se cierran en 2, el algoritmo busca qué tienen en común las que se resuelven rápido. Eso revela los cuellos de botella reales, no los reportados.
+
+Lo que el análisis permite ver que los números simples no muestran: algunas agencias tienen compromisos de tiempo de respuesta (SLA, service level agreement) imposibles de cumplir dado su volumen de quejas, no porque sean lentas sino porque el compromiso se fijó sin considerar la demanda real. Los tiempos de respuesta en ciertos barrios son sistemáticamente más lentos para quejas idénticas a las de otras zonas. Ciertos tipos de queja tienen picos estacionales predecibles que se acumulan en rezagos si las agencias no ajustan capacidad. El dashboard hace navegables esos patrones por agencia, tipo de queja, barrio y período.
 
 Dashboard Next.js con visualizaciones de flujos de proceso, heatmaps de SLA y rankings de agencias.
 
@@ -109,7 +127,7 @@ Después de construir 7 proyectos en dominios diferentes, los patrones recurrent
 
 **El 3% de recompra de Olist cambia cómo se enmarca un análisis de cohortes.** Cuando la gran mayoría de clientes son one-time buyers, la pregunta no es "qué tan bien retenemos" sino "qué diferencia a los que regresan." Ese reencuadre aplica en seguros (qué diferencia a las pólizas que renuevan), en SaaS (qué diferencia a los usuarios que no hacen churn) y en cualquier negocio con alta tasa de abandono.
 
-**El rigor estadístico de la formación actuarial se aplica directamente a producto.** Kaplan-Meier para curvas de supervivencia de clientes. Distribuciones de severidad para modelar LTV. Bornhuetter-Ferguson como ejemplo de cómo combinar datos observados con un prior cuando la experiencia es escasa. Estos no son métodos exclusivos de seguros; son herramientas estadísticas que la mayoría de analistas de producto no usa porque no las conoce.
+**El rigor estadístico de la formación actuarial se aplica directamente a producto.** Kaplan-Meier es una curva que muestra qué fracción de clientes seguía activa en cada punto del tiempo, sin necesitar que todos hayan abandonado para estimar la tendencia: en seguros modela cuántos asegurados permanecen vivos; en producto, cuántos usuarios siguen comprando. Las distribuciones de severidad no describen solo el monto promedio de una transacción sino toda la forma de la distribución: cuántos clientes gastan \$50, cuántos \$500, cuántos \$5,000, que es exactamente lo que se necesita para estimar el valor de vida de un cliente sin que los casos extremos distorsionen el promedio. Bornhuetter-Ferguson combina lo que tus datos actuales dicen con lo que la experiencia histórica del sector sugiere, útil cuando tienes pocos registros propios para confiar solo en ellos. El punto no es los nombres. Es que la analítica de seguros y la analítica de producto resuelven el mismo problema: estimar lo que aún no ha ocurrido a partir de lo que sí observaste.
 
 ## Conexiones con el portafolio actuarial
 
