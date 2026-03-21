@@ -16,6 +16,7 @@ const { lang } = Astro.props;
 const projects = getProjects(lang).map((p) => ({
   ...p,
   relatedNames: p.relatedTo ? getRelatedProjectNames(p.relatedTo, lang) : [],
+  tier: p.tier,
   blogUrl: p.blogSlug
     ? (lang === 'en' ? `/en/blog/${p.blogSlug}/` : `/blog/${p.blogSlug}/`)
     : undefined,
@@ -33,6 +34,7 @@ const labels = {
   gridView: t(lang, 'projects.gridView'),
   listView: t(lang, 'projects.listView'),
   filterAll: t(lang, 'projects.filterAll'),
+  sortTier: t(lang, 'projects.sortTier'),
   sortNewest: t(lang, 'projects.sortNewest'),
   sortOldest: t(lang, 'projects.sortOldest'),
   sortUpdated: t(lang, 'projects.sortUpdated'),

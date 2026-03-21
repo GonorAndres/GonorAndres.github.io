@@ -1,5 +1,14 @@
 # Portfolio Project Guidelines
 
+## Git Workflow -- NEVER Push to Main Directly
+
+**NEVER push commits directly to `main`.** All changes go through pull requests.
+
+- Work is always done on a feature branch (e.g. `march2`, `fix/something`)
+- To "deploy", open a PR from the feature branch into `main` and let the user merge it
+- The only exception is if the user explicitly says "push to main" in that specific message
+- This applies even when the user asks to "deploy" or "go live" -- create a PR, don't push
+
 ## Session Start Checklist
 
 At the start of every session, read `to-do.md` in the repo root before proposing or starting any work.
@@ -84,139 +93,12 @@ When converting academic notes to blog posts:
 5. Add a "what I'd do differently" or "next steps" section
 6. Link the original PDF as supplementary material, not as the main content
 
-## Session Log -- 2026-02-02
+## PDFs: Content to NOT Share Standalone
 
-### What Was Done
-- Explored Google Drive (G:\Mi unidad\PortafolioPDF and G:\Mi unidad\01_educacion\Apuntes\MisApuntes) via PowerShell from WSL
-- Read and assessed all PDFs for portfolio relevance
-- Created "Notas para Compartir" / "Worth Sharing Notes" section with 7 documents: Black-Scholes/FRA/IRS exam, Delhi time series, A/B testing (ES+EN), GLM actuarial models, Black-Scholes log-normal, parametric returns fitting, volcanic eruption forecasting
-- Added 3 DataCamp certificate links under Education section
-- Created English blog category route (was missing, caused 404s on /en/blog/categoria/)
-- Fixed English blog index category links (pointed to wrong URL pattern)
-- Added email to Contact section, changed to 2x2 grid layout
-- Updated hero: name split into two lines (Andres / Gonzalez Ortega), personalized description
-- Adjusted background color to #EDE6DD with header contrast at #E8E0D7
-- Changed GMM Explorer from recreational to academic category
-- Cleaned footer: removed duplicate contact links, added academic folder + apuntes sueltos Drive links
-- Created docs/portfolio-review-recommendations.md with full honest assessment
-- Created project-level CLAUDE.md with content guidelines
-- All descriptions written in hook-style prose, not homework tone
-
-### Current State
-- Branch: new-design (2 commits pushed to origin)
-- Homepage sections: Hero -> Projects (12) -> SharedNotes (7) -> Skills -> Education (+ certs) -> Contact -> Footer
-- Blog: 1 post per language + interactive math visualizations page + category routes for ES and EN
-- All Drive PDF links are direct file links (not folder links)
-
-### Known Issues
-- Node 18.19.1 (system default) is too old for Astro 5 -- must use `nvm use 22` before dev/build
-- The `new-design` branch has not been merged to main yet
-
-## Session Log -- 2026-02-07
-
-- Added editorial blog styling and rewrote Proust Attention Machine post as personal essay
-- Added bilingual blog post for Proust Attention Machine project
-
-## Session Log -- 2026-02-15
-
-- Fixed blog language switcher 404s: stripped es/en directory prefixes from slugs in route files and BlogPostPreview
-- Renamed es/bienvenida.md to es/welcome.md to enforce shared English slug convention
-- Added "Blog i18n Filename Convention" section to CLAUDE.md
-- All blog posts now use matching filenames across languages so the LanguageSwitcher works correctly
-
-## Session Log -- 2026-02-18
-
-### What Was Done
-- **DiscoverPostCard**: Created `src/components/ui/DiscoverPostCard.astro` -- shows random (build-time shuffled) blog posts excluding the 3 newest. Added below LatestPostCard in Hero with `md:flex-col md:gap-4` stacking. i18n keys: `hero.discoverPosts` in both langs.
-- **SOA blog post Drive links**: Added "Material de estudio" / "Study materials" sections to all 6 SOA blog post files (3 ES + 3 EN) with Google Drive download links to study PDFs.
-- **Uploaded exam_p_reference.pdf to Drive**: Uploaded `/home/andtega349/soa_exams/p/exam_p_reference.pdf` as `exam_p_basic_guide_v2.pdf` to MisApuntes/SOA_P__resources folder.
-- **Google Drive API access established**: Set up persistent ADC credentials with Drive scope on this VM. See agent memory `drive-files.md` for full Drive file ID mapping.
-- **SharedNotes reorganization**: Expanded from 7 flat notes to 10 notes organized in 3 categories (Actuarial 4, Quant Finance 3, Statistics 3). Added `NoteCategory` type, `getNotesByCategory()` function, and category group rendering in `SharedNotes.astro`. New notes added: SOA Exam P v2 reference, Eve's Law, Lee-Carter Mortality.
-- **Agent memory**: Created `MEMORY.md` and `drive-files.md` in agent memory directory with project context and Drive ID mappings.
-
-### Files Modified
-- `src/i18n/es.ts`, `src/i18n/en.ts` -- added `hero.discoverPosts` and `sharedNotes.cat.*` keys
-- `src/components/ui/DiscoverPostCard.astro` -- NEW
-- `src/components/sections/Hero.astro` -- added DiscoverPostCard import and flex-col wrapper
-- `src/components/sections/SharedNotes.astro` -- category-grouped rendering
-- `src/data/notes.ts` -- 10 notes with category system, `getNotesByCategory()`
-- `src/content/blog/{es,en}/soa-probability-foundations.md` -- added study materials section
-- `src/content/blog/{es,en}/soa-random-variables-insurance.md` -- added study materials, removed broken local PDF link
-- `src/content/blog/{es,en}/soa-multivariate-clt.md` -- added 5 study material links
-
-## Session Log -- 2026-03-05
-
-### What Was Done
-- **Scanned `data-analyst-path/projects/`**: Assessed 7 projects (00-06). Two completed (00-demo Airbnb CDMX, 01-insurance-claims), one in progress (02-ecommerce), four planned only.
-- **Added insurance-claims project to portfolio**: New entry in `src/data/projects.ts` with slug `insurance-claims`, category `actuarial`, variant `wide`. GitHub URL as primary link; TODO comment for deployed dashboard URL once live.
-- **Created blog posts**: ES + EN blog post pair at `src/content/blog/{es,en}/insurance-claims-dashboard.md` covering reserving methodology, findings, and dashboard features.
-- **Cross-references updated**: SIMA and GMM Explorer now link back to `insurance-claims` via `relatedTo`.
-- **Added analytics-dashboards project to portfolio**: Airbnb CDMX + Olist E-Commerce dual dashboard. New entry in `src/data/projects.ts` with slug `analytics-dashboards`, category `data-science`, variant `wide`. GitHub URL; TODO for deployed URL.
-- **Created blog posts for analytics dashboards**: ES + EN blog post pair at `src/content/blog/{es,en}/analytics-dashboards.md`. Editorial angle: why React (Next.js + Recharts) beats traditional BI tools for production-grade analytical reports.
-
-### Pending / In Progress
-- **Deploy insurance dashboard**: Next.js + FastAPI dashboard needs deployment (Vercel + Cloud Run or similar). Once live, update `url` in projects.ts and change `platform` from `'GitHub'` to `'Vercel'` or `'GCP'`.
-- **Airbnb CDMX + Olist project (00-demo)**: Added to portfolio as `analytics-dashboards`. Deploy pending -- once live, update `url` in projects.ts and change `platform` to `'Vercel'`.
-- **E-commerce cohort analysis (02)**: In progress (notebook 01 started, Streamlit scaffold exists). Not portfolio-ready yet.
-- **Projects 03-06**: Planned only, no code. 03 (A/B test) overlaps existing portfolio project. 05 (financial tracker) overlaps Markowitz.
-
-### data-analyst-path Repository
-- Repo: `https://github.com/GonorAndres/data-analyst-path`
-- All projects under `projects/` directory
-- Shared architecture: Next.js 14 + FastAPI backend with proxy pattern, Recharts, dark/light mode
-
-## Future Scope
-
-### Blog Posts: use blog-writer agent for all of these
-Invoke with: "use blog-writer to write a post about [slug or topic]"
-
-#### Cards exist, blog post missing
-- [ ] `lisf-agent`: Claude SDK + LISF regulatory chatbot. Also needs public GCP URL in projects.ts (currently `#`).
-- [ ] `b-tree-explorer`: Rust + WASM visualization. Concept post done (b-trees-optimization); this one should focus on the implementation itself.
-- [ ] `flight-analytics`: PostgreSQL airline delay analysis. GitHub: https://github.com/GonorAndres/learning-posgre
-- [ ] `eruption-forecasting`: Time series volcanic forecasting. GitHub: https://github.com/GonorAndres/forecasting
-- [ ] `actuarial-suite`: 6-phase Python actuarial library. GitHub: https://github.com/GonorAndres/Analisis_Seguros_Mexico
-- [x] `cartera-autos`: Synthetic auto insurance portfolio. GitHub: https://github.com/GonorAndres/CarteraSeguroAutos — DONE 2026-03-19
-- [ ] `proust-attention`: Transformer trained on Proust. GitHub: https://github.com/GonorAndres/proust-attention
-- [ ] `pension-simulator`: IMSS + Fondo Bienestar R Shiny app. GitHub: https://github.com/GonorAndres/seguridad-social
-
-#### Concept / actuarial posts (high priority)
-- [ ] Life insurance technical note: rewrite from homework tone, add regulatory context (LISF/CUSF)
-- [ ] Property insurance technical note: same treatment, CNSF data angle
-- [ ] Michoacan demographic analysis: connect mortality tables to life insurance pricing
-- [x] GMM Explorer: pricing methodology breakdown -- DONE 2026-03-21
-
-#### Other posts
-- [ ] Research article: non-technical summary of data science internship paper
-- [ ] SOA exam P: frame as professional insight on probabilistic thinking, not study guide
-
-### Project improvements
-- [ ] `lisf-agent`: expose GCP VM port publicly, update url in projects.ts
-- [ ] `data-analyst-portfolio`: update url when dashboards are deployed (currently links to blog post)
-- [ ] Redo Markowitz in Python: scipy.optimize efficient frontier + VaR comparison
-- [ ] SIMA web platform: Phase 2 engine done, needs frontend
-- [ ] TIIE/CETES interactive dashboard: Banxico API
-
-### Low Priority
-- [ ] Mortality table visualizer: interactive CONAPO/INEGI explorer
-- [ ] Concave vs Convex and Evolution of Probability: could become blog posts with more context
-
-### Content to NOT Share Standalone
 - Amortizador/Instrucciones_Examen.pdf (exam instructions, not original work)
 - Formulario_MetodosCuantitativosParcial1.pdf (cheat sheet)
 - Covarianza_Regresion.pdf (2-page proof, too brief)
 - EticaActuarialEnsayo.pdf (opinion essay, not technical)
-
-## Session Log -- 2026-03-14
-
-### What Was Done
-- **Created blog posts for insurance pricing ML project**: ES + EN pair at `src/content/blog/{es,en}/actuarial-ml-pricing.md`. Editorial angle: cross-border analysis of what European ML pricing techniques mean for Mexico's 70% uninsured auto market. Covers frequency-severity decomposition, GLM vs GBM comparison, SHAP explainability, fairness audits, and regulatory comparison (CNSF vs EU AI Act).
-- **Cross-references**: Links to insurance-claims-dashboard (reserving is backward-looking, pricing is forward-looking), SIMA (regulatory layer), GMM Explorer (severity distribution).
-- **Source**: Project lives in `data-science-path` repo at `projects/insurance-pricing/`. Academic PDFs in `docs/references/`.
-
-### Pending
-- **Add `insurance-pricing-ml` project card to `src/data/projects.ts`**: slug `insurance-pricing-ml`, category `actuarial` or `data-science`, variant `wide`. GitHub URL: `https://github.com/GonorAndres/data-science-path/tree/main/projects/insurance-pricing`. Once dashboard is deployed, update URL.
-- **Deploy pricing dashboard**: Next.js (port 3060) + FastAPI (port 2060). Same Cloud Run pattern as other dashboards.
 
 ## How to Add a Blog Post
 

@@ -15,6 +15,7 @@ interface ProjectData {
   relatedTo?: string[];
   relatedNames: string[];
   blogUrl?: string;
+  tier: number;
   creation_date: string;
   last_modification_date?: string;
 }
@@ -33,6 +34,7 @@ interface Props {
     gridView: string;
     listView: string;
     filterAll: string;
+    sortTier: string;
     sortNewest: string;
     sortOldest: string;
     sortUpdated: string;
@@ -301,7 +303,7 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
 }
 
 // --- Main Component ---
-type SortMode = 'newest' | 'oldest' | 'updated';
+type SortMode = 'tier' | 'newest' | 'oldest' | 'updated';
 type FilterCat = ProjectCategory | 'all';
 
 const CATEGORY_ORDER: ProjectCategory[] = ['actuarial', 'data-science', 'data-engineering', 'quant-finance', 'applied-math'];
@@ -310,7 +312,7 @@ export default function ProjectsGrid({ projects, labels }: Props) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showAll, setShowAll] = useState(readExpanded);
   const [activeCategory, setActiveCategory] = useState<FilterCat>('all');
-  const [sortMode, setSortMode] = useState<SortMode>('newest');
+  const [sortMode, setSortMode] = useState<SortMode>('tier');
 
   const handleCategoryChange = (cat: FilterCat) => {
     setActiveCategory(cat);
@@ -324,11 +326,17 @@ export default function ProjectsGrid({ projects, labels }: Props) {
   const filtered = activeCategory === 'all' ? projects : projects.filter(p => p.category === activeCategory);
 
   const sorted = [...filtered].sort((a, b) => {
-    if (sortMode === 'newest') return a.creation_date < b.creation_date ? 1 : -1;
-    if (sortMode === 'oldest') return a.creation_date > b.creation_date ? 1 : -1;
+    if (sortMode === 'tier') {
+      if (a.tier !== b.tier) return a.tier - b.tier;
+      const aDate = a.last_modification_date ?? a.creation_date;
+      const bDate = b.last_modification_date ?? b.creation_date;
+      return aDate < bDate ? 1 : aDate > bDate ? -1 : 0;
+    }
+    if (sortMode === 'newest') return a.creation_date < b.creation_date ? 1 : a.creation_date > b.creation_date ? -1 : 0;
+    if (sortMode === 'oldest') return a.creation_date > b.creation_date ? 1 : a.creation_date < b.creation_date ? -1 : 0;
     const aDate = a.last_modification_date ?? a.creation_date;
     const bDate = b.last_modification_date ?? b.creation_date;
-    return aDate < bDate ? 1 : -1;
+    return aDate < bDate ? 1 : aDate > bDate ? -1 : 0;
   });
 
   const visible = showAll ? sorted : sorted.slice(0, INITIAL_COUNT);
@@ -400,6 +408,7 @@ export default function ProjectsGrid({ projects, labels }: Props) {
               onChange={(e) => handleSortChange(e.target.value as SortMode)}
               className="text-xs text-[#1B2A4A]/70 bg-transparent border border-[#1B2A4A]/15 rounded-md px-2 py-1 focus:outline-none focus:border-[#1B2A4A]/30 cursor-pointer"
             >
+              <option value="tier">{labels.sortTier}</option>
               <option value="newest">{labels.sortNewest}</option>
               <option value="oldest">{labels.sortOldest}</option>
               <option value="updated">{labels.sortUpdated}</option>

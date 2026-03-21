@@ -15,6 +15,7 @@ export interface Project {
   screenshot?: string;
   relatedTo?: string[];
   blogSlug?: string;     // English slug of the blog post for this project (e.g. 'sima', 'actuarial-ml-pricing')
+  tier: 1 | 2 | 3 | 4; // internal priority: 1=full package, 2=screenshot+blog, 3=academic, 4=minimal
   creation_date: string;           // YYYY-MM-DD — when the project was built/started
   last_modification_date?: string; // YYYY-MM-DD — last significant update (optional)
 }
@@ -46,6 +47,7 @@ export const projects: Project[] = [
     screenshot: '/screenshots/sima.png',
     relatedTo: ['life-insurance', 'property-insurance', 'gmm-explorer', 'michoacan', 'data-analyst-portfolio'],
     blogSlug: 'sima',
+    tier: 1,
     creation_date: '2026-01-23',
     last_modification_date: '2026-03-21',
   },
@@ -75,6 +77,7 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/gmm-explorer.png',
     blogSlug: 'gmm-explorer',
+    tier: 1,
     relatedTo: ['sima', 'life-insurance', 'property-insurance', 'data-analyst-portfolio'],
     creation_date: '2025-12-07',
     last_modification_date: '2026-03-21',
@@ -106,6 +109,7 @@ export const projects: Project[] = [
     screenshot: '/screenshots/data-analyst-portafolio.png',
     relatedTo: ['sima', 'gmm-explorer', 'ab-testing', 'credit-risk'],
     blogSlug: 'data-analyst-portfolio',
+    tier: 1,
     creation_date: '2026-02-21',
     last_modification_date: '2026-03-21',
   },
@@ -136,6 +140,7 @@ export const projects: Project[] = [
     screenshot: '/screenshots/data-engineering-platform.png',
     relatedTo: ['sima', 'insurance-pricing-ml', 'data-analyst-portfolio'],
     blogSlug: 'data-engineering-platform',
+    tier: 1,
     creation_date: '2026-02-21',
     last_modification_date: '2026-03-21',
   },
@@ -164,6 +169,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/lisf-agent.png',
     relatedTo: ['sima'],
+    tier: 1,
     creation_date: '2026-02-01',
     last_modification_date: '2026-03-19',
   },
@@ -178,8 +184,8 @@ export const projects: Project[] = [
       en: 'IMSS Pension Simulator + Fondo Bienestar',
     },
     description: {
-      es: 'Aplicación R Shiny que estima la pensión de retiro bajo Ley 73, Ley 97 y el Fondo de Pensiones para el Bienestar (2024). Incluye proyección de saldo AFORE, elegibilidad al complemento del Fondo Bienestar y análisis de sensibilidad bajo escenarios conservador, base y optimista.',
-      en: 'R Shiny app that estimates Mexican retirement pension under Ley 73, Ley 97, and the Fondo de Pensiones para el Bienestar (2024). Includes AFORE balance projection, Fondo Bienestar eligibility check, and sensitivity analysis under conservative, base, and optimistic scenarios.',
+      es: 'En México coexisten tres regímenes de pensión con reglas distintas: Ley 73, Ley 97 y el Fondo Bienestar (2024). La mayoría de los trabajadores no sabe cuál le aplica ni cuánto recibirá al retiro. Una aplicación R Shiny convierte ese flujo de cálculo complejo en algo accionable: ingresa salario, semanas cotizadas y rendimiento AFORE esperado, y obtiene la pensión estimada bajo los tres regímenes con análisis de sensibilidad y reporte PDF descargable.',
+      en: 'Mexico runs three concurrent pension regimes with different rules: Ley 73, Ley 97, and the 2024 Fondo Bienestar supplement. Most workers don\'t know which applies to them or what they will actually receive at retirement. An R Shiny app that turns that complex calculation flow into something actionable: enter salary, contribution weeks, and expected AFORE return, and get the estimated pension across all three regimes with sensitivity analysis and a downloadable PDF report.',
     },
     url: 'https://simulador-pension-d3qj5vwxtq-uc.a.run.app/',
     repo: 'https://github.com/GonorAndres/seguridad-social/tree/main/fondo_bienestar',
@@ -193,6 +199,7 @@ export const projects: Project[] = [
     screenshot: '/screenshots/pension-simulator.png',
     relatedTo: ['sima', 'life-insurance'],
     blogSlug: 'pension-simulator',
+    tier: 1,
     creation_date: '2026-02-07',
     last_modification_date: '2026-03-17',
   },
@@ -219,6 +226,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/vida-tecnica.png',
     relatedTo: ['sima', 'property-insurance', 'michoacan', 'gmm-explorer'],
+    tier: 3,
     creation_date: '2024-12-01',
   },
 
@@ -244,6 +252,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/danos-tecnica.png',
     relatedTo: ['sima', 'life-insurance', 'gmm-explorer'],
+    tier: 3,
     creation_date: '2025-06-01',
   },
 
@@ -269,6 +278,7 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/derivatives.png',
     relatedTo: ['markowitz'],
+    tier: 3,
     creation_date: '2025-06-12',
     last_modification_date: '2025-08-09',
   },
@@ -295,6 +305,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/markowitz.png',
     relatedTo: ['derivatives'],
+    tier: 3,
     creation_date: '2025-06-01',
   },
 
@@ -320,6 +331,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/demografia-michoacan.png',
     relatedTo: ['sima', 'life-insurance'],
+    tier: 3,
     creation_date: '2023-12-01',
   },
 
@@ -345,6 +357,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/deuda-cdmx.png',
     relatedTo: ['credit-risk'],
+    tier: 3,
     creation_date: '2025-06-01',
   },
 
@@ -370,6 +383,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/monte-carlo-poker.png',
     relatedTo: ['ab-testing'],
+    tier: 3,
     creation_date: '2025-06-12',
     last_modification_date: '2025-08-09',
   },
@@ -396,6 +410,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/amortizacion.png',
     relatedTo: ['derivatives'],
+    tier: 3,
     creation_date: '2024-06-01',
   },
 
@@ -423,6 +438,7 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/actuarial-suite.png',
     blogSlug: 'suite-actuarial',
+    tier: 1,
     relatedTo: ['sima', 'life-insurance', 'property-insurance'],
     creation_date: '2025-11-18',
     last_modification_date: '2026-03-19',
@@ -453,6 +469,7 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/cartera-autos.png',
     blogSlug: 'cartera-autos',
+    tier: 1,
     relatedTo: ['pension-simulator', 'sima', 'property-insurance'],
     creation_date: '2025-08-30',
     last_modification_date: '2026-03-19',
@@ -473,7 +490,7 @@ export const projects: Project[] = [
     },
     url: 'https://github.com/GonorAndres/proust-attention',
     platform: 'GitHub',
-    category: 'applied-math',
+    category: 'data-science',
     tags: {
       es: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
       en: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
@@ -481,6 +498,7 @@ export const projects: Project[] = [
     variant: 'standard',
     relatedTo: ['lisf-agent'],
     blogSlug: 'proust-attention-machine',
+    tier: 1,
     creation_date: '2026-02-07',
     last_modification_date: '2026-03-14',
   },
@@ -507,6 +525,7 @@ export const projects: Project[] = [
     variant: 'tall',
     screenshot: '/screenshots/ab-testing.png',
     relatedTo: ['credit-risk'],
+    tier: 3,
     creation_date: '2025-06-12',
     last_modification_date: '2025-08-09',
   },
@@ -535,6 +554,7 @@ export const projects: Project[] = [
     variant: 'wide',
     relatedTo: ['sima', 'data-analyst-portfolio', 'credit-risk'],
     blogSlug: 'actuarial-ml-pricing',
+    tier: 2,
     creation_date: '2026-02-21',
     last_modification_date: '2026-03-15',
   },
@@ -562,6 +582,7 @@ export const projects: Project[] = [
     variant: 'standard',
     relatedTo: ['data-analyst-portfolio'],
     blogSlug: 'b-trees-optimization',
+    tier: 4,
     creation_date: '2026-02-07',
   },
 
@@ -588,6 +609,7 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['michoacan', 'ab-testing'],
+    tier: 4,
     creation_date: '2026-02-07',
   },
 
@@ -613,6 +635,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/euler-method.png',
     relatedTo: ['michoacan'],
+    tier: 3,
     creation_date: '2024-04-01',
   },
 
@@ -640,6 +663,7 @@ export const projects: Project[] = [
     screenshot: '/screenshots/flight-analytics-pg-bq.png',
     relatedTo: ['data-engineering-platform', 'data-analyst-portfolio'],
     blogSlug: 'flight-analytics-pg-bq',
+    tier: 2,
     creation_date: '2026-02-07',
     last_modification_date: '2026-03-19',
   },
@@ -669,6 +693,7 @@ export const projects: Project[] = [
     screenshot: '/screenshots/risk-analyst.png',
     relatedTo: ['credit-risk', 'derivatives', 'markowitz'],
     blogSlug: 'risk-analyst',
+    tier: 2,
     creation_date: '2026-03-18',
     last_modification_date: '2026-03-19',
   },
@@ -695,6 +720,7 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/credit-risk.png',
     relatedTo: ['ab-testing', 'data-cleaning'],
+    tier: 3,
     creation_date: '2025-06-12',
     last_modification_date: '2025-08-09',
   },
@@ -714,6 +740,7 @@ export function getProjects(lang: Lang) {
     screenshot: p.screenshot,
     relatedTo: p.relatedTo,
     blogSlug: p.blogSlug,
+    tier: p.tier,
     creation_date: p.creation_date,
     last_modification_date: p.last_modification_date,
   }));
