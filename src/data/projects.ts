@@ -87,9 +87,9 @@ export const projects: Project[] = [
       es: '7 proyectos end-to-end de análisis de datos: cohortes de e-commerce, reservas actuariales, pruebas A/B, KPIs ejecutivos, portafolio financiero y eficiencia operacional. SQL, Python, Streamlit, Next.js y Power BI.',
       en: '7 end-to-end data analysis projects: e-commerce cohorts, actuarial reserves, A/B testing, executive KPIs, financial portfolio, and operational efficiency. SQL, Python, Streamlit, Next.js, and Power BI.',
     },
-    url: '/blog/data-analyst-portfolio/',
+    url: 'https://demo-aesthetics.vercel.app/',
     repo: 'https://github.com/GonorAndres/data-analyst-path',
-    platform: 'GCP',
+    platform: 'Vercel',
     category: 'data-science',
     tags: {
       es: ['Python', 'SQL', 'Streamlit', 'Next.js', 'Plotly', 'Power BI'],
@@ -101,28 +101,32 @@ export const projects: Project[] = [
     blogSlug: 'data-analyst-portfolio',
   },
 
-  // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Credit_Risk_Model)
-  // source: Kaggle credit default dataset (~32,000 records)
+  // repo: https://github.com/GonorAndres/data-engineer-path
+  // local: /home/andtega349/data-engineer-path
+  // source: 6 projects building a complete GCP data platform for insurance claims
+  // 4 deployed to GCP (P01-P04), 2 local-only (P05-P06), total platform cost <$10/month
   {
-    slug: 'credit-risk',
+    slug: 'data-engineering-platform',
     title: {
-      es: 'Modelo Predictivo de Incumplimiento Crediticio',
-      en: 'Credit Default Prediction Model',
+      es: 'Plataforma de Datos en GCP para Seguros',
+      en: 'GCP Data Platform for Insurance',
     },
     description: {
-      es: 'Machine learning con 85.19% de precisión (AUC) para predecir incumplimiento en préstamos. GLM en Python con 32,000+ registros.',
-      en: 'Machine learning with 85.19% AUC to predict loan defaults. GLM in Python with 32,000+ records.',
+      es: '6 proyectos que construyen una plataforma de datos completa sobre GCP: warehouse dimensional en BigQuery, orquestación con Dagster y Cloud Run ($0.10/mes vs $400/mes de Composer), streaming con Pub/Sub y Apache Beam, infraestructura como código con Terraform (24 recursos, 6 módulos), y pricing actuarial con GLM Tweedie. Toda la plataforma opera por menos de $10 al mes.',
+      en: '6 projects building a complete data platform on GCP: dimensional warehouse in BigQuery, orchestration with Dagster and Cloud Run ($0.10/mo vs $400/mo Composer), streaming with Pub/Sub and Apache Beam, infrastructure as code with Terraform (24 resources, 6 modules), and actuarial pricing with Tweedie GLM. The entire platform runs for under $10/month.',
     },
-    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model',
-    platform: 'GitHub',
-    category: 'data-science',
+    url: '/blog/data-engineering-platform/',
+    repo: 'https://github.com/GonorAndres/data-engineer-path',
+    platform: 'GCP',
+    category: 'data-engineering',
     tags: {
-      es: ['ML', 'GLM', 'Riesgo'],
-      en: ['ML', 'GLM', 'Risk'],
+      es: ['BigQuery', 'Terraform', 'Pub/Sub', 'Apache Beam', 'Dagster', 'Cloud Run', 'DuckDB', 'GLM Tweedie'],
+      en: ['BigQuery', 'Terraform', 'Pub/Sub', 'Apache Beam', 'Dagster', 'Cloud Run', 'DuckDB', 'Tweedie GLM'],
     },
     variant: 'wide',
-    screenshot: '/screenshots/credit-risk.png',
-    relatedTo: ['ab-testing', 'data-cleaning'],
+    screenshot: '/screenshots/data-engineering-platform.png',
+    relatedTo: ['sima', 'insurance-pricing-ml', 'data-analyst-portfolio'],
+    blogSlug: 'data-engineering-platform',
   },
 
   // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Bayesian_vs_Frequentist)
@@ -474,34 +478,6 @@ export const projects: Project[] = [
     relatedTo: ['sima'],
   },
 
-  // repo: https://github.com/GonorAndres/data-engineer-path
-  // local: /home/andtega349/data-engineer-path
-  // source: 6 projects building a complete GCP data platform for insurance claims
-  // 4 deployed to GCP (P01-P04), 2 local-only (P05-P06), total platform cost <$10/month
-  {
-    slug: 'data-engineering-platform',
-    title: {
-      es: 'Plataforma de Datos en GCP para Seguros',
-      en: 'GCP Data Platform for Insurance',
-    },
-    description: {
-      es: '6 proyectos que construyen una plataforma de datos completa sobre GCP: warehouse dimensional en BigQuery, orquestación con Dagster y Cloud Run ($0.10/mes vs $400/mes de Composer), streaming con Pub/Sub y Apache Beam, infraestructura como código con Terraform (24 recursos, 6 módulos), y pricing actuarial con GLM Tweedie. Toda la plataforma opera por menos de $10 al mes.',
-      en: '6 projects building a complete data platform on GCP: dimensional warehouse in BigQuery, orchestration with Dagster and Cloud Run ($0.10/mo vs $400/mo Composer), streaming with Pub/Sub and Apache Beam, infrastructure as code with Terraform (24 resources, 6 modules), and actuarial pricing with Tweedie GLM. The entire platform runs for under $10/month.',
-    },
-    url: '/blog/data-engineering-platform/',
-    repo: 'https://github.com/GonorAndres/data-engineer-path',
-    platform: 'GCP',
-    category: 'data-engineering',
-    tags: {
-      es: ['BigQuery', 'Terraform', 'Pub/Sub', 'Apache Beam', 'Dagster', 'Cloud Run', 'DuckDB', 'GLM Tweedie'],
-      en: ['BigQuery', 'Terraform', 'Pub/Sub', 'Apache Beam', 'Dagster', 'Cloud Run', 'DuckDB', 'Tweedie GLM'],
-    },
-    variant: 'wide',
-    screenshot: '/screenshots/data-engineering-platform.png',
-    relatedTo: ['sima', 'insurance-pricing-ml', 'data-analyst-portfolio'],
-    blogSlug: 'data-engineering-platform',
-  },
-
   // repo: https://github.com/GonorAndres/data-science-path (subfolder: projects/insurance-pricing)
   // local: /home/andtega349/data-science-path/projects/insurance-pricing
   // source: synthetic insurance data generated with actuarial assumptions (Poisson/Gamma frequency-severity)
@@ -653,6 +629,30 @@ export const projects: Project[] = [
     screenshot: '/screenshots/risk-analyst.png',
     relatedTo: ['credit-risk', 'derivatives', 'markowitz'],
     blogSlug: 'risk-analyst',
+  },
+
+  // repo: https://github.com/GonorAndres/Proyectos_Aprendizaje (subfolder: Credit_Risk_Model)
+  // source: Kaggle credit default dataset (~32,000 records)
+  {
+    slug: 'credit-risk',
+    title: {
+      es: 'Modelo Predictivo de Incumplimiento Crediticio',
+      en: 'Credit Default Prediction Model',
+    },
+    description: {
+      es: 'Machine learning con 85.19% de precisión (AUC) para predecir incumplimiento en préstamos. GLM en Python con 32,000+ registros.',
+      en: 'Machine learning with 85.19% AUC to predict loan defaults. GLM in Python with 32,000+ records.',
+    },
+    url: 'https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model',
+    platform: 'GitHub',
+    category: 'data-science',
+    tags: {
+      es: ['ML', 'GLM', 'Riesgo'],
+      en: ['ML', 'GLM', 'Risk'],
+    },
+    variant: 'wide',
+    screenshot: '/screenshots/credit-risk.png',
+    relatedTo: ['ab-testing', 'data-cleaning'],
   },
 ];
 
