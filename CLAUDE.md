@@ -184,7 +184,7 @@ Invoke with: "use blog-writer to write a post about [slug or topic]"
 - [ ] Life insurance technical note: rewrite from homework tone, add regulatory context (LISF/CUSF)
 - [ ] Property insurance technical note: same treatment, CNSF data angle
 - [ ] Michoacan demographic analysis: connect mortality tables to life insurance pricing
-- [ ] GMM Explorer: pricing methodology breakdown
+- [x] GMM Explorer: pricing methodology breakdown -- DONE 2026-03-21
 
 #### Other posts
 - [ ] Research article: non-technical summary of data science internship paper
