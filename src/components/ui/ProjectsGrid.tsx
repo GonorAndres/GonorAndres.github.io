@@ -44,6 +44,19 @@ interface Props {
 
 
 const INITIAL_COUNT = 6;
+const STORAGE_KEY = 'projects-grid-expanded';
+
+function readExpanded(): boolean {
+  try { return sessionStorage.getItem(STORAGE_KEY) === 'true'; }
+  catch { return false; }
+}
+
+function writeExpanded(expanded: boolean) {
+  try {
+    if (expanded) sessionStorage.setItem(STORAGE_KEY, 'true');
+    else sessionStorage.removeItem(STORAGE_KEY);
+  } catch { /* Safari private mode or storage disabled */ }
+}
 
 // Category accent colors — one clear color per category, used for the top bar and badges
 const categoryAccent: Record<ProjectCategory, string> = {
@@ -199,10 +212,18 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
   const accent = categoryAccent[project.category];
 
   return (
-    <a href={project.url}
-      {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
-      className="group flex items-center gap-4 md:gap-6 bg-[#F5F0EA] rounded-xl border border-[#1B2A4A]/10 p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+    <article
+      className="group relative flex items-center gap-4 md:gap-6 bg-[#F5F0EA] rounded-xl border border-[#1B2A4A]/10 p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
       style={{ borderLeftColor: accent, borderLeftWidth: '3px' }}>
+
+      {/* Stretched primary link covers the whole card */}
+      <a
+        href={project.url}
+        {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
+        className="absolute inset-0 rounded-xl z-0"
+        aria-label={project.title}
+        tabIndex={0}
+      />
 
       {/* Icon */}
       <div className={`hidden sm:flex shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br items-center justify-center ${placeholderGradients[project.category]}`}>
@@ -242,8 +263,7 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
           <a
             href={project.repo ?? project.url}
             target="_blank" rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="text-[#1B2A4A]/30 hover:text-[#1B2A4A]/65 transition-colors"
+            className="relative z-10 text-[#1B2A4A]/30 hover:text-[#1B2A4A]/65 transition-colors"
             aria-label={project.platform === 'Drive' ? labels.viewDrive : labels.viewRepo}
           >
             {project.platform === 'Drive' ? (
@@ -261,8 +281,7 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
         {project.blogUrl ? (
           <a
             href={project.blogUrl}
-            onClick={(e) => e.stopPropagation()}
-            className="text-[#1B2A4A]/30 hover:text-[#1B2A4A]/65 transition-colors"
+            className="relative z-10 text-[#1B2A4A]/30 hover:text-[#1B2A4A]/65 transition-colors"
             aria-label={labels.viewDetails}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -277,7 +296,7 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
           </svg>
         ) : <span className="w-4 h-4" />}
       </div>
-    </a>
+    </article>
   );
 }
 
@@ -289,12 +308,16 @@ const CATEGORY_ORDER: ProjectCategory[] = ['actuarial', 'data-science', 'data-en
 
 export default function ProjectsGrid({ projects, labels }: Props) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(readExpanded);
   const [activeCategory, setActiveCategory] = useState<FilterCat>('all');
   const [sortMode, setSortMode] = useState<SortMode>('newest');
 
-  const handleCategoryChange = (cat: FilterCat) => { setActiveCategory(cat); setShowAll(false); };
-  const handleSortChange = (mode: SortMode) => { setSortMode(mode); setShowAll(false); };
+  const handleCategoryChange = (cat: FilterCat) => {
+    setActiveCategory(cat);
+    setShowAll(false);
+    writeExpanded(false);
+  };
+  const handleSortChange = (mode: SortMode) => { setSortMode(mode); };
 
   const presentCategories = CATEGORY_ORDER.filter(c => projects.some(p => p.category === c));
 
@@ -410,7 +433,11 @@ export default function ProjectsGrid({ projects, labels }: Props) {
       {hasMore && (
         <div className="flex justify-center mt-10">
           <button
-            onClick={() => setShowAll(!showAll)}
+            onClick={() => {
+              const next = !showAll;
+              setShowAll(next);
+              writeExpanded(next);
+            }}
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-[#1B2A4A]/15 text-sm font-medium text-[#1B2A4A]/70 hover:text-[#1B2A4A] hover:border-[#1B2A4A]/30 hover:shadow-sm transition-all duration-200"
           >
             {showAll ? labels.showLess : labels.showAll}

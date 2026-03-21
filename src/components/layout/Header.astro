@@ -26,13 +26,13 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
     </a>
 
     <div class="hidden md:flex items-center gap-8">
-      <a href={tp('/')} class={isHome ? activeClass : inactiveClass} {...(isHome ? {'aria-current': 'page'} : {})}>
+      <a href={tp('/')} data-nav="home" class={isHome ? activeClass : inactiveClass} {...(isHome ? {'aria-current': 'page'} : {})}>
         {t(lang, 'nav.home')}
       </a>
-      <a href={tp('/#proyectos')} class={inactiveClass}>
+      <a href={tp('/#proyectos')} data-nav="projects" class={inactiveClass}>
         {t(lang, 'nav.projects')}
       </a>
-      <a href={tp('/notes/')} class={isNotes ? activeClass : inactiveClass} {...(isNotes ? {'aria-current': 'page'} : {})}>
+      <a href={tp('/notes/')} data-nav="notes" class={isNotes ? activeClass : inactiveClass} {...(isNotes ? {'aria-current': 'page'} : {})}>
         {t(lang, 'nav.notes')}
       </a>
       <a href={tp('/blog/')} class={isBlog ? activeClass : inactiveClass} {...(isBlog ? {'aria-current': 'page'} : {})}>
@@ -59,13 +59,13 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden px-6 pb-4 space-y-3 md:!hidden">
-    <a href={tp('/')} class={`block ${isHome ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isHome ? {'aria-current': 'page'} : {})}>
+    <a href={tp('/')} data-nav="home" class={`block ${isHome ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isHome ? {'aria-current': 'page'} : {})}>
       {t(lang, 'nav.home')}
     </a>
-    <a href={tp('/#proyectos')} class="block text-sm font-medium text-navy/70 hover:text-terracotta">
+    <a href={tp('/#proyectos')} data-nav="projects" class="block text-sm font-medium text-navy/70 hover:text-terracotta">
       {t(lang, 'nav.projects')}
     </a>
-    <a href={tp('/notes/')} class={`block ${isNotes ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isNotes ? {'aria-current': 'page'} : {})}>
+    <a href={tp('/notes/')} data-nav="notes" class={`block ${isNotes ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isNotes ? {'aria-current': 'page'} : {})}>
       {t(lang, 'nav.notes')}
     </a>
     <a href={tp('/blog/')} class={`block ${isBlog ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isBlog ? {'aria-current': 'page'} : {})}>
@@ -85,5 +85,55 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
       const expanded = btn?.getAttribute('aria-expanded') === 'true';
       btn?.setAttribute('aria-expanded', String(!expanded));
     });
+
+    // Scroll-spy: highlight nav link based on which section is in view.
+    // Only runs on the homepage where #proyectos and #notas exist.
+    const proyectosSection = document.querySelector('#proyectos');
+    const notasSection = document.querySelector('#notas');
+
+    if (proyectosSection && notasSection) {
+      const ACTIVE = ['text-terracotta', 'border-b-2', 'border-terracotta', 'pb-0.5'];
+      const INACTIVE = ['text-navy/70'];
+
+      function setActive(navKey: string) {
+        document.querySelectorAll('[data-nav]').forEach((el) => {
+          if (el.getAttribute('data-nav') === navKey) {
+            el.classList.remove(...INACTIVE);
+            el.classList.add(...ACTIVE);
+            el.setAttribute('aria-current', 'page');
+          } else {
+            el.classList.remove(...ACTIVE);
+            el.classList.add(...INACTIVE);
+            el.removeAttribute('aria-current');
+          }
+        });
+      }
+
+      const visible = new Set<string>();
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              visible.add(entry.target.id);
+            } else {
+              visible.delete(entry.target.id);
+            }
+          });
+
+          if (visible.has('proyectos')) {
+            setActive('projects');
+          } else if (visible.has('notas')) {
+            setActive('notes');
+          } else {
+            setActive('home');
+          }
+        },
+        { threshold: 0 }
+      );
+
+      observer.observe(proyectosSection);
+      observer.observe(notasSection);
+    }
   </script>
 </header>
