@@ -155,8 +155,8 @@ export const projects: Project[] = [
       en: 'Actuarial Regulation Assistant',
     },
     description: {
-      es: 'La LISF y la CUSF suman más de mil artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de ambas leyes y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas.',
-      en: 'LISF and CUSF together span over a thousand articles, and interpreting them requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full text of both laws and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations.',
+      es: 'La LISF y la CUSF suman más de mil artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de ambas leyes y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas. Código de acceso: actuaria-claude.',
+      en: 'LISF and CUSF together span over a thousand articles, and interpreting them requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full text of both laws and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations. Access code: actuaria-claude.',
     },
     url: 'https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/',
     repo: 'https://github.com/GonorAndres/regulation-actuarial-agent',
@@ -169,6 +169,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/lisf-agent.png',
     relatedTo: ['sima'],
+    blogSlug: 'regulation-agent-rag',
     tier: 1,
     creation_date: '2026-02-01',
     last_modification_date: '2026-03-19',
