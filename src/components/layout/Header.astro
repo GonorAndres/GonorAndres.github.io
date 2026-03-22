@@ -121,7 +121,12 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
             }
           });
 
-          if (visible.has('proyectos')) {
+          // When near the top of the page, always highlight "Inicio"
+          // regardless of what the observer reports as intersecting.
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          if (scrollTop < 200) {
+            setActive('home');
+          } else if (visible.has('proyectos')) {
             setActive('projects');
           } else if (visible.has('notas')) {
             setActive('notes');
@@ -129,11 +134,29 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
             setActive('home');
           }
         },
-        { threshold: 0 }
+        { threshold: 0.05, rootMargin: '-30% 0px -30% 0px' }
       );
 
       observer.observe(proyectosSection);
       observer.observe(notasSection);
+
+      // Backup scroll listener: when the user scrolls back to top
+      // (e.g. clicking "Inicio"), the observer may not re-fire because
+      // the section never fully leaves the shrunken rootMargin zone.
+      // This ensures "Inicio" gets highlighted near the top.
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            if (scrollTop < 200) {
+              setActive('home');
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
     }
   </script>
 </header>
