@@ -144,27 +144,27 @@ export const projects: Project[] = [
     last_modification_date: '2026-03-21',
   },
 
-  // repo: no GitHub repo — code lives only on the GCP VM
+  // repo: https://github.com/GonorAndres/regulation-actuarial-agent
   // local: /home/andtega349/lisf-agent
-  // live: TODO — currently accessible only via SSH tunnel to GCP VM (port 8000), not publicly exposed yet
-  // source: LISF PDF from https://www.diputados.gob.mx/LeyesBiblio/pdf/LISF.pdf
+  // live: https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/
+  // source: LISF + CUSF PDFs — Mexican insurance and surety regulation
   {
     slug: 'lisf-agent',
     title: {
-      es: 'Agente LISF - Consultor Regulatorio',
-      en: 'LISF Agent - Regulatory Consultant',
+      es: 'Asistente de Regulación Actuarial',
+      en: 'Actuarial Regulation Assistant',
     },
     description: {
-      es: 'La LISF tiene más de 600 artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de la ley y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas.',
-      en: 'LISF has over 600 articles and interpreting it requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full law text and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations.',
+      es: 'La LISF y la CUSF suman más de mil artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de ambas leyes y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas.',
+      en: 'LISF and CUSF together span over a thousand articles, and interpreting them requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full text of both laws and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations.',
     },
-    url: 'https://lisf-agent-451451662791.us-central1.run.app',
+    url: 'https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/',
     repo: 'https://github.com/GonorAndres/regulation-actuarial-agent',
     platform: 'GCP',
     category: 'actuarial',
     tags: {
-      es: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
-      en: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
+      es: ['Claude SDK', 'FastAPI', 'LISF', 'CUSF', 'Python', 'GCP'],
+      en: ['Claude SDK', 'FastAPI', 'LISF', 'CUSF', 'Python', 'GCP'],
     },
     variant: 'standard',
     screenshot: '/screenshots/lisf-agent.png',

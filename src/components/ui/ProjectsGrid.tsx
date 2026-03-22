@@ -137,7 +137,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
         <h3 className="font-serif text-lg font-bold text-[#1B2A4A] mb-2 group-hover:text-[#C17654] transition-colors leading-snug">
           {project.title}
         </h3>
-        <p className="text-sm text-[#1B2A4A]/55 flex-1 mb-3 leading-relaxed line-clamp-none sm:line-clamp-5">
+        <p className="text-sm text-[#1B2A4A]/55 flex-1 mb-3 leading-relaxed line-clamp-none sm:line-clamp-6">
           {project.description}
         </p>
         {project.tags.length > 0 && (
