@@ -47,6 +47,7 @@ export default {
   'projects.gridView': 'Cuadrícula',
   'projects.listView': 'Lista',
   'projects.filterAll': 'Todos',
+  'projects.sortTier': 'Relevancia',
   'projects.sortNewest': 'Más recientes',
   'projects.sortOldest': 'Más antiguos',
   'projects.sortUpdated': 'Actualizados recientemente',

@@ -47,6 +47,7 @@ export default {
   'projects.gridView': 'Grid',
   'projects.listView': 'List',
   'projects.filterAll': 'All',
+  'projects.sortTier': 'Relevance',
   'projects.sortNewest': 'Newest',
   'projects.sortOldest': 'Oldest',
   'projects.sortUpdated': 'Recently updated',

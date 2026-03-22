@@ -88,7 +88,7 @@ The implementation includes **reinstatements**: the ability to reinstate the lim
 
 ### Stop Loss
 
-Aggregate protection across the entire portfolio. The Stop Loss activates when total loss experience (claims / premiums) exceeds a threshold called the **attachment point**. A contract of "80% xs 20%" on $10M of subject premiums means: if the loss ratio exceeds 80%, the reinsurer covers up to an additional 20 percentage points. If claims total $9M (90% loss ratio), the reinsurer pays $1M (the 10% excess above 80%, applied to $10M of premiums). If claims reach $11M (110%), the reinsurer pays the maximum of $2M (20% of $10M).
+Aggregate protection across the entire portfolio. The Stop Loss activates when total loss experience (claims / premiums) exceeds a threshold called the **attachment point**. A contract of "80% xs 20%" on \$10M of subject premiums means: if the loss ratio exceeds 80%, the reinsurer covers up to an additional 20 percentage points. If claims total \$9M (90% loss ratio), the reinsurer pays \$1M (the 10% excess above 80%, applied to \$10M of premiums). If claims reach \$11M (110%), the reinsurer pays the maximum of \$2M (20% of \$10M).
 
 Pydantic validates that the attachment point falls within a reasonable range (50%-200%) -- trigger points outside that range indicate a data entry error, not a real contract.
 
@@ -112,7 +112,7 @@ The Bootstrap module answers with a full distribution. The process is:
 4. Run Chain Ladder on each synthetic triangle.
 5. Obtain the distribution of possible reserves and compute percentiles.
 
-The gap between the 50th percentile (median) and the 75th percentile reveals the process uncertainty. If P50 = $2.5M and P75 = $3.1M, there is a 25% probability that the required reserve is at least $600,000 higher than the median. That difference is directly relevant to how much capital to hold. In a `ConfiguracionBootstrap`, Pydantic validates that the requested percentiles fall between 1 and 99, and that the number of simulations is between 100 and 10,000.
+The gap between the 50th percentile (median) and the 75th percentile reveals the process uncertainty. If P50 = \$2.5M and P75 = \$3.1M, there is a 25% probability that the required reserve is at least \$600,000 higher than the median. That difference is directly relevant to how much capital to hold. In a `ConfiguracionBootstrap`, Pydantic validates that the requested percentiles fall between 1 and 99, and that the number of simulations is between 100 and 10,000.
 
 ## Regulatory Compliance -- RCS, CNSF, S-11.4, SAT
 
