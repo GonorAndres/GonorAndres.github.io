@@ -109,54 +109,44 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
         });
       }
 
-      const visible = new Set<string>();
+      // Determine which section is active based on scroll position.
+      // Uses getBoundingClientRect for reliability across all viewport sizes.
+      function updateActiveFromScroll() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const triggerPoint = 300;
+        const proyectosTop = proyectosSection.getBoundingClientRect().top;
+        const notasTop = notasSection.getBoundingClientRect().top;
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              visible.add(entry.target.id);
-            } else {
-              visible.delete(entry.target.id);
-            }
-          });
+        if (scrollTop < 200) {
+          setActive('home');
+        } else if (notasTop < triggerPoint) {
+          setActive('notes');
+        } else if (proyectosTop < triggerPoint) {
+          setActive('projects');
+        } else {
+          setActive('home');
+        }
+      }
 
-          // When near the top of the page, always highlight "Inicio"
-          // regardless of what the observer reports as intersecting.
-          const scrollTop = window.scrollY || document.documentElement.scrollTop;
-          if (scrollTop < 200) {
-            setActive('home');
-          } else if (visible.has('proyectos')) {
-            setActive('projects');
-          } else if (visible.has('notas')) {
-            setActive('notes');
-          } else {
-            setActive('home');
-          }
-        },
-        { threshold: 0.05, rootMargin: '-30% 0px -30% 0px' }
-      );
-
-      observer.observe(proyectosSection);
-      observer.observe(notasSection);
-
-      // Backup scroll listener: when the user scrolls back to top
-      // (e.g. clicking "Inicio"), the observer may not re-fire because
-      // the section never fully leaves the shrunken rootMargin zone.
-      // This ensures "Inicio" gets highlighted near the top.
+      // Scroll listener as the primary mechanism for nav highlighting.
       let ticking = false;
       window.addEventListener('scroll', () => {
         if (!ticking) {
           requestAnimationFrame(() => {
-            const scrollTop = window.scrollY || document.documentElement.scrollTop;
-            if (scrollTop < 200) {
-              setActive('home');
-            }
+            updateActiveFromScroll();
             ticking = false;
           });
           ticking = true;
         }
       }, { passive: true });
+
+      // Also run on anchor clicks (hash navigation doesn't always fire scroll).
+      window.addEventListener('hashchange', () => {
+        requestAnimationFrame(updateActiveFromScroll);
+      });
+
+      // Initial check in case the page loaded at a hash position.
+      updateActiveFromScroll();
     }
   </script>
 </header>
