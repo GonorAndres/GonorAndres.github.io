@@ -1,208 +1,84 @@
 ---
-title: "Mexican Actuarial Suite: Pricing, Reinsurance, Reserves, and Regulatory Compliance in Python"
-description: "Python actuarial library spanning 6 phases: EMSSA-09 mortality tables, life insurance pricing (term, whole, endowment), reinsurance (QS, XoL, SL), reserving (Chain Ladder, BF, Bootstrap), RCS under LISF, CNSF regulatory reports, and SAT tax validations. 307 tests, 87% coverage, interactive Streamlit dashboard."
+title: "Mexican Actuarial Suite: the full insurance operating cycle in one Python library"
+description: "Mid-sized Mexican insurers price in one spreadsheet, reserve in another, and fill the RCS by hand. This library unifies that cycle: EMSSA-09 mortality tables, life products, three reinsurance strategies, reserves with explicit uncertainty, and regulatory compliance under LISF and CUSF, backed by 307 tests and Decimal precision throughout."
 date: "2026-03-19"
+lastModified: "2026-03-22"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["Python", "Pydantic", "LISF", "CUSF", "CNSF", "RCS", "Reservas", "Chain Ladder", "Reaseguro", "Streamlit", "EMSSA-09", "SAT"]
 ---
 
-# Mexican Actuarial Suite: Pricing, Reinsurance, Reserves, and Regulatory Compliance in Python
+In the technical department of a typical Mexican insurer, the quarterly operating cycle is fragmented across spreadsheets that do not talk to each other. One actuary prices products with an EMSSA-09 table pasted into Excel, another calculates reserves using a separate development triangle, a third fills in the RCS regulatory form by hand, and at the end someone tries to reconcile everything for the report filed with the CNSF. Every quarter, the same manual reconciliation exercise.
 
-In the technical department of a typical Mexican insurance company, the quarterly operating cycle is fragmented across spreadsheets that do not talk to each other. One actuary prices products with an EMSSA-09 table pasted into Excel, another calculates reserves using a separate development triangle, a third fills in the RCS regulatory form by hand, and at the end someone tries to reconcile everything for the report filed with the CNSF. Every quarter, the same manual reconciliation exercise.
+The **Mexican Actuarial Suite** unifies those workflows into a single Python library. It covers everything from the EMSSA-09 mortality table to the quarterly CNSF report, including life product pricing, three reinsurance strategies, advanced reserving methods, and SAT tax validations.
 
-The **Mexican Actuarial Suite** unifies those workflows into a single Python library. It covers everything from the EMSSA-09 mortality table to the quarterly CNSF report, including life product pricing, three reinsurance strategies, advanced reserving methods, and SAT tax validations. Unlike [SIMA](/proyectos-y-analisis/sima), which builds its own mortality model from raw INEGI data via Lee-Carter, this suite uses the regulatory EMSSA-09 table directly and focuses on the breadth of the insurance cycle: products, reinsurance, reserves, compliance, and reporting.
+<img src="/screenshots/actuarial-suite.png" alt="Mexican Actuarial Suite dashboard showing life product calculators, regulatory compliance, and technical reserves" style="max-width: 100%; border: 1px solid #d4d4d4; border-radius: 4px; margin: 1rem 0;" />
 
-## The Problem -- Why an Actuarial Suite in Python
+## The problem: why an actuarial suite in Python
 
-The Mexican insurance market is regulated by the Comision Nacional de Seguros y Fianzas (CNSF, the national insurance and surety commission) under the framework of the Ley de Instituciones de Seguros y de Fianzas (LISF, the insurance and surety institutions law) and the Circular Unica de Seguros y Fianzas (CUSF, the unified insurance and surety regulation). This regulatory framework imposes requirements that do not exist in any other jurisdiction: country-specific mortality tables (EMSSA-09), quarterly report formats with a defined structure, a Solvency Capital Requirement (RCS) calculation calibrated to the Mexican market, and tax deductibility rules that depend on Mexico's income tax law (LISR).
+The Mexican insurance market operates under the LISF and the CUSF, a regulatory framework that imposes requirements that do not exist in any other jurisdiction: country-specific mortality tables (EMSSA-09), quarterly report formats with a structure defined by the CNSF, a Solvency Capital Requirement (RCS) calibrated to the Mexican market, and tax deductibility rules that depend on Mexico's income tax law (LISR).
 
-Most actuarial work in Mexico is done in Excel or in proprietary systems like Prophet or MoSes. For mid-sized and small insurers, commercial licensing costs are prohibitive, and the result is usually a collection of spreadsheets where every cell is a potential point of failure. Open-source actuarial software in Python does exist -- the `chainladder` package for reserving, `lifelines` for survival analysis -- but none of it integrates Mexican regulatory requirements. There is no library that knows what an EMSSA-09 table is, that computes the RCS as defined by the LISF, or that validates premium deductibility under Article 151 of the LISR.
+Open-source actuarial software in Python does exist: `chainladder` for reserving, `lifelines` for survival analysis. But none of it integrates Mexican regulatory requirements. There is no library that knows what an EMSSA-09 table is, that computes the RCS as defined by the LISF, or that validates premium deductibility under Article 151 of the LISR. For mid-sized and small insurers, that gap means spreadsheets with formulas no one audits, and errors discovered at the regulatory exam.
 
-The suite fills that gap with two fundamental design decisions. The first is using Pydantic v2 as a domain guard: every piece of data entering the system -- insured age, sum assured, product configuration, claims triangle -- is validated before it touches a formula. An insured with a negative age, a technical interest rate of 200%, or a sum assured of zero simply cannot enter the system. The second is using `Decimal` instead of `float` throughout the entire calculation chain. In a context where rounding differences of a few cents compound across portfolios of thousands of policies, arithmetic precision is not an academic luxury -- it is an operational requirement.
+Two design decisions define the suite. The first is Pydantic v2 as a domain guard: every piece of data entering the system is validated before it touches a formula. An insured with a negative age or a technical rate of 200% simply cannot enter. The second is `Decimal` instead of `float` throughout the entire calculation chain. Across portfolios of thousands of policies, rounding differences compound; arithmetic precision is not an academic luxury.
 
-## Life Products -- Term, Whole, Endowment
+## Life products
 
-### Product architecture
+All three products inherit from an abstract base class that fixes the calculation sequence through Template Method: validate insurability, compute net premium, apply loadings, build result. Each concrete product implements its own actuarial formula.
 
-All products in the suite inherit from an abstract base class `ProductoSeguro` that defines the common interface: `calcular_prima()`, `calcular_reserva()`, `validar_asegurabilidad()`, and `aplicar_recargos()`. The design combines two classic patterns. **Template Method** fixes the calculation sequence -- validate insurability, compute net premium, apply loadings, build result -- while each concrete product implements the specific logic of its actuarial formula. **Strategy** comes in for the averaging methods used in development factors and for reinsurance modalities.
+The **EMSSA-09** (Experiencia Mexicana de Seguridad Social 2009) is the regulatory mortality table for life insurance in Mexico. The suite loads it from a CSV and wraps it in a model that supports interpolation for intermediate ages and validates that every `qx` falls between 0 and 1. Pricing follows the equivalence principle: the actuarial present value of future benefits equals the actuarial present value of future premiums. The technical interest rate is 5.5%, the maximum the CNSF allows for traditional life products.
 
-The `aplicar_recargos()` method lives in the base class and breaks down the gross premium transparently: administration expenses (5% by default), acquisition expenses (10%), and profit margin (3%). A Pydantic `model_validator` checks that total loadings do not exceed 100% of the net premium, cutting off absurd configurations at the root.
+**Term insurance** is pure risk: no payout if the insured survives the policy period. **Whole life** is guaranteed: the payout will happen, it is only a matter of when. **Endowment** combines protection with savings: it pays the sum assured on death or on survival at maturity. A 35-year-old male with a MXN \$1,000,000 sum assured on a 20-year term policy pays roughly \$5,900 per year using the EMSSA-09 at 5.5%.
 
-### The EMSSA-09 table
+<a href="/blog/sima/" style="color: #C17654; text-decoration: underline;">SIMA</a> builds its own mortality model from raw INEGI data via Lee-Carter. This suite uses the regulatory EMSSA-09 directly. They are complementary approaches: one constructs the demographics from the source, the other applies the table the regulator requires in the technical note.
 
-The Experiencia Mexicana de Seguridad Social 2009 (EMSSA-09, roughly "Mexican Social Security Experience 2009") is the regulatory mortality table for life insurance in Mexico. Each record contains three fields: age, sex, and `qx` -- the probability that a person aged `x` dies before reaching age `x+1`. For a 35-year-old male, the table gives `qx = 0.001300`, meaning 1.3 deaths per thousand people of that age. At 40, the value rises to `qx = 0.001600`. This mortality progression is the fundamental input for all pricing.
+## Reinsurance
 
-The suite loads the EMSSA-09 from a CSV and wraps it in a `TablaMortalidad` model that supports interpolation for intermediate ages and automatic validation that every `qx` falls between 0 and 1.
+Reinsurance is insurance for insurers. The suite implements three strategies with domain validation throughout.
 
-### Pricing formulas
+**Quota Share** cedes a fixed percentage of every policy: premiums and claims alike. Simple and predictable, with the drawback that you cede the same proportion of profitable risks and unprofitable ones.
 
-The net premium is calculated under the **equivalence principle**: the actuarial present value of future benefits must equal the actuarial present value of future premiums. For a term insurance of `n` years on an insured aged `x`:
+**Excess of Loss** protects against individual large claims. The reinsurer only steps in when a single claim exceeds the cedant's retention. A "500 xs 200" contract means the cedant retains the first \$200,000 and the reinsurer pays up to an additional \$500,000. The implementation includes reinstatements: reinstating the limit after it has been used in exchange for an additional premium. A `model_validator` verifies that the limit is greater than the retention; in editable spreadsheet cells, that condition gets violated more often than anyone would like to admit.
 
-- **Term insurance** A[x:n]: Sum of v^(t+1) * t_p_x * q_(x+t) for t from 0 to n-1, where v = 1/(1+i) is the discount factor at technical rate i, t_p_x is the probability of surviving t years, and q_(x+t) is the mortality at age x+t.
-- **Annuity-due** a-double[x:n]: Sum of v^t * t_p_x for t from 0 to n-1. It represents the present value of one unit paid at the beginning of each year while the insured survives.
-- **Level net premium**: P = A[x:n] / a-double[x:n]. This is the constant annual amount that, paid while the insured is alive within the policy term, exactly funds the expected benefit.
+**Stop Loss** protects the entire portfolio. It activates when total loss experience exceeds a threshold (attachment point). If claims on a \$10M premium portfolio reach 90% and the contract is "80% xs 20%", the reinsurer pays \$1M of the excess.
 
-The technical interest rate is 5.5%, the typical maximum the CNSF allows for traditional life products in Mexico.
+## Reserves: Chain Ladder, Bornhuetter-Ferguson, Bootstrap
 
-### Worked numerical example
+IBNR estimation is one of the central problems in casualty actuarial practice. The suite implements Chain Ladder and Bornhuetter-Ferguson, but the distinguishing piece is the Bootstrap module.
 
-Consider a 35-year-old male with a sum assured of $1,000,000 MXN under a 20-year term policy. Using the EMSSA-09 and a 5.5% technical rate:
+Chain Ladder produces a point estimate. Bornhuetter-Ferguson complements it by weighting against an a priori loss ratio expectation, which makes it more stable for recent origin years with little development. But neither answers the most important question: how wrong could this estimate be?
 
-- The annual net premium comes out to approximately $5,000 MXN. This amount reflects the fact that cumulative mortality over 20 years is relatively low for a 35-year-old male (qx starts at 0.0013 and grows gradually).
-- Loadings add up to 18% (5% admin + 10% acquisition + 3% profit): roughly $900 MXN.
-- The total annual premium lands at approximately $5,900 MXN.
+Bootstrap answers with a full distribution. It computes Pearson residuals on the original triangle, resamples them to generate 1,000 synthetic triangles, runs Chain Ladder on each, and extracts percentiles from the resulting distribution. If P50 = \$2.5M and P75 = \$3.1M, there is a 25% probability that the required reserve is at least \$600,000 higher than the median. That difference is directly relevant to how much capital to hold. The <a href="/blog/insurance-claims-dashboard/" style="color: #C17654; text-decoration: underline;">Insurance Claims Dashboard</a> explores this mechanic in more detail from a portfolio analysis perspective.
 
-The breakdown is stored in a `ResultadoCalculo` validated by Pydantic, which includes metadata with the table used, rate, term, and payment frequency.
+## Regulatory compliance
 
-### Product comparison
+This is what sets the suite apart from any other open-source actuarial package. To the best of my knowledge, no public library implements the Mexican RCS calculation, the rules of Circular S-11.4, or the SAT's tax validations for insurance premiums.
 
-| Aspect | Term | Whole Life | Endowment |
-|---|---|---|---|
-| Coverage | Fixed term (10, 20, 30 years) | Lifetime (up to omega age) | Fixed term |
-| Death benefit | Only if death occurs during the term | Guaranteed (just a matter of when) | If death occurs during the term |
-| Survival benefit | None | None | Yes, at maturity |
-| Relative premium | Low (pure risk) | Medium (guaranteed payout) | High (savings + protection) |
-| Reserve at maturity | Zero | Grows to the sum assured | Equals the sum assured |
-| Typical use | Temporary family protection | Estate and succession planning | Education savings, retirement |
+The **RCS** computes three risk modules: life underwriting (mortality, longevity, disability, expenses), non-life underwriting (premium risk and reserve risk), and investment (market, credit, concentration). Aggregation uses a correlation matrix that avoids summing risks linearly. The life-to-non-life correlation is 0.00 because mortality and auto claims are statistically independent. The life-to-investment and non-life-to-investment correlation is 0.25 because a financial crisis affects the ability to meet both types of obligations through the investment portfolio. With life RCS \$28M, non-life \$30M, and investment \$35M, a straight sum would give \$93M; the correlation-based aggregation gives \$75M. Those \$18M in difference are capital the insurer can invest rather than hold idle.
 
-Term insurance is pure risk: if the insured survives the policy term, there is no payout. Whole life is lifetime coverage -- the payout is guaranteed, it is only a matter of when. Endowment combines protection with savings: it pays the sum assured either on death or on survival at maturity. A 30-year-old parent who buys a 20-year endowment with $500,000 MXN knows that, no matter what happens, there will be $500,000 available when their child reaches college age.
+**Circular S-11.4** defines how technical reserves must be calculated. The module implements the mathematical reserve using the prospective method and the unearned premium reserve for short-term products, both with a sufficiency validator.
 
-## Reinsurance -- Three Risk Transfer Strategies
+**SAT tax validations** determine what portion of each premium is deductible for income tax purposes, given the insurance type and the policyholder's tax regime. The `ValidadorPrimasDeducibles` takes the current annual UMA, computes limits in pesos, and returns the deductible amount with the exact legal basis: Article 151 of the LISR for individuals, Article 25 for legal entities.
 
-Reinsurance is insurance for insurers. When a company holds risks that exceed its absorption capacity -- by individual amount, by concentration, or by aggregate volatility -- it transfers part of those risks to a reinsurer in exchange for ceding part of the premiums. The suite implements three complementary strategies.
+The <a href="/blog/regulation-agent-rag/" style="color: #C17654; text-decoration: underline;">regulation agent</a> navigates the LISF and CUSF to locate the relevant provisions. This suite implements the math those provisions define. They are complementary tools: one finds the article, the other runs the calculation.
 
-### Quota Share
+## Engineering decisions
 
-The simplest and most predictable contract. The reinsurer accepts a fixed percentage of **all** policies: if the contract is 30% QS, it receives 30% of every premium and pays 30% of every claim. In return, it pays a ceding commission to the cedant (typically 25%) for acquisition expenses already incurred.
+The suite has 34 production modules across 7 subpackages and 307 tests at 87% coverage. Dependency flow is unidirectional: `core` imports from nobody; `products`, `reinsurance`, `reservas`, and `regulatorio` import from `core`; `reportes` imports from `regulatorio`. No cycles, so any module can be tested in isolation.
 
-In the suite, a `QuotaShareConfig` validates that the cession percentage is between 0 and 100, the commission does not exceed 50%, and the contract term does not exceed 5 years. The calculation is straightforward: `prima_cedida = prima_bruta * (porcentaje_cesion / 100)`. The advantage of QS is simplicity and commission income generation. The disadvantage is that you cede the same proportion of all risks, including the profitable ones.
+Every Pydantic model includes `json_schema_extra` with concrete examples that double as executable documentation. Validation error messages are written for the actuary, not the developer: "Total loadings (115%) exceed 100%" communicates the problem immediately.
 
-### Excess of Loss
+The Streamlit dashboard has three pages built with Plotly: a life product calculator with sensitivity analysis, a regulatory compliance monitor with RCS calculators and SAT validations, and a technical reserves view with development triangles and method comparison.
 
-Non-proportional protection against large claims. The reinsurer only steps in when an individual claim exceeds the cedant's retention, and pays up to a maximum limit. The standard notation is "limit xs retention": a "500 xs 200" contract means the cedant retains the first $200,000 and the reinsurer pays the excess up to an additional $500,000.
+## What I learned
 
-If the claim is $150,000, the cedant absorbs everything. If it is $400,000, the cedant pays $200,000 and the reinsurer pays $200,000. If it is $800,000, the cedant pays $200,000, the reinsurer pays its $500,000 limit, and the cedant absorbs the remaining $100,000.
+The hardest part was not Chain Ladder or the life insurance formulas, which are standard in any jurisdiction. It was Mexican regulatory specificity: the EMSSA-09 as the pricing base table, Circular S-11.4 for technical reserves, the deductibility rules of Article 151 of the LISR, the CNSF report formats with their date and quarter validations. Those modules required the most research hours, with the fewest implementation references available anywhere.
 
-The implementation includes **reinstatements**: the ability to reinstate the limit after it has been used, in exchange for an additional premium. A `model_validator` ensures that the limit is greater than the retention -- a condition that sounds obvious but gets violated in editable spreadsheet cells more often than anyone would like to admit.
+The second lesson involves the RCS correlation matrix. The aggregation formula is straightforward vector algebra. The hard part is not implementing it but understanding why the CNSF chose those specific correlations. The numbers encode the regulator's view of how risks interact in the Mexican market. Implementing a formula without understanding the logic behind the parameters is typing, not actuarial engineering.
 
-### Stop Loss
+A real limitation worth naming: the dashboard is demonstrative, not production-ready. An insurer wanting to adopt it would need to integrate their own data, validate tables and parameters against their CNSF-approved technical notes, and run an actuarial audit on the outputs. The suite solves the fragmentation problem; it does not solve the legacy integration problem.
 
-Aggregate protection across the entire portfolio. The Stop Loss activates when total loss experience (claims / premiums) exceeds a threshold called the **attachment point**. A contract of "80% xs 20%" on \$10M of subject premiums means: if the loss ratio exceeds 80%, the reinsurer covers up to an additional 20 percentage points. If claims total \$9M (90% loss ratio), the reinsurer pays \$1M (the 10% excess above 80%, applied to \$10M of premiums). If claims reach \$11M (110%), the reinsurer pays the maximum of \$2M (20% of \$10M).
-
-Pydantic validates that the attachment point falls within a reasonable range (50%-200%) -- trigger points outside that range indicate a data entry error, not a real contract.
-
-## Advanced Reserves -- Chain Ladder, Bornhuetter-Ferguson, Bootstrap
-
-Estimating reserves for outstanding claims (IBNR -- Incurred But Not Reported) is one of the central problems in casualty actuarial practice. Anyone who has read the [Insurance Claims Dashboard post](/proyectos-y-analisis/insurance-claims-dashboard) is already familiar with the mechanics of Chain Ladder and development triangles. I am not going to repeat the explanation from scratch here. Instead, I want to focus on three aspects that distinguish this implementation.
-
-### Custom implementation vs. the chainladder package
-
-The suite includes `chainladder` as a dependency but implements Chain Ladder from scratch in the `reservas/chain_ladder.py` module. The reason is not to reinvent the wheel: it is to integrate Pydantic validations at every step of the process. The `ConfiguracionChainLadder` allows choosing between simple, weighted, or geometric averages for development factors, and optionally computing a tail factor for late development. Each `ResultadoReserva` includes a `model_validator` that checks the fundamental identity: ultimate = paid + reserve. If the discrepancy exceeds one cent, the model rejects the result.
-
-### Bootstrap and uncertainty quantification
-
-Chain Ladder produces a point estimate. Bornhuetter-Ferguson complements it by weighting with an a priori expectation (expected loss ratio), which makes it more stable for recent origin years with little development. But neither answers the most important question: "how wrong could this estimate be?"
-
-The Bootstrap module answers with a full distribution. The process is:
-
-1. Run Chain Ladder on the original triangle (base model).
-2. Calculate Pearson residuals: (observed - expected) / sqrt(expected).
-3. Resample those residuals to generate N synthetic triangles (1,000 simulations by default).
-4. Run Chain Ladder on each synthetic triangle.
-5. Obtain the distribution of possible reserves and compute percentiles.
-
-The gap between the 50th percentile (median) and the 75th percentile reveals the process uncertainty. If P50 = \$2.5M and P75 = \$3.1M, there is a 25% probability that the required reserve is at least \$600,000 higher than the median. That difference is directly relevant to how much capital to hold. In a `ConfiguracionBootstrap`, Pydantic validates that the requested percentiles fall between 1 and 99, and that the number of simulations is between 100 and 10,000.
-
-## Regulatory Compliance -- RCS, CNSF, S-11.4, SAT
-
-This is the section that sets the suite apart from any other open-source actuarial package. To the best of my knowledge, there is no public library that implements the Mexican RCS calculation, the rules of Circular S-11.4, or the SAT's tax validations for insurance premiums. These modules required the most research with the fewest available references.
-
-### RCS: Solvency Capital Requirement
-
-The RCS (Requerimiento de Capital de Solvencia) is the minimum capital an insurer must hold to absorb unexpected losses at a 99.5% confidence level (equivalent to the 99.5th percentile of the one-year loss distribution). The suite computes three risk modules:
-
-**Life underwriting risk** (`RCSVida`). Four sub-risks:
-- *Mortality*: Insureds die sooner than expected. Formula: 0.3% of total sum assured, adjusted by an age factor (1.0 at age 30, up to 3.0 at advanced ages) and a diversification factor (decreases with more insureds, by the law of large numbers).
-- *Longevity*: Life annuity policyholders live longer than expected. Formula: 0.2% of the mathematical reserve, adjusted by age and average policy duration.
-- *Disability*: Incapacity of the insured.
-- *Expenses*: Administration expenses exceed projections.
-
-**Non-life underwriting risk** (`RCSDanos`). Two sub-risks:
-- *Premium risk*: Collected premiums are insufficient to cover claims experience. Formula: alpha * retained_premiums * sigma * diversification_factor, where alpha = 3.0 (confidence factor at 99.5%) and sigma is the historical coefficient of variation of the loss ratio.
-- *Reserve risk*: Outstanding claims reserves are insufficient.
-
-**Investment risk** (`RCSInversion`). Three sub-risks:
-- *Market*: Drop in asset values. Shocks calibrated by asset type: equities -35%, government bonds -5% (adjusted by duration), corporate bonds -15%, real estate -25%.
-- *Credit*: Issuer default. Shocks ranging from 0.2% for AAA down to 50% for C-rated securities.
-- *Concentration*: Excessive exposure to a single issuer.
-
-The final aggregation is performed by the `AgregadorRCS` using a **correlation matrix** that avoids summing risks linearly (which would overestimate the required capital):
-
-|  | Life | Non-life | Investment |
-|---|---|---|---|
-| **Life** | 1.00 | 0.00 | 0.25 |
-| **Non-life** | 0.00 | 1.00 | 0.25 |
-| **Investment** | 0.25 | 0.25 | 1.00 |
-
-The life-non-life correlation is 0.00 (independent risks: someone dying is not correlated with a car crash). The life-investment and non-life-investment correlation is 0.25 (investments back the reserves of both lines; a market downturn affects the ability to meet both types of obligations). The aggregation formula is the square root of the quadratic form: RCS_total = sqrt(Rv^2 + Rd^2 + Ri^2 + 2*rho_vi*Rv*Ri + 2*rho_di*Rd*Ri), where Rv, Rd, Ri are the RCS by category and rho the correlation coefficients.
-
-As a concrete example, using the values from the `ResultadoRCS` schema: life RCS $28M, non-life RCS $30M, investment RCS $35M. A straight sum would give $93M, but the correlation-based aggregation yields $75M -- a capital savings of $18M that reflects the diversification benefit. An insurer with $100M in capital would have a solvency ratio of 0.75 and would meet the regulatory requirement.
-
-### Circular S-11.4: Technical Reserves
-
-Circular S-11.4 from the CNSF defines how technical reserves must be calculated. The suite implements two key reserves:
-
-**Mathematical Reserve (RM, Reserva Matematica)** for long-term life insurance. The `CalculadoraRM` uses the prospective method: RM = PV(Future Benefits) - PV(Future Premiums). For a 45-year-old who purchased a life policy at age 40 with an annual premium of $25,000 and a sum assured of $1,000,000, the RM reflects that 5 years of exposure have already accumulated without a claim, so future obligations net of premiums yet to be collected are positive. The reserve grows over time until it reaches the sum assured (for whole life) or drops to zero at maturity (for term).
-
-**Reserva de Riesgos en Curso (RRC, roughly "unearned premium reserve")** for short-term insurance. It covers the unearned portion of the premium plus an inadequacy adjustment if expected claims experience exceeds what was anticipated.
-
-Both modules include a sufficiency validator that checks whether the established reserves are adequate relative to estimated obligations.
-
-### SAT Tax Validations
-
-No other open-source actuarial package implements Mexican tax rules for insurance. The suite includes a `ValidadorPrimasDeducibles` that determines, given an insurance type and the taxpayer's tax regime, what portion of the premium is deductible for income tax (ISR) purposes:
-
-- **Major medical insurance (individuals)**: 100% deductible with no limit (LISR Art. 151, Section I).
-- **Life insurance (individuals)**: Not deductible.
-- **Pension plans (individuals)**: Deductible up to 5 annual UMAs (LISR Art. 151, Section V).
-- **Employee insurance (legal entities)**: 100% deductible -- major medical, life, and disability insurance for employees (LISR Art. 25, Section VI).
-- **Property insurance (legal entities)**: 100% deductible as strictly necessary business expenses.
-
-The validator receives the current annual UMA as a parameter, calculates limits in pesos, and returns a `ResultadoDeducibilidadPrima` with the deductible amount, percentage, and exact legal basis. This automates a lookup that typically requires an accountant to manually review the LISR.
-
-### CNSF Reports
-
-The reporting module structures the quarterly data that insurers file with the CNSF. Four specialized generators produce reports on underwriting (written, earned, and cancelled premiums by line of business), claims (incurred, paid, and outstanding), investments (portfolio by asset type), and RCS (full breakdown by risk type).
-
-The `MetadatosReporte` model validates that the filing date is after the reported quarter (you cannot file the Q1 report before March ends), and the `DatosSuscripcionRamo` entries verify consistency between written, earned, and cancelled premiums. These are validations that in Excel depend on someone having placed a conditional formula in the right cell; here they are immovable business rules.
-
-These regulatory modules benefit mutually from everything built in the earlier phases. Pricing feeds the life RCS calculations (sums assured, mathematical reserves). Advanced reserves feed the non-life RCS (claims reserves). And all three converge in the CNSF report. It is the same integration that motivated building a suite rather than standalone scripts. For a complementary view of how mortality modeling works from raw data, [SIMA](/proyectos-y-analisis/sima) walks that path using the Lee-Carter method on INEGI data.
-
-## Engineering Decisions
-
-The suite has 34 production modules distributed across 7 sub-packages (`core`, `actuarial`, `products`, `reinsurance`, `reservas`, `regulatorio`, `reportes`) and 16 test files with 307 tests and 87% coverage. That comes to roughly 6,500 lines of production code and 5,500 lines of tests.
-
-**Unidirectional dependencies.** The dependency flow goes in one direction: `core` imports from nobody; `products`, `reinsurance`, `reservas`, and `regulatorio` import from `core`; `reportes` imports from `regulatorio`. There are no cycles. This allows any module to be tested in isolation.
-
-**Over 30 Pydantic models** with `json_schema_extra` that include concrete examples. Each model doubles as executable documentation: the examples in the schema are valid instances that can be copied directly into a test or an interactive session.
-
-**Decimal precision** throughout the chain. From the `qx` in the mortality table to the final RCS result, every calculation uses `Decimal` instead of `float`. The product configuration specifies rates as `Decimal("0.055")`, not `0.055`. Premiums are rounded to cents with `quantize(Decimal("0.01"))`.
-
-**CI with GitHub Actions.** The suite is automatically tested against Python 3.11 and 3.12. The pipeline runs `ruff` for linting (line-length 100, target-version py311), `mypy` with the Pydantic plugin for type checking, and `pytest` with coverage measurement. The `mypy` configuration enables `disallow_untyped_defs` and `warn_return_any` -- decisions that hurt at coding time but pay dividends as the codebase grows.
-
-**Streamlit dashboard.** Three interactive pages built with Plotly: a life product calculator (comparison between term, whole life, and endowment with sensitivity analysis), a regulatory compliance monitor (RCS calculators and SAT validations), and a technical reserves analysis view (development triangles, projections, and method comparison). The `wide` layout takes advantage of the available space for metrics and side-by-side columns.
-
-## What I Learned
-
-**First** lesson: Pydantic as a domain guard is qualitatively different from unit tests. A `model_validator` that checks total loadings do not exceed 100% catches an entire class of errors at the entry point, before the data ever touches a formula. With unit tests, you need to imagine and write out each invalid case. With Pydantic, you define the rule once and the model rejects everything that does not comply, including cases you never thought of. The error messages are for the user, not for the developer -- "Total loadings (115%) exceed 100%" communicates the problem immediately. This is especially valuable in actuarial software, where the user is an actuary who understands the domain but not necessarily the tech stack.
-
-**Second** lesson: the RCS correlation matrix encodes regulatory judgment. The aggregation formula is straightforward vector algebra -- a square root of a quadratic form. The hard part is not implementing the formula but understanding **why** the CNSF chose those specific correlations: 0.00 between life and non-life, 0.25 between life and investment, 0.25 between non-life and investment. The 0.00 between life and non-life reflects the statistical independence between mortality and automobile claims. The 0.25 with investment reflects the fact that a financial crisis affects the ability to meet both types of obligations through the investment portfolio. These numbers encode the regulator's view of how risks interact in the Mexican market. Implementing the formula without understanding the logic behind the parameters is typing, not actuarial engineering.
-
-**Third** lesson: Mexican regulatory specificity is the hard part. Chain Ladder is Chain Ladder in Mexico, France, or Japan. The annuity-due formula is identical in every jurisdiction. What makes this suite useful **specifically for Mexico** are the modules that do not exist in any other package: the EMSSA-09 as the pricing base table, Circular S-11.4 for technical reserves, the deductibility rules of Article 151 of the LISR, the CNSF report formats with their date and quarter validations. Those modules were the ones that required the most hours of research in CNSF documents, circulars, and statutory texts, with the fewest implementation references available.
-
-## Closing
-
-The Mexican Actuarial Suite demonstrates that it is possible to cover the complete operating cycle of an insurer -- from raw mortality to regulatory reporting -- in a single Python library with rigorous validation and decimal precision, without relying on proprietary software.
-
-**Repository**: [github.com/GonorAndres/Analisis_Seguros_Mexico](https://github.com/GonorAndres/Analisis_Seguros_Mexico)
+<div style="margin-top: 2rem; padding: 1rem 1.5rem; border-left: 4px solid #C17654; background-color: #f9f6f2;">
+  <p style="margin: 0 0 0.5rem 0;"><strong>Repository:</strong> <a href="https://github.com/GonorAndres/Analisis_Seguros_Mexico" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">github.com/GonorAndres/Analisis_Seguros_Mexico</a></p>
+  <p style="margin: 0;"><strong>Live app:</strong> <a href="https://suite-actuarial-d3qj5vwxtq-uc.a.run.app" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">suite-actuarial on Cloud Run</a></p>
+</div>

@@ -464,8 +464,8 @@ export const projects: Project[] = [
     platform: 'GCP',
     category: 'actuarial',
     tags: {
-      es: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib'],
-      en: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib'],
+      es: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib', 'CONDUSEF', 'AMIS', 'Fraude', 'Autos'],
+      en: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib', 'CONDUSEF', 'AMIS', 'Fraud', 'Auto'],
     },
     variant: 'wide',
     screenshot: '/screenshots/cartera-autos.png',

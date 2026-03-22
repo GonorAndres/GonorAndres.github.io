@@ -65,4 +65,6 @@ The practical difference between Chain Ladder and Bornhuetter-Ferguson surfaces 
 
 One critical limitation: the data is entirely synthetic. Variable correlations—say, between geographic zone and vehicle type—are by design, not discovered. A real dataset from AMIS or CONDUSEF would reveal patterns and interactions that don't exist in generated data. The next step would be obtaining CONDUSEF public datasets or negotiating a data-sharing agreement with an actual insurer to retrain the GLMs on market reality.
 
-The application is deployed on <a href="https://cartera-autos-451451662791.us-central1.run.app" target="_blank" rel="noopener">Google Cloud Run</a> and the source code is on <a href="https://github.com/GonorAndres/CarteraSeguroAutos" target="_blank" rel="noopener">GitHub</a>.
+<img src="/screenshots/cartera-autos.png" alt="Auto Insurance Claims Platform executive dashboard showing KPIs, claims distribution, and monthly trend" style="max-width: 100%; border: 1px solid #d4d4d4; border-radius: 4px; margin: 1rem 0;" />
+
+The application is deployed on <a href="https://cartera-autos-451451662791.us-central1.run.app" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a> and the source code is on <a href="https://github.com/GonorAndres/CarteraSeguroAutos" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a>.
