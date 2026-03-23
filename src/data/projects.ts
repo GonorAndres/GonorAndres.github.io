@@ -144,31 +144,32 @@ export const projects: Project[] = [
     last_modification_date: '2026-03-21',
   },
 
-  // repo: no GitHub repo — code lives only on the GCP VM
+  // repo: https://github.com/GonorAndres/regulation-actuarial-agent
   // local: /home/andtega349/lisf-agent
-  // live: TODO — currently accessible only via SSH tunnel to GCP VM (port 8000), not publicly exposed yet
-  // source: LISF PDF from https://www.diputados.gob.mx/LeyesBiblio/pdf/LISF.pdf
+  // live: https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/
+  // source: LISF + CUSF PDFs — Mexican insurance and surety regulation
   {
     slug: 'lisf-agent',
     title: {
-      es: 'Agente LISF - Consultor Regulatorio',
-      en: 'LISF Agent - Regulatory Consultant',
+      es: 'Asistente de Regulación Actuarial',
+      en: 'Actuarial Regulation Assistant',
     },
     description: {
-      es: 'La LISF tiene más de 600 artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de la ley y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas.',
-      en: 'LISF has over 600 articles and interpreting it requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full law text and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations.',
+      es: 'La LISF y la CUSF suman más de mil artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de ambas leyes y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas. Código de acceso: actuaria-claude.',
+      en: 'LISF and CUSF together span over a thousand articles, and interpreting them requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full text of both laws and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations. Access code: actuaria-claude.',
     },
-    url: 'https://lisf-agent-451451662791.us-central1.run.app',
+    url: 'https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/',
     repo: 'https://github.com/GonorAndres/regulation-actuarial-agent',
     platform: 'GCP',
     category: 'actuarial',
     tags: {
-      es: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
-      en: ['Claude SDK', 'FastAPI', 'LISF', 'Python', 'GCP'],
+      es: ['Claude SDK', 'FastAPI', 'LISF', 'CUSF', 'Python', 'GCP'],
+      en: ['Claude SDK', 'FastAPI', 'LISF', 'CUSF', 'Python', 'GCP'],
     },
     variant: 'standard',
     screenshot: '/screenshots/lisf-agent.png',
     relatedTo: ['sima'],
+    blogSlug: 'regulation-agent-rag',
     tier: 1,
     creation_date: '2026-02-01',
     last_modification_date: '2026-03-19',
@@ -424,8 +425,8 @@ export const projects: Project[] = [
       en: 'Mexican Actuarial Suite - Python',
     },
     description: {
-      es: 'Calcular primas, reservas y capital regulatorio en Python suele implicar reescribir las mismas funciones para cada producto nuevo. Esta librería estandariza ese ciclo en 6 módulos reutilizables: tablas EMSSA-09, primas de vida, reservas técnicas, reaseguro, requerimiento de capital bajo LISF y reportes CNSF. Código abierto, listo para extenderse a nuevos productos o integrarse en proyectos más complejos.',
-      en: 'Calculating premiums, reserves, and regulatory capital in Python usually means rewriting the same functions for every new product. This library standardizes that cycle into 6 reusable modules: EMSSA-09 tables, life premiums, technical reserves, reinsurance, LISF capital requirements, and CNSF reports. Open code, ready to extend to new products or plug into larger projects.',
+      es: 'El ciclo operativo de una aseguradora mexicana se fragmenta entre hojas de cálculo que no se comunican. Esta librería unifica tarificación, reservas, reaseguro y cumplimiento regulatorio para cuatro ramos (vida, daños, salud, pensiones) con validación Pydantic y precisión Decimal. Expuesta como API REST y con ejemplos interactivos, sirve como base modular para construir sistemas actuariales más complejos.',
+      en: 'A Mexican insurer\'s operating cycle is fragmented across spreadsheets that don\'t talk to each other. This library unifies pricing, reserves, reinsurance, and regulatory compliance for four lines (life, property, health, pensions) with Pydantic validation and Decimal precision. Exposed as a REST API with interactive examples, it serves as a modular base for building more complex actuarial systems.',
     },
     url: 'https://suite-actuarial-d3qj5vwxtq-uc.a.run.app',
     repo: 'https://github.com/GonorAndres/Analisis_Seguros_Mexico',
@@ -463,8 +464,8 @@ export const projects: Project[] = [
     platform: 'GCP',
     category: 'actuarial',
     tags: {
-      es: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib'],
-      en: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib'],
+      es: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib', 'CONDUSEF', 'AMIS', 'Fraude', 'Autos'],
+      en: ['R', 'Shiny', 'GLM', 'IBNR', 'Monte Carlo', 'bslib', 'CONDUSEF', 'AMIS', 'Fraud', 'Auto'],
     },
     variant: 'wide',
     screenshot: '/screenshots/cartera-autos.png',

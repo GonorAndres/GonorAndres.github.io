@@ -65,4 +65,6 @@ La diferencia práctica entre Chain Ladder y Bornhuetter-Ferguson emerge en año
 
 Una limitación crítica: los datos son completamente sintéticos. Las correlaciones entre variables—por ejemplo, entre zona geográfica y tipo de vehículo—son por diseño, no descubiertas. Un conjunto de datos real de AMIS o CONDUSEF revelaría patrones e interacciones que no existen en datos generados. El siguiente paso sería obtener datasets públicos de CONDUSEF o negociar un acuerdo de compartir datos con una aseguradora real para reentrenar los GLMs en la realidad del mercado.
 
-La aplicación está desplegada en <a href="https://cartera-autos-451451662791.us-central1.run.app" target="_blank" rel="noopener">Google Cloud Run</a> y el código fuente está en <a href="https://github.com/GonorAndres/CarteraSeguroAutos" target="_blank" rel="noopener">GitHub</a>.
+<img src="/screenshots/cartera-autos.png" alt="Dashboard ejecutivo de la Plataforma de Siniestralidad Auto mostrando KPIs, distribución de siniestros y tendencia mensual" style="max-width: 100%; border: 1px solid #d4d4d4; border-radius: 4px; margin: 1rem 0;" />
+
+La aplicación está desplegada en <a href="https://cartera-autos-451451662791.us-central1.run.app" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a> y el código fuente está en <a href="https://github.com/GonorAndres/CarteraSeguroAutos" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a>.

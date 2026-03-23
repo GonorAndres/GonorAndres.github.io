@@ -82,6 +82,11 @@ The version and creation date are displayed on individual note pages (`/notes/[s
 - Professional but accessible -- imagine the reader is a hiring manager at an insurance company or consultancy who has 2 minutes
 - Technical depth is good but must serve a point, not just demonstrate you can do math
 - Every PDF or document linked should have a 2-3 sentence description explaining what it demonstrates and what skills it shows
+- **Blog post descriptions: problem, approach, implication**: The `description` field in blog frontmatter follows three beats: (1) the real-world problem, (2) the key approach with only the most important technical terms, (3) what that approach makes possible. Present tense. Don't list every tool or technique; name only the ones that matter most and explain what they enable. Save raw numbers and full stack details for the post body.
+  - Wrong: "This post explains why RAG is the right approach for regulatory documents."
+  - Wrong (too many technical terms): "...FTS5 con BM25 ponderado, grafo de referencias cruzadas, palabras clave enriquecidas por pipeline Sonnet/Opus, backend FastAPI en GCP..."
+  - Wrong (LinkedIn-style hook): "Over a thousand articles. Two laws. One Ctrl+F that fails you when it matters most. This project builds the search infrastructure Mexican actuarial regulation needed." Avoid punchy, inspirational, or engagement-bait phrasing.
+  - Right: "Interpretar la LISF y la CUSF exige navegar entre artículos que se referencian mutuamente entre leyes. Este agente usa RAG para indexar cada artículo con un grafo de referencias cruzadas, eliminando las alucinaciones de citas y permitiendo que el modelo razone solo sobre texto real de la ley. El resultado es un asistente que amplifica la memoria del actuario sin sustituir su criterio."
 
 ## Blog Posts from Academic Work
 
