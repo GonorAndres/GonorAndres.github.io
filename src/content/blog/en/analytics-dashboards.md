@@ -7,7 +7,7 @@ lang: "en"
 tags: ["React", "Next.js", "Recharts", "dashboards", "data-analytics", "Airbnb", "Olist"]
 ---
 
-> **Note:** This post is a legacy version focused on a single project. For the complete and updated data analyst portfolio, see [Data Analyst Portfolio: 7 End-to-End Projects](/en/blog/data-analyst-portfolio).
+> **Note:** This project is part of the [Data Analyst Portfolio: 7 End-to-End Projects](/en/blog/data-analyst-portfolio). Here you will find the complete analysis for this particular project.
 
 Power BI is excellent at what it does. Drag a field onto a canvas, choose a chart type, connect to a live data source, publish to a workspace, and someone non-technical can have a working report in an afternoon. That is a genuine advantage, and I am not going to pretend otherwise.
 

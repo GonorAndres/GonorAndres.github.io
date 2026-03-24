@@ -27,9 +27,9 @@ Posts that do not exist yet. But we need to create after proyect goes to golden 
 Posts that exist but need content alignment or structural fixes.
 
 - [ ] `proust-attention-machine.md` — accent fixes done 2026-03-15; review framing and whether it reflects your actual perspective on what the project taught you about LLMs
-- [ ] `soa-probability-foundations.md` — accent fixes done; check tone is professional insight, not study guide
-- [ ] `insurance-claims-dashboard.md` — currently a stub that redirects to `data-analyst-portfolio`; decide: expand into standalone post or remove and redirect
-- [ ] `analytics-dashboards.md` — same situation as above
+- [x] `soa-probability-foundations.md` — DONE 2026-03-24: removed self-referential exam reflections, kept study guide purpose
+- [x] `insurance-claims-dashboard.md` — DONE 2026-03-24: full standalone post, redirect banner replaced with cross-reference to data-analyst-portfolio
+- [x] `analytics-dashboards.md` — DONE 2026-03-24: same, redirect banner replaced with cross-reference
 
 ---
 
