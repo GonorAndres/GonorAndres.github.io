@@ -11,11 +11,11 @@ Tasks are organized by type — a project may appear in multiple lists.
 
 Posts that do not exist yet. But we need to create after proyect goes to golden phase or completed enteirely.
 
-- [ ] `actuarial-suite` — Suite Actuarial Mexicana (Python, LISF, CNSF, tablas EMSSA-09)
+- [x] `actuarial-suite` — DONE: blog post `suite-actuarial.md` (ES+EN) published
 - [x] `cartera-autos` — Cartera de Seguro de Autos (R, Shiny, AMIS, siniestralidad sintética) — DONE 2026-03-19: blog posts (ES+EN), project card updated, deployed to Cloud Run
 - [x] `lisf-agent` — DONE: deployed on Cloud Run, blog post `regulation-agent-rag.md` (ES+EN) published
 - [x] `pension-simulator` — DONE: blog post `pension-simulator.md` (ES+EN) published
-- [ ] `flight-analytics` — Análisis de vuelos SQL (PostgreSQL, 2.5GB, aerolíneas rusas)
+- [x] `flight-analytics` — DONE: blog post `flight-analytics-pg-bq.md` (ES+EN) published
 - [ ] `eruption-forecasting` — Pronóstico de erupciones volcánicas (ARIMA, séries de tiempo, UNAM)
 - [ ] `b-tree-explorer` (implementation) — concept post `b-trees-optimization.md` exists; this one is about the Rust + WASM build itself
 - [x] `insurance-pricing-ml` — DONE: project card exists in projects.ts (slug `insurance-pricing-ml`, tier 2) with blogSlug `actuarial-ml-pricing`
@@ -35,16 +35,16 @@ Posts that exist but need content alignment or structural fixes.
 
 ## Screenshots to Add
 
-Files go in `public/screenshots/`. None of these exist yet.
+Files go in `public/screenshots/`.
 
-- [ ] `actuarial-suite.png`
-- [ ] `cartera-autos.png` — Shiny dashboard Resumen tab (deployed on Cloud Run, needs screenshot capture)
-- [ ] `proust-attention.png` — generated text sample or training loss curve
-- [ ] `pension-simulator.png` — Shiny app UI
-- [ ] `lisf-agent.png` — chatbot answering a LISF question (do after URL is live)
-- [ ] `b-tree-explorer.png` — WASM visualization running in browser
-- [ ] `flight-analytics.png` — SQL results or delay analysis chart
-- [ ] `eruption-forecasting.png` — ARIMA forecast plot
+- [x] `actuarial-suite.png` — exists (176 KB)
+- [x] `cartera-autos.png` — exists (161 KB)
+- [ ] `proust-attention.png` — MISSING: no screenshot, no `screenshot` field in projects.ts
+- [x] `pension-simulator.png` — exists (231 KB)
+- [x] `lisf-agent.png` — exists (76 KB)
+- [ ] `b-tree-explorer.png` — MISSING: no screenshot, no `screenshot` field in projects.ts
+- [x] `flight-analytics-pg-bq.png` — exists (101 KB)
+- [ ] `eruption-forecasting.png` — MISSING: no screenshot, no `screenshot` field in projects.ts
 
 ---
 
@@ -53,8 +53,8 @@ Files go in `public/screenshots/`. None of these exist yet.
 Confirmed broken or placeholder URLs in `src/data/projects.ts`.
 
 - [x] `lisf-agent` — DONE: URL updated to `https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/`
-- [ ] `insurance-claims` — URL points to blog post; update to deployed dashboard URL when live
-- [ ] `analytics-dashboards` — same; URL points to blog post; update when Vercel deploy is live
+- [ ] `insurance-claims` — no project card in projects.ts; only blog post exists. Decide: add project card or remove from to-do
+- [ ] `analytics-dashboards` — same: no project card in projects.ts; only blog post exists. Decide: add project card or remove from to-do
 
 ---
 
@@ -76,11 +76,11 @@ For context when writing posts or deciding priority.
 
 | Project | Dev complete? | Deployed? | Blocker |
 |---------|--------------|-----------|---------|
-| `actuarial-suite` | Check repo (6 phases planned) | No | Blog post, screenshot |
-| `cartera-autos` | Yes (R + Shiny) | Yes (Cloud Run) | Screenshot pending |
-| `proust-attention` | Yes | No (GitHub only) | Screenshot |
-| `pension-simulator` | Yes (R Shiny) | Yes (Cloud Run) | Screenshot pending |
-| `lisf-agent` | Yes | Yes (Cloud Run) | Screenshot pending |
-| `b-tree-explorer` | Partial (WASM status unknown) | No | Screenshot, optional impl blog post |
-| `flight-analytics` | Yes (SQL analysis) | No | Blog post, screenshot |
-| `eruption-forecasting` | Yes (Python notebooks) | No | Blog post, screenshot |
+| `actuarial-suite` | Yes | No | Done: blog + screenshot exist |
+| `cartera-autos` | Yes (R + Shiny) | Yes (Cloud Run) | Done: blog + screenshot exist |
+| `proust-attention` | Yes | No (GitHub only) | Screenshot missing, no `screenshot` field in projects.ts |
+| `pension-simulator` | Yes (R Shiny) | Yes (Cloud Run) | Done: blog + screenshot exist |
+| `lisf-agent` | Yes | Yes (Cloud Run) | Done: blog + screenshot exist |
+| `b-tree-explorer` | Yes (WASM build in `/home/andtega349/b-trees/pkg/`) | No | Screenshot missing, optional impl blog post |
+| `flight-analytics` | Yes (SQL analysis) | No | Done: blog + screenshot exist |
+| `eruption-forecasting` | Yes (Python notebooks) | No | Blog post missing, screenshot missing |
