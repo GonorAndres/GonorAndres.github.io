@@ -22,6 +22,12 @@ skills-info/
 # Temporary working files
 temp/
 
+# Playwright MCP
+.playwright-mcp/
+
+# Design review screenshots (repo root only, not public/screenshots/)
+/*.png
+
 # Claude ephemeral (config files ARE tracked)
 .claude/cache/
 .claude/debug/
