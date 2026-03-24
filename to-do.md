@@ -53,20 +53,21 @@ Files go in `public/screenshots/`.
 Confirmed broken or placeholder URLs in `src/data/projects.ts`.
 
 - [x] `lisf-agent` — DONE: URL updated to `https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/`
-- [ ] `insurance-claims` — no project card in projects.ts; only blog post exists. Decide: add project card or remove from to-do
-- [ ] `analytics-dashboards` — same: no project card in projects.ts; only blog post exists. Decide: add project card or remove from to-do
+- [x] `insurance-claims` — resolved: no project card needed, blog post belongs under `data-analyst-portfolio` project card
+- [x] `analytics-dashboards` — resolved: same, blog post belongs under `data-analyst-portfolio` project card
 
 ---
 
-## Links to Audit
+## Links to Audit (verified 2026-03-24 via HTTP + Playwright MCP)
 
-Not confirmed broken — need manual verification.
-
-- [ ] Drive PDF links in `src/data/notes.ts` — open each and confirm file is publicly shared (not restricted)
-- [ ] SOA study material Drive links in `src/content/blog/es/soa-*.md` and matching EN files
-- [ ] All `relatedTo` slugs in `src/data/projects.ts` — verify each slug exists as an actual project entry
-- [ ] External GitHub repo links — verify repos are public and not renamed
-- [ ] Internal blog cross-links — `[text](/blog/slug)` references throughout blog posts
+- [x] Drive PDF links in `src/data/notes.ts` — all 11 links return 200 OK, publicly accessible
+- [x] SOA study material Drive links in `src/content/blog/es/soa-*.md` — all 4 additional PDFs return 200 OK
+- [x] All `relatedTo` slugs in `src/data/projects.ts` — all 56 cross-references point to existing project slugs
+- [ ] External GitHub repo links — 4 repos are PRIVATE (return 404 to public): `proust-attention`, `b-trees`, `forecasting`, `learning-posgre`. Decide: make public or remove links from project cards.
+- [x] Internal blog cross-links — all 14 cross-links verified on local preview (200 OK ES+EN)
+- [x] Drive folder links (6 project folders) — all return 200 OK
+- [x] Live app URLs — SIMA, GMM Explorer, Data Analyst, LISF Agent, Pension Simulator all return 200 OK
+- [x] Colab notebook (euler-method) — returns 200 OK
 
 ---
 
