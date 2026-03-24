@@ -1,15 +1,13 @@
 ---
 title: "Why Insurance Works: The Central Limit Theorem and the Power of Aggregating Risk"
-description: "Study guide for the third Exam P topic: multivariate variables, Eve's Law, and the CLT. The most manageable section of the exam, which does not make it trivial."
+description: "Study guide for the third Exam P topic: multivariate variables, Eve's Law, and the CLT. The concepts that explain why insurance works as a business."
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "en"
 tags: ["CLT", "exam-P", "SOA", "aggregation", "risk"]
 ---
 
-Of the three Exam P topics, this is the most manageable. Not because multivariate variables and the CLT are easy concepts (they are not), but because the SOA keeps the evaluation within reasonable bounds. Most problems involve normal variables or countable discrete ones, and the patterns repeat enough that deliberate practice pays off quickly.
-
-Being honest, this is not the section that excites me most in terms of intellectual challenge. But it is on the exam and it is not trivial. The strategy here is pragmatic: practice until edge cases do not surprise you, handle numerical tables with confidence, and keep the explicit formulas in your head (the lognormal, for example, has parameterizations that are easy to confuse).
+Of the three Exam P topics, this is the one that connects most directly to how an insurer actually operates. Multivariate variables and the CLT are not easy concepts, but the SOA keeps the evaluation within reasonable bounds. Most problems involve normal variables or countable discrete ones, and the patterns repeat enough that deliberate practice pays off quickly.
 
 This post covers the three pieces the SOA evaluates in this block: covariance and dependence, Eve's Law for decomposing variability, and the Central Limit Theorem as the mathematical justification for why insurance works.
 

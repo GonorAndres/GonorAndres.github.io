@@ -12,7 +12,7 @@ tags: ["portafolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "P
 
 El trabajo de un analista de datos no es producir gráficas. Es convertir una pregunta de negocio en una decisión informada. Cada proyecto de este portafolio sigue ese arco completo: un stakeholder tiene una pregunta, los datos existen en algún formato inconveniente, el análisis produce un hallazgo, y el hallazgo se entrega en un formato que la audiencia puede usar para actuar.
 
-Construí estos 7 proyectos durante mi transición de actuaría a roles híbridos de análisis de datos. La formación actuarial aporta rigor estadístico (Kaplan-Meier, distribuciones de severidad, métodos de reserva) pero los roles de DA exigen herramientas diferentes: SQL fluido, dashboards interactivos, storytelling para audiencias no técnicas, y la capacidad de moverse entre dominios sin perder profundidad. Estos proyectos demuestran exactamente eso.
+Estos 7 proyectos cubren el arco completo del análisis de datos: desde la pregunta de negocio hasta el insight accionable, aplicado a dominios que van desde e-commerce hasta seguros. La formación actuarial aporta rigor estadístico (Kaplan-Meier, distribuciones de severidad, métodos de reserva) y los roles de DA exigen herramientas complementarias: SQL fluido, dashboards interactivos, storytelling para audiencias no técnicas, y la capacidad de moverse entre dominios sin perder profundidad.
 
 El hilo conductor es metodológico: ETL cuidadoso, análisis exploratorio antes de cualquier conclusión, segmentación como herramienta recurrente, y entrega en el formato que el stakeholder necesita, ya sea un dashboard interactivo, un PDF automatizado o una app de Streamlit.
 

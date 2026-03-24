@@ -1,13 +1,13 @@
 ---
 title: "Random Variables in Insurance: Deductibles, Limits, and the Math of Paying Claims"
-description: "Study guide for the heaviest topic on Exam P: random variables, distributions, and payment modifications. The topic I feel most comfortable with, and where mechanical errors hurt more than conceptual ones."
+description: "Study guide for the heaviest topic on Exam P: random variables, distributions, and payment modifications. The topic where mechanical errors hurt more than conceptual ones."
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "en"
 tags: ["random-variables", "exam-P", "SOA", "insurance", "distributions"]
 ---
 
-Of the three Exam P topics, this is the one that feels most natural. Random variables were the daily bread of my actuarial degree: distributions, expected values, moment generating functions. None of this is new. What changes is the angle: the SOA does not ask whether you can integrate a PDF, it asks whether you can think in terms of policies, deductibles, and losses.
+Of the three Exam P topics, this is the densest. Random variables are the daily bread of actuarial science: distributions, expected values, moment generating functions. What changes is the angle: the SOA does not ask whether you can integrate a PDF, it asks whether you can think in terms of policies, deductibles, and losses.
 
 The hard part of this section is not conceptual. It is mechanical. The tricky thing is choosing the right approach: condition or go direct, use the CDF or a transformation, survival integral or closed-form formula. And then there are the execution errors: plugging the wrong number into the calculator, forgetting to use the complement, confusing parameters between distributions. You lose points not because you do not understand, but because you slip up on step 4 of 7.
 
@@ -41,7 +41,7 @@ The normal, incidentally, almost never models losses directly. Losses are positi
 
 Everything discussed so far could appear in a university probability course. Random variables, named distributions, distribution functions, expected values. What follows is the territory that separates Exam P from a university exam: policy payment modifications.
 
-This is where something clicked for me. Throughout my degree I handled deductibles as R functions or Excel columns. I knew how to *use* the formula, but I had never built it from scratch. Studying for the P, I defined a deductible analytically for the first time, derived the survival integral, and understood why E[(X - d)+] takes that form. I went from "I know how to calculate it" to "I know why it works that way." That difference shows when the exam changes the scenario and the memorized formula no longer applies directly.
+Defining a deductible analytically, deriving the survival integral, and understanding why E[(X - d)+] takes that form is the difference between applying formulas mechanically and knowing when to abandon them when the scenario changes. It is the difference between "I know how to calculate it" and "I know why it works that way."
 
 In practice, the insurer almost never pays X, the full loss amount. They pay a function of X that depends on the policy structure: deductible, limit, coinsurance.
 

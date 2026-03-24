@@ -12,7 +12,7 @@ tags: ["portfolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "Po
 
 A data analyst's job is not to produce charts. It is to convert a business question into an informed decision. Every project in this portfolio follows that full arc: a stakeholder has a question, the data exists in some inconvenient format, the analysis produces a finding, and that finding gets delivered in a format the audience can act on.
 
-I built these 7 projects during my transition from actuarial science to hybrid data analyst roles. Actuarial training provides statistical rigor (Kaplan-Meier, severity distributions, reserving methods), but DA roles demand different tools: fluent SQL, interactive dashboards, storytelling for non-technical audiences, and the ability to move across domains without losing depth. These projects demonstrate exactly that.
+These 7 projects cover the full arc of data analysis: from business question to actionable insight, applied to domains ranging from e-commerce to insurance. Actuarial training provides statistical rigor (Kaplan-Meier, severity distributions, reserving methods), and DA roles demand complementary tools: fluent SQL, interactive dashboards, storytelling for non-technical audiences, and the ability to move across domains without losing depth.
 
 The connecting thread is methodological: careful ETL, exploratory analysis before any conclusion, segmentation as a recurring tool, and delivery in whatever format the stakeholder needs, whether that is an interactive dashboard, an automated PDF, or a Streamlit app.
 

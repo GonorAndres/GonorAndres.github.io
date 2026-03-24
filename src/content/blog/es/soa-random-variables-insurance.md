@@ -1,13 +1,13 @@
 ---
 title: "Variables Aleatorias en el Mundo del Seguro: Deducibles, Límites y la Matemática de Pagar Siniestros"
-description: "Guía de estudio para el tema más pesado del Examen P: variables aleatorias, distribuciones y modificaciones de pago. El tema donde más cómodo me siento, y donde los errores mecánicos duelen más que los conceptuales."
+description: "Guía de estudio para el tema más pesado del Examen P: variables aleatorias, distribuciones y modificaciones de pago. El tema donde los errores mecánicos duelen más que los conceptuales."
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "es"
 tags: ["variables-aleatorias", "examen-P", "SOA", "seguros", "distribuciones"]
 ---
 
-De los tres temas del Examen P, este es el que me resulta más natural. Variables aleatorias fueron el pan de cada día durante toda la carrera de actuaría: distribuciones, valores esperados, funciones generadoras de momentos. No es un tema nuevo. Lo que cambia es el ángulo: la SOA no pregunta si sabes integrar una PDF, pregunta si puedes pensar en términos de póliza, deducible y pérdida.
+De los tres temas del Examen P, este es el más denso. Variables aleatorias son el pan de cada día de la actuaría: distribuciones, valores esperados, funciones generadoras de momentos. Lo que cambia es el ángulo: la SOA no pregunta si sabes integrar una PDF, pregunta si puedes pensar en términos de póliza, deducible y pérdida.
 
 Lo complicado de esta sección no es conceptual. Es mecánico. La parte tramposa es elegir el enfoque correcto: condicionar o ir directo, usar la CDF o una transformación, la integral de supervivencia o la fórmula cerrada. Y después están los errores de ejecución: meter un número mal en la calculadora, olvidar usar el complemento, confundir parámetros entre distribuciones. Pierdes puntos no porque no entiendas, sino porque te equivocas en el paso 4 de 7.
 
@@ -41,7 +41,7 @@ La normal, por cierto, casi nunca modela pérdidas directamente. Las pérdidas s
 
 Hasta aquí, todo lo anterior se ve en la universidad. Variables aleatorias, distribuciones con nombre, funciones de distribución, valores esperados. Lo que sigue es el territorio que separa al Examen P de un examen universitario: las modificaciones de pago por póliza.
 
-Y aquí es donde me pasó algo interesante. Durante la carrera manejé deducibles como funciones en R o columnas en Excel; sabía *usar* la fórmula, pero no la había construido desde cero. Estudiando para el P, por primera vez definí un deducible analíticamente, derivé la integral de supervivencia, y entendí por qué E[(X - d)+] tiene esa forma. Pasé de "sé cómo calcularlo" a "sé por qué funciona así." Esa diferencia se nota cuando el examen cambia el escenario y la fórmula de memoria ya no aplica directamente.
+Definir un deducible analíticamente, derivar la integral de supervivencia, y entender por qué E[(X - d)+] tiene esa forma marca la diferencia entre aplicar fórmulas mecánicamente y saber cuándo abandonarlas cuando el escenario cambia. Es la diferencia entre "sé cómo calcularlo" y "sé por qué funciona así."
 
 En el mundo real, la aseguradora casi nunca paga X, es decir, la pérdida completa. Paga una función de X que depende de la estructura de la póliza: deducible, límite, coaseguro.
 

@@ -7,11 +7,11 @@ lang: "es"
 tags: ["probabilidad", "examen-P", "SOA", "Bayes", "riesgo"]
 ---
 
-El temario del SOA-P se ve familiar. Los temas llegan a la mente y los entiendes abstractamente (axiomas, probabilidad condicional, Bayes, todo eso ya lo vi en la carrera). Pero cuando empecé a resolver ejercicios la sensación cambió por completo. Se siente más como teoría de conjuntos que como teoría de probabilidad. La mayoría de esta sección usa propiedades de sigma-álgebras de manera implícita. Claro, alguien puede resolver todo correctamente sin saber que es una "medida", pero me sorprendió como cambia la perspectiva cuando lo ves desde ahí.
+El temario del SOA-P se ve familiar. Los temas llegan a la mente y los entiendes abstractamente (axiomas, probabilidad condicional, Bayes, todo eso ya lo vi en la carrera). Pero al resolver ejercicios la sensación cambia por completo. Se siente más como teoría de conjuntos que como teoría de probabilidad. La mayoría de esta sección usa propiedades de sigma-álgebras de manera implícita. Alguien puede resolver todo correctamente sin saber que es una "medida", pero la perspectiva cambia cuando lo ves desde ahí.
 
-Y la dificultad no está en entender los conceptos. Está en resolver de manera eficiente y limpia. Al principio intentaba ir lo más rápido posible, pero mi hoja terminaba sin organización y no encontraba errores sutiles que había cometido tres pasos atrás. Después intenté el enfoque contrario: transcribir a mano el enunciado completo, ir con calma, paso por paso. Pero así resolvía 30 preguntas en 5 horas, más que el máximo que establece la SOA para el examen completo. El balance entre velocidad y claridad es parte del aprendizaje, no solo la matemática.
+Y la dificultad no está en entender los conceptos. Está en resolver de manera eficiente y limpia. El balance entre velocidad y claridad es parte del aprendizaje, no solo la matemática.
 
-Este post es una guía de estudio. Comparto las tres ideas fundamentales de esta sección, por qué la SOA las pone primero, y cómo se conectan con el trabajo actuarial real.
+Este post es una guía de estudio. Cubre las tres ideas fundamentales de esta sección, por qué la SOA las pone primero, y cómo se conectan con el trabajo actuarial real.
 
 ## El lenguaje de la incertidumbre
 
@@ -51,7 +51,7 @@ La SOA pone probabilidad general como Tema 1, entre 25% y 30% del peso del exame
 
 Esta sección es interesante y al final bastante compacta. Mi meta es hacer 300 ejercicios este mes, suficientes para que nunca más tenga que *pensar* en cómo resolver estos problemas. Que mi pensamiento automático sea suficiente, que la resolución fluya sin esfuerzo consciente. No porque los problemas sean triviales, sino porque con suficiente práctica deliberada la mecánica se vuelve instintiva y puedo reservar la energía mental para los problemas que realmente la necesitan.
 
-En mi portafolio, estas ideas aparecen en lugares concretos. El proyecto de pruebas A/B usa inferencia bayesiana para decidir si una variante es mejor que otra, misma lógica de prior, verosimilitud y posterior. El modelo de riesgo crediticio con GLM estima probabilidades condicionales de incumplimiento dado un perfil financiero.
+Estas ideas aparecen en problemas concretos. La inferencia bayesiana decide si una variante es mejor que otra en pruebas A/B: misma lógica de prior, verosimilitud y posterior. Un modelo de riesgo crediticio con GLM estima probabilidades condicionales de incumplimiento dado un perfil financiero.
 
 ## Material de estudio
 

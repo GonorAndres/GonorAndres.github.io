@@ -7,7 +7,7 @@ lang: "es"
 tags: ["reservas", "chain-ladder", "BF", "IBNR", "P&C", "dashboard", "Python", "SQL"]
 ---
 
-> **Nota:** Este post es una versión anterior centrada en un solo proyecto. Para la version completa y actualizada del portafolio de analista de datos, consulta [Portafolio de Analista de Datos: 7 Proyectos End-to-End](/blog/data-analyst-portfolio).
+> **Nota:** Este proyecto es parte del [Portafolio de Analista de Datos: 7 Proyectos End-to-End](/blog/data-analyst-portfolio). Aquí se presenta el análisis completo de este proyecto en particular.
 
 Todo CFO de una aseguradora tiene la misma pregunta debajo de la superficie en cada cierre contable: ¿estamos reservando suficiente? No es una pregunta filosófica. Es operativa. Si las reservas son insuficientes, el estado de resultados muestra utilidades que no existen, se distribuyen dividendos que son en realidad pasivos diferidos, y cuando los siniestros tardíos finalmente se liquidan, el balance revienta. Si las reservas son excesivas, el capital queda atrapado sin generar rendimiento, los ratios de solvencia parecen robustos cuando en realidad hay ineficiencia operativa. El actuario de reservas vive en ese espacio: estimar, con la información disponible hoy, cuánto va a costar en el futuro una cartera de siniestros que todavía no se ha reportado del todo.
 

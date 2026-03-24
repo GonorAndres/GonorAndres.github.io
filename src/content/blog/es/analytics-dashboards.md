@@ -7,7 +7,7 @@ lang: "es"
 tags: ["React", "Next.js", "Recharts", "dashboards", "data-analytics", "Airbnb", "Olist"]
 ---
 
-> **Nota:** Este post es una versión anterior centrada en un solo proyecto. Para la version completa y actualizada del portafolio de analista de datos, consulta [Portafolio de Analista de Datos: 7 Proyectos End-to-End](/blog/data-analyst-portfolio).
+> **Nota:** Este proyecto es parte del [Portafolio de Analista de Datos: 7 Proyectos End-to-End](/blog/data-analyst-portfolio). Aquí se presenta el análisis completo de este proyecto en particular.
 
 Power BI y Tableau existen por una razón válida: permiten a un analista sin experiencia en frontend construir un reporte funcional en horas. Para exploración ad hoc, para stakeholders internos que necesitan filtros básicos, para el primer borrador de un análisis, son herramientas razonables. El problema aparece cuando ese borrador tiene que convertirse en un producto. Cuando el reporte tiene que ser responsive en móvil. Cuando el modo oscuro es un requisito. Cuando la interacción entre gráficas necesita ser más rica que un simple filtro de segmento. Cuando el diseñador tiene un sistema tipográfico que no encaja en las plantillas de la herramienta. En ese momento, las herramientas drag-and-drop muestran sus límites estructurales.
 
