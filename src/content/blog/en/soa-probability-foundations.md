@@ -51,7 +51,7 @@ The SOA places general probability as Topic 1 (between 25% and 30% of the exam w
 
 This section is interesting and ultimately quite compact. My goal is to do 300 exercises this month, enough that I never have to *think* about how to solve these problems again. So that automatic thinking kicks in, so resolution flows without conscious effort. Not because the problems are trivial, but because with enough deliberate practice the mechanics become instinctive and I can save mental energy for the problems that actually need it.
 
-In my portfolio, these ideas show up in concrete places. The A/B testing project uses Bayesian inference to decide whether one variant outperforms another, the same logic of prior, likelihood, and posterior. The credit risk model with GLMs estimates conditional default probabilities given a financial profile.
+These ideas show up in concrete problems. Bayesian inference decides whether one variant outperforms another in A/B testing: the same logic of prior, likelihood, and posterior. A credit risk model with GLMs estimates conditional default probabilities given a financial profile.
 
 ## Study materials
 

@@ -51,7 +51,7 @@ La SOA pone probabilidad general como Tema 1, entre 25% y 30% del peso del exame
 
 Esta sección es interesante y al final bastante compacta. Mi meta es hacer 300 ejercicios este mes, suficientes para que nunca más tenga que *pensar* en cómo resolver estos problemas. Que mi pensamiento automático sea suficiente, que la resolución fluya sin esfuerzo consciente. No porque los problemas sean triviales, sino porque con suficiente práctica deliberada la mecánica se vuelve instintiva y puedo reservar la energía mental para los problemas que realmente la necesitan.
 
-En mi portafolio, estas ideas aparecen en lugares concretos. El proyecto de pruebas A/B usa inferencia bayesiana para decidir si una variante es mejor que otra, misma lógica de prior, verosimilitud y posterior. El modelo de riesgo crediticio con GLM estima probabilidades condicionales de incumplimiento dado un perfil financiero.
+Estas ideas aparecen en problemas concretos. La inferencia bayesiana decide si una variante es mejor que otra en pruebas A/B: misma lógica de prior, verosimilitud y posterior. Un modelo de riesgo crediticio con GLM estima probabilidades condicionales de incumplimiento dado un perfil financiero.
 
 ## Material de estudio
 

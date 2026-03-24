@@ -41,7 +41,7 @@ La normal, por cierto, casi nunca modela pérdidas directamente. Las pérdidas s
 
 Hasta aquí, todo lo anterior se ve en la universidad. Variables aleatorias, distribuciones con nombre, funciones de distribución, valores esperados. Lo que sigue es el territorio que separa al Examen P de un examen universitario: las modificaciones de pago por póliza.
 
-Y aquí es donde me pasó algo interesante. Durante la carrera manejé deducibles como funciones en R o columnas en Excel; sabía *usar* la fórmula, pero no la había construido desde cero. Estudiando para el P, por primera vez definí un deducible analíticamente, derivé la integral de supervivencia, y entendí por qué E[(X - d)+] tiene esa forma. Pasé de "sé cómo calcularlo" a "sé por qué funciona así." Esa diferencia se nota cuando el examen cambia el escenario y la fórmula de memoria ya no aplica directamente.
+Definir un deducible analíticamente, derivar la integral de supervivencia, y entender por qué E[(X - d)+] tiene esa forma marca la diferencia entre aplicar fórmulas mecánicamente y saber cuándo abandonarlas cuando el escenario cambia. Es la diferencia entre "sé cómo calcularlo" y "sé por qué funciona así."
 
 En el mundo real, la aseguradora casi nunca paga X, es decir, la pérdida completa. Paga una función de X que depende de la estructura de la póliza: deducible, límite, coaseguro.
 

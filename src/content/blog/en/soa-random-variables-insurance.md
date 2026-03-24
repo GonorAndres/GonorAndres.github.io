@@ -41,7 +41,7 @@ The normal, incidentally, almost never models losses directly. Losses are positi
 
 Everything discussed so far could appear in a university probability course. Random variables, named distributions, distribution functions, expected values. What follows is the territory that separates Exam P from a university exam: policy payment modifications.
 
-This is where something clicked for me. Throughout my degree I handled deductibles as R functions or Excel columns. I knew how to *use* the formula, but I had never built it from scratch. Studying for the P, I defined a deductible analytically for the first time, derived the survival integral, and understood why E[(X - d)+] takes that form. I went from "I know how to calculate it" to "I know why it works that way." That difference shows when the exam changes the scenario and the memorized formula no longer applies directly.
+Defining a deductible analytically, deriving the survival integral, and understanding why E[(X - d)+] takes that form is the difference between applying formulas mechanically and knowing when to abandon them when the scenario changes. It is the difference between "I know how to calculate it" and "I know why it works that way."
 
 In practice, the insurer almost never pays X, the full loss amount. They pay a function of X that depends on the policy structure: deductible, limit, coinsurance.
 
