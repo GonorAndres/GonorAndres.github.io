@@ -1,6 +1,6 @@
 # Portfolio To-Do
 
-Last updated: 2026-03-19
+Last updated: 2026-03-24
 
 Read this at the start of every session. Update it when tasks are completed or new ones are discovered.
 Tasks are organized by type — a project may appear in multiple lists.
@@ -13,12 +13,12 @@ Posts that do not exist yet. But we need to create after proyect goes to golden 
 
 - [ ] `actuarial-suite` — Suite Actuarial Mexicana (Python, LISF, CNSF, tablas EMSSA-09)
 - [x] `cartera-autos` — Cartera de Seguro de Autos (R, Shiny, AMIS, siniestralidad sintética) — DONE 2026-03-19: blog posts (ES+EN), project card updated, deployed to Cloud Run
-- [ ] `lisf-agent` — Agente LISF regulatorio (Claude SDK, FastAPI, GCP) — WAIT until public URL is live
-- [ ] `pension-simulator` — Simulador pensión IMSS + Fondo Bienestar (R Shiny, Ley 73/97)
+- [x] `lisf-agent` — DONE: deployed on Cloud Run, blog post `regulation-agent-rag.md` (ES+EN) published
+- [x] `pension-simulator` — DONE: blog post `pension-simulator.md` (ES+EN) published
 - [ ] `flight-analytics` — Análisis de vuelos SQL (PostgreSQL, 2.5GB, aerolíneas rusas)
 - [ ] `eruption-forecasting` — Pronóstico de erupciones volcánicas (ARIMA, séries de tiempo, UNAM)
 - [ ] `b-tree-explorer` (implementation) — concept post `b-trees-optimization.md` exists; this one is about the Rust + WASM build itself
-- [ ] `insurance-pricing-ml` project card — blog posts (ES + EN) exist since 2026-03-14 but the project card in `src/data/projects.ts` is still missing
+- [x] `insurance-pricing-ml` — DONE: project card exists in projects.ts (slug `insurance-pricing-ml`, tier 2) with blogSlug `actuarial-ml-pricing`
 
 ---
 
@@ -38,7 +38,7 @@ Posts that exist but need content alignment or structural fixes.
 Files go in `public/screenshots/`. None of these exist yet.
 
 - [ ] `actuarial-suite.png`
-- [ ] `cartera-autos.png` — Shiny dashboard Resumen tab (pending Cloud Run deploy + screenshot capture)
+- [ ] `cartera-autos.png` — Shiny dashboard Resumen tab (deployed on Cloud Run, needs screenshot capture)
 - [ ] `proust-attention.png` — generated text sample or training loss curve
 - [ ] `pension-simulator.png` — Shiny app UI
 - [ ] `lisf-agent.png` — chatbot answering a LISF question (do after URL is live)
@@ -52,7 +52,7 @@ Files go in `public/screenshots/`. None of these exist yet.
 
 Confirmed broken or placeholder URLs in `src/data/projects.ts`.
 
-- [ ] `lisf-agent` — URL is `#`; expose GCP VM port publicly then update
+- [x] `lisf-agent` — DONE: URL updated to `https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/`
 - [ ] `insurance-claims` — URL points to blog post; update to deployed dashboard URL when live
 - [ ] `analytics-dashboards` — same; URL points to blog post; update when Vercel deploy is live
 
@@ -79,8 +79,8 @@ For context when writing posts or deciding priority.
 | `actuarial-suite` | Check repo (6 phases planned) | No | Blog post, screenshot |
 | `cartera-autos` | Yes (R + Shiny) | Yes (Cloud Run) | Screenshot pending |
 | `proust-attention` | Yes | No (GitHub only) | Screenshot |
-| `pension-simulator` | Yes (R Shiny) | No | Blog post, screenshot |
-| `lisf-agent` | Yes | No (VM only, port closed) | Public URL, then blog post + screenshot |
+| `pension-simulator` | Yes (R Shiny) | Yes (Cloud Run) | Screenshot pending |
+| `lisf-agent` | Yes | Yes (Cloud Run) | Screenshot pending |
 | `b-tree-explorer` | Partial (WASM status unknown) | No | Screenshot, optional impl blog post |
 | `flight-analytics` | Yes (SQL analysis) | No | Blog post, screenshot |
 | `eruption-forecasting` | Yes (Python notebooks) | No | Blog post, screenshot |

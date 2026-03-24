@@ -12,7 +12,7 @@
 ## Session Start Checklist
 
 At the start of every session, read `to-do.md` in the repo root before proposing or starting any work.
-It tracks: missing blog posts, missing screenshots, broken/placeholder links, and development status for the 8 priority projects.
+It tracks: missing blog posts, missing screenshots, broken/placeholder links, and development status for priority projects.
 Update `to-do.md` when tasks are completed (check off items, add new ones as discovered).
 
 ## Core Narrative -- Emerges from the Work, Never Stated
