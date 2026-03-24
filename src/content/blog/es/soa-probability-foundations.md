@@ -7,11 +7,11 @@ lang: "es"
 tags: ["probabilidad", "examen-P", "SOA", "Bayes", "riesgo"]
 ---
 
-El temario del SOA-P se ve familiar. Los temas llegan a la mente y los entiendes abstractamente (axiomas, probabilidad condicional, Bayes, todo eso ya lo vi en la carrera). Pero cuando empecé a resolver ejercicios la sensación cambió por completo. Se siente más como teoría de conjuntos que como teoría de probabilidad. La mayoría de esta sección usa propiedades de sigma-álgebras de manera implícita. Claro, alguien puede resolver todo correctamente sin saber que es una "medida", pero me sorprendió como cambia la perspectiva cuando lo ves desde ahí.
+El temario del SOA-P se ve familiar. Los temas llegan a la mente y los entiendes abstractamente (axiomas, probabilidad condicional, Bayes, todo eso ya lo vi en la carrera). Pero al resolver ejercicios la sensación cambia por completo. Se siente más como teoría de conjuntos que como teoría de probabilidad. La mayoría de esta sección usa propiedades de sigma-álgebras de manera implícita. Alguien puede resolver todo correctamente sin saber que es una "medida", pero la perspectiva cambia cuando lo ves desde ahí.
 
-Y la dificultad no está en entender los conceptos. Está en resolver de manera eficiente y limpia. Al principio intentaba ir lo más rápido posible, pero mi hoja terminaba sin organización y no encontraba errores sutiles que había cometido tres pasos atrás. Después intenté el enfoque contrario: transcribir a mano el enunciado completo, ir con calma, paso por paso. Pero así resolvía 30 preguntas en 5 horas, más que el máximo que establece la SOA para el examen completo. El balance entre velocidad y claridad es parte del aprendizaje, no solo la matemática.
+Y la dificultad no está en entender los conceptos. Está en resolver de manera eficiente y limpia. El balance entre velocidad y claridad es parte del aprendizaje, no solo la matemática.
 
-Este post es una guía de estudio. Comparto las tres ideas fundamentales de esta sección, por qué la SOA las pone primero, y cómo se conectan con el trabajo actuarial real.
+Este post es una guía de estudio. Cubre las tres ideas fundamentales de esta sección, por qué la SOA las pone primero, y cómo se conectan con el trabajo actuarial real.
 
 ## El lenguaje de la incertidumbre
 

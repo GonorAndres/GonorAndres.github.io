@@ -1,13 +1,13 @@
 ---
 title: "Random Variables in Insurance: Deductibles, Limits, and the Math of Paying Claims"
-description: "Study guide for the heaviest topic on Exam P: random variables, distributions, and payment modifications. The topic I feel most comfortable with, and where mechanical errors hurt more than conceptual ones."
+description: "Study guide for the heaviest topic on Exam P: random variables, distributions, and payment modifications. The topic where mechanical errors hurt more than conceptual ones."
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "en"
 tags: ["random-variables", "exam-P", "SOA", "insurance", "distributions"]
 ---
 
-Of the three Exam P topics, this is the one that feels most natural. Random variables were the daily bread of my actuarial degree: distributions, expected values, moment generating functions. None of this is new. What changes is the angle: the SOA does not ask whether you can integrate a PDF, it asks whether you can think in terms of policies, deductibles, and losses.
+Of the three Exam P topics, this is the densest. Random variables are the daily bread of actuarial science: distributions, expected values, moment generating functions. What changes is the angle: the SOA does not ask whether you can integrate a PDF, it asks whether you can think in terms of policies, deductibles, and losses.
 
 The hard part of this section is not conceptual. It is mechanical. The tricky thing is choosing the right approach: condition or go direct, use the CDF or a transformation, survival integral or closed-form formula. And then there are the execution errors: plugging the wrong number into the calculator, forgetting to use the complement, confusing parameters between distributions. You lose points not because you do not understand, but because you slip up on step 4 of 7.
 

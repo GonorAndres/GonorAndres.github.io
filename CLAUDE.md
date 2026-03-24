@@ -15,6 +15,16 @@ At the start of every session, read `to-do.md` in the repo root before proposing
 It tracks: missing blog posts, missing screenshots, broken/placeholder links, and development status for the 8 priority projects.
 Update `to-do.md` when tasks are completed (check off items, add new ones as discovered).
 
+## Core Narrative -- Emerges from the Work, Never Stated
+
+The portfolio's message is never declared explicitly. No section, paragraph, or sentence should say "I'm learning," "I know what I don't know," or any variation of "although I lack X, I have Y." The reader arrives at their own conclusions by moving through the projects, posts, and notes.
+
+Guidelines for all content:
+- Show the work. The reader infers the rest.
+- The natural arc of honest technical writing is: real problem, approach, failure, understanding why it failed, retry with adjustments, satisfactory result. Not every post needs every step, but when the work involved iteration, show it. That's what makes the writing credible.
+- Different content carries different weight. Some posts (pension-simulator, SIMA, regulation-agent) naturally show the full arc. Others (math-visualizations, b-trees) are tools posts and don't need to carry narrative.
+- The blog is also a resource for others, not just a portfolio showcase. Study guides (SOA posts) help readers learn; that purpose is valid on its own.
+
 ## Content Tone -- NEVER Homework Style
 
 When writing or editing any content for this portfolio (blog posts, project descriptions, section text):

@@ -1,15 +1,13 @@
 ---
 title: "Por Qué Funciona el Seguro: El Teorema Central del Límite y la Magia de Agregar Riesgos"
-description: "Guía de estudio para el tercer tema del Examen P: variables multivariadas, la Ley de Eve y el TCL. La sección más manejable del examen, lo que no la hace trivial."
+description: "Guía de estudio para el tercer tema del Examen P: variables multivariadas, la Ley de Eve y el TCL. Los conceptos que explican por qué el seguro funciona como negocio."
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "es"
 tags: ["TCL", "examen-P", "SOA", "agregacion", "riesgo"]
 ---
 
-De los tres temas del Examen P, este es el más manejable. No porque variables multivariadas y el TCL sean conceptos fáciles (no lo son), sino porque la SOA mantiene la evaluación dentro de límites razonables. La mayoría de los problemas involucran variables normales o discretas contables, y los patrones se repiten lo suficiente para que la práctica deliberada rinda dividendos rápidos.
-
-Siendo honesto, no es la sección que más me entusiasma en términos de desafío intelectual. Pero está en el examen y no es trivial. La estrategia aquí es pragmática: practicar hasta que los casos borde no sorprendan, manejar tablas numéricas con confianza, y tener en la cabeza las fórmulas explícitas (la lognormal, por ejemplo, tiene parametrizaciones que se confunden fácilmente).
+De los tres temas del Examen P, este es el que conecta más directamente con la operación de una aseguradora. Variables multivariadas y el TCL no son conceptos fáciles, pero la SOA mantiene la evaluación dentro de límites razonables. La mayoría de los problemas involucran variables normales o discretas contables, y los patrones se repiten lo suficiente para que la práctica deliberada rinda dividendos rápidos.
 
 Este post cubre las tres piezas que la SOA evalúa en este bloque: covarianza y dependencia, la Ley de Eve para descomponer variabilidad, y el Teorema Central del Límite como justificación matemática de que el seguro funcione.
 
