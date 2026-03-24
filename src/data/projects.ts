@@ -601,7 +601,7 @@ export const projects: Project[] = [
       es: 'Pronosticar erupciones volcánicas es un problema de eventos raros con alta varianza y datos escasos. Este análisis ajusta modelos ARIMA y suavizamiento exponencial al catálogo histórico del Smithsonian GVP, evalúa los intervalos de predicción y documenta los límites inherentes de aplicar series de tiempo a fenómenos geofísicos extremos.',
       en: 'Forecasting volcanic eruptions is a rare-event problem with high variance and scarce data. This analysis fits ARIMA and exponential smoothing models to the Smithsonian GVP historical catalog, evaluates prediction intervals, and documents the inherent limits of applying time series methods to extreme geophysical events.',
     },
-    url: 'https://github.com/GonorAndres/forecasting',
+    url: '#', // repo is private; update when blog post is published or repo is made public
     platform: 'GitHub',
     category: 'applied-math',
     tags: {

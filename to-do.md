@@ -63,7 +63,7 @@ Confirmed broken or placeholder URLs in `src/data/projects.ts`.
 - [x] Drive PDF links in `src/data/notes.ts` — all 11 links return 200 OK, publicly accessible
 - [x] SOA study material Drive links in `src/content/blog/es/soa-*.md` — all 4 additional PDFs return 200 OK
 - [x] All `relatedTo` slugs in `src/data/projects.ts` — all 56 cross-references point to existing project slugs
-- [ ] External GitHub repo links — 4 repos are PRIVATE (return 404 to public): `proust-attention`, `b-trees`, `forecasting`, `learning-posgre`. Decide: make public or remove links from project cards.
+- [x] External GitHub repo links — 3 repos made public (proust-attention, b-trees, learning-posgre). `forecasting` stays private; URL set to `#` in projects.ts.
 - [x] Internal blog cross-links — all 14 cross-links verified on local preview (200 OK ES+EN)
 - [x] Drive folder links (6 project folders) — all return 200 OK
 - [x] Live app URLs — SIMA, GMM Explorer, Data Analyst, LISF Agent, Pension Simulator all return 200 OK
