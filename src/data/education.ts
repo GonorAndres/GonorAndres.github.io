@@ -42,7 +42,7 @@ export const certificates: Certificate[] = [
     issuer: 'Society of Actuaries',
     date: { es: 'Mar 2026', en: 'Mar 2026' },
     url: 'https://drive.google.com/file/d/1rt3emgBnPpQi7NiXkBQeA5WwJTV0JuAf/view?usp=drive_link',
-    note: { es: 'Resultado preliminar aprobado', en: 'Preliminary approved result' },
+    note: { es: 'Resultado preliminar aprobado, en espera de confirmación oficial', en: 'Preliminary pass, awaiting official confirmation' },
   },
   {
     name: 'Associate Data Analyst (SQL)',

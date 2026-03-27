@@ -16,6 +16,7 @@ interface ProjectData {
   relatedNames: string[];
   blogUrl?: string;
   tier: number;
+  status?: 'completed' | 'in-development';
   creation_date: string;
   last_modification_date?: string;
 }
@@ -29,6 +30,7 @@ interface Props {
     viewDetails: string;
     viewLive: string;
     seeAlso: string;
+    inDevelopment: string;
     showAll: string;
     showLess: string;
     gridView: string;
@@ -129,6 +131,11 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
           <span className="text-xs px-2 py-1 rounded-full bg-white/70 text-[#1B2A4A]/55 backdrop-blur-sm">
             {project.platform}
           </span>
+          {project.status === 'in-development' && (
+            <span className="text-xs px-2 py-1 rounded-full border border-dashed border-[#1B2A4A]/30 text-[#1B2A4A]/50 backdrop-blur-sm bg-white/50">
+              {labels.inDevelopment}
+            </span>
+          )}
         </div>
       </a>
 
@@ -247,6 +254,11 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
           <span className={`hidden md:inline-block text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0 ${categoryBadge[project.category]}`}>
             {labels.categories[project.category]}
           </span>
+          {project.status === 'in-development' && (
+            <span className="hidden md:inline-block text-[10px] px-2 py-0.5 rounded-full shrink-0 border border-dashed border-[#1B2A4A]/25 text-[#1B2A4A]/45">
+              {labels.inDevelopment}
+            </span>
+          )}
         </div>
         <p className="text-sm text-[#1B2A4A]/50 line-clamp-1">{project.description}</p>
       </div>
