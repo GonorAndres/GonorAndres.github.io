@@ -204,9 +204,19 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
                 style={{ color: accent }}
               >
                 {labels.viewLive}
-                <svg className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+                {project.platform === 'HuggingFace' ? (
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 120 120" fill="currentColor" aria-hidden="true">
+                    <path d="M37.6 62.5c-1.6-3.2-6-3.2-7.6 0l-4 8c-.4.8-.4 1.7 0 2.5l4 8c1.6 3.2 6 3.2 7.6 0l4-8c.4-.8.4-1.7 0-2.5l-4-8zM90 62.5c-1.6-3.2-6-3.2-7.6 0l-4 8c-.4.8-.4 1.7 0 2.5l4 8c1.6 3.2 6 3.2 7.6 0l4-8c.4-.8.4-1.7 0-2.5l-4-8zM60 10C31.6 10 8.4 31.2 5.2 58.8c-.2 1.6 1 3 2.6 3.2 1.6.2 3-1 3.2-2.6C13.6 34.4 34.6 15.6 60 15.6s46.4 18.8 49 43.8c.2 1.6 1.6 2.8 3.2 2.6 1.6-.2 2.8-1.6 2.6-3.2C111.6 31.2 88.4 10 60 10zM80.8 86c-1.2-1.2-3.2-1-4.2.4-5.2 6.8-13 10.8-21.2 10.4-7.6-.4-14.8-4.4-19.6-10.8-1-1.4-3-1.6-4.2-.4-1.4 1-1.6 3-.4 4.2 5.8 7.6 14.4 12.6 23.6 13 10 .4 19.4-4.4 25.6-12.6 1-1.2.8-3.2-.4-4.2z" />
+                  </svg>
+                ) : project.platform === 'GCP' ? (
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                )}
               </a>
             )}
           </div>
@@ -305,9 +315,19 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
         ) : <span className="w-4 h-4" />}
         {/* RIGHT — live site */}
         {project.platform !== 'GitHub' && project.platform !== 'Drive' ? (
-          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: accent }}>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
+          project.platform === 'HuggingFace' ? (
+            <svg className="w-4 h-4" viewBox="0 0 120 120" fill="currentColor" aria-hidden="true" style={{ color: accent }}>
+              <path d="M37.6 62.5c-1.6-3.2-6-3.2-7.6 0l-4 8c-.4.8-.4 1.7 0 2.5l4 8c1.6 3.2 6 3.2 7.6 0l4-8c.4-.8.4-1.7 0-2.5l-4-8zM90 62.5c-1.6-3.2-6-3.2-7.6 0l-4 8c-.4.8-.4 1.7 0 2.5l4 8c1.6 3.2 6 3.2 7.6 0l4-8c.4-.8.4-1.7 0-2.5l-4-8zM60 10C31.6 10 8.4 31.2 5.2 58.8c-.2 1.6 1 3 2.6 3.2 1.6.2 3-1 3.2-2.6C13.6 34.4 34.6 15.6 60 15.6s46.4 18.8 49 43.8c.2 1.6 1.6 2.8 3.2 2.6 1.6-.2 2.8-1.6 2.6-3.2C111.6 31.2 88.4 10 60 10zM80.8 86c-1.2-1.2-3.2-1-4.2.4-5.2 6.8-13 10.8-21.2 10.4-7.6-.4-14.8-4.4-19.6-10.8-1-1.4-3-1.6-4.2-.4-1.4 1-1.6 3-.4 4.2 5.8 7.6 14.4 12.6 23.6 13 10 .4 19.4-4.4 25.6-12.6 1-1.2.8-3.2-.4-4.2z" />
+            </svg>
+          ) : project.platform === 'GCP' ? (
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ color: accent }}>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+            </svg>
+          ) : (
+            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: accent }}>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          )
         ) : <span className="w-4 h-4" />}
       </div>
     </article>

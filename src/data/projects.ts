@@ -8,7 +8,7 @@ export interface Project {
   description: Record<Lang, string>;
   url: string;           // primary link: live app, Drive folder, Colab, or GitHub if no live version
   repo?: string;         // GitHub repo URL — only set when url points to a live deployment
-  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP';
+  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP' | 'HuggingFace';
   category: ProjectCategory;
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
@@ -490,8 +490,9 @@ export const projects: Project[] = [
       es: 'Los modelos de lenguaje se usan a diario pero pocos saben lo que ocurre dentro. Este transformer character-level, entrenado con los 7 volúmenes de En busca del tiempo perdido y construido desde cero en PyTorch, hace visible ese mecanismo: cómo se aprenden embeddings, cómo opera la atención multi-cabeza y por qué todo se reduce a multiplicación de matrices.',
       en: 'Language models are used daily but few people understand what happens inside. This character-level transformer, trained on all 7 volumes of In Search of Lost Time and built from scratch in PyTorch, makes that mechanism visible: how embeddings are learned, how multi-head attention operates, and why everything reduces to matrix multiplication.',
     },
-    url: 'https://github.com/GonorAndres/proust-attention',
-    platform: 'GitHub',
+    url: 'https://huggingface.co/spaces/GonorAndres/proust-attention',
+    repo: 'https://github.com/GonorAndres/proust-attention',
+    platform: 'HuggingFace',
     category: 'data-science',
     tags: {
       es: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],

@@ -2,6 +2,7 @@
 title: "Building a Transformer from Scratch: The Proust Attention Machine"
 description: "I wanted to understand what really happens inside a language model. I built one from the first matrix multiplication, trained it on all 7 volumes of Proust, and what taught me the most wasn't the architecture; it was realizing that everything is just numbers."
 date: "2026-02-15"
+lastModified: "2026-03-28"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["deep-learning", "transformers", "NLP", "PyTorch", "NumPy"]
@@ -80,3 +81,7 @@ The scaling by the square root of `d_k`, the causal mask as a triangular matrix 
 ## What's next
 
 The model didn't reach convergence; 5 to 10 epochs would likely improve coherence. I want to try pre-norm instead of post-norm, experiment with a BPE tokenizer to capture Spanish morphology, and explore the attention maps to understand what patterns each head learns. The complete code with shape annotations is in the [GitHub repository](https://github.com/GonorAndres/proust-attention).
+
+## Update: interactive demo on HuggingFace
+
+The trained model is available as an <a href="https://huggingface.co/spaces/GonorAndres/proust-attention" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">interactive demo on HuggingFace Spaces</a>. You can type a prompt and generate text directly in the browser, with no need to clone the repository or set up a local environment. It is the fastest way to see how the model behaves with different prompts, temperatures, and top-k values.
