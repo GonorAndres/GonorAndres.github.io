@@ -2,6 +2,7 @@
 title: "Asistente de Regulación Actuarial: por qué RAG es el enfoque correcto para LISF y CUSF"
 description: "Interpretar la LISF y la CUSF exige navegar entre artículos que se referencian mutuamente entre leyes, y un Ctrl+F no distingue el artículo que define reservas técnicas del que las menciona de paso. La IA permite absorber todo ese volumen sin perder un solo detalle. Este agente usa RAG para indexar cada artículo de forma individual con un grafo de referencias cruzadas, eliminando las alucinaciones de citas y permitiendo que el modelo razone solo sobre texto real de la ley. El resultado es un asistente que amplifica la memoria del actuario sin sustituir su criterio."
 date: "2026-03-22"
+lastModified: "2026-03-28"
 category: "proyectos-y-analisis"
 lang: "es"
 tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP", "referencias-cruzadas"]
@@ -82,3 +83,9 @@ El código está en <a href="https://github.com/GonorAndres/regulation-actuarial
 <div style="background-color: #1B2A4A; padding: 1rem 1.5rem; border-left: 4px solid #C17654; margin-top: 2rem; font-size: 1.05rem;">
 <strong style="color: #EDE6DD;">Código de acceso para probar la aplicación en vivo:</strong> <code style="background-color: #C17654; color: #EDE6DD; padding: 0.2rem 0.5rem; border-radius: 3px; font-weight: bold;">actuaria-claude</code>
 </div>
+
+## Versión abierta con modelo open-source
+
+La versión principal del asistente usa Claude a través de la API de Anthropic, lo que ofrece la mejor calidad de respuesta pero tiene un costo por consulta. Para quienes quieran explorar la herramienta sin restricciones de acceso, existe una <a href="https://huggingface.co/spaces/GonorAndres/lisf-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">versión desplegada en HuggingFace Spaces</a> que usa Qwen2.5-72B, un modelo open-source.
+
+La diferencia en calidad es real: Qwen interpreta bien consultas directas sobre artículos específicos, pero en preguntas que requieren razonar sobre múltiples disposiciones interrelacionadas, Claude es notablemente más preciso. Para trabajo regulatorio serio, la versión con Claude sigue siendo la recomendación. Pero para familiarizarte con la estructura de la LISF y la CUSF, o para consultas rápidas cuando el presupuesto es limitado, la versión open-source es una alternativa funcional, sin código de acceso y sin límite de uso.

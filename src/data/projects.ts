@@ -8,7 +8,7 @@ export interface Project {
   description: Record<Lang, string>;
   url: string;           // primary link: live app, Drive folder, Colab, or GitHub if no live version
   repo?: string;         // GitHub repo URL — only set when url points to a live deployment
-  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP';
+  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP' | 'HuggingFace';
   category: ProjectCategory;
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
@@ -16,6 +16,7 @@ export interface Project {
   relatedTo?: string[];
   blogSlug?: string;     // English slug of the blog post for this project (e.g. 'sima', 'actuarial-ml-pricing')
   tier: 1 | 2 | 3 | 4; // internal priority: 1=full package, 2=screenshot+blog, 3=academic, 4=minimal
+  status?: 'completed' | 'in-development'; // omit or 'completed' = done; 'in-development' = shows badge
   creation_date: string;           // YYYY-MM-DD — when the project was built/started
   last_modification_date?: string; // YYYY-MM-DD — last significant update (optional)
 }
@@ -489,8 +490,9 @@ export const projects: Project[] = [
       es: 'Los modelos de lenguaje se usan a diario pero pocos saben lo que ocurre dentro. Este transformer character-level, entrenado con los 7 volúmenes de En busca del tiempo perdido y construido desde cero en PyTorch, hace visible ese mecanismo: cómo se aprenden embeddings, cómo opera la atención multi-cabeza y por qué todo se reduce a multiplicación de matrices.',
       en: 'Language models are used daily but few people understand what happens inside. This character-level transformer, trained on all 7 volumes of In Search of Lost Time and built from scratch in PyTorch, makes that mechanism visible: how embeddings are learned, how multi-head attention operates, and why everything reduces to matrix multiplication.',
     },
-    url: 'https://github.com/GonorAndres/proust-attention',
-    platform: 'GitHub',
+    url: 'https://huggingface.co/spaces/GonorAndres/proust-attention',
+    repo: 'https://github.com/GonorAndres/proust-attention',
+    platform: 'HuggingFace',
     category: 'data-science',
     tags: {
       es: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
@@ -725,6 +727,33 @@ export const projects: Project[] = [
     creation_date: '2025-06-12',
     last_modification_date: '2025-08-09',
   },
+
+  // local: /home/andtega349/micro-insurance
+  // source: original research — INEGI mortality, Banxico remittances, CONEVAL marginalization, EMSSA-2009
+  // status: in-development (Phase 1 not started)
+  {
+    slug: 'micro-insurance',
+    title: {
+      es: 'MicroInsurance.jl - Tarificacion para Economia Informal',
+      en: 'MicroInsurance.jl - Pricing Engine for the Informal Economy',
+    },
+    description: {
+      es: '~35M de trabajadores informales en Mexico no tienen acceso a seguros de vida porque el underwriting tradicional exige empleo formal, historial crediticio y examen medico. Este motor reemplaza esos requisitos con senales proxy (mortalidad geografica, remesas, pagos de servicios) ponderadas por credibilidad Buhlmann-Straub sobre una superficie de mortalidad Lee-Carter. Julia.',
+      en: '~35M informal workers in Mexico lack access to life insurance because traditional underwriting requires formal employment, credit history, and medical exams. This engine replaces those requirements with proxy signals (geographic mortality, remittances, utility payments) weighted through Buhlmann-Straub credibility over a Lee-Carter mortality surface. Julia.',
+    },
+    url: '#',
+    platform: 'GitHub',
+    category: 'actuarial',
+    tags: {
+      es: ['Julia', 'Lee-Carter', 'Buhlmann-Straub', 'LISF', 'Microfinanzas', 'INEGI'],
+      en: ['Julia', 'Lee-Carter', 'Buhlmann-Straub', 'LISF', 'Microfinance', 'INEGI'],
+    },
+    variant: 'standard',
+    relatedTo: ['sima', 'pension-simulator', 'lisf-agent', 'actuarial-suite', 'michoacan'],
+    tier: 2,
+    status: 'in-development',
+    creation_date: '2026-03-26',
+  },
 ];
 
 export function getProjects(lang: Lang) {
@@ -742,6 +771,7 @@ export function getProjects(lang: Lang) {
     relatedTo: p.relatedTo,
     blogSlug: p.blogSlug,
     tier: p.tier,
+    status: p.status,
     creation_date: p.creation_date,
     last_modification_date: p.last_modification_date,
   }));

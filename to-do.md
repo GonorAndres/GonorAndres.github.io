@@ -1,6 +1,6 @@
 # Portfolio To-Do
 
-Last updated: 2026-03-24
+Last updated: 2026-03-25
 
 Read this at the start of every session. Update it when tasks are completed or new ones are discovered.
 Tasks are organized by type — a project may appear in multiple lists.
@@ -19,6 +19,7 @@ Posts that do not exist yet. But we need to create after proyect goes to golden 
 - [ ] `eruption-forecasting` — Pronóstico de erupciones volcánicas (ARIMA, séries de tiempo, UNAM)
 - [ ] `b-tree-explorer` (implementation) — concept post `b-trees-optimization.md` exists; this one is about the Rust + WASM build itself
 - [x] `insurance-pricing-ml` — DONE: project card exists in projects.ts (slug `insurance-pricing-ml`, tier 2) with blogSlug `actuarial-ml-pricing`
+- [ ] `micro-insurance` — MicroInsurance.jl: life insurance pricing for Mexico's informal economy via proxy signals + credibility theory. Julia. Phase 1 not started. Needs: project card, blog post (ES+EN), methodology diagram. Tier 1 candidate.
 
 ---
 
@@ -45,6 +46,7 @@ Files go in `public/screenshots/`.
 - [ ] `b-tree-explorer.png` — MISSING: no screenshot, no `screenshot` field in projects.ts
 - [x] `flight-analytics-pg-bq.png` — exists (101 KB)
 - [ ] `eruption-forecasting.png` — MISSING: no screenshot, no `screenshot` field in projects.ts
+- [ ] `micro-insurance.png` — MISSING: no project card yet. Methodology flowchart would work (no UI to screenshot).
 
 ---
 
@@ -85,3 +87,4 @@ For context when writing posts or deciding priority.
 | `b-tree-explorer` | Yes (WASM build in `/home/andtega349/b-trees/pkg/`) | No | Screenshot missing, optional impl blog post |
 | `flight-analytics` | Yes (SQL analysis) | No | Done: blog + screenshot exist |
 | `eruption-forecasting` | Yes (Python notebooks) | No | Blog post missing, screenshot missing |
+| `micro-insurance` | No (Phase 1 not started) | No | Everything missing: project card, blog, screenshot. Highest actuarial ROI in portfolio. |

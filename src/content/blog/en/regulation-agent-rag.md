@@ -2,6 +2,7 @@
 title: "Actuarial Regulation Assistant: Why RAG Is the Right Approach for LISF and CUSF"
 description: "Interpreting LISF and CUSF means navigating articles that cross-reference each other across laws, and a Ctrl+F can't tell the article defining technical reserves from one that mentions them in passing. AI makes it possible to absorb that entire volume without losing a single detail. This agent uses RAG to index every article individually with a cross-reference graph, eliminating citation hallucinations and ensuring the model only reasons over real legal text. The result is an assistant that amplifies the actuary's memory without replacing their judgment."
 date: "2026-03-22"
+lastModified: "2026-03-28"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP", "cross-references"]
@@ -82,3 +83,9 @@ The code is on <a href="https://github.com/GonorAndres/regulation-actuarial-agen
 <div style="background-color: #1B2A4A; padding: 1rem 1.5rem; border-left: 4px solid #C17654; margin-top: 2rem; font-size: 1.05rem;">
 <strong style="color: #EDE6DD;">Access code to try the live application:</strong> <code style="background-color: #C17654; color: #EDE6DD; padding: 0.2rem 0.5rem; border-radius: 3px; font-weight: bold;">actuaria-claude</code>
 </div>
+
+## Open-source version
+
+The main version of the assistant uses Claude through Anthropic's API, which offers the best response quality but has a per-query cost. For those who want to explore the tool without access restrictions, there is a <a href="https://huggingface.co/spaces/GonorAndres/lisf-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">version deployed on HuggingFace Spaces</a> running Qwen2.5-72B, an open-source model.
+
+The quality difference is real: Qwen handles straightforward queries about specific articles well, but for questions that require reasoning across multiple interrelated provisions, Claude is noticeably more precise. For serious regulatory work, the Claude version remains the recommendation. But for getting familiar with the LISF and CUSF structure, or for quick lookups when budget is tight, the open-source version is a functional alternative with no access code and no usage limits.
