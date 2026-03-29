@@ -162,6 +162,13 @@ Five persistent agents are defined for periodic maintenance. Claude auto-delegat
 
 All agents save work reports to `subagents_outputs/`.
 
+## External Project Plans
+
+Two sibling directories contain implementation plans for upcoming portfolio additions. Read the relevant plan.md before starting work on either topic.
+
+- **`/home/andtega349/microsoft-suite-data/plan.md`** -- Excel consolidation card + Power BI insurance claims dashboard. Covers project card metadata, DAX measures, star schema, cross-linking to existing projects. Both cards use `data-science` category and share insurance domain data.
+- **`/home/andtega349/risk-analyst/plan.md`** -- 4 theory PDFs (VaR/CVaR foundations, EVT tail risk, copula dependency, stress testing) to add as notes under the `quant` category. Includes note slugs, descriptions (ES+EN), tags, keywords, relatedNotes, and back-linking instructions for existing notes.
+
 ## Local Testing with Playwright MCP
 
 After making changes, use the Playwright MCP browser tools to verify rendering before committing:
