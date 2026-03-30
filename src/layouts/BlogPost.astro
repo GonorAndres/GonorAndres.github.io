@@ -68,4 +68,11 @@ const backLabel = lang === 'es' ? 'Volver al blog' : 'Back to blog';
       </div>
     </div>
   </article>
+
+  <script>
+    import { track } from '../lib/analytics';
+
+    const title = document.querySelector('article h1')?.textContent?.trim() ?? '';
+    track('content_engaged', { page: title });
+  </script>
 </BaseLayout>

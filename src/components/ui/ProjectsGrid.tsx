@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { ProjectCategory } from '../../data/projects';
+import { track } from '../../lib/analytics';
 
 interface ProjectData {
   slug: string;
@@ -107,6 +108,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
       {/* Visual area */}
       <a href={project.url}
         {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
+        onClick={() => track('tool_used', { tool: project.title })}
         className="block relative overflow-hidden h-44">
         {project.screenshot ? (
           <div className="w-full h-full flex items-center justify-center bg-[#F8F5F1] p-3">
@@ -239,6 +241,7 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
       <a
         href={project.url}
         {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
+        onClick={() => track('tool_used', { tool: project.title })}
         className="absolute inset-0 rounded-xl z-0"
         aria-label={project.title}
         tabIndex={0}
