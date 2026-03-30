@@ -39,6 +39,8 @@ const {
       datePublished={datePublished}
     />
     <slot name="head" />
+    <!-- PostHog (loaded only when PUBLIC_POSTHOG_KEY is set) -->
+    <script>import '../lib/analytics';</script>
     <!-- Google Analytics (gtag.js) -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-098V02NCB0"></script>
     <script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-098V02NCB0');</script>

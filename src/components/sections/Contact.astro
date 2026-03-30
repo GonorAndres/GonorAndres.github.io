@@ -84,3 +84,14 @@ const { lang } = Astro.props;
     </div>
   </div>
 </section>
+
+<script>
+  import { track } from '../../lib/analytics';
+
+  document.querySelectorAll('#contacto a').forEach((link) => {
+    link.addEventListener('click', () => {
+      const label = link.querySelector('.font-medium')?.textContent?.trim() ?? 'unknown';
+      track('contact_clicked', { method: label.toLowerCase() });
+    });
+  });
+</script>
