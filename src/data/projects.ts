@@ -8,7 +8,7 @@ export interface Project {
   description: Record<Lang, string>;
   url: string;           // primary link: live app, Drive folder, Colab, or GitHub if no live version
   repo?: string;         // GitHub repo URL — only set when url points to a live deployment
-  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP' | 'HuggingFace';
+  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP' | 'HuggingFace' | 'Firebase';
   category: ProjectCategory;
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
@@ -652,15 +652,16 @@ export const projects: Project[] = [
       en: 'Flight Analytics - PostgreSQL to BigQuery',
     },
     description: {
-      es: 'PostgreSQL y BigQuery resuelven problemas diferentes; saber cuándo usar cada uno requiere haberlos comparado con datos reales. Este proyecto migra 5.74M filas de datos reales de aerolíneas de PostgreSQL 16 a BigQuery con un pipeline ETL en Python, documenta aceleraciones de 13x a 1,300x en consultas clave e incluye análisis geoespacial de rutas.',
-      en: 'PostgreSQL and BigQuery solve different problems; knowing when to use each requires comparing them on real data. This project migrates 5.74M rows of real airline data from PostgreSQL 16 to BigQuery via a Python ETL pipeline, documents 13x to 1,300x query speedups, and includes geospatial route analysis.',
+      es: 'PostgreSQL y BigQuery resuelven problemas diferentes; saber cuándo usar cada uno requiere haberlos comparado con datos reales. Este proyecto migra 5.74M filas de datos reales de aerolíneas de PostgreSQL 16 a BigQuery con un pipeline ETL en Python, documenta aceleraciones de 13x a 1,300x en consultas clave e incluye un dashboard interactivo desplegado en Firebase con mapa WebGL de rutas, heatmaps de retrasos y visualización de internals de PostgreSQL.',
+      en: 'PostgreSQL and BigQuery solve different problems; knowing when to use each requires comparing them on real data. This project migrates 5.74M rows of real airline data from PostgreSQL 16 to BigQuery via a Python ETL pipeline, documents 13x to 1,300x query speedups, and includes an interactive dashboard deployed on Firebase with a WebGL route map, delay heatmaps, and PostgreSQL internals visualization.',
     },
-    url: 'https://github.com/GonorAndres/learning-posgre',
-    platform: 'GitHub',
+    url: 'https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/',
+    repo: 'https://github.com/GonorAndres/learning-posgre',
+    platform: 'Firebase',
     category: 'data-engineering',
     tags: {
-      es: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Plotly', 'Folium', 'GIS'],
-      en: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Plotly', 'Folium', 'GIS'],
+      es: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Next.js', 'deck.gl', 'Firebase', 'recharts'],
+      en: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Next.js', 'deck.gl', 'Firebase', 'recharts'],
     },
     variant: 'wide',
     screenshot: '/screenshots/flight-analytics-pg-bq.png',
@@ -668,7 +669,7 @@ export const projects: Project[] = [
     blogSlug: 'flight-analytics-pg-bq',
     tier: 2,
     creation_date: '2026-02-07',
-    last_modification_date: '2026-03-19',
+    last_modification_date: '2026-03-30',
   },
 
   // repo: https://github.com/GonorAndres/risk-analyst
