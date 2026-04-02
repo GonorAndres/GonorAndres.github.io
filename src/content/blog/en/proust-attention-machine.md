@@ -82,6 +82,8 @@ The scaling by the square root of `d_k`, the causal mask as a triangular matrix 
 
 The model didn't reach convergence; 5 to 10 epochs would likely improve coherence. I want to try pre-norm instead of post-norm, experiment with a BPE tokenizer to capture Spanish morphology, and explore the attention maps to understand what patterns each head learns. The complete code with shape annotations is in the [GitHub repository](https://github.com/GonorAndres/proust-attention).
 
+## Other uses of AI
+
 Training from scratch is one end of the LLM specialization spectrum: the model learns the domain from the weights up. The other end is retrieval, where a general model is grounded on specific documents at inference time without any retraining. The [actuarial regulation agent](/blog/regulation-agent-rag/) sits at that other end, using RAG to make a frontier model reason only over the exact text of the LISF and CUSF. Both approaches answer the same question, "how do you make a model know what you need it to know," just with different tradeoffs in cost, control, and generalization.
 
 ## Update: interactive demo on HuggingFace

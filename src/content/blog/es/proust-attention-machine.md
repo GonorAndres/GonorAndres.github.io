@@ -82,6 +82,8 @@ El escalamiento por la raíz de `d_k`, la máscara causal como matriz triangular
 
 El modelo no llegó a convergencia; 5 a 10 épocas probablemente mejorarían la coherencia. Quiero probar pre-norm en lugar de post-norm, experimentar con un tokenizador BPE para capturar la morfología del español, y explorar las attention maps para entender qué patrones aprende cada cabeza. El código completo con anotaciones de shapes está en el [repositorio de GitHub](https://github.com/GonorAndres/proust-attention).
 
+## Otros de mis usos con la IA
+
 Entrenar desde cero es un extremo del espectro de especialización de modelos de lenguaje: el modelo aprende el dominio desde los pesos hacia arriba. El otro extremo es la recuperación, donde un modelo general se ancla a documentos específicos en tiempo de inferencia sin ningún reentrenamiento. El [asistente de regulación actuarial](/blog/regulation-agent-rag/) ocupa ese otro extremo: usa RAG para que un modelo frontera razone únicamente sobre el texto exacto de la LISF y la CUSF. Ambos enfoques responden la misma pregunta, cómo hacer que un modelo sepa lo que necesitas que sepa, pero con distintos compromisos entre costo, control y generalización.
 
 ## Actualización: demo interactiva en HuggingFace
