@@ -57,10 +57,10 @@ Validation loss being lower than training loss is explained by dropout: during t
 The hours of waiting while the model trained were part of the learning. Watching the loss drop, watching the writing gradually improve: at first pure noise, then isolated Spanish words, then phrases with structure. At temperature 0.8 with top-k 40, the trained model generates this:
 
 **Prompt**: "Mucho tiempo" (A long time)
-> Mucho tiempo verdad, sin sus muchos que esa cortina de los personas con las que el senor. Es que lo que el amor que acababa de propio de la imaginacion y que habia causado una gran modo de olvidarla o de vida reductamente el mio). Por eso, mi madre sistencia desconocida con frecuencia, no hubiera ido a consider
+> Mucho tiempo verdad, sin sus muchos que esa cortina de los personas con las que el señor. Es que lo que el amor que acababa de propio de la imaginación y que había causado una gran modo de olvidarla o de vida reductamente el mío). Por eso, mi madre sistencia desconocida con frecuencia, no hubiera ido a consider
 
 **Prompt**: "La memoria" (Memory)
-> La memoria y su pasad se sigue, por ejemplo, senora aun sin embargo, al menos encontrar a la Sra. de Guermantes me permanecia yo saber que el mismo seguro, pero en el que, si bien buscar con frecuencia venir a veces a un cual se debe tanto para salir y no podia hacer ella su disposicion con la sociedad, por l
+> La memoria y su pasad se sigue, por ejemplo, señora aun sin embargo, al menos encontrar a la Sra. de Guermantes me permanecía yo saber que el mismo seguro, pero en el que, si bien buscar con frecuencia venir a veces a un cual se debe tanto para salir y no podía hacer ella su disposición con la sociedad, por l
 
 Character names appear correctly (Swann, Guermantes, Sra.), learned purely from statistical frequency. Spanish grammar is present. You can sense something Proustian in the long sentences with subordinate clauses. But semantic coherence fades as the sentence gets longer: it starts well and loses the thread. With 420K parameters and a single training epoch, that was expected.
 
@@ -72,7 +72,7 @@ The first thing that hit me is how simple it is when you think about it. The mod
 
 But that's where it gets important. If these weights are just interconnected numbers, then they have enormous vulnerabilities. It's like with bombs: if you know how to deactivate one, you know how to build one. The tensors of a language model have such vast combinatorial potential that it will always be impossible to be completely sure that all the connections between weights don't have something harmful hidden in them. It's not a question of finding the vulnerability; it's that the space of possibilities is larger than what we can inspect.
 
-Building a model from scratch clarifies why Anthropic takes the position it takes on AI safety. It's not paranoia or marketing. When you build a model from scratch and see that everything is numbers and gradients, you understand that the boundary between "useful" and "dangerous" is a question of weights, literally. There is no clear line in the architecture separating good from bad. Everything depends on what those numbers learned during training, and verifying that exhaustively is computationally impossible.
+Part of what led me to build this model were Anthropic's public statements on AI safety. This wasn't a company saying its product was dangerous to sell more; it was engineers explaining in papers and interviews why models far larger than mine generated concerns they couldn't fully resolve. I wondered whether that was hype, corporate paranoia, or something genuine. Building the model gave me my own answer. When you see that everything reduces to a tensor of numbers and that the relationships between those weights produce outputs with structure and coherence, you understand why the boundary between "useful" and "dangerous" is impossible to draw precisely. There is no line in the architecture separating good from bad. Everything depends on what those numbers learned during training, and verifying that exhaustively in a 420K-parameter model is already hard; doing it with hundreds of billions of parameters is computationally impossible. The concerns are valid because the architecture itself offers no guarantees.
 
 The project didn't leave me as an expert in embeddings or tokenization classification. It wasn't about the free Colab T4 or the hours waiting for each epoch to finish. What I took away was understanding the causes and consequences that are invisible when you use a language model as a user, the ones hidden in the weights of the computational beasts we have today.
 
@@ -81,6 +81,8 @@ The scaling by the square root of `d_k`, the causal mask as a triangular matrix 
 ## What's next
 
 The model didn't reach convergence; 5 to 10 epochs would likely improve coherence. I want to try pre-norm instead of post-norm, experiment with a BPE tokenizer to capture Spanish morphology, and explore the attention maps to understand what patterns each head learns. The complete code with shape annotations is in the [GitHub repository](https://github.com/GonorAndres/proust-attention).
+
+Training from scratch is one end of the LLM specialization spectrum: the model learns the domain from the weights up. The other end is retrieval, where a general model is grounded on specific documents at inference time without any retraining. The [actuarial regulation agent](/blog/regulation-agent-rag/) sits at that other end, using RAG to make a frontier model reason only over the exact text of the LISF and CUSF. Both approaches answer the same question, "how do you make a model know what you need it to know," just with different tradeoffs in cost, control, and generalization.
 
 ## Update: interactive demo on HuggingFace
 
