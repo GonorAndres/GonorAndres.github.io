@@ -2,7 +2,7 @@
 title: "What 5.74 Million Flights Taught Me About PostgreSQL, BigQuery, and Knowing When to Use Each"
 description: "A deep dive into building production-grade SQL analytics on real airline data, migrating to BigQuery via Python ETL, and the honest trade-offs between both systems: real timing, real costs, and real query plans."
 date: "2026-03-18"
-lastModified: "2026-03-19"
+lastModified: "2026-03-30"
 category: "proyectos-y-analisis"
 lang: "en"
 tags: ["PostgreSQL", "BigQuery", "Python", "ETL", "EXPLAIN ANALYZE", "Docker", "GIS", "Plotly", "Folium", "data-engineering"]
@@ -22,7 +22,7 @@ Every analysis started with a business question, not a technique. The delays scr
 
 The utilization analysis uncovered something striking: Boeing 777-300s operate at 72.8% average load factor, while Cessna 208 Caravans run at just 16%. That's not a small plane problem; it's a network design problem. Those Cessnas serve routes where boarding passes simply aren't being issued in the dataset, suggesting either data incompleteness or genuinely underutilized regional routes.
 
-Each finding is backed by a runnable SQL script in the `analysis/` directory. No placeholders, no "example findings." Run the query, get the number.
+The scripts are in the `analysis/` directory, ready to run.
 
 ## Phase 2: Understanding the PostgreSQL engine
 
@@ -40,7 +40,7 @@ The `internals/` directory contains six scripts that go deep into PostgreSQL's e
 
 **WAL and checkpoints** revealed trade-offs I hadn't fully appreciated. A bulk operation generating 100,000 inserts and 100,000 updates produces measurable WAL volume. Setting `synchronous_commit = off` can speed up writes, but you lose the last ~600ms of commits on a crash. That's acceptable for analytics; never for financial transactions.
 
-These aren't academic exercises. They're the exact decisions you make when tuning a production PostgreSQL instance on Cloud SQL.
+The same decisions apply when configuring a PostgreSQL instance on Cloud SQL.
 
 ## Phase 3: Migration to BigQuery
 
@@ -48,9 +48,9 @@ The migration pipeline is four Python files: `extract.py` reads from PostgreSQL 
 
 The schema translation exposed every difference between the two systems. PostgreSQL's `JSONB` column `airport_name` (storing `{"en": "Sheremetyevo", "ru": "..."}`) became two flat columns: `airport_name_en` and `airport_name_ru`. The `point` type for coordinates became separate `longitude` and `latitude` FLOAT64 columns. Fixed-length `character(3)` fields needed trailing whitespace stripped. Every `timestamptz` was normalized to UTC (BigQuery stores all timestamps in UTC).
 
-The pipeline uses `gcloud` Application Default Credentials: no service account JSON files, no credential management. On this VM, `gcloud auth` is already configured, so the Python BigQuery client authenticates automatically.
+Authentication with BigQuery uses Application Default Credentials, no manual service account files.
 
-## Phase 4: PostgreSQL vs BigQuery, honestly
+## Phase 4: PostgreSQL vs BigQuery, compared
 
 I ran the same business queries on both systems and recorded actual timing:
 
@@ -65,7 +65,7 @@ I ran the same business queries on both systems and recorded actual timing:
 
 **BigQuery wins on full-table analytics.** The revenue query scanning 2.3 million rows of `ticket_flights` ran faster on BigQuery (1.2s vs 1.6s) without any index design. BigQuery's columnar storage and parallel execution handle large aggregations naturally.
 
-**Cost tells the real story.** For this 500MB dataset with analytical queries, BigQuery costs ~$0.25/month (pay-per-query at $5/TB). The smallest Cloud SQL instance costs ~$7/month. At scale, the gap widens further: BigQuery charges for what you scan, Cloud SQL charges for what you provision.
+**Cost tells the real story.** For this 500MB dataset with analytical queries, BigQuery costs ~\$0.25/month (pay-per-query at \$5/TB). The smallest Cloud SQL instance costs ~\$7/month. At scale, the gap widens further: BigQuery charges for what you scan, Cloud SQL charges for what you provision.
 
 The conclusion isn't "BigQuery is better." It's "use PostgreSQL for OLTP and point lookups, BigQuery for OLAP and ad-hoc analytics, and build a pipeline between them." This project implements exactly that pattern.
 
@@ -77,15 +77,27 @@ The distance analysis surfaced an unexpected pattern: delay rates don't correlat
 
 A Jupyter notebook ties everything together: interactive plotly charts (delay heatmaps, revenue Pareto curves, load factor rankings, before/after optimization comparisons) plus folium maps showing the route network colored by delay severity. The route map is the visual centerpiece: 104 airports connected by lines that shift from green to red as delays increase, making network stress immediately apparent.
 
-## What this project demonstrates
+## Phase 6: Interactive dashboard
 
-This isn't a "learning SQL" project. It's a complete data engineering workflow:
+The <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">dashboard</a> takes the results from the five previous phases and makes them explorable in the browser. Deployed on Firebase, bilingual (EN/ES), fed by the same SQL output already in the repository.
 
-1. **PostgreSQL at production depth**: not just queries, but EXPLAIN ANALYZE, index strategy, partitioning, VACUUM, WAL, and Cloud SQL-modeled configuration
-2. **Python ETL**: extract with batched cursors, transform JSONB and geospatial types, load to BigQuery with ADC auth
-3. **BigQuery migration**: schema translation, syntax differences, real performance comparison
-4. **Informed trade-off analysis**: not "which is better" but "which is better *for this specific workload*"
-5. **Visualization**: interactive charts and maps that make data patterns immediately visible
-6. **GIS in both systems**: PL/pgSQL haversine vs BQ `ST_DISTANCE`, same questions, different implementations
+The map lets you filter all 532 routes by airport, color them by delay rate or volume, and see how the three Moscow hubs contrast with eastern Russia's thin connectivity. The delays from Phase 1 and the distances from Phase 5 take on a different dimension when explored geographically.
 
-The full source is at <a href="https://github.com/GonorAndres/learning-posgre" target="_blank" rel="noopener">github.com/GonorAndres/learning-posgre</a>. Every script is runnable, every metric is real, and the pipeline can be reproduced with `docker compose up` and a GCP project.
+The internals section translates Phase 2 results into comparison bars: the 13x composite index improvement and the 1,300x materialized view sit side by side, no EXPLAIN output required. The pipeline section shows Phase 3 metrics (rows/second, load times) alongside the Phase 4 comparison table.
+
+Revenue lets you walk through the Pareto curve and see that 20% of routes carry 80% of income. Fleet puts the Boeing 777 at 73% load next to the Cessna 208 at 16%, which sits there as an open question: incomplete data or network design?
+
+Everything runs on pre-extracted JSON. No database connection, no hosting cost.
+
+## Learnings
+
+Working with the same dataset across PostgreSQL, BigQuery, and a dashboard made clear that each layer solves a different problem, and choosing between them depends on the question being asked:
+
+1. **PostgreSQL**: EXPLAIN ANALYZE, index strategy, partitioning, VACUUM, and WAL are configuration decisions, not just syntax
+2. **Python ETL**: batch-cursor extraction, type transformations (JSONB, `point`), and BigQuery loading form the bridge between the two systems
+3. **BigQuery**: schema translation exposes real differences in how each system handles types, timestamps, and geospatial functions
+4. **Trade-offs**: PostgreSQL wins point lookups, BigQuery wins full scans; cost behaves in opposite directions for each
+5. **Geospatial visualization**: the same distance question solved with haversine in PL/pgSQL and `ST_DISTANCE` in BigQuery shows two ways of thinking about the problem
+6. **Dashboard**: converting query results to static JSON and serving them from Firebase closes the loop between analysis and communication
+
+Source code at <a href="https://github.com/GonorAndres/learning-posgre" target="_blank" rel="noopener">github.com/GonorAndres/learning-posgre</a> and the dashboard at <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">project-ad7a5be2-a1c7-4510-82d.firebaseapp.com</a>. The pipeline reproduces with `docker compose up` and a GCP project.

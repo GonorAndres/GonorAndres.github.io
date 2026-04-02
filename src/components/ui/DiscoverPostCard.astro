@@ -15,8 +15,8 @@ const posts = (await getCollection('blog'))
   .filter((p) => p.data.lang === lang)
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
-const latestSlugs = new Set(posts.slice(0, 3).map((p) => p.slug));
-const remaining = posts.filter((p) => !latestSlugs.has(p.slug));
+const latestSlugs = new Set(posts.slice(0, 3).map((p) => p.id));
+const remaining = posts.filter((p) => !latestSlugs.has(p.id));
 
 // Fisher-Yates shuffle
 for (let i = remaining.length - 1; i > 0; i--) {
@@ -45,7 +45,7 @@ function formatDate(date: string) {
 
 {discoverPosts.map((post) => (
   <a
-    href={getPostUrl(post.slug)}
+    href={getPostUrl(post.id)}
     class="flex flex-col gap-0.5 rounded-lg border-l-2 border-l-amber border border-navy/8 bg-white/90 shadow-sm px-3 py-2 hover:shadow-md hover:border-l-terracotta transition-all group flex-1 min-w-0"
   >
     <div class="flex items-center gap-2">

@@ -142,7 +142,7 @@ When converting academic notes to blog posts:
 
 4. **Write the body** in standard Markdown. For inline HTML (buttons, styled links), use inline `style=""` attributes -- Tailwind classes are purged from markdown content.
 
-5. **Verify**: run `npx astro build` from the project root. The new post should appear in the page count.
+5. **Verify**: run `npx astro build` from the project root (currently 85 pages). The new post should appear in the blog index, its category page, and LatestPostCard.
 
 The post will automatically show up in:
 - The blog index (`/blog/` and `/en/blog/`)
@@ -192,20 +192,34 @@ Common issue: `$` followed by a digit in blog prose (e.g., `$10`, `$400`) gets p
 - `quant-finance`: amber (#D4A574)
 - `applied-math`: navy (#1B2A4A)
 
+Project cards also accept `status?: 'completed' | 'in-development'`. Set to `'in-development'` to render a dashed "En desarrollo"/"In development" badge. Omit for finished projects.
+
 Adding a new category requires changes in: `src/data/projects.ts` (type), `src/components/ui/ProjectsGrid.tsx` (accent, badge, gradient, icon), `src/i18n/es.ts` + `en.ts` (translation key), `src/components/sections/FeaturedProjects.astro` (labels object).
 
 ## Technical Preferences
 
 - Framework: Astro 5 + Tailwind + React islands + MDX
+- Content Layer: config at `src/content.config.ts` with explicit `glob()` loader; posts use `post.id` (format: `es/slug` or `en/slug`) not `post.slug`; render via `import { render } from 'astro:content'` then `render(post)`
 - Deployment: GitHub Pages (GonorAndres.github.io)
+- Project platforms: GitHub, Drive, Vercel, Colab, GCP, HuggingFace, Firebase
 - i18n: ES (default, no prefix) / EN (/en/)
 - Blog categories: actuaria-para-todos, fundamentos-actuariales, proyectos-y-analisis, herramientas, mercado-mexicano
 - Color palette: cream (#EDE6DD), header (#E8E0D7), navy (#1B2A4A), amber (#D4A574), terracotta (#C17654), sage (#7A8B6F), steel blue (#5B7B9A)
 - Fonts: Lora (headings), Inter (body)
 
+## Analytics
+
+Two systems run in production, disabled on localhost:
+- **GA4**: initialized in `BaseLayout.astro`, automatic pageview tracking
+- **PostHog**: initialized in `src/lib/analytics.ts`; three custom events:
+  - `tool_used` — project card primary link clicks (ProjectsGrid)
+  - `contact_clicked` — contact link interactions
+  - `content_engaged` — blog post reads
+  - API key injected from GitHub secrets during build via `.github/workflows/deploy.yml`
+
 ## File Organization
 
 - PDFs for download go in public/docs/
-- Blog content in src/content/blog/es/ and src/content/blog/en/
+- Blog content in src/content/blog/es/ and src/content/blog/en/; collection config at src/content.config.ts
 - Subagent outputs go to repositorio/subagents_outputs/
 - Planning and reference docs go in docs/

@@ -36,7 +36,7 @@ function formatDate(date: string) {
 
 {recentPosts.map((post) => (
   <a
-    href={getPostUrl(post.slug)}
+    href={getPostUrl(post.id)}
     class="flex flex-col gap-0.5 rounded-lg border-l-2 border-l-terracotta border border-navy/8 bg-white shadow-sm px-3 py-2 hover:shadow-md hover:border-l-amber transition-all group flex-1 min-w-0"
   >
     <div class="flex items-center gap-2">

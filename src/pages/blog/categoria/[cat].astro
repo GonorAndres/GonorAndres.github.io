@@ -17,7 +17,7 @@ const posts = (await getCollection('blog'))
 const postsData = posts.map((post) => ({
   title: post.data.title,
   description: post.data.description,
-  slug: post.slug.replace(/^(es|en)\//, ''),
+  slug: post.id.replace(/^(es|en)\//, ''),
   date: post.data.date,
   category: post.data.category,
   categoryLabel: categoryLabels['es'][post.data.category as Category] ?? post.data.category,
