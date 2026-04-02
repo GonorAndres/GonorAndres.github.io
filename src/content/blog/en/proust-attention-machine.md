@@ -35,9 +35,9 @@ Everything started in NumPy. I implemented the full architecture: the embedding 
 #    with near-zero gradients)
 ```
 
-The architecture is deliberately modest: `d_model` of 128, 2 attention heads, 2 transformer layers, feedforward dimension of 512, context window of 256 characters, and dropout of 0.1. The whole model is 419,840 parameters, trainable in about 30 minutes on a Colab T4, which is incredible that it's a free resource available to everyone.
+The architecture is deliberately modest: 419,840 parameters in total, with a context window of 256 characters, trainable in about 30 minutes on a Colab T4. The idea was to fit everything into a single free session.
 
-What helped me understand the most was tracing the shapes. Tokens come in as (batch, 256), pass through embedding and positional encoding to become (batch, 256, 128), go through 2 transformer blocks that preserve that shape, and project to (batch, 256, 94), logits over the vocabulary. Every transformation is annotated line by line in the NumPy code.
+What helped me understand the most was tracing the tensor shape through each layer: text comes in as a sequence of characters, gets converted into vectors, passes through the attention blocks, and ends as a probability distribution over the vocabulary. Annotating those transformations line by line was what made multi-head attention stop being an abstract concept.
 
 Once the NumPy implementation was complete and each operation felt solid, the PyTorch port was mechanical. Same variable names, same structure, just swapping `np.ndarray` for `torch.Tensor`. All the thinking had already happened in NumPy.
 
@@ -45,7 +45,7 @@ Once the NumPy implementation was complete and each operation felt solid, the Py
 
 The corpus had its own story. The first version used 2 volumes from Project Gutenberg, and it was a disaster: OCR noise everywhere, publisher watermarks, metadata leaking into the text. The vocabulary inflated to over 200 characters full of garbage that the model learned with the same fidelity as real patterns. The final version uses all 7 volumes extracted from MOBI files, born-digital, no scanning artifacts. After whitelist cleaning: 7.15 million characters with a vocabulary of exactly 94 symbols.
 
-Training used AdamW with learning rate 3e-4 and weight decay 0.01, cosine annealing with 500 steps of linear warmup, gradient clipping at max norm 1.0, and a 90/10 split. After 201,104 steps across the full corpus:
+Training used AdamW with cosine annealing, gradient clipping, and a 90/10 split. After 201,104 steps across the full corpus:
 
 | Metric | Value |
 |--------|-------|
@@ -80,7 +80,7 @@ The scaling by the square root of `d_k`, the causal mask as a triangular matrix 
 
 ## What's next
 
-The model didn't reach convergence; 5 to 10 epochs would likely improve coherence. I want to try pre-norm instead of post-norm, experiment with a BPE tokenizer to capture Spanish morphology, and explore the attention maps to understand what patterns each head learns. The complete code with shape annotations is in the [GitHub repository](https://github.com/GonorAndres/proust-attention).
+The model didn't reach convergence; 5 to 10 more epochs would likely improve coherence. I want to try pre-norm instead of post-norm, experiment with a BPE tokenizer to capture Spanish morphology, and explore the attention maps to understand what patterns each head learns.
 
 ## Other uses of AI
 

@@ -498,6 +498,7 @@ export const projects: Project[] = [
       es: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
       en: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
     },
+    screenshot: '/screenshots/proust-attention.png',
     variant: 'standard',
     relatedTo: ['lisf-agent'],
     blogSlug: 'proust-attention-machine',

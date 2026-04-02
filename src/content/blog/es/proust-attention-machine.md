@@ -35,9 +35,9 @@ Todo empezó en NumPy. Implementé la arquitectura completa: la lookup table de 
 #    con gradientes cercanos a cero)
 ```
 
-La arquitectura es deliberadamente modesta: `d_model` de 128, 2 cabezas de atención, 2 capas de transformer, dimensión feedforward de 512, ventana de contexto de 256 caracteres, y dropout de 0.1. Todo el modelo suma 419,840 parámetros, entrenable en unos 30 minutos con una T4 de Colab, que es increíble que sea un recurso gratuito y disponible para todo público.
+La arquitectura es deliberadamente modesta: 419,840 parámetros en total, con una ventana de contexto de 256 caracteres, entrenable en unos 30 minutos con una T4 de Colab. La idea era que todo cupiera en una sola sesión gratuita.
 
-Lo que más me ayudó a entender fue rastrear las shapes. Los tokens entran como (batch, 256), pasan por embedding y codificación posicional para convertirse en (batch, 256, 128), atraviesan 2 bloques transformer que preservan esa shape, y se proyectan a (batch, 256, 94), los logits sobre el vocabulario. Cada transformación está anotada línea por línea en el código NumPy.
+Lo que más me ayudó fue rastrear la shape del tensor en cada capa: el texto entra como una secuencia de caracteres, se convierte en vectores, atraviesa los bloques de atención y termina como una distribución de probabilidad sobre el vocabulario. Anotar esas transformaciones línea por línea fue lo que hizo que el multi-head attention dejara de ser un concepto abstracto.
 
 Una vez que la implementación NumPy estaba completa y cada operación se sentía sólida, el port a PyTorch fue mecánico. Mismos nombres de variables, misma estructura, solo cambiando `np.ndarray` por `torch.Tensor`. Todo el pensamiento ya había ocurrido en NumPy.
 
@@ -45,7 +45,7 @@ Una vez que la implementación NumPy estaba completa y cada operación se sentí
 
 El corpus tuvo su propia historia. La primera versión usaba 2 volúmenes de Project Gutenberg, y fue un desastre: ruido de OCR por todas partes, marcas de agua del editor, metadata filtrándose al texto. El vocabulario se infló a más de 200 caracteres lleno de basura que el modelo aprendía con la misma fidelidad que los patrones reales. La versión final usa los 7 volúmenes completos extraídos de archivos MOBI, nacidos digitales, sin artefactos de escaneo. Después de limpieza por whitelist: 7.15 millones de caracteres con un vocabulario de exactamente 94 símbolos.
 
-Para el entrenamiento usé AdamW con learning rate de 3e-4 y weight decay de 0.01, cosine annealing con warmup lineal de 500 pasos, gradient clipping con norma máxima de 1.0, y un split 90/10. Después de 201,104 pasos sobre todo el corpus:
+Entrené con AdamW y cosine annealing, gradient clipping y un split 90/10. Después de 201,104 pasos sobre el corpus completo:
 
 | Métrica | Valor |
 |---------|-------|
@@ -62,7 +62,7 @@ Las horas de espera mientras el modelo entrenaba fueron parte del aprendizaje. V
 **Prompt**: "La memoria"
 > La memoria y su pasad se sigue, por ejemplo, señora aun sin embargo, al menos encontrar a la Sra. de Guermantes me permanecía yo saber que el mismo seguro, pero en el que, si bien buscar con frecuencia venir a veces a un cual se debe tanto para salir y no podía hacer ella su disposición con la sociedad, por l
 
-Los nombres de personajes aparecen correctamente (Swann, Guermantes, Sra.), aprendidos puramente de frecuencia estadística. La estructura gramatical del español está presente. Se percibe algo del estilo proustiano en las oraciones largas con cláusulas subordinadas. Pero la coherencia semántica se desvanece conforme la oración se alarga: empieza bien y pierde el hilo. Con 420K parámetros y una sola época, eso era esperable.
+Los nombres de personajes aparecen correctamente (Swann, Guermantes, Sra.), aprendidos puramente de frecuencia estadística. La estructura gramatical del español está presente. Se percibe algo del estilo proustiano en las oraciones largas con cláusulas subordinadas. Pero la coherencia semántica se desvanece conforme la oración se alarga: empieza bien y pierde el hilo. Con 420K parámetros y un solo epoch de entrenamiento, eso era esperable.
 
 ## Lo que realmente entendí
 
@@ -74,13 +74,13 @@ Pero ahí es donde se pone importante. Si estos pesos son solo números intercon
 
 Parte de lo que me llevó a construir este modelo fueron las posiciones públicas de Anthropic sobre seguridad en IA. No era una empresa diciendo que su producto era peligroso para vender más, sino ingenieros explicando en papers y entrevistas por qué modelos mucho más grandes que el mío les generaban preocupaciones que no podían resolver del todo. Me pregunté si eso era hype, paranoia corporativa, o algo genuino. Construir el modelo me dio mi propia respuesta. Cuando ves que todo se reduce a un tensor de números y que las relaciones entre esos pesos producen outputs con estructura y coherencia, entiendes por qué la frontera entre "útil" y "peligroso" es imposible de trazar con precisión. No hay una línea en la arquitectura que separe lo bueno de lo malo. Todo depende de qué aprendieron esos números durante el entrenamiento, y verificar eso exhaustivamente en un modelo de 420K parámetros ya es difícil; hacerlo con cientos de miles de millones es computacionalmente imposible. Las preocupaciones son válidas porque la arquitectura misma no ofrece garantías.
 
-El proyecto no me dejó siendo experto en embeddings ni en clasificación de tokenización. Tampoco fue sobre la T4 gratuita de Colab ni sobre las horas esperando que terminara cada época. Lo que me llevé fue entender las causas y consecuencias que son invisibles cuando usas un modelo de lenguaje como usuario, las que están escondidas en los pesos de estos monstruos computacionales que tenemos hoy.
+El proyecto no me dejó siendo experto en embeddings ni en clasificación de tokenización. Tampoco fue sobre la T4 gratuita de Colab ni sobre las horas esperando que terminara cada epoch. Lo que me llevé fue entender las causas y consecuencias que son invisibles cuando usas un modelo de lenguaje como usuario, las que están escondidas en los pesos de estos monstruos computacionales que tenemos hoy.
 
 El escalamiento por la raíz de `d_k`, la máscara causal como matriz triangular de `-inf`, las residual connections que hacen entrenables los transformers profundos. Todo eso lo derivé y lo documenté en el código. Pero si tuviera que elegir una sola lección, no sería ninguna de esas. Sería la comprensión de que algo tan simple como un tensor puede producir algo que se siente intelectual, y que esa misma simplicidad es la razón por la que la seguridad en IA es un problema tan difícil.
 
 ## Qué sigue
 
-El modelo no llegó a convergencia; 5 a 10 épocas probablemente mejorarían la coherencia. Quiero probar pre-norm en lugar de post-norm, experimentar con un tokenizador BPE para capturar la morfología del español, y explorar las attention maps para entender qué patrones aprende cada cabeza. El código completo con anotaciones de shapes está en el [repositorio de GitHub](https://github.com/GonorAndres/proust-attention).
+El modelo no llegó a convergencia; 5 a 10 epochs más probablemente mejorarían la coherencia. Quiero probar pre-norm en lugar de post-norm, experimentar con un tokenizador BPE para capturar la morfología del español, y explorar las attention maps para entender qué patrones aprende cada head.
 
 ## Otros de mis usos con la IA
 
