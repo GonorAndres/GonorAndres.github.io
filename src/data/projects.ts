@@ -13,6 +13,7 @@ export interface Project {
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
   screenshot?: string;
+  gallery?: Array<{ src: string; caption?: Record<Lang, string> }>;
   relatedTo?: string[];
   blogSlug?: string;     // English slug of the blog post for this project (e.g. 'sima', 'actuarial-ml-pricing')
   tier: 1 | 2 | 3 | 4; // internal priority: 1=full package, 2=screenshot+blog, 3=academic, 4=minimal
@@ -613,6 +614,7 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['michoacan', 'ab-testing'],
+    status: 'in-development',
     tier: 4,
     creation_date: '2026-02-07',
   },
@@ -770,6 +772,7 @@ export function getProjects(lang: Lang) {
     tags: p.tags[lang],
     variant: p.variant,
     screenshot: p.screenshot,
+    gallery: p.gallery?.map(g => ({ src: g.src, caption: g.caption?.[lang] })),
     relatedTo: p.relatedTo,
     blogSlug: p.blogSlug,
     tier: p.tier,
