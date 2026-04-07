@@ -196,6 +196,35 @@ Project cards also accept `status?: 'completed' | 'in-development'`. Set to `'in
 
 Adding a new category requires changes in: `src/data/projects.ts` (type), `src/components/ui/ProjectsGrid.tsx` (accent, badge, gradient, icon), `src/i18n/es.ts` + `en.ts` (translation key), `src/components/sections/FeaturedProjects.astro` (labels object).
 
+## Project Gallery (Creation Steps)
+
+Every project card with a `screenshot` is clickable: clicking the image opens a full-screen lightbox. If the project also has a `gallery` array, the lightbox becomes a sequential gallery showing the creation process step by step.
+
+**Goal:** all projects should eventually have a `gallery` that walks through the most important stages of building the project (data pipeline, model fitting, UI iteration, key result, etc.).
+
+**UI layout (one image at a time):**
+```
+┌─────────────────────────────────────[X]─┐
+│  ┌───────────────────────────────────┐   │
+│  │           [ image ]               │   │
+│  └───────────────────────────────────┘   │
+│  ←   "Caption describing this step"  →   │
+│               •  •  ●  •  •             │
+└─────────────────────────────────────────┘
+```
+Arrows and keyboard (←/→/Escape) navigate between steps. Dots show position.
+
+**How to add a gallery to a project** (`src/data/projects.ts`):
+```ts
+gallery: [
+  { src: '/screenshots/sima-step1.png', caption: { es: 'Proyección Lee-Carter', en: 'Lee-Carter projection' } },
+  { src: '/screenshots/sima-step2.png', caption: { es: 'Tabla de conmutación', en: 'Commutation table' } },
+],
+```
+Place images in `public/screenshots/`. Captions are optional but recommended. The `screenshot` field stays as the card thumbnail; `gallery` adds the step-by-step view.
+
+**Status:** field added to all projects, images pending. Priority order: SIMA, GMM Explorer, regulation-agent, life-insurance, then the rest.
+
 ## Technical Preferences
 
 - Framework: Astro 5 + Tailwind + React islands + MDX

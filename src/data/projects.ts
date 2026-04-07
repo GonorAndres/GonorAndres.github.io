@@ -13,6 +13,7 @@ export interface Project {
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
   screenshot?: string;
+  gallery?: Array<{ src: string; caption?: Record<Lang, string> }>;
   relatedTo?: string[];
   blogSlug?: string;     // English slug of the blog post for this project (e.g. 'sima', 'actuarial-ml-pricing')
   tier: 1 | 2 | 3 | 4; // internal priority: 1=full package, 2=screenshot+blog, 3=academic, 4=minimal
@@ -115,6 +116,41 @@ export const projects: Project[] = [
     last_modification_date: '2026-03-21',
   },
 
+  // repo: https://github.com/GonorAndres/graph-relation-db
+  // local: /home/andtega349/graph-relation-db
+  // source: real UK PSC + GLEIF MX ownership topology with synthetic Mexican credit layer
+  {
+    slug: 'credit-graph',
+    title: {
+      es: 'CreditGraph: Riesgo Crediticio con Topología de Grafos',
+      en: 'CreditGraph: Topological Credit Risk Analysis',
+    },
+    description: {
+      es: 'El análisis crediticio tradicional trata cada préstamo como evento independiente, pero las cadenas de garantías, garantías circulares y concentración accionaria crean exposición correlacionada invisible a modelos relacionales. CreditGraph modela un portafolio de 500 clientes como grafo en Neo4j, procesa datos con PySpark en Databricks, califica con LightGBM calibrado por Platt, y ejecuta pruebas de estrés topológicas que revelan patrones de riesgo estructural ocultos al SQL.',
+      en: 'Traditional credit analysis treats each loan as independent, but guarantee chains, circular guarantees, and ownership concentration create correlated exposure invisible to relational models. CreditGraph models a 500-client portfolio as a Neo4j graph, processes data with PySpark on Databricks, scores with Platt-calibrated LightGBM, and runs topological stress tests that reveal structural risk patterns hidden from SQL.',
+    },
+    url: 'https://github.com/GonorAndres/graph-relation-db',
+    platform: 'GitHub',
+    category: 'data-science',
+    tags: {
+      es: ['Neo4j', 'PySpark', 'Databricks', 'Cypher', 'LightGBM', 'Riesgo crediticio', 'Grafos'],
+      en: ['Neo4j', 'PySpark', 'Databricks', 'Cypher', 'LightGBM', 'Credit risk', 'Graphs'],
+    },
+    variant: 'standard',
+    screenshot: '/screenshots/graph_db_1.png',
+    gallery: [
+      { src: '/screenshots/graph_db_2.png', caption: { es: 'Pipeline ETL en PySpark sobre Databricks', en: 'PySpark ETL pipeline on Databricks' } },
+      { src: '/screenshots/graph_db_3.png', caption: { es: 'PDs calibradas con Platt cargadas en Neo4j', en: 'Platt-calibrated PDs loaded into Neo4j' } },
+      { src: '/screenshots/graph_db_1.png', caption: { es: 'Topología del grafo en Neo4j AuraDB', en: 'Graph topology in Neo4j AuraDB' } },
+      { src: '/screenshots/graph_db_4.png', caption: { es: 'Pruebas de estrés topológicas con Cypher', en: 'Topological stress tests with Cypher' } },
+    ],
+    relatedTo: ['sima', 'credit-risk', 'lisf-agent', 'data-engineering-platform'],
+    blogSlug: 'credit-graph-topological-risk',
+    tier: 1,
+    creation_date: '2026-03-29',
+    last_modification_date: '2026-03-21',
+  },
+
   // repo: https://github.com/GonorAndres/data-engineer-path
   // local: /home/andtega349/data-engineer-path
   // source: 6 projects building a complete GCP data platform for insurance claims
@@ -138,42 +174,11 @@ export const projects: Project[] = [
     },
     variant: 'wide',
     screenshot: '/screenshots/data-engineering-platform.png',
-    relatedTo: ['sima', 'insurance-pricing-ml', 'data-analyst-portfolio'],
+    relatedTo: ['sima', 'insurance-pricing-ml', 'data-analyst-portfolio', 'credit-graph'],
     blogSlug: 'data-engineering-platform',
     tier: 1,
     creation_date: '2026-02-21',
     last_modification_date: '2026-03-21',
-  },
-
-  // repo: https://github.com/GonorAndres/regulation-actuarial-agent
-  // local: /home/andtega349/lisf-agent
-  // live: https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/
-  // source: LISF + CUSF PDFs — Mexican insurance and surety regulation
-  {
-    slug: 'lisf-agent',
-    title: {
-      es: 'Asistente de Regulación Actuarial',
-      en: 'Actuarial Regulation Assistant',
-    },
-    description: {
-      es: 'La LISF y la CUSF suman más de mil artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de ambas leyes y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas. Código de acceso: actuaria-claude.',
-      en: 'LISF and CUSF together span over a thousand articles, and interpreting them requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full text of both laws and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations. Access code: actuaria-claude.',
-    },
-    url: 'https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/',
-    repo: 'https://github.com/GonorAndres/regulation-actuarial-agent',
-    platform: 'GCP',
-    category: 'actuarial',
-    tags: {
-      es: ['Claude SDK', 'FastAPI', 'LISF', 'CUSF', 'Python', 'GCP'],
-      en: ['Claude SDK', 'FastAPI', 'LISF', 'CUSF', 'Python', 'GCP'],
-    },
-    variant: 'standard',
-    screenshot: '/screenshots/lisf-agent.png',
-    relatedTo: ['sima'],
-    blogSlug: 'regulation-agent-rag',
-    tier: 1,
-    creation_date: '2026-02-01',
-    last_modification_date: '2026-03-19',
   },
 
   // repo: https://github.com/GonorAndres/seguridad-social
@@ -203,7 +208,38 @@ export const projects: Project[] = [
     blogSlug: 'pension-simulator',
     tier: 1,
     creation_date: '2026-02-07',
-    last_modification_date: '2026-03-17',
+    last_modification_date: '2026-03-19',
+  },
+
+  // repo: https://github.com/GonorAndres/regulation-actuarial-agent
+  // local: /home/andtega349/lisf-agent
+  // live: https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/
+  // source: LISF + CUSF PDFs — Mexican insurance and surety regulation
+  {
+    slug: 'lisf-agent',
+    title: {
+      es: 'Asistente de Regulación Actuarial',
+      en: 'Actuarial Regulation Assistant',
+    },
+    description: {
+      es: 'La LISF y la CUSF suman más de mil artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de ambas leyes y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas. Código de acceso: actuaria-claude.',
+      en: 'LISF and CUSF together span over a thousand articles, and interpreting them requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full text of both laws and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations. Access code: actuaria-claude.',
+    },
+    url: 'https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/',
+    repo: 'https://github.com/GonorAndres/regulation-actuarial-agent',
+    platform: 'GCP',
+    category: 'actuarial',
+    tags: {
+      es: ['Claude SDK', 'FastAPI', 'LISF', 'CUSF', 'Python', 'GCP'],
+      en: ['Claude SDK', 'FastAPI', 'LISF', 'CUSF', 'Python', 'GCP'],
+    },
+    variant: 'standard',
+    screenshot: '/screenshots/lisf-agent.png',
+    relatedTo: ['sima', 'credit-graph'],
+    blogSlug: 'regulation-agent-rag',
+    tier: 1,
+    creation_date: '2026-02-01',
+    last_modification_date: '2026-03-19',
   },
 
   // repo: no public GitHub repo — Drive folder IS the deliverable
@@ -498,6 +534,7 @@ export const projects: Project[] = [
       es: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
       en: ['PyTorch', 'Transformers', 'NLP', 'Deep Learning'],
     },
+    screenshot: '/screenshots/proust-attention.png',
     variant: 'standard',
     relatedTo: ['lisf-agent'],
     blogSlug: 'proust-attention-machine',
@@ -612,6 +649,7 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['michoacan', 'ab-testing'],
+    status: 'in-development',
     tier: 4,
     creation_date: '2026-02-07',
   },
@@ -723,7 +761,7 @@ export const projects: Project[] = [
     },
     variant: 'wide',
     screenshot: '/screenshots/credit-risk.png',
-    relatedTo: ['ab-testing', 'data-cleaning'],
+    relatedTo: ['ab-testing', 'data-cleaning', 'credit-graph'],
     tier: 3,
     creation_date: '2025-06-12',
     last_modification_date: '2025-08-09',
@@ -769,6 +807,7 @@ export function getProjects(lang: Lang) {
     tags: p.tags[lang],
     variant: p.variant,
     screenshot: p.screenshot,
+    gallery: p.gallery?.map(g => ({ src: g.src, caption: g.caption?.[lang] })),
     relatedTo: p.relatedTo,
     blogSlug: p.blogSlug,
     tier: p.tier,

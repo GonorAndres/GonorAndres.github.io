@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import type { ProjectCategory } from '../../data/projects';
 import { track } from '../../lib/analytics';
 
@@ -20,6 +21,7 @@ interface ProjectData {
   status?: 'completed' | 'in-development';
   creation_date: string;
   last_modification_date?: string;
+  gallery?: Array<{ src: string; caption?: string }>;
 }
 
 interface Props {
@@ -96,9 +98,145 @@ const categoryIconPaths: Record<ProjectCategory, string> = {
   'applied-math': 'M4.871 4A17.926 17.926 0 003 12c0 2.874.673 5.59 1.871 8m14.13 0A17.926 17.926 0 0021 12a17.926 17.926 0 00-1.871-8M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
 };
 
+// --- Gallery Modal ---
+function GalleryModal({ images, title, onClose }: {
+  images: Array<{ src: string; caption?: string }>;
+  title: string;
+  onClose: () => void;
+}) {
+  const [idx, setIdx] = useState(0);
+  const total = images.length;
+  const current = images[idx];
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight' && total > 1) setIdx(i => (i + 1) % total);
+      if (e.key === 'ArrowLeft' && total > 1) setIdx(i => (i - 1 + total) % total);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose, total]);
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, []);
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#1B2A4A]/90 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-4xl mx-4"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute -top-10 right-0 text-white/60 hover:text-white transition-colors"
+          aria-label="Cerrar"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Image */}
+        <div className="bg-[#F8F5F1] rounded-xl overflow-hidden flex items-center justify-center" style={{ maxHeight: '70vh' }}>
+          <img
+            src={current.src}
+            alt={current.caption ?? title}
+            className="max-w-full object-contain"
+            style={{ maxHeight: '70vh' }}
+          />
+        </div>
+
+        {/* Navigation row */}
+        <div className="mt-4 flex items-center gap-4">
+          {total > 1 ? (
+            <button
+              onClick={() => setIdx(i => (i - 1 + total) % total)}
+              className="shrink-0 text-white/60 hover:text-white transition-colors"
+              aria-label="Anterior"
+            >
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          ) : <div className="w-7" />}
+
+          <div className="flex-1 text-center">
+            {current.caption && (
+              <p className="text-white/75 text-sm">{current.caption}</p>
+            )}
+            {total > 1 && (
+              <p className="text-white/35 text-xs mt-1">{idx + 1} / {total}</p>
+            )}
+          </div>
+
+          {total > 1 ? (
+            <button
+              onClick={() => setIdx(i => (i + 1) % total)}
+              className="shrink-0 text-white/60 hover:text-white transition-colors"
+              aria-label="Siguiente"
+            >
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          ) : <div className="w-7" />}
+        </div>
+
+        {/* Dot indicators */}
+        {total > 1 && (
+          <div className="flex justify-center gap-2 mt-3">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIdx(i)}
+                className={`w-2 h-2 rounded-full transition-colors ${i === idx ? 'bg-white' : 'bg-white/30 hover:bg-white/50'}`}
+                aria-label={`Imagen ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 // --- Grid Card ---
 function GridCard({ project, labels }: { project: ProjectData; labels: Props['labels'] }) {
   const accent = categoryAccent[project.category];
+  const [galleryOpen, setGalleryOpen] = useState(false);
+
+  // Gallery images: prefer explicit gallery array, fall back to main screenshot
+  const galleryImages: Array<{ src: string; caption?: string }> | null =
+    project.gallery?.length
+      ? project.gallery
+      : project.screenshot
+        ? [{ src: project.screenshot }]
+        : null;
+
+  const badges = (
+    <div className="absolute top-3 left-3 flex items-center gap-2">
+      <span className={`text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm ${project.screenshot ? 'bg-white/85 text-[#1B2A4A]/75' : categoryBadge[project.category]}`}>
+        {labels.categories[project.category]}
+      </span>
+      <span className="text-xs px-2 py-1 rounded-full bg-white/70 text-[#1B2A4A]/55 backdrop-blur-sm">
+        {project.platform}
+      </span>
+      {project.status === 'in-development' && (
+        <span className="text-xs px-2 py-1 rounded-full border border-dashed border-[#1B2A4A]/30 text-[#1B2A4A]/50 backdrop-blur-sm bg-white/50">
+          {labels.inDevelopment}
+        </span>
+      )}
+    </div>
+  );
 
   return (
     <article className="group flex flex-col h-full bg-[#F5F0EA] rounded-xl border border-[#1B2A4A]/10 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
@@ -106,40 +244,49 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
       <div className="h-1 w-full shrink-0" style={{ backgroundColor: accent }} />
 
       {/* Visual area */}
-      <a href={project.url}
-        {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
-        onClick={() => track('tool_used', { tool: project.title })}
-        className="block relative overflow-hidden h-44">
-        {project.screenshot ? (
+      {galleryImages ? (
+        <button
+          type="button"
+          onClick={() => { track('tool_used', { tool: project.title }); setGalleryOpen(true); }}
+          className="block relative overflow-hidden h-44 w-full cursor-zoom-in text-left"
+          aria-label={`Ver galería: ${project.title}`}
+        >
           <div className="w-full h-full flex items-center justify-center bg-[#F8F5F1] p-3">
             <img src={project.screenshot} alt={project.title}
-              className="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105 rounded-sm" loading="lazy" />
+              className="max-w-full max-h-full object-contain transition-opacity duration-300 group-hover:opacity-85 rounded-sm" loading="lazy" />
           </div>
-        ) : (
+          {badges}
+          {/* Gallery indicator */}
+          <div className="absolute bottom-2 right-2 bg-black/30 backdrop-blur-sm rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-hidden="true">
+            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        </button>
+      ) : (
+        <a href={project.url}
+          {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
+          onClick={() => track('tool_used', { tool: project.title })}
+          className="block relative overflow-hidden h-44">
           <div className={`w-full h-full bg-gradient-to-br flex items-center justify-center relative ${placeholderGradients[project.category]}`}>
             <div className="absolute inset-0 opacity-[0.06]"
               style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-            <svg className="w-12 h-12 text-[#1B2A4A]/15 transition-transform duration-500 group-hover:scale-110"
+            <svg className="w-12 h-12 text-[#1B2A4A]/15 transition-opacity duration-300 group-hover:opacity-50"
               fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d={categoryIconPaths[project.category]} />
             </svg>
           </div>
-        )}
-        {/* Badges overlay */}
-        <div className="absolute top-3 left-3 flex items-center gap-2">
-          <span className={`text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm ${project.screenshot ? 'bg-white/85 text-[#1B2A4A]/75' : categoryBadge[project.category]}`}>
-            {labels.categories[project.category]}
-          </span>
-          <span className="text-xs px-2 py-1 rounded-full bg-white/70 text-[#1B2A4A]/55 backdrop-blur-sm">
-            {project.platform}
-          </span>
-          {project.status === 'in-development' && (
-            <span className="text-xs px-2 py-1 rounded-full border border-dashed border-[#1B2A4A]/30 text-[#1B2A4A]/50 backdrop-blur-sm bg-white/50">
-              {labels.inDevelopment}
-            </span>
-          )}
-        </div>
-      </a>
+          {badges}
+        </a>
+      )}
+
+      {galleryOpen && galleryImages && (
+        <GalleryModal
+          images={galleryImages}
+          title={project.title}
+          onClose={() => setGalleryOpen(false)}
+        />
+      )}
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-5">
