@@ -99,24 +99,25 @@ const categoryIconPaths: Record<ProjectCategory, string> = {
 };
 
 // --- Gallery Modal ---
-function GalleryModal({ images, title, onClose }: {
+function GalleryModal({ images, title, onClose, startIndex = 0 }: {
   images: Array<{ src: string; caption?: string }>;
   title: string;
-  onClose: () => void;
+  onClose: (lastIndex: number) => void;
+  startIndex?: number;
 }) {
-  const [idx, setIdx] = useState(0);
+  const [idx, setIdx] = useState(startIndex);
   const total = images.length;
   const current = images[idx];
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') onClose(idx);
       if (e.key === 'ArrowRight' && total > 1) setIdx(i => (i + 1) % total);
       if (e.key === 'ArrowLeft' && total > 1) setIdx(i => (i - 1 + total) % total);
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [onClose, total]);
+  }, [onClose, total, idx]);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -127,7 +128,7 @@ function GalleryModal({ images, title, onClose }: {
   return createPortal(
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-[#1B2A4A]/90 backdrop-blur-sm"
-      onClick={onClose}
+      onClick={() => onClose(idx)}
     >
       <div
         className="relative w-full max-w-4xl mx-4"
@@ -135,7 +136,7 @@ function GalleryModal({ images, title, onClose }: {
       >
         {/* Close */}
         <button
-          onClick={onClose}
+          onClick={() => onClose(idx)}
           className="absolute -top-10 right-0 text-white/60 hover:text-white transition-colors"
           aria-label="Cerrar"
         >
@@ -214,14 +215,15 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
   const accent = categoryAccent[project.category];
   const [galleryOpen, setGalleryOpen] = useState(false);
 
-  // Random thumbnail: use fixed screenshot if set, otherwise pick a random gallery image on mount
-  const [thumbnailSrc] = useState<string | null>(() => {
-    if (project.screenshot) return project.screenshot;
-    if (project.gallery?.length) {
-      return project.gallery[Math.floor(Math.random() * project.gallery.length)].src;
+  // Active gallery index — always 0 for SSR, randomized after hydration via useEffect
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  useEffect(() => {
+    if (project.gallery && project.gallery.length > 1) {
+      setActiveIndex(Math.floor(Math.random() * project.gallery.length));
     }
-    return null;
-  });
+  }, []);
+  const thumbnailSrc: string | null =
+    project.gallery?.length ? project.gallery[activeIndex].src : (project.screenshot ?? null);
 
   // Gallery images: prefer explicit gallery array, fall back to main screenshot
   const galleryImages: Array<{ src: string; caption?: string }> | null =
@@ -254,24 +256,41 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
 
       {/* Visual area */}
       {galleryImages ? (
-        <button
-          type="button"
+        <div
+          role="button"
+          tabIndex={0}
           onClick={() => { track('tool_used', { tool: project.title }); setGalleryOpen(true); }}
-          className="block relative overflow-hidden h-44 w-full cursor-zoom-in text-left"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); track('tool_used', { tool: project.title }); setGalleryOpen(true); } }}
+          className="relative overflow-hidden h-44 w-full cursor-zoom-in"
           aria-label={`Ver galería: ${project.title}`}
         >
-          <div className="w-full h-full flex items-center justify-center bg-[#F8F5F1] p-3">
+          <div className="w-full h-full flex items-center justify-center bg-gray-200 p-3">
             <img src={thumbnailSrc!} alt={project.title}
+              suppressHydrationWarning
               className="max-w-full max-h-full object-contain transition-opacity duration-300 group-hover:opacity-85 rounded-sm" loading="lazy" />
           </div>
           {badges}
-          {/* Gallery indicator */}
-          <div className="absolute bottom-2 right-2 bg-black/30 backdrop-blur-sm rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-hidden="true">
-            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        </button>
+          {/* Dot strip: vertical right side, always visible, click to jump thumbnail */}
+          {project.gallery && project.gallery.length > 1 && (
+            <div className="absolute right-1 top-0 bottom-0 flex flex-col justify-center gap-0 sm:gap-1.5 sm:right-2" aria-hidden="true">
+              {project.gallery.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setActiveIndex(i); }}
+                  className="p-2 sm:p-0 flex items-center justify-center"
+                  aria-label={`Ver imagen ${i + 1}`}
+                >
+                  <span className={`rounded-full block transition-all duration-200 ${
+                    i === activeIndex
+                      ? 'w-2 h-2 bg-[#1B2A4A]'
+                      : 'w-1.5 h-1.5 bg-[#1B2A4A]/30 hover:bg-[#1B2A4A]/60'
+                  }`} />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       ) : (
         <a href={project.url}
           {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
@@ -293,7 +312,8 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
         <GalleryModal
           images={galleryImages}
           title={project.title}
-          onClose={() => setGalleryOpen(false)}
+          startIndex={activeIndex}
+          onClose={(lastIndex) => { setActiveIndex(lastIndex); setGalleryOpen(false); }}
         />
       )}
 
@@ -302,7 +322,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
         <h3 className="font-serif text-lg font-bold text-[#1B2A4A] mb-2 group-hover:text-[#C17654] transition-colors leading-snug">
           {project.title}
         </h3>
-        <p className="text-sm text-[#1B2A4A]/55 flex-1 mb-3 leading-relaxed line-clamp-none sm:line-clamp-6">
+        <p className="text-xs text-[#1B2A4A]/55 flex-1 mb-3 leading-relaxed">
           {project.description}
         </p>
         {project.tags.length > 0 && (
@@ -618,9 +638,9 @@ export default function ProjectsGrid({ projects, labels }: Props) {
         </div>
       </div>
 
-      {/* Grid view — clean 2-col */}
+      {/* Grid view — 3-col */}
       {viewMode === 'grid' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {visible.map((project) => (
             <GridCard key={project.slug} project={project} labels={labels} />
           ))}
