@@ -214,6 +214,15 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
   const accent = categoryAccent[project.category];
   const [galleryOpen, setGalleryOpen] = useState(false);
 
+  // Random thumbnail: use fixed screenshot if set, otherwise pick a random gallery image on mount
+  const [thumbnailSrc] = useState<string | null>(() => {
+    if (project.screenshot) return project.screenshot;
+    if (project.gallery?.length) {
+      return project.gallery[Math.floor(Math.random() * project.gallery.length)].src;
+    }
+    return null;
+  });
+
   // Gallery images: prefer explicit gallery array, fall back to main screenshot
   const galleryImages: Array<{ src: string; caption?: string }> | null =
     project.gallery?.length
@@ -224,7 +233,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
 
   const badges = (
     <div className="absolute top-3 left-3 flex items-center gap-2">
-      <span className={`text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm ${project.screenshot ? 'bg-white/85 text-[#1B2A4A]/75' : categoryBadge[project.category]}`}>
+      <span className={`text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm ${thumbnailSrc ? 'bg-white/85 text-[#1B2A4A]/75' : categoryBadge[project.category]}`}>
         {labels.categories[project.category]}
       </span>
       <span className="text-xs px-2 py-1 rounded-full bg-white/70 text-[#1B2A4A]/55 backdrop-blur-sm">
@@ -252,7 +261,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
           aria-label={`Ver galería: ${project.title}`}
         >
           <div className="w-full h-full flex items-center justify-center bg-[#F8F5F1] p-3">
-            <img src={project.screenshot} alt={project.title}
+            <img src={thumbnailSrc!} alt={project.title}
               className="max-w-full max-h-full object-contain transition-opacity duration-300 group-hover:opacity-85 rounded-sm" loading="lazy" />
           </div>
           {badges}
@@ -378,6 +387,13 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
 // --- List Row ---
 function ListRow({ project, labels }: { project: ProjectData; labels: Props['labels'] }) {
   const accent = categoryAccent[project.category];
+  const [thumbnailSrc] = useState<string | null>(() => {
+    if (project.screenshot) return project.screenshot;
+    if (project.gallery?.length) {
+      return project.gallery[Math.floor(Math.random() * project.gallery.length)].src;
+    }
+    return null;
+  });
 
   return (
     <article
@@ -396,8 +412,8 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
 
       {/* Icon */}
       <div className={`hidden sm:flex shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br items-center justify-center ${placeholderGradients[project.category]}`}>
-        {project.screenshot ? (
-          <img src={project.screenshot} alt="" className="w-full h-full object-cover rounded-lg" loading="lazy" />
+        {thumbnailSrc ? (
+          <img src={thumbnailSrc} alt="" className="w-full h-full object-cover rounded-lg" loading="lazy" />
         ) : (
           <svg className="w-6 h-6 text-[#1B2A4A]/25" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d={categoryIconPaths[project.category]} />
