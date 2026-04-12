@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import type { ProjectCategory } from '../../data/projects';
 import { track } from '../../lib/analytics';
@@ -8,6 +8,7 @@ interface ProjectData {
   title: string;
   description: string;
   url: string;
+  urls?: Array<{ label: string; url: string }>;
   repo?: string;
   platform: string;
   category: ProjectCategory;
@@ -99,24 +100,25 @@ const categoryIconPaths: Record<ProjectCategory, string> = {
 };
 
 // --- Gallery Modal ---
-function GalleryModal({ images, title, onClose }: {
+function GalleryModal({ images, title, onClose, startIndex = 0 }: {
   images: Array<{ src: string; caption?: string }>;
   title: string;
-  onClose: () => void;
+  onClose: (lastIndex: number) => void;
+  startIndex?: number;
 }) {
-  const [idx, setIdx] = useState(0);
+  const [idx, setIdx] = useState(startIndex);
   const total = images.length;
   const current = images[idx];
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') onClose(idx);
       if (e.key === 'ArrowRight' && total > 1) setIdx(i => (i + 1) % total);
       if (e.key === 'ArrowLeft' && total > 1) setIdx(i => (i - 1 + total) % total);
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [onClose, total]);
+  }, [onClose, total, idx]);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -127,7 +129,7 @@ function GalleryModal({ images, title, onClose }: {
   return createPortal(
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-[#1B2A4A]/90 backdrop-blur-sm"
-      onClick={onClose}
+      onClick={() => onClose(idx)}
     >
       <div
         className="relative w-full max-w-4xl mx-4"
@@ -135,7 +137,7 @@ function GalleryModal({ images, title, onClose }: {
       >
         {/* Close */}
         <button
-          onClick={onClose}
+          onClick={() => onClose(idx)}
           className="absolute -top-10 right-0 text-white/60 hover:text-white transition-colors"
           aria-label="Cerrar"
         >
@@ -209,10 +211,110 @@ function GalleryModal({ images, title, onClose }: {
   );
 }
 
+// --- Live Links Menu (dropdown for projects with multiple live URLs) ---
+function LiveLinksMenu({ urls, label, accent }: {
+  urls: Array<{ label: string; url: string }>;
+  label: string;
+  accent: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<{ top: number; right: number } | null>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open || !btnRef.current) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    setPosition({
+      top: rect.top - 8,
+      right: window.innerWidth - rect.right,
+    });
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (btnRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    // Close on scroll or resize so the menu never appears disconnected from its trigger
+    const onScrollOrResize = () => setOpen(false);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('click', onDown);
+    document.addEventListener('keydown', onKey);
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('click', onDown);
+      document.removeEventListener('keydown', onKey);
+      window.removeEventListener('scroll', onScrollOrResize);
+      window.removeEventListener('resize', onScrollOrResize);
+    };
+  }, [open]);
+
+  return (
+    <>
+      <button
+        ref={btnRef}
+        type="button"
+        onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
+        className="inline-flex items-center gap-1.5 text-xs font-medium transition-colors duration-200"
+        style={{ color: accent }}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        {label}
+        <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && position && createPortal(
+        <div
+          ref={menuRef}
+          className="fixed w-64 bg-white rounded-lg shadow-lg border border-[#1B2A4A]/10 py-1 z-[60] -translate-y-full"
+          style={{ top: position.top, right: position.right }}
+          role="menu"
+        >
+          {urls.map((u, i) => (
+            <a
+              key={i}
+              href={u.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => { track('tool_used', { tool: u.label }); setOpen(false); }}
+              className="block px-3 py-2 text-xs text-[#1B2A4A]/75 hover:bg-[#EDE6DD] hover:text-[#1B2A4A] transition-colors"
+              role="menuitem"
+            >
+              {u.label}
+            </a>
+          ))}
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
 // --- Grid Card ---
 function GridCard({ project, labels }: { project: ProjectData; labels: Props['labels'] }) {
   const accent = categoryAccent[project.category];
   const [galleryOpen, setGalleryOpen] = useState(false);
+
+  // Active gallery index — always 0 for SSR, randomized after hydration via useEffect
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  useEffect(() => {
+    if (project.gallery && project.gallery.length > 1) {
+      setActiveIndex(Math.floor(Math.random() * project.gallery.length));
+    }
+  }, []);
+  const thumbnailSrc: string | null =
+    project.gallery?.length ? project.gallery[activeIndex].src : (project.screenshot ?? null);
 
   // Gallery images: prefer explicit gallery array, fall back to main screenshot
   const galleryImages: Array<{ src: string; caption?: string }> | null =
@@ -224,7 +326,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
 
   const badges = (
     <div className="absolute top-3 left-3 flex items-center gap-2">
-      <span className={`text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm ${project.screenshot ? 'bg-white/85 text-[#1B2A4A]/75' : categoryBadge[project.category]}`}>
+      <span className={`text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm ${thumbnailSrc ? 'bg-white/85 text-[#1B2A4A]/75' : categoryBadge[project.category]}`}>
         {labels.categories[project.category]}
       </span>
       <span className="text-xs px-2 py-1 rounded-full bg-white/70 text-[#1B2A4A]/55 backdrop-blur-sm">
@@ -245,24 +347,41 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
 
       {/* Visual area */}
       {galleryImages ? (
-        <button
-          type="button"
+        <div
+          role="button"
+          tabIndex={0}
           onClick={() => { track('tool_used', { tool: project.title }); setGalleryOpen(true); }}
-          className="block relative overflow-hidden h-44 w-full cursor-zoom-in text-left"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); track('tool_used', { tool: project.title }); setGalleryOpen(true); } }}
+          className="relative overflow-hidden h-44 w-full cursor-zoom-in"
           aria-label={`Ver galería: ${project.title}`}
         >
-          <div className="w-full h-full flex items-center justify-center bg-[#F8F5F1] p-3">
-            <img src={project.screenshot} alt={project.title}
+          <div className="w-full h-full flex items-center justify-center bg-gray-200 p-3">
+            <img src={thumbnailSrc!} alt={project.title}
+              suppressHydrationWarning
               className="max-w-full max-h-full object-contain transition-opacity duration-300 group-hover:opacity-85 rounded-sm" loading="lazy" />
           </div>
           {badges}
-          {/* Gallery indicator */}
-          <div className="absolute bottom-2 right-2 bg-black/30 backdrop-blur-sm rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200" aria-hidden="true">
-            <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-        </button>
+          {/* Dot strip: vertical right side, always visible, click to jump thumbnail */}
+          {project.gallery && project.gallery.length > 1 && (
+            <div className="absolute right-1 top-0 bottom-0 flex flex-col justify-center gap-0 sm:gap-1.5 sm:right-2" aria-hidden="true">
+              {project.gallery.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setActiveIndex(i); }}
+                  className="p-2 sm:p-0 flex items-center justify-center"
+                  aria-label={`Ver imagen ${i + 1}`}
+                >
+                  <span className={`rounded-full block transition-all duration-200 ${
+                    i === activeIndex
+                      ? 'w-2 h-2 bg-[#1B2A4A]'
+                      : 'w-1.5 h-1.5 bg-[#1B2A4A]/30 hover:bg-[#1B2A4A]/60'
+                  }`} />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       ) : (
         <a href={project.url}
           {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
@@ -284,7 +403,8 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
         <GalleryModal
           images={galleryImages}
           title={project.title}
-          onClose={() => setGalleryOpen(false)}
+          startIndex={activeIndex}
+          onClose={(lastIndex) => { setActiveIndex(lastIndex); setGalleryOpen(false); }}
         />
       )}
 
@@ -293,7 +413,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
         <h3 className="font-serif text-lg font-bold text-[#1B2A4A] mb-2 group-hover:text-[#C17654] transition-colors leading-snug">
           {project.title}
         </h3>
-        <p className="text-sm text-[#1B2A4A]/55 flex-1 mb-3 leading-relaxed line-clamp-none sm:line-clamp-6">
+        <p className="text-xs text-[#1B2A4A]/55 flex-1 mb-3 leading-relaxed">
           {project.description}
         </p>
         {project.tags.length > 0 && (
@@ -343,9 +463,12 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
               </a>
             )}
           </div>
-          {/* RIGHT — live site */}
+          {/* RIGHT — live site (dropdown if multiple URLs, single link otherwise) */}
           <div className="flex justify-end">
             {project.platform !== 'GitHub' && project.platform !== 'Drive' && (
+              project.urls && project.urls.length > 0 ? (
+                <LiveLinksMenu urls={project.urls} label={labels.viewLive} accent={accent} />
+              ) : (
               <a
                 href={project.url}
                 {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
@@ -367,6 +490,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
                   </svg>
                 )}
               </a>
+              )
             )}
           </div>
         </div>
@@ -378,6 +502,13 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
 // --- List Row ---
 function ListRow({ project, labels }: { project: ProjectData; labels: Props['labels'] }) {
   const accent = categoryAccent[project.category];
+  const [thumbnailSrc] = useState<string | null>(() => {
+    if (project.screenshot) return project.screenshot;
+    if (project.gallery?.length) {
+      return project.gallery[Math.floor(Math.random() * project.gallery.length)].src;
+    }
+    return null;
+  });
 
   return (
     <article
@@ -396,8 +527,8 @@ function ListRow({ project, labels }: { project: ProjectData; labels: Props['lab
 
       {/* Icon */}
       <div className={`hidden sm:flex shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br items-center justify-center ${placeholderGradients[project.category]}`}>
-        {project.screenshot ? (
-          <img src={project.screenshot} alt="" className="w-full h-full object-cover rounded-lg" loading="lazy" />
+        {thumbnailSrc ? (
+          <img src={thumbnailSrc} alt="" className="w-full h-full object-cover rounded-lg" loading="lazy" />
         ) : (
           <svg className="w-6 h-6 text-[#1B2A4A]/25" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d={categoryIconPaths[project.category]} />
@@ -602,9 +733,9 @@ export default function ProjectsGrid({ projects, labels }: Props) {
         </div>
       </div>
 
-      {/* Grid view — clean 2-col */}
+      {/* Grid view — 3-col */}
       {viewMode === 'grid' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {visible.map((project) => (
             <GridCard key={project.slug} project={project} labels={labels} />
           ))}

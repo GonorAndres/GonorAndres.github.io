@@ -1,5 +1,11 @@
 import posthog from 'posthog-js';
 
+declare global {
+  interface Window {
+    posthog: typeof posthog;
+  }
+}
+
 let initialized = false;
 
 const key = import.meta.env.PUBLIC_POSTHOG_KEY as string | undefined;
@@ -10,7 +16,19 @@ if (key && typeof window !== 'undefined' && !/localhost|127\.0\.0\.1/.test(windo
     autocapture: false,
     capture_pageview: true,
   });
+  window.posthog = posthog;
   initialized = true;
+
+  if (localStorage.getItem('is_owner') === 'true') {
+    posthog.identify(
+      'gonor-owner',
+      {
+        email: 'gonorandres@ciencias.unam.mx',
+        name: 'Gonor (Owner)',
+        is_internal_user: true
+      }
+    );
+  }
 }
 
 export function track(event: string, props?: Record<string, unknown>) {
