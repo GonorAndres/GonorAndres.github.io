@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import type { ProjectCategory } from '../../data/projects';
 import { track } from '../../lib/analytics';
@@ -8,6 +8,7 @@ interface ProjectData {
   title: string;
   description: string;
   url: string;
+  urls?: Array<{ label: string; url: string }>;
   repo?: string;
   platform: string;
   category: ProjectCategory;
@@ -210,6 +211,96 @@ function GalleryModal({ images, title, onClose, startIndex = 0 }: {
   );
 }
 
+// --- Live Links Menu (dropdown for projects with multiple live URLs) ---
+function LiveLinksMenu({ urls, label, accent }: {
+  urls: Array<{ label: string; url: string }>;
+  label: string;
+  accent: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<{ top: number; right: number } | null>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open || !btnRef.current) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    setPosition({
+      top: rect.top - 8,
+      right: window.innerWidth - rect.right,
+    });
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (btnRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    // Close on scroll or resize so the menu never appears disconnected from its trigger
+    const onScrollOrResize = () => setOpen(false);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('click', onDown);
+    document.addEventListener('keydown', onKey);
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('click', onDown);
+      document.removeEventListener('keydown', onKey);
+      window.removeEventListener('scroll', onScrollOrResize);
+      window.removeEventListener('resize', onScrollOrResize);
+    };
+  }, [open]);
+
+  return (
+    <>
+      <button
+        ref={btnRef}
+        type="button"
+        onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
+        className="inline-flex items-center gap-1.5 text-xs font-medium transition-colors duration-200"
+        style={{ color: accent }}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        {label}
+        <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && position && createPortal(
+        <div
+          ref={menuRef}
+          className="fixed w-64 bg-white rounded-lg shadow-lg border border-[#1B2A4A]/10 py-1 z-[60] -translate-y-full"
+          style={{ top: position.top, right: position.right }}
+          role="menu"
+        >
+          {urls.map((u, i) => (
+            <a
+              key={i}
+              href={u.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => { track('tool_used', { tool: u.label }); setOpen(false); }}
+              className="block px-3 py-2 text-xs text-[#1B2A4A]/75 hover:bg-[#EDE6DD] hover:text-[#1B2A4A] transition-colors"
+              role="menuitem"
+            >
+              {u.label}
+            </a>
+          ))}
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
+
 // --- Grid Card ---
 function GridCard({ project, labels }: { project: ProjectData; labels: Props['labels'] }) {
   const accent = categoryAccent[project.category];
@@ -372,9 +463,12 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
               </a>
             )}
           </div>
-          {/* RIGHT — live site */}
+          {/* RIGHT — live site (dropdown if multiple URLs, single link otherwise) */}
           <div className="flex justify-end">
             {project.platform !== 'GitHub' && project.platform !== 'Drive' && (
+              project.urls && project.urls.length > 0 ? (
+                <LiveLinksMenu urls={project.urls} label={labels.viewLive} accent={accent} />
+              ) : (
               <a
                 href={project.url}
                 {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
@@ -396,6 +490,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
                   </svg>
                 )}
               </a>
+              )
             )}
           </div>
         </div>
