@@ -4,6 +4,14 @@ description: "Actuarial reserve analysis using Chain-Ladder and Bornhuetter-Ferg
 date: "2026-03-05"
 category: "proyectos-y-analisis"
 lang: "en"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Python · FastAPI · Next.js · SQL · Jupyter"
+  datos: "NAIC Schedule P · siniestros sintéticos (~50,000 reclamaciones)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard"
 tags: ["reserves", "chain-ladder", "BF", "IBNR", "P&C", "dashboard", "Python", "SQL"]
 ---
 

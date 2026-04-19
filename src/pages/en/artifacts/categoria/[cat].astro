@@ -9,42 +9,88 @@ export function getStaticPaths() {
 }
 
 const { cat } = Astro.params;
-const allNotes = getNotes('en').filter((n) => n.category === cat);
+const activeCat = cat as NoteCategory;
 
-const notesData = allNotes.map((note) => ({
-  slug: note.slug,
-  category: noteCategoryLabels['en'][note.category],
-  type: note.type,
-  title: note.title,
-  description: note.description,
-  urls: note.urls,
-  tags: note.tags,
-  lang: 'en' as const,
-}));
+const allEn = getNotes('en');
+const notesData = allEn
+  .filter((n) => n.category === activeCat)
+  .map((note) => ({
+    slug: note.slug,
+    categoryKey: note.category,
+    category: noteCategoryLabels['en'][note.category],
+    type: note.type,
+    title: note.title,
+    description: note.description,
+    urls: note.urls,
+    tags: note.tags,
+    createdDate: note.createdDate,
+    lang: 'en' as const,
+  }))
+  .sort((a, b) => b.createdDate.localeCompare(a.createdDate));
 
-const categoryOptions = noteCategories.map((c) => ({
-  value: noteCategoryLabels['en'][c],
-  label: noteCategoryLabels['en'][c],
-}));
+const categoryCounts = noteCategories
+  .map((c) => ({
+    key: c,
+    label: noteCategoryLabels['en'][c],
+    count: allEn.filter((n) => n.category === c).length,
+  }))
+  .filter((cc) => cc.count > 0 || cc.key === activeCat);
 
 const labels = {
   searchPlaceholder: t('en', 'notes.searchPlaceholder'),
   noResults: t('en', 'notes.noResults'),
   noteSingular: t('en', 'notes.noteSingular'),
   notePlural: t('en', 'notes.notePlural'),
-  allCategories: t('en', 'notes.allCategories'),
-  viewPdf: t('en', 'notes.viewPdf'),
-  details: t('en', 'notes.details'),
+  interactive: 'Interactive',
+  sortRecent: 'Newest first',
+  sortOldest: 'Oldest first',
+  sortTitle: 'Title A–Z',
 };
 ---
 
-<BaseLayout title={`${noteCategoryLabels['en'][cat as NoteCategory]} | Artifacts`} lang="en">
+<BaseLayout title={`${noteCategoryLabels['en'][activeCat]} | Artifacts`} lang="en">
   <section class="py-16 px-6">
     <div class="max-w-4xl mx-auto">
-      <a href="/en/artifacts/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; {t('en', 'notes.allNotes')}</a>
-      <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{noteCategoryLabels['en'][cat as NoteCategory]}</h1>
+      <div
+        class="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-x-12 gap-y-6 items-end pb-6 mb-10 border-b border-[#1B2A4A]/15 fade-up"
+      >
+        <div>
+          <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#1B2A4A]/45 mb-3">
+            {t('en', 'notes.title')}
+          </div>
+          <h1
+            class="font-serif text-3xl md:text-5xl font-semibold text-[#1B2A4A] leading-[1.05] tracking-tight"
+          >
+            {noteCategoryLabels['en'][activeCat]}
+          </h1>
+        </div>
+        <nav class="flex flex-col font-mono text-[10px] uppercase tracking-[0.12em]">
+          <a
+            href="/en/artifacts/"
+            class="flex justify-between py-1.5 border-b border-[#1B2A4A]/15 text-[#1B2A4A]/55 hover:text-[#1B2A4A] no-underline transition-colors"
+          >
+            <span>{t('en', 'notes.allNotes')}</span><span>{allEn.length}</span>
+          </a>
+          {categoryCounts.map((cc) => {
+            const active = cc.key === activeCat;
+            return (
+              <a
+                href={`/en/artifacts/categoria/${cc.key}/`}
+                class:list={[
+                  'flex justify-between py-1.5 border-b no-underline transition-colors',
+                  active
+                    ? 'border-[#1B2A4A] text-[#1B2A4A]'
+                    : 'border-[#1B2A4A]/15 text-[#1B2A4A]/55 hover:text-[#1B2A4A]',
+                ]}
+              >
+                <span>{cc.label}</span><span>{cc.count}</span>
+              </a>
+            );
+          })}
+        </nav>
+      </div>
 
-      <NotesSearch client:idle notes={notesData} labels={labels} categoryOptions={categoryOptions} />
+      <NotesSearch client:idle notes={notesData} labels={labels} />
     </div>
   </section>
 </BaseLayout>

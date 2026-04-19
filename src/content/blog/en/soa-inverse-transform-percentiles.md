@@ -4,6 +4,7 @@ description: "When an insurance policy modifies the payment based on the loss, w
 date: "2026-03-05"
 category: "fundamentos-actuariales"
 lang: "en"
+shape: "study-guide"
 tags: ["transformations", "percentiles", "exam-P", "SOA", "insurance", "CDF"]
 ---
 

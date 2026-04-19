@@ -4,6 +4,7 @@ description: "Cuando una póliza modifica el pago según la pérdida, lo que tie
 date: "2026-03-05"
 category: "fundamentos-actuariales"
 lang: "es"
+shape: "study-guide"
 tags: ["transformaciones", "percentiles", "examen-P", "SOA", "seguros", "CDF"]
 ---
 

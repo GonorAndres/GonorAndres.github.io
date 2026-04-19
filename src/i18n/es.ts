@@ -9,7 +9,7 @@ export default {
   'hero.description': 'Me formé como actuario en la UNAM y desde entonces no he dejado de construir: un transformer entrenado con Proust, plataformas de datos en GCP, agentes de IA sobre regulación mexicana, APIs en producción. Cada proyecto empieza con una pregunta que no sé responder y termina con algo que funciona.',
   'hero.cta': 'Ver proyectos',
   'hero.cv': 'Descargar CV',
-  'hero.latestPost': 'Últimos posts de mi blog',
+  'hero.latestPost': 'Lo más reciente',
   'hero.discoverPosts': 'Descubre más',
   'hero.readPost': 'Leer',
   'section.featured': 'Proyectos Destacados',

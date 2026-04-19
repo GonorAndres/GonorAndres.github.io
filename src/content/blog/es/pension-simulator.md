@@ -5,6 +5,16 @@ date: "2026-03-16"
 lastModified: "2026-03-19"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "R · Shiny · bslib · Plotly · Docker"
+  datos: "DOF (reforma 2020) · CONAPO · IMSS (constantes regulatorias 2025)"
+  regulacion: "LSS (Ley 73 · Ley 97 · Art. 167) · CONSAR · Fondo de Pensiones para el Bienestar (DOF 2024)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/seguridad-social/tree/main/fondo_bienestar"
+  live: "https://simulador-pension-d3qj5vwxtq-uc.a.run.app/"
 tags: ["R", "Shiny", "IMSS", "AFORE", "Pensiones", "Ley 73", "Ley 97", "Fondo Bienestar", "seguridad social", "CONSAR"]
 ---
 

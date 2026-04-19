@@ -4,6 +4,16 @@ description: "R Shiny dashboard with 140,000 synthetic policies calibrated to th
 date: "2026-03-19"
 category: "proyectos-y-analisis"
 lang: "en"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "R · Shiny · bslib · Plotly · Docker"
+  datos: "Datos sintéticos calibrados con CONDUSEF · AMIS (140,385 pólizas)"
+  regulacion: "CNSF (RCS · TVaR)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/CarteraSeguroAutos"
+  live: "https://cartera-autos-451451662791.us-central1.run.app"
 tags: ["R", "Shiny", "GLM", "IBNR", "Monte Carlo", "bslib", "CONDUSEF", "AMIS", "fraud", "auto"]
 ---
 

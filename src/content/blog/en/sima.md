@@ -5,6 +5,16 @@ date: "2026-03-15"
 lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "en"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Python · FastAPI · React · scipy"
+  datos: "INEGI · CONAPO · Human Mortality Database"
+  regulacion: "LISF · CUSF · CNSF (SCR/RCS, Solvencia II)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/SIMA"
+  live: "https://sima-451451662791.us-central1.run.app/"
 tags: ["Lee-Carter", "mortality", "LISF", "CUSF", "CNSF", "Whittaker-Henderson", "SVD", "reserves", "SCR", "commutation-functions", "INEGI", "CONAPO", "FastAPI", "React"]
 ---
 

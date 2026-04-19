@@ -4,6 +4,16 @@ description: "How classifying 5.1M Major Medical Expenses claims into three hosp
 date: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "en"
+shape: "case-study"
+ficha:
+  rol: "Autor principal, proyecto académico UNAM (equipo)"
+  año: "2026"
+  stack: "Python · Next.js · Recharts · shadcn/ui · Claude AI"
+  datos: "CNSF (5.1M siniestros GMM, 2020-2024)"
+  regulacion: "LISF Art. 201 · CUSF 15.3-15.8 · CNSF"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/gmm-explorer"
+  live: "https://gmm-explorer.vercel.app/contexto"
 tags: ["GMM", "pricing", "CNSF", "hospitalization", "Claude AI", "frequency-severity", "credibility", "LISF", "Next.js", "Python"]
 ---
 

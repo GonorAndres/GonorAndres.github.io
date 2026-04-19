@@ -9,7 +9,7 @@ export default {
   'hero.description': 'I trained as an actuary at UNAM, and since then I haven\'t stopped building: a transformer trained on Proust, data platforms on GCP, AI agents over Mexican regulation, production APIs. Every project starts with a question I can\'t answer yet and ends with something that works.',
   'hero.cta': 'View projects',
   'hero.cv': 'Download CV',
-  'hero.latestPost': 'Latest posts from my blog',
+  'hero.latestPost': 'Latest',
   'hero.discoverPosts': 'Discover more',
   'hero.readPost': 'Read',
   'section.featured': 'Featured Projects',

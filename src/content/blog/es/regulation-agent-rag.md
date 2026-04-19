@@ -5,6 +5,18 @@ date: "2026-03-22"
 lastModified: "2026-03-28"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Python · FastAPI · SQLite FTS5 · Claude API · React"
+  datos: "LISF · CUSF (2,354 artículos indexados, 2,882 referencias cruzadas)"
+  regulacion: "LISF · CUSF · CNSF"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/regulation-actuarial-agent"
+  live: "https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/"
+  extraLinks:
+    - { label: "Versión open-source (HuggingFace)", url: "https://huggingface.co/spaces/GonorAndres/lisf-agent" }
 tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP", "referencias-cruzadas"]
 ---
 

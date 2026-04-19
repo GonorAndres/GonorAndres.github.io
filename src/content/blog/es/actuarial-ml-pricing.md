@@ -5,6 +5,15 @@ date: "2026-03-14"
 lastModified: "2026-03-19"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Python · XGBoost · LightGBM · SHAP · FastAPI"
+  datos: "freMTPL2 (677,991 pólizas reales, asegurador francés)"
+  regulacion: "LISF (nota técnica de suficiencia)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/data-science-path/tree/main/projects/insurance-pricing"
 tags: ["pricing", "GLM", "XGBoost", "LightGBM", "SHAP", "freMTPL2", "actuarial", "frecuencia-severidad", "Optuna", "MLflow", "fairness"]
 ---
 

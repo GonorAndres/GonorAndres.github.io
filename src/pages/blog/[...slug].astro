@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import BlogPost, { type RelatedPost } from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -14,14 +14,48 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+const words = (post.body ?? '').trim().split(/\s+/).filter(Boolean).length;
+const minutes = Math.max(1, Math.round(words / 200));
+const readingTime = post.data.readingTime ?? `${minutes} min`;
+
+const slug = post.id.replace(/^es\//, '');
+
+const allEs = (await getCollection('blog')).filter((p) => p.data.lang === 'es' && p.id !== post.id);
+
+const explicit = (post.data.relatedPosts ?? [])
+  .map((s) => allEs.find((p) => p.id.endsWith(`/${s}`)))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+const fallback = allEs
+  .filter((p) => p.data.category === post.data.category)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
+
+const picked = explicit.length > 0 ? explicit.slice(0, 4) : fallback;
+
+const relatedPosts: RelatedPost[] = picked.map((p) => ({
+  slug: p.id.replace(/^es\//, ''),
+  title: p.data.title,
+  date: p.data.date,
+  category: p.data.category,
+}));
 ---
 
 <BlogPost
   title={post.data.title}
   description={post.data.description}
   date={post.data.date}
+  lastModified={post.data.lastModified}
   category={post.data.category}
+  tags={post.data.tags ?? []}
   lang="es"
+  shape={post.data.shape}
+  readingTime={readingTime}
+  ficha={post.data.ficha}
+  heroImage={post.data.heroImage}
+  heroCaption={post.data.heroCaption}
+  relatedPosts={relatedPosts}
 >
   <Content />
 </BlogPost>

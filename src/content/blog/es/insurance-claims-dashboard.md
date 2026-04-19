@@ -4,6 +4,14 @@ description: "Análisis de reservas actuariales con métodos Chain-Ladder y Born
 date: "2026-03-05"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Python · FastAPI · Next.js · SQL · Jupyter"
+  datos: "NAIC Schedule P · siniestros sintéticos (~50,000 reclamaciones)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard"
 tags: ["reservas", "chain-ladder", "BF", "IBNR", "P&C", "dashboard", "Python", "SQL"]
 ---
 

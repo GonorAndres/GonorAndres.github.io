@@ -5,6 +5,7 @@ date: "2026-03-13"
 lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "en"
+shape: "narrative"
 tags: ["portfolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "Power BI"]
 ---
 

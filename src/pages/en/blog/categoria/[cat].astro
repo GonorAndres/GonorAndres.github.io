@@ -10,8 +10,12 @@ export async function getStaticPaths() {
 }
 
 const { cat } = Astro.params;
-const posts = (await getCollection('blog'))
-  .filter((p) => p.data.lang === 'en' && p.data.category === cat)
+const activeCat = cat as Category;
+
+const allEn = (await getCollection('blog')).filter((p) => p.data.lang === 'en');
+
+const posts = allEn
+  .filter((p) => p.data.category === activeCat)
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
 const postsData = posts.map((post) => ({
@@ -19,26 +23,74 @@ const postsData = posts.map((post) => ({
   description: post.data.description,
   slug: post.id.replace(/^(es|en)\//, ''),
   date: post.data.date,
-  category: post.data.category,
+  lastModified: post.data.lastModified,
+  categoryKey: post.data.category as Category,
   categoryLabel: categoryLabels['en'][post.data.category as Category] ?? post.data.category,
+  tags: post.data.tags,
   lang: 'en' as const,
 }));
 
+const categoryCounts = categories
+  .map((c) => ({
+    key: c,
+    label: categoryLabels['en'][c],
+    count: allEn.filter((p) => p.data.category === c).length,
+  }))
+  .filter((cc) => cc.count > 0 || cc.key === activeCat);
+
 const labels = {
   searchPlaceholder: t('en', 'blog.searchPlaceholder'),
-  allYears: t('en', 'blog.allYears'),
   noResults: t('en', 'blog.noResults'),
-  readMore: t('en', 'blog.readMore'),
   articleSingular: t('en', 'blog.articleSingular'),
   articlePlural: t('en', 'blog.articlePlural'),
+  readMore: t('en', 'blog.readMore'),
+  sortRecent: 'Newest first',
+  sortOldest: 'Oldest first',
+  sortTitle: 'Title A–Z',
 };
 ---
 
-<BaseLayout title={`${categoryLabels['en'][cat as Category]} | Blog`} lang="en">
+<BaseLayout title={`${categoryLabels['en'][activeCat]} | Blog`} lang="en">
   <section class="py-16 px-6">
     <div class="max-w-4xl mx-auto">
-      <a href="/en/blog/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; {t('en', 'blog.allPosts')}</a>
-      <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{categoryLabels['en'][cat as Category]}</h1>
+      <div
+        class="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-x-12 gap-y-6 items-end pb-6 mb-10 border-b border-[#1B2A4A]/15 fade-up"
+      >
+        <div>
+          <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#1B2A4A]/45 mb-3">
+            {t('en', 'section.blog')}
+          </div>
+          <h1
+            class="font-serif text-3xl md:text-5xl font-semibold text-[#1B2A4A] leading-[1.05] tracking-tight"
+          >
+            {categoryLabels['en'][activeCat]}
+          </h1>
+        </div>
+        <nav class="flex flex-col font-mono text-[10px] uppercase tracking-[0.12em]">
+          <a
+            href="/en/blog/"
+            class="flex justify-between py-1.5 border-b border-[#1B2A4A]/15 text-[#1B2A4A]/55 hover:text-[#1B2A4A] no-underline transition-colors"
+          >
+            <span>{t('en', 'blog.allPosts')}</span><span>{allEn.length}</span>
+          </a>
+          {categoryCounts.map((cc) => {
+            const active = cc.key === activeCat;
+            return (
+              <a
+                href={`/en/blog/categoria/${cc.key}/`}
+                class:list={[
+                  'flex justify-between py-1.5 border-b no-underline transition-colors',
+                  active
+                    ? 'border-[#1B2A4A] text-[#1B2A4A]'
+                    : 'border-[#1B2A4A]/15 text-[#1B2A4A]/55 hover:text-[#1B2A4A]',
+                ]}
+              >
+                <span>{cc.label}</span><span>{cc.count}</span>
+              </a>
+            );
+          })}
+        </nav>
+      </div>
 
       <BlogSearch client:idle posts={postsData} labels={labels} />
     </div>

@@ -5,6 +5,7 @@ date: "2026-03-18"
 lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "narrative"
 tags: ["BigQuery", "Terraform", "Pub/Sub", "Apache Beam", "Dagster", "Cloud Run", "DuckDB", "GLM Tweedie", "GCP", "actuarial"]
 ---
 

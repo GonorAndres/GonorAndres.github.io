@@ -5,6 +5,14 @@ date: "2026-03-19"
 lastModified: "2026-03-30"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Python · PyTorch · scikit-learn · QuantLib · arch · PyTorch Geometric"
+  datos: "yfinance · FRED (datos de mercado públicos)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/risk-analyst"
 tags: ["Python", "Riesgo Financiero", "VaR", "Monte Carlo", "Machine Learning", "Deep Hedging", "Copulas", "EVT"]
 ---
 

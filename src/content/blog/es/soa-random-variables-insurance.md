@@ -4,6 +4,7 @@ description: "Guía de estudio para el tema más pesado del Examen P: variables 
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "es"
+shape: "study-guide"
 tags: ["variables-aleatorias", "examen-P", "SOA", "seguros", "distribuciones"]
 ---
 

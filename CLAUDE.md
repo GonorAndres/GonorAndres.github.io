@@ -200,6 +200,16 @@ After making changes, use the Playwright MCP browser tools to verify rendering b
 
 Common issue: `$` followed by a digit in blog prose (e.g., `$10`, `$400`) gets parsed as inline math by remark-math. Fix by escaping: `\$10`, `\$400`. Actual math expressions like `$p = 1.5$` should NOT be escaped.
 
+## Button Radii Convention
+
+Three radius values are used across the site; pick by role, not by aesthetic whim:
+
+- **`rounded-full` (9999px)** — inline row actions (pill buttons inside list rows, e.g. `Abrir artefacto`, `Ver PDF` in the artifacts catalog). Signals "small secondary action scoped to this row".
+- **`rounded-xl` (12px)** — page-level CTAs and cards (e.g. the "Ver todos los artefactos" button, the search input, project cards). Signals "primary surface or action for the page".
+- **`rounded-lg` (8px)** — reserved for the home hero's primary CTAs only. Do not introduce new uses; if adding a new button, pick one of the first two.
+
+If a new pattern is needed, extend this list explicitly rather than inventing a fourth value.
+
 ## Project Categories
 
 - `actuarial`: terracotta (#C17654)

@@ -1,69 +1,317 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import type { Lang } from '../i18n';
-import Squiggle from '../components/decorations/Squiggle.astro';
 import { categoryLabels, type Category } from '../data/categories';
 import 'katex/dist/katex.min.css';
+
+export type PostShape = 'blog' | 'case-study' | 'narrative' | 'study-guide';
+
+export interface FichaFields {
+  rol?: string;
+  año?: string;
+  periodo?: string;
+  stack?: string;
+  datos?: string;
+  regulacion?: string;
+  estado?: string;
+  repositorio?: string;
+  live?: string;
+  extraLinks?: { label: string; url: string }[];
+}
+
+export interface RelatedPost {
+  slug: string;
+  title: string;
+  date: string;
+  category: Category;
+}
 
 interface Props {
   title: string;
   description: string;
   date: string;
+  lastModified?: string;
   category: string;
+  tags?: string[];
   lang: Lang;
+  shape?: PostShape;
+  readingTime: string;
+  ficha?: FichaFields;
+  heroImage?: string;
+  heroCaption?: string;
+  relatedPosts: RelatedPost[];
 }
 
-const { title, description, date, category, lang } = Astro.props;
-const formattedDate = new Date(date).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', {
+const {
+  title,
+  description,
+  date,
+  lastModified,
+  category,
+  tags = [],
+  lang,
+  shape = 'blog',
+  readingTime,
+  ficha,
+  heroImage,
+  heroCaption,
+  relatedPosts,
+} = Astro.props;
+
+const dateFmt = new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', {
   year: 'numeric',
-  month: 'long',
+  month: 'short',
   day: 'numeric',
 });
+const formattedDate = dateFmt.format(new Date(`${date}T12:00:00`));
+const formattedUpdated = lastModified
+  ? dateFmt.format(new Date(`${lastModified}T12:00:00`))
+  : undefined;
 
 const categoryDisplay = categoryLabels[lang]?.[category as Category] ?? category;
-const categoryHref = lang === 'es'
-  ? `/blog/categoria/${category}/`
-  : `/en/blog/categoria/${category}/`;
+const categoryHref =
+  lang === 'es' ? `/blog/categoria/${category}/` : `/en/blog/categoria/${category}/`;
 const backHref = lang === 'es' ? '/blog/' : '/en/blog/';
-const backLabel = lang === 'es' ? 'Volver al blog' : 'Back to blog';
+const backLabel = lang === 'es' ? 'Blog' : 'Blog';
+
+const CATEGORY_COLOR: Record<Category, string> = {
+  'actuaria-para-todos': '#7A8B6F',
+  'fundamentos-actuariales': '#C17654',
+  'proyectos-y-analisis': '#5B7B9A',
+  'herramientas': '#D4A574',
+  'mercado-mexicano': '#1B2A4A',
+};
+const catColor = CATEGORY_COLOR[category as Category] ?? '#1B2A4A';
+
+const L = {
+  by: lang === 'es' ? 'Por' : 'By',
+  updated: lang === 'es' ? 'actualizado' : 'updated',
+  read: lang === 'es' ? 'de lectura' : 'read',
+  ficha: lang === 'es' ? 'Ficha' : 'About',
+  rol: lang === 'es' ? 'Rol' : 'Role',
+  año: lang === 'es' ? 'Año' : 'Year',
+  periodo: lang === 'es' ? 'Periodo' : 'Period',
+  stack: 'Stack',
+  datos: lang === 'es' ? 'Datos' : 'Data',
+  regulacion: lang === 'es' ? 'Regulación' : 'Regulation',
+  estado: lang === 'es' ? 'Estado' : 'Status',
+  repo: lang === 'es' ? 'Repositorio' : 'Repository',
+  live: 'Live',
+  links: 'Links',
+  topics: 'Tags',
+  date: lang === 'es' ? 'Fecha' : 'Date',
+  lastMod: lang === 'es' ? 'Última edición' : 'Last edit',
+  readTime: lang === 'es' ? 'Tiempo' : 'Reading',
+  series: lang === 'es' ? 'Serie' : 'Series',
+  related: lang === 'es' ? 'Relacionados' : 'Related',
+  backToBlog: lang === 'es' ? 'Volver al blog' : 'Back to blog',
+};
+
+const fichaRows: { key: string; value: string; href?: string }[] = [];
+if (shape === 'case-study' && ficha) {
+  if (ficha.rol) fichaRows.push({ key: L.rol, value: ficha.rol });
+  if (ficha.año) fichaRows.push({ key: L.año, value: ficha.año });
+  if (ficha.periodo) fichaRows.push({ key: L.periodo, value: ficha.periodo });
+  if (ficha.stack) fichaRows.push({ key: L.stack, value: ficha.stack });
+  if (ficha.datos) fichaRows.push({ key: L.datos, value: ficha.datos });
+  if (ficha.regulacion) fichaRows.push({ key: L.regulacion, value: ficha.regulacion });
+  if (ficha.estado) fichaRows.push({ key: L.estado, value: ficha.estado });
+  if (ficha.repositorio) fichaRows.push({ key: L.repo, value: 'GitHub', href: ficha.repositorio });
+  if (ficha.live) fichaRows.push({ key: L.live, value: 'Demo', href: ficha.live });
+  (ficha.extraLinks ?? []).forEach((l) =>
+    fichaRows.push({ key: L.links, value: l.label, href: l.url })
+  );
+}
+
+const prose = shape;
 ---
 
-<BaseLayout title={`${title} | AGO Blog`} description={description} lang={lang} ogType="article" datePublished={date}>
-  <article class="py-16 px-6">
-    <div class="max-w-[720px] mx-auto">
-      <div class="mb-8">
-        <a href={backHref} class="text-sm text-terracotta hover:underline mb-4 block">
-          &larr; {backLabel}
+<BaseLayout
+  title={`${title} | AGO Blog`}
+  description={description}
+  lang={lang}
+  ogType="article"
+  datePublished={date}
+>
+  <article class="py-12 md:py-16 px-6">
+    <div class="max-w-[1020px] mx-auto">
+      <nav
+        class="pd-back font-mono text-[11px] uppercase tracking-[0.12em] text-[#1B2A4A]/50 mb-8"
+        aria-label="Breadcrumb"
+      >
+        <a href={backHref} class="hover:text-[#A35E3E] no-underline">{L.backToBlog}</a>
+      </nav>
+
+      <div class="pd-kicker flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+        <a
+          href={categoryHref}
+          class="font-mono text-[10px] uppercase tracking-[0.16em] px-2 py-0.5 border no-underline transition-colors"
+          style={`color: ${catColor}; border-color: ${catColor};`}
+        >
+          {categoryDisplay}
         </a>
-        <div class="flex items-center gap-3 mb-4">
-          <a href={categoryHref} class="text-xs px-2 py-0.5 rounded-full bg-sage/15 text-sage font-medium hover:bg-sage/25 transition-colors">
-            {categoryDisplay}
-          </a>
-          <time class="text-sm text-navy/50">{formattedDate}</time>
+        {tags.slice(0, 4).length > 0 && (
+          <span class="font-mono text-[10px] uppercase tracking-[0.12em] text-[#1B2A4A]/55">
+            {tags.slice(0, 4).join(' \u00b7 ')}
+          </span>
+        )}
+        <time
+          class="font-mono text-[10px] uppercase tracking-[0.12em] text-[#1B2A4A]/55"
+          datetime={date}>{formattedDate}</time
+        >
+      </div>
+
+      <h1
+        class="font-serif font-semibold text-3xl md:text-[40px] text-[#1B2A4A] leading-[1.08] tracking-tight mb-4 text-balance"
+      >
+        {title}
+      </h1>
+
+      <p class="lede font-serif text-lg md:text-[19px] leading-[1.55] text-[#1B2A4A]/75 max-w-[64ch] mb-5">
+        {description}
+      </p>
+
+      <div
+        class="byline font-mono text-[10px] uppercase tracking-[0.14em] text-[#1B2A4A]/55 pt-4 border-t border-[#1B2A4A]/10 flex flex-wrap gap-x-4 gap-y-1"
+      >
+        <span>{L.by} <b class="text-[#1B2A4A] font-medium">Andrés González Ortega</b></span>
+        <span>{formattedDate}</span>
+        {formattedUpdated && <span>{L.updated} {formattedUpdated}</span>}
+        <span>{readingTime} {L.read}</span>
+      </div>
+
+      {heroImage && (
+        <figure class="hero-img mt-8">
+          <img src={heroImage} alt={heroCaption ?? title} class="w-full aspect-[16/9] object-cover" loading="lazy" />
+          {heroCaption && (
+            <figcaption class="font-mono text-[10px] uppercase tracking-[0.12em] text-[#1B2A4A]/50 mt-2">
+              {heroCaption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+
+      <div class="pd-body grid grid-cols-1 md:grid-cols-[1fr_220px] gap-x-12 gap-y-10 mt-10 items-start">
+        <div
+          class:list={[
+            'prose max-w-none',
+            'text-[#1B2A4A]',
+            'prose-p:leading-[1.65] prose-p:text-[#1B2A4A]/85',
+            'prose-a:text-[#C17654] prose-a:no-underline hover:prose-a:underline',
+            'prose-strong:text-[#1B2A4A] prose-strong:font-semibold',
+            'prose-code:font-mono prose-code:text-[#A35E3E] prose-code:bg-[#E8E0D7] prose-code:px-1 prose-code:rounded prose-code:before:content-none prose-code:after:content-none',
+            'prose-blockquote:border-l-[#C17654] prose-blockquote:bg-[#C17654]/5 prose-blockquote:italic prose-blockquote:text-[#1B2A4A]',
+            'prose-li:text-[#1B2A4A]/85',
+            'prose-img:rounded',
+          ]}
+          data-shape={prose}
+        >
+          <slot />
         </div>
-        <h1 class="text-2xl md:text-4xl font-bold text-navy leading-tight mb-4">{title}</h1>
-        <p class="text-lg text-navy/60">{description}</p>
+
+        <aside class="pd-side md:sticky md:top-8 self-start">
+          <div
+            class="lbl font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2A4A]/50 pb-2.5 border-b border-[#1B2A4A]/15 mb-3"
+          >
+            {L.ficha}
+          </div>
+
+          <div class="row flex items-baseline gap-3 py-1.5 font-mono text-[11px]">
+            <span class="k text-[#1B2A4A]/50 uppercase tracking-[0.14em] text-[9.5px]">{L.date}</span>
+            <span class="v ml-auto text-right text-[#1B2A4A] tabular-nums">{formattedDate}</span>
+          </div>
+          {formattedUpdated && (
+            <div class="row flex items-baseline gap-3 py-1.5 font-mono text-[11px]">
+              <span class="k text-[#1B2A4A]/50 uppercase tracking-[0.14em] text-[9.5px]">
+                {L.lastMod}
+              </span>
+              <span class="v ml-auto text-right text-[#1B2A4A] tabular-nums">{formattedUpdated}</span>
+            </div>
+          )}
+          <div class="row flex items-baseline gap-3 py-1.5 font-mono text-[11px]">
+            <span class="k text-[#1B2A4A]/50 uppercase tracking-[0.14em] text-[9.5px]">
+              {L.readTime}
+            </span>
+            <span class="v ml-auto text-right text-[#1B2A4A] tabular-nums">{readingTime}</span>
+          </div>
+
+          {fichaRows.map((r) => (
+            <div class="row flex items-baseline gap-3 py-1.5 font-mono text-[11px]">
+              <span class="k text-[#1B2A4A]/50 uppercase tracking-[0.14em] text-[9.5px]">{r.key}</span>
+              <span class="v ml-auto text-right text-[#1B2A4A] tabular-nums">
+                {r.href ? (
+                  <a
+                    href={r.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="no-underline border-b border-dotted border-[#39c] text-[#39c] hover:text-[#A35E3E] hover:border-[#A35E3E]"
+                  >
+                    {r.value}
+                  </a>
+                ) : (
+                  r.value
+                )}
+              </span>
+            </div>
+          ))}
+
+          {tags.length > 0 && (
+            <div class="block mt-6">
+              <div
+                class="lbl font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2A4A]/50 pb-2.5 border-b border-[#1B2A4A]/15 mb-3"
+              >
+                {L.topics}
+              </div>
+              <div class="tagset flex flex-wrap gap-1">
+                {tags.map((tag) => (
+                  <span class="font-mono text-[9px] uppercase tracking-[0.1em] border border-[#1B2A4A]/15 px-1.5 py-0.5 text-[#1B2A4A]/75">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {relatedPosts.length > 0 && (
+            <div class="block mt-6">
+              <div
+                class="lbl font-mono text-[10px] uppercase tracking-[0.18em] text-[#1B2A4A]/50 pb-2.5 border-b border-[#1B2A4A]/15 mb-3"
+              >
+                {L.related}
+              </div>
+              <ul class="space-y-3 list-none p-0 m-0">
+                {relatedPosts.map((r) => (
+                  <li class="m-0">
+                    <a
+                      href={lang === 'es' ? `/blog/${r.slug}/` : `/en/blog/${r.slug}/`}
+                      class="group/rel block no-underline"
+                    >
+                      <span class="flex items-baseline gap-1.5">
+                        <span class="font-serif text-[13.5px] leading-snug text-[#1B2A4A] group-hover/rel:text-[#A35E3E] border-b border-dotted border-[#C17654]/60 group-hover/rel:border-[#A35E3E] pb-0.5 transition-colors">
+                          {r.title}
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          class="text-[11px] text-[#C17654] group-hover/rel:translate-x-0.5 transition-transform shrink-0"
+                        >
+                          {'\u2192'}
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </aside>
       </div>
-      <Squiggle class="w-full h-4 mb-8" color="#D4A574" />
-      <div class="blog-content prose prose-lg max-w-none
-        text-justify hyphens-auto md:text-justify
-        prose-headings:font-serif prose-headings:text-navy
-        prose-h2:text-xl prose-h2:md:text-2xl prose-h2:mt-10 prose-h2:pt-6 prose-h2:border-t prose-h2:border-amber/20 prose-h2:font-bold
-        prose-h3:text-lg prose-h3:md:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-h3:font-semibold
-        prose-p:text-navy/80 prose-p:leading-[1.55] prose-p:mb-4
-        prose-a:text-terracotta prose-a:no-underline hover:prose-a:underline
-        prose-strong:text-navy
-        prose-code:text-terracotta prose-code:bg-amber/10 prose-code:px-1 prose-code:rounded prose-code:font-sans
-        prose-code:before:content-none prose-code:after:content-none
-        prose-blockquote:border-l-amber prose-blockquote:bg-amber/5 prose-blockquote:rounded-r-lg prose-blockquote:italic
-        prose-li:text-left
-        prose-table:text-sm
-      ">
-        <slot />
-      </div>
-      <div class="mt-16 pt-8 border-t border-amber/20">
-        <a href={backHref} class="text-terracotta hover:underline text-sm">
-          &larr; {backLabel}
+
+      <div class="mt-16 pt-6 border-t border-[#1B2A4A]/10">
+        <a
+          href={backHref}
+          class="font-mono text-[11px] uppercase tracking-[0.12em] text-[#1B2A4A]/50 hover:text-[#A35E3E] no-underline"
+        >
+          &larr; {L.backToBlog}
         </a>
       </div>
     </div>
@@ -72,7 +320,153 @@ const backLabel = lang === 'es' ? 'Volver al blog' : 'Back to blog';
   <script>
     import { track } from '../lib/analytics';
 
-    const title = document.querySelector('article h1')?.textContent?.trim() ?? '';
-    track('content_engaged', { page: title });
+    function enhance() {
+      const h1 = document.querySelector('article h1')?.textContent?.trim() ?? '';
+      track('content_engaged', { page: h1 });
+
+      const narrative = document.querySelector('.prose[data-shape="narrative"]');
+      if (narrative) {
+        const h2s = narrative.querySelectorAll(':scope > h2, :scope h2');
+        h2s.forEach((h2, i) => {
+          if (!h2.hasAttribute('data-n')) {
+            h2.setAttribute('data-n', String(i + 1).padStart(2, '0'));
+          }
+        });
+      }
+    }
+
+    enhance();
+    document.addEventListener('astro:page-load', enhance);
   </script>
 </BaseLayout>
+
+<style is:global>
+  /* Prose typography (cross-cutting defaults) --------------------------- */
+  .prose h1 { font-family: 'Lora', Georgia, serif; }
+  .prose h2 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 600;
+    line-height: 1.22;
+    margin-top: 2.25rem;
+    margin-bottom: 0.9rem;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+  .prose h3 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    font-style: italic;
+    color: #1B2A4A;
+    margin-top: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose h2:first-child { margin-top: 0; }
+  .prose p {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1.02rem;
+    max-width: 68ch;
+  }
+  .prose ul, .prose ol { font-family: 'Lora', Georgia, serif; max-width: 68ch; }
+
+  /* blog + case-study: terracotta H2, drop-cap on first paragraph ------- */
+  .prose[data-shape="blog"] h2,
+  .prose[data-shape="case-study"] h2 { color: #A35E3E; }
+
+  .prose[data-shape="blog"] > p:first-of-type::first-letter,
+  .prose[data-shape="case-study"] > p:first-of-type::first-letter {
+    font-family: 'Lora', Georgia, serif;
+    font-weight: 600;
+    font-size: 3.4rem;
+    line-height: 0.85;
+    float: left;
+    padding: 6px 10px 0 0;
+    color: #C17654;
+  }
+
+  /* narrative: terracotta H2 with numbered ::before if data-n set ------- */
+  .prose[data-shape="narrative"] h2 {
+    color: #A35E3E;
+    position: relative;
+  }
+  .prose[data-shape="narrative"] h2[data-n] {
+    padding-left: 48px;
+  }
+  .prose[data-shape="narrative"] h2[data-n]::before {
+    content: attr(data-n);
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: #a39c8e;
+    border: 1px solid #CFC5B6;
+    padding: 3px 7px;
+    font-weight: 500;
+  }
+
+  /* study-guide: ink H2 with thin underline ---------------------------- */
+  .prose[data-shape="study-guide"] h2 {
+    color: #1B2A4A;
+    border-bottom: 1px solid #CFC5B6;
+    padding-bottom: 0.45rem;
+    font-size: 1.35rem;
+  }
+
+  /* Inline authoring primitives (used across shapes via markdown HTML) - */
+  .prose .pull {
+    margin: 1.5rem 0;
+    padding: 0.85rem 0 0.85rem 1.25rem;
+    border-left: 3px solid #C17654;
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.45;
+    color: #1B2A4A;
+    max-width: 56ch;
+  }
+
+  .prose .callout {
+    background: #1B2A4A;
+    color: #EDE6DD;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid #C17654;
+    margin: 1.5rem 0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 0.95rem;
+    border-radius: 2px;
+  }
+  .prose .callout code {
+    background: #C17654 !important;
+    color: #EDE6DD !important;
+    border: none;
+    padding: 2px 6px;
+    font-weight: 600;
+  }
+  .prose .callout a { color: #D4A574; }
+
+  .prose .keyidea {
+    background: #E8E0D7;
+    border: 1px solid #CFC5B6;
+    padding: 0.9rem 1.15rem;
+    margin: 1.25rem 0;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  .prose .keyidea .lbl {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #C17654;
+    margin-bottom: 0.35rem;
+    font-style: normal;
+  }
+
+  /* KaTeX readability (keep display math tidy) ------------------------- */
+  .prose .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+  .prose .katex { font-size: 1.02em; }
+</style>

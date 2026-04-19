@@ -4,6 +4,15 @@ description: "El análisis crediticio tradicional trata cada préstamo como inde
 date: "2026-03-30"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Neo4j · PySpark · Databricks · LightGBM · Python"
+  datos: "Registro PSC del Reino Unido · GLEIF · 500 clientes ficticios"
+  regulacion: "CNBV Circular Única de Bancos (Art. 73, Circular 3/2012)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/graph-relation-db"
 tags: ["Neo4j", "PySpark", "Databricks", "Riesgo de crédito", "Cypher", "LightGBM", "Calibración Platt", "Grafos"]
 ---
 
