@@ -14,6 +14,7 @@ const allNotes = getNotes('en').filter((n) => n.category === cat);
 const notesData = allNotes.map((note) => ({
   slug: note.slug,
   category: noteCategoryLabels['en'][note.category],
+  type: note.type,
   title: note.title,
   description: note.description,
   urls: note.urls,
@@ -37,10 +38,10 @@ const labels = {
 };
 ---
 
-<BaseLayout title={`${noteCategoryLabels['en'][cat as NoteCategory]} | Technical Notes`} lang="en">
+<BaseLayout title={`${noteCategoryLabels['en'][cat as NoteCategory]} | Artifacts`} lang="en">
   <section class="py-16 px-6">
     <div class="max-w-4xl mx-auto">
-      <a href="/en/notes/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; {t('en', 'notes.allNotes')}</a>
+      <a href="/en/artifacts/" class="text-sm text-terracotta hover:underline mb-4 block">&larr; {t('en', 'notes.allNotes')}</a>
       <h1 class="text-3xl md:text-4xl font-bold text-navy mb-8">{noteCategoryLabels['en'][cat as NoteCategory]}</h1>
 
       <NotesSearch client:idle notes={notesData} labels={labels} categoryOptions={categoryOptions} />

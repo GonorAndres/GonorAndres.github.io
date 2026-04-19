@@ -12,7 +12,7 @@ const tp = useTranslatedPath(lang);
 
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/' || pathname === '/en' || pathname === '/en/';
-const isNotes = pathname.startsWith('/notes') || pathname.startsWith('/en/notes');
+const isNotes = pathname.startsWith('/artifacts') || pathname.startsWith('/en/artifacts');
 const isBlog = pathname.startsWith('/blog') || pathname.startsWith('/en/blog');
 
 const activeClass = 'text-sm font-medium text-terracotta border-b-2 border-terracotta pb-0.5 transition-colors';
@@ -32,7 +32,7 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
       <a href={tp('/#proyectos')} data-nav="projects" class={inactiveClass}>
         {t(lang, 'nav.projects')}
       </a>
-      <a href={tp('/notes/')} data-nav="notes" class={isNotes ? activeClass : inactiveClass} {...(isNotes ? {'aria-current': 'page'} : {})}>
+      <a href={tp('/artifacts/')} data-nav="notes" class={isNotes ? activeClass : inactiveClass} {...(isNotes ? {'aria-current': 'page'} : {})}>
         {t(lang, 'nav.notes')}
       </a>
       <a href={tp('/blog/')} class={isBlog ? activeClass : inactiveClass} {...(isBlog ? {'aria-current': 'page'} : {})}>
@@ -65,7 +65,7 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
     <a href={tp('/#proyectos')} data-nav="projects" class="block text-sm font-medium text-navy/70 hover:text-terracotta">
       {t(lang, 'nav.projects')}
     </a>
-    <a href={tp('/notes/')} data-nav="notes" class={`block ${isNotes ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isNotes ? {'aria-current': 'page'} : {})}>
+    <a href={tp('/artifacts/')} data-nav="notes" class={`block ${isNotes ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isNotes ? {'aria-current': 'page'} : {})}>
       {t(lang, 'nav.notes')}
     </a>
     <a href={tp('/blog/')} class={`block ${isBlog ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isBlog ? {'aria-current': 'page'} : {})}>

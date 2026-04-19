@@ -1,0 +1,1488 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bow of Error · A Visualization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f1e7d1;
+    --paper-2: #ead9b8;
+    --paper-dark: #dfccaa;
+    --sumi: #1a1714;
+    --sumi-2: #524a3e;
+    --sumi-3: #9a9082;
+    --shu: #c23826;
+    --shu-deep: #8c1f12;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mincho: 'Shippori Mincho B1', 'Yu Mincho', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--sumi);
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.75;
+    font-weight: 400;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 18% 8%, rgba(26,23,20,0.035), transparent 60%),
+      radial-gradient(ellipse 55% 75% at 88% 82%, rgba(26,23,20,0.028), transparent 60%),
+      radial-gradient(ellipse 45% 35% at 65% 45%, rgba(194,56,38,0.015), transparent 60%);
+  }
+
+  /* Paper grain overlay — warm noise, multiply blended */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.55;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='9'/><feColorMatrix values='0 0 0 0 0.12  0 0 0 0 0.1  0 0 0 0 0.08  0 0 0 0.045 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Subtle fiber streaks */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    background-image:
+      repeating-linear-gradient(
+        92deg,
+        transparent 0,
+        transparent 6px,
+        rgba(26,23,20,0.012) 6px,
+        rgba(26,23,20,0.012) 7px,
+        transparent 7px,
+        transparent 24px
+      );
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ————————————————— PROGRESS BAR ————————————————— */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(26, 23, 20, 0.05);
+    z-index: 200;
+    pointer-events: none;
+  }
+
+  .progress-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--shu);
+    opacity: 0.75;
+    transition: width 100ms linear;
+  }
+
+  /* ————————————————— SIDE RAIL ————————————————— */
+  .side-rail {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 150;
+    opacity: 0;
+    transition: opacity 700ms ease;
+    pointer-events: none;
+  }
+
+  .side-rail.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .side-rail ol {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0;
+    margin: 0;
+  }
+
+  .side-rail button {
+    background: none;
+    border: none;
+    padding: 10px 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mincho);
+    color: var(--sumi-3);
+    transition: color 300ms ease;
+  }
+
+  .side-rail .tick {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--sumi-3);
+    opacity: 0.6;
+    transition: width 400ms ease, height 400ms ease, background 400ms ease, opacity 400ms ease;
+  }
+
+  .side-rail button[data-current="true"] .tick {
+    width: 30px;
+    height: 2px;
+    background: var(--shu);
+    opacity: 1;
+  }
+
+  .side-rail button[data-current="true"] {
+    color: var(--sumi);
+  }
+
+  .side-rail .rail-label {
+    font-family: var(--mincho);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 280ms ease, transform 280ms ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .side-rail button:hover .rail-label,
+  .side-rail button:focus-visible .rail-label,
+  .side-rail button[data-current="true"] .rail-label {
+    opacity: 0.9;
+    transform: translateX(0);
+  }
+
+  .side-rail button:focus-visible {
+    outline: 1px solid var(--shu);
+    outline-offset: 4px;
+  }
+
+  /* ————————————————— COVER ————————————————— */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8vh 24px;
+    position: relative;
+  }
+
+  .cover-enso {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: inkAppear 1.4s ease-out 0.15s forwards;
+  }
+
+  @keyframes inkAppear {
+    from { opacity: 0; transform: scale(0.92) rotate(-4deg); }
+    to { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .cover-ja {
+    font-family: var(--mincho);
+    font-weight: 500;
+    font-size: clamp(44px, 7.5vw, 82px);
+    letter-spacing: 0.02em;
+    line-height: 1.12;
+    margin-bottom: 28px;
+    color: var(--sumi);
+    text-align: center;
+    max-width: 780px;
+    opacity: 0;
+    animation: fadeUp 1.1s ease-out 0.75s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .cover-en {
+    font-family: var(--mincho);
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--sumi);
+    max-width: 420px;
+    line-height: 1.55;
+    opacity: 0;
+    animation: fadeUp 1.1s ease-out 1.25s forwards;
+  }
+
+  .cover-divider {
+    width: 1px;
+    height: 48px;
+    background: var(--sumi-3);
+    margin: 64px 0 20px;
+    opacity: 0;
+    animation: fadeUp 1.0s ease-out 1.5s forwards;
+  }
+
+  .cover-meta {
+    font-family: var(--serif);
+    font-size: 12px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--sumi-3);
+    opacity: 0;
+    animation: fadeUp 1.0s ease-out 1.7s forwards;
+  }
+
+  .cover-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--serif);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--sumi-3);
+    opacity: 0;
+    animation: fadeUp 1.0s ease-out 1.95s forwards, bob 2.4s ease-in-out 3s infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ————————————————— INTRO PROSE ————————————————— */
+  .intro {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 15vh 24px 10vh;
+  }
+
+  .intro-mark {
+    font-family: var(--mincho);
+    color: var(--shu);
+    font-size: 40px;
+    line-height: 1;
+    margin-bottom: 32px;
+    letter-spacing: 0.1em;
+  }
+
+  .intro p {
+    margin-bottom: 1.35em;
+    font-size: 20px;
+    line-height: 1.8;
+    color: var(--sumi);
+  }
+
+  .intro p:first-of-type::first-letter {
+    font-family: var(--mincho);
+    font-weight: 600;
+    font-size: 4.2em;
+    float: left;
+    line-height: 0.88;
+    margin: 0.08em 0.1em 0 -0.04em;
+    color: var(--shu);
+  }
+
+  .intro em {
+    font-style: italic;
+    color: var(--sumi-2);
+  }
+
+  /* ————————————————— SCROLLYTELLING ————————————————— */
+  .scrolly {
+    position: relative;
+    padding-top: 0;
+  }
+
+  .viz-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 7vh;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .viz-frame {
+    position: relative;
+    width: 90%;
+    max-width: 620px;
+    aspect-ratio: 30 / 11;
+    max-height: 42vh;
+  }
+
+  .viz-frame svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 1s ease;
+  }
+
+  #u-viz { opacity: 0; }
+
+  .scrolly[data-active="4"] #u-viz,
+  .scrolly[data-active="5"] #u-viz { opacity: 1; }
+  .scrolly[data-active="4"] #scatter-viz,
+  .scrolly[data-active="5"] #scatter-viz { opacity: 0; }
+
+  /* SCATTER viz element states */
+  .true-curve, .fit-line, .fit-wiggle, .fit-sweet, .sweet-seal,
+  .label-bias, .label-variance, .label-balance {
+    opacity: 0;
+    transition: opacity 900ms ease;
+  }
+
+  .scatter-point {
+    opacity: 0;
+    transition: opacity 700ms ease;
+  }
+
+  .scrolly[data-active="0"] .scatter-point,
+  .scrolly[data-active="1"] .scatter-point,
+  .scrolly[data-active="2"] .scatter-point,
+  .scrolly[data-active="3"] .scatter-point {
+    opacity: 1;
+  }
+
+  .scrolly[data-active="1"] .fit-line,
+  .scrolly[data-active="1"] .label-bias { opacity: 1; }
+
+  .scrolly[data-active="2"] .fit-wiggle,
+  .scrolly[data-active="2"] .label-variance { opacity: 1; }
+
+  .scrolly[data-active="3"] .fit-sweet,
+  .scrolly[data-active="3"] .true-curve,
+  .scrolly[data-active="3"] .sweet-seal,
+  .scrolly[data-active="3"] .label-balance { opacity: 1; }
+
+  /* Path draw-in animations using stroke-dashoffset */
+  .draw-path {
+    stroke-dasharray: var(--len, 2000);
+    stroke-dashoffset: var(--len, 2000);
+    transition: stroke-dashoffset 1.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 900ms ease;
+  }
+
+  .scrolly[data-active="1"] .fit-line.draw-path,
+  .scrolly[data-active="2"] .fit-wiggle.draw-path,
+  .scrolly[data-active="3"] .fit-sweet.draw-path,
+  .scrolly[data-active="3"] .true-curve.draw-path {
+    stroke-dashoffset: 0;
+  }
+
+  /* U-CURVE viz element states */
+  .u-axis { opacity: 0.35; }
+  .u-train, .u-test, .u-sweet-ring, .u-sweet-dot,
+  .u-label-train, .u-label-test, .u-label-sweet,
+  .u-cv-highlight, .u-cv-label {
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  .scrolly[data-active="4"] .u-train,
+  .scrolly[data-active="4"] .u-test,
+  .scrolly[data-active="4"] .u-label-train,
+  .scrolly[data-active="4"] .u-label-test,
+  .scrolly[data-active="4"] .u-sweet-dot,
+  .scrolly[data-active="4"] .u-sweet-ring,
+  .scrolly[data-active="4"] .u-label-sweet { opacity: 1; }
+
+  .scrolly[data-active="5"] .u-train,
+  .scrolly[data-active="5"] .u-test,
+  .scrolly[data-active="5"] .u-label-train,
+  .scrolly[data-active="5"] .u-label-test,
+  .scrolly[data-active="5"] .u-sweet-dot,
+  .scrolly[data-active="5"] .u-sweet-ring,
+  .scrolly[data-active="5"] .u-cv-highlight,
+  .scrolly[data-active="5"] .u-cv-label { opacity: 1; }
+
+  .scrolly[data-active="4"] .u-train.draw-path,
+  .scrolly[data-active="4"] .u-test.draw-path,
+  .scrolly[data-active="5"] .u-train.draw-path,
+  .scrolly[data-active="5"] .u-test.draw-path {
+    stroke-dashoffset: 0;
+  }
+
+  .u-math-anchor {
+    opacity: 0;
+    transition: opacity 900ms ease 250ms;
+  }
+
+  .scrolly[data-active="4"] .u-math-anchor,
+  .scrolly[data-active="5"] .u-math-anchor {
+    opacity: 1;
+  }
+
+  /* STEPS ——————————————————————————— */
+  .steps {
+    position: relative;
+    margin-top: -100vh;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .step {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 24px 22vh;
+  }
+
+  .step-content {
+    pointer-events: auto;
+    width: 100%;
+    max-width: 460px;
+    padding: 24px 30px 28px;
+    background: rgba(241, 231, 209, 0.96);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border: 1px solid rgba(26, 23, 20, 0.08);
+    border-left: 2px solid var(--shu);
+    position: relative;
+    text-align: left;
+    opacity: 0.55;
+    transform: translateY(8px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+
+  .step.active .step-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Tether: vermilion line from card top extending up into the viz */
+  .tether {
+    position: absolute;
+    left: -2px;
+    bottom: 100%;
+    width: 2px;
+    height: 6vh;
+    background: linear-gradient(to top, var(--shu) 0%, rgba(194, 56, 38, 0.3) 60%, transparent 100%);
+    opacity: 0;
+    transition: opacity 600ms ease 100ms;
+    pointer-events: none;
+  }
+
+  .step.active .tether {
+    opacity: 0.7;
+  }
+
+  .tether::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: var(--shu);
+    border-radius: 50%;
+    opacity: 0.55;
+  }
+
+  .step-content::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    width: 14px;
+    height: 14px;
+    border-top: 1px solid var(--sumi-3);
+    border-right: 1px solid var(--sumi-3);
+  }
+
+  .step-content::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    width: 14px;
+    height: 14px;
+    border-bottom: 1px solid var(--sumi-3);
+    border-left: 1px solid var(--sumi-3);
+    margin-left: 1px;
+  }
+
+  .step-num-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(26, 23, 20, 0.12);
+  }
+
+  .step-kanji {
+    font-family: var(--mincho);
+    font-size: 32px;
+    color: var(--shu);
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .step-roman {
+    font-family: var(--serif);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--sumi-3);
+  }
+
+  .step-title {
+    font-family: var(--mincho);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--sumi);
+    margin-bottom: 10px;
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+
+  .step-body {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--sumi);
+  }
+
+  .step-body em {
+    font-style: italic;
+    color: var(--shu-deep);
+  }
+
+  /* ————————————————— CODA ————————————————— */
+  .coda {
+    padding: 20vh 24px 10vh;
+    text-align: center;
+  }
+
+  .coda-inner {
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .coda-mark {
+    font-family: var(--mincho);
+    color: var(--shu);
+    font-size: 38px;
+    margin-bottom: 28px;
+    letter-spacing: 0.1em;
+  }
+
+  .coda p {
+    font-family: var(--mincho);
+    font-size: 22px;
+    line-height: 1.65;
+    color: var(--sumi);
+    margin-bottom: 1.3em;
+    font-weight: 400;
+  }
+
+  .coda p.whisper {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-style: italic;
+    color: var(--sumi-2);
+    margin-top: 40px;
+  }
+
+  /* ————————————————— FOOTER ————————————————— */
+  footer {
+    padding: 14vh 24px 12vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .hanko {
+    width: 72px;
+    height: 72px;
+    position: relative;
+  }
+
+  .hanko svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .footer-text {
+    font-family: var(--serif);
+    font-size: 11px;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--sumi-3);
+    text-align: center;
+    line-height: 2;
+  }
+
+  /* ————————————————— UNIVERSAL BACK PILL ————————————————— */
+  /* Neutral, aesthetic-agnostic "return to portfolio" link.
+     Must be kept consistent across all artifacts -- see ARTIFACTS.md. */
+  .artifact-home {
+    position: fixed;
+    top: 14px;
+    left: 18px;
+    z-index: 210;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px 6px 11px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: #1f1f1f;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px) saturate(1.2);
+    -webkit-backdrop-filter: blur(10px) saturate(1.2);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  }
+  .artifact-home:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  }
+  .artifact-home:focus-visible {
+    outline: 2px solid #2060df;
+    outline-offset: 2px;
+  }
+  .artifact-home svg { flex-shrink: 0; opacity: 0.7; }
+  @media (max-width: 480px) {
+    .artifact-home { top: 10px; left: 12px; font-size: 11px; padding: 5px 11px 5px 9px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .artifact-home,
+    .artifact-home:hover { transition: none; transform: none; }
+  }
+
+  /* ————————————————— LANGUAGE TOGGLE ————————————————— */
+  .lang-toggle {
+    position: fixed;
+    top: 14px;
+    right: 24px;
+    z-index: 210;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--serif);
+    font-size: 12px;
+    letter-spacing: 0.28em;
+  }
+
+  .lang-btn {
+    background: none;
+    border: none;
+    padding: 4px 2px;
+    cursor: pointer;
+    color: var(--sumi-3);
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    transition: color 260ms ease, border-color 260ms ease;
+    border-bottom: 1px solid transparent;
+  }
+
+  .lang-btn[aria-pressed="true"] {
+    color: var(--shu);
+    border-bottom-color: var(--shu);
+  }
+
+  .lang-btn:hover { color: var(--sumi); }
+
+  .lang-btn:focus-visible {
+    outline: 1px solid var(--shu);
+    outline-offset: 3px;
+  }
+
+  .lang-sep { color: var(--sumi-3); user-select: none; }
+
+  /* Toggle visibility by language */
+  body[data-lang="en"] .lang-es { display: none; }
+  body[data-lang="es"] .lang-en { display: none; }
+
+  /* ————————————————— RESPONSIVE ————————————————— */
+  @media (max-width: 860px) {
+    .side-rail { right: 14px; }
+    .side-rail .rail-label { display: none; }
+  }
+
+  @media (max-width: 720px) {
+    .side-rail { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    body { font-size: 17px; line-height: 1.7; }
+    .cover { padding: 6vh 22px; }
+    .cover-enso { width: 160px; height: 160px; margin-bottom: 36px; }
+    .cover-ja { font-size: 44px; letter-spacing: 0.02em; }
+    .cover-romaji { margin-bottom: 30px; }
+    .cover-en { font-size: 18px; }
+    .cover-divider { margin: 48px 0 18px; }
+    .intro { padding: 10vh 22px 6vh; }
+    .intro p { font-size: 17.5px; line-height: 1.75; }
+    .intro-mark { font-size: 32px; margin-bottom: 24px; }
+    .step { min-height: 100vh; padding: 0 16px 26vh; }
+    .step-content { padding: 20px 20px 22px; max-width: 100%; }
+    .step-num-row { gap: 12px; margin-bottom: 10px; padding-bottom: 8px; }
+    .step-kanji { font-size: 28px; }
+    .step-roman { font-size: 10px; letter-spacing: 0.32em; }
+    .step-title { font-size: 20px; margin-bottom: 8px; }
+    .step-body { font-size: 15.5px; line-height: 1.65; }
+    .viz-frame {
+      width: 100%;
+      aspect-ratio: 2 / 1;
+      max-height: 34vh;
+    }
+    .viz-sticky { align-items: flex-start; padding-top: 5vh; }
+    .coda { padding: 14vh 22px 8vh; }
+    .coda-mark { font-size: 32px; }
+    .coda p { font-size: 19px; }
+    footer { padding: 10vh 22px 10vh; }
+  }
+
+  @media (max-width: 420px) {
+    .cover-ja { font-size: 40px; }
+    .cover-en { font-size: 17px; }
+    .step-content { padding: 18px 18px 20px; }
+    .viz-frame { width: 98%; max-height: 26vh; }
+    .viz-sticky { padding-top: 4vh; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: opacity 200ms ease !important;
+    }
+    .draw-path { stroke-dashoffset: 0 !important; }
+  }
+</style>
+</head>
+<body data-lang="en">
+
+<!-- ═══════════════════════ BACK TO PORTFOLIO (universal) ═══════════════════════ -->
+<a href="/artifacts/" class="artifact-home" id="artifactHome" aria-label="Back to portfolio">
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+  <span class="lang-en">Portfolio</span>
+  <span class="lang-es">Portafolio</span>
+</a>
+
+<main>
+
+  <!-- ═══════════════════════ PROGRESS BAR ═══════════════════════ -->
+  <div class="progress-bar" aria-hidden="true">
+    <div class="progress-bar-fill"></div>
+  </div>
+
+  <!-- ═══════════════════════ LANGUAGE TOGGLE ═══════════════════════ -->
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button type="button" class="lang-btn" data-lang-btn="en" aria-pressed="true">EN</button>
+    <span class="lang-sep" aria-hidden="true">·</span>
+    <button type="button" class="lang-btn" data-lang-btn="es" aria-pressed="false">ES</button>
+  </div>
+
+  <!-- ═══════════════════════ SIDE RAIL NAV ═══════════════════════ -->
+  <nav class="side-rail" aria-label="Chapter navigation">
+    <ol>
+      <li><button type="button" data-jump="0" aria-label="Chapter 1"><span class="tick"></span><span class="rail-label lang-en">I · Scatter</span><span class="rail-label lang-es">I · Datos</span></button></li>
+      <li><button type="button" data-jump="1" aria-label="Chapter 2"><span class="tick"></span><span class="rail-label lang-en">II · Bias</span><span class="rail-label lang-es">II · Sesgo</span></button></li>
+      <li><button type="button" data-jump="2" aria-label="Chapter 3"><span class="tick"></span><span class="rail-label lang-en">III · Variance</span><span class="rail-label lang-es">III · Varianza</span></button></li>
+      <li><button type="button" data-jump="3" aria-label="Chapter 4"><span class="tick"></span><span class="rail-label lang-en">IV · Middle</span><span class="rail-label lang-es">IV · Centro</span></button></li>
+      <li><button type="button" data-jump="4" aria-label="Chapter 5"><span class="tick"></span><span class="rail-label lang-en">V · The Bow</span><span class="rail-label lang-es">V · El arco</span></button></li>
+      <li><button type="button" data-jump="5" aria-label="Chapter 6"><span class="tick"></span><span class="rail-label lang-en">VI · Validate</span><span class="rail-label lang-es">VI · Validar</span></button></li>
+    </ol>
+  </nav>
+
+  <!-- ═══════════════════════ COVER ═══════════════════════ -->
+  <section class="cover">
+    <svg class="cover-enso" viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <filter id="brushEnso" x="-15%" y="-15%" width="130%" height="130%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="3" seed="4" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+        </filter>
+      </defs>
+      <!-- imperfect enso circle, open at top-left -->
+      <path
+        d="M 112 28
+           C 148 32 172 58 175 98
+           C 178 138 150 170 110 173
+           C 66 176 32 148 28 104
+           C 25 66 54 34 94 30"
+        stroke="var(--sumi)"
+        stroke-width="7"
+        fill="none"
+        stroke-linecap="round"
+        filter="url(#brushEnso)"
+        opacity="0.92"/>
+      <!-- taper end -->
+      <circle cx="94" cy="30" r="3.5" fill="var(--sumi)" opacity="0.75"/>
+    </svg>
+
+    <h1 class="cover-ja lang-en">The Bow of Error</h1>
+    <h1 class="cover-ja lang-es">El arco del error</h1>
+    <p class="cover-en lang-en">
+      A visualization of bias, variance, and the middle way.
+    </p>
+    <p class="cover-en lang-es">
+      Una visualización del sesgo, la varianza y el punto medio.
+    </p>
+
+    <div class="cover-divider"></div>
+    <div class="cover-meta lang-en">Statistical Learning</div>
+    <div class="cover-meta lang-es">Aprendizaje estadístico</div>
+
+    <div class="cover-scroll-hint lang-en">scroll ↓</div>
+    <div class="cover-scroll-hint lang-es">desplaza ↓</div>
+  </section>
+
+  <!-- ═══════════════════════ INTRO ═══════════════════════ -->
+  <section class="intro">
+    <div class="intro-mark">§</div>
+    <div class="lang-en">
+      <p>
+        Statistical learning asks one quiet question: <em>how much model does the data deserve?</em>
+        Too little and the model goes blind to the pattern. Too much and it chases noise,
+        mistaking the accidents of one sample for the shape of the world.
+      </p>
+      <p>
+        The answer is never a formula. It is a balance: two errors pulling in opposite directions.
+        Plotted against model flexibility, they trace a curve with a soft valley. A bow, bent by its two ends.
+      </p>
+      <p>
+        What follows is that bow, drawn slowly.
+      </p>
+    </div>
+    <div class="lang-es">
+      <p>
+        El aprendizaje estadístico plantea una sola pregunta, en voz baja: <em>¿cuánto modelo merecen los datos?</em>
+        Si es poco, el modelo se vuelve ciego al patrón. Si es demasiado, persigue el ruido
+        y confunde los azares de una muestra con la forma del mundo.
+      </p>
+      <p>
+        La respuesta nunca es una fórmula. Es un equilibrio: dos errores que tiran en direcciones opuestas.
+        Al graficarlos frente a la flexibilidad del modelo, trazan una curva con un valle suave.
+        Un arco, tensado por sus dos extremos.
+      </p>
+      <p>
+        Lo que sigue es ese arco, trazado con calma.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ SCROLLYTELLING ═══════════════════════ -->
+  <div class="scrolly" data-active="0">
+
+    <div class="viz-sticky">
+      <div class="viz-frame">
+
+        <!-- ——— SCATTER VIZ ——— -->
+        <svg id="scatter-viz" viewBox="0 0 600 220" aria-hidden="true">
+          <defs>
+            <filter id="brush1" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="3" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/>
+            </filter>
+            <filter id="brush2" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="7" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/>
+            </filter>
+          </defs>
+
+          <!-- true function, revealed in step 3 -->
+          <path class="true-curve draw-path"
+                d="M 60 200 C 180 100 420 100 540 200"
+                stroke="var(--sumi-3)"
+                stroke-width="1.5"
+                stroke-dasharray="4 6"
+                fill="none"
+                stroke-linecap="round"
+                style="--len: 800"/>
+
+          <!-- underfit: straight line -->
+          <path class="fit-line draw-path"
+                d="M 60 152 L 540 138"
+                stroke="var(--sumi)"
+                stroke-width="3.5"
+                fill="none"
+                stroke-linecap="round"
+                filter="url(#brush1)"
+                opacity="0.85"
+                style="--len: 490"/>
+
+          <!-- overfit: wiggly curve through points -->
+          <path class="fit-wiggle draw-path"
+                id="wiggle-path"
+                stroke="var(--sumi)"
+                stroke-width="3"
+                fill="none"
+                stroke-linecap="round"
+                filter="url(#brush2)"
+                opacity="0.88"
+                style="--len: 1400"/>
+
+          <!-- sweet-spot fit -->
+          <path class="fit-sweet draw-path"
+                d="M 60 205 C 180 105 420 108 540 195"
+                stroke="var(--sumi)"
+                stroke-width="3.8"
+                fill="none"
+                stroke-linecap="round"
+                filter="url(#brush1)"
+                opacity="0.94"
+                style="--len: 820"/>
+
+          <!-- scatter points (filled in by JS for neatness) -->
+          <g id="scatter-points"></g>
+
+          <!-- sweet seal: small vermilion mark at the apex of the good fit -->
+          <g class="sweet-seal">
+            <rect x="285" y="155" width="30" height="30" fill="var(--shu)" opacity="0.94" transform="rotate(-3 300 170)"/>
+            <text x="300" y="178" font-family="EB Garamond" font-size="14" fill="var(--paper)" text-anchor="middle" font-weight="500" font-style="italic" transform="rotate(-3 300 170)">M</text>
+          </g>
+
+          <!-- labels in the corners, pinned to fit states -->
+          <g class="label-bias">
+            <text class="lang-en" x="540" y="108" font-family="EB Garamond" font-size="11" letter-spacing="2" fill="var(--shu-deep)" text-anchor="end" font-style="italic">HIGH BIAS</text>
+            <text class="lang-es" x="540" y="108" font-family="EB Garamond" font-size="11" letter-spacing="2" fill="var(--shu-deep)" text-anchor="end" font-style="italic">ALTO SESGO</text>
+          </g>
+
+          <g class="label-variance">
+            <text class="lang-en" x="60" y="58" font-family="EB Garamond" font-size="11" letter-spacing="2" fill="var(--shu-deep)" font-style="italic">HIGH VARIANCE</text>
+            <text class="lang-es" x="60" y="58" font-family="EB Garamond" font-size="11" letter-spacing="2" fill="var(--shu-deep)" font-style="italic">ALTA VARIANZA</text>
+          </g>
+
+          <g class="label-balance">
+            <text class="lang-en" x="60" y="215" font-family="EB Garamond" font-size="11" letter-spacing="2" fill="var(--shu-deep)" font-style="italic">THE MIDDLE WAY</text>
+            <text class="lang-es" x="60" y="215" font-family="EB Garamond" font-size="11" letter-spacing="2" fill="var(--shu-deep)" font-style="italic">EL PUNTO MEDIO</text>
+          </g>
+        </svg>
+
+        <!-- ——— U-CURVE VIZ ——— -->
+        <svg id="u-viz" viewBox="0 0 600 220" aria-hidden="true">
+          <defs>
+            <filter id="brush3" x="-5%" y="-5%" width="110%" height="110%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="2" result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/>
+            </filter>
+          </defs>
+
+          <!-- axes: fit entirely within 220-tall viewBox so nothing hides behind card -->
+          <g class="u-axis">
+            <line x1="60" y1="200" x2="540" y2="200" stroke="var(--sumi-3)" stroke-width="1"/>
+            <line x1="60" y1="40" x2="60" y2="200" stroke="var(--sumi-3)" stroke-width="1"/>
+            <text class="lang-en" x="300" y="217" font-family="EB Garamond" font-size="10" letter-spacing="3" fill="var(--sumi-2)" text-anchor="middle" font-style="italic">MODEL FLEXIBILITY →</text>
+            <text class="lang-es" x="300" y="217" font-family="EB Garamond" font-size="10" letter-spacing="3" fill="var(--sumi-2)" text-anchor="middle" font-style="italic">FLEXIBILIDAD DEL MODELO →</text>
+            <text class="lang-en" x="28" y="120" font-family="EB Garamond" font-size="10" letter-spacing="3" fill="var(--sumi-2)" text-anchor="middle" font-style="italic" transform="rotate(-90 28 120)">ERROR →</text>
+            <text class="lang-es" x="28" y="120" font-family="EB Garamond" font-size="10" letter-spacing="3" fill="var(--sumi-2)" text-anchor="middle" font-style="italic" transform="rotate(-90 28 120)">ERROR →</text>
+            <text x="52" y="213" font-family="EB Garamond" font-size="10" fill="var(--sumi-3)" text-anchor="end">0</text>
+          </g>
+
+          <!-- training error: monotonically decreasing (dashed) -->
+          <path class="u-train draw-path"
+                d="M 60 66 C 180 100 320 168 540 192"
+                stroke="var(--sumi-2)"
+                stroke-width="2.5"
+                stroke-dasharray="6 6"
+                fill="none"
+                stroke-linecap="round"
+                filter="url(#brush3)"
+                style="--len: 520"/>
+
+          <!-- test error: U-shape, solid -->
+          <path class="u-test draw-path"
+                d="M 60 58 C 130 128 205 170 250 174 C 310 178 410 126 540 62"
+                stroke="var(--sumi)"
+                stroke-width="3.8"
+                fill="none"
+                stroke-linecap="round"
+                filter="url(#brush3)"
+                style="--len: 680"/>
+
+          <!-- sweet spot: vermilion dot + open ring -->
+          <circle class="u-sweet-ring" cx="250" cy="174" r="13" stroke="var(--shu)" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <circle class="u-sweet-dot" cx="250" cy="174" r="4.5" fill="var(--shu)"/>
+
+          <!-- labels -->
+          <text class="u-label-test lang-en" x="80" y="50" font-family="EB Garamond" font-size="13" fill="var(--sumi)" font-style="italic" letter-spacing="0.5">test error</text>
+          <text class="u-label-test lang-es" x="80" y="50" font-family="EB Garamond" font-size="13" fill="var(--sumi)" font-style="italic" letter-spacing="0.5">error de prueba</text>
+
+          <text class="u-label-train lang-en" x="540" y="182" font-family="EB Garamond" font-size="13" fill="var(--sumi-2)" font-style="italic" text-anchor="end" letter-spacing="0.5">training error</text>
+          <text class="u-label-train lang-es" x="540" y="182" font-family="EB Garamond" font-size="13" fill="var(--sumi-2)" font-style="italic" text-anchor="end" letter-spacing="0.5">error de entrenamiento</text>
+
+          <!-- sweet spot label: tick above, label below axis -->
+          <g class="u-label-sweet">
+            <text class="lang-en" x="250" y="197" font-family="EB Garamond" font-size="10" fill="var(--shu-deep)" text-anchor="middle" letter-spacing="2" font-style="italic">OPTIMAL</text>
+            <text class="lang-es" x="250" y="197" font-family="EB Garamond" font-size="10" fill="var(--shu-deep)" text-anchor="middle" letter-spacing="2" font-style="italic">ÓPTIMO</text>
+          </g>
+
+          <!-- math anchor: bias-variance decomposition, shown in steps 4 & 5 -->
+          <g class="u-math-anchor">
+            <line x1="210" y1="26" x2="390" y2="26" stroke="var(--shu)" stroke-width="0.5" opacity="0.4"/>
+            <text x="300" y="18" font-family="EB Garamond" font-size="12" fill="var(--sumi-2)" text-anchor="middle" font-style="italic" letter-spacing="0.02em">E[(y − ŷ)²] = Bias² + Var + σ²</text>
+          </g>
+
+          <!-- cross-validation highlight (shown in step 6) -->
+          <g class="u-cv-highlight">
+            <line x1="250" y1="174" x2="250" y2="58" stroke="var(--shu)" stroke-width="0.5" stroke-dasharray="2 4" opacity="0.4"/>
+            <line x1="250" y1="174" x2="60" y2="174" stroke="var(--shu)" stroke-width="0.5" stroke-dasharray="2 4" opacity="0.4"/>
+          </g>
+          <text class="u-cv-label lang-en" x="390" y="88" font-family="EB Garamond" font-size="11" fill="var(--sumi-2)" font-style="italic" letter-spacing="0.3">honest estimate by</text>
+          <text class="u-cv-label lang-en" x="390" y="102" font-family="EB Garamond" font-size="13" fill="var(--sumi)" font-style="italic" letter-spacing="0.3">cross-validation</text>
+          <text class="u-cv-label lang-es" x="390" y="88" font-family="EB Garamond" font-size="11" fill="var(--sumi-2)" font-style="italic" letter-spacing="0.3">estimación honesta por</text>
+          <text class="u-cv-label lang-es" x="390" y="102" font-family="EB Garamond" font-size="13" fill="var(--sumi)" font-style="italic" letter-spacing="0.3">validación cruzada</text>
+        </svg>
+
+      </div>
+    </div>
+
+    <div class="steps">
+
+      <div class="step" data-step="0">
+        <div class="step-content lang-en">
+          <div class="step-num-row">
+            <span class="step-kanji">I</span>
+            <span class="step-roman">The Observations</span>
+          </div>
+          <h2 class="step-title">A handful of points</h2>
+          <p class="step-body">
+            All we have is a scatter. Behind it, a pattern we cannot see directly:
+            the true relationship between cause and effect, hidden inside the noise.
+            The question is <em>how tightly</em> to model it.
+          </p>
+        </div>
+        <div class="step-content lang-es">
+          <div class="step-num-row">
+            <span class="step-kanji">I</span>
+            <span class="step-roman">Las observaciones</span>
+          </div>
+          <h2 class="step-title">Un puñado de puntos</h2>
+          <p class="step-body">
+            Todo lo que tenemos es una nube de puntos. Detrás de ella, un patrón que
+            no podemos ver directamente: la verdadera relación entre causa y efecto,
+            oculta dentro del ruido. La pregunta es <em>con cuánta fuerza</em> modelarlo.
+          </p>
+        </div>
+      </div>
+
+      <div class="step" data-step="1">
+        <div class="step-content lang-en">
+          <div class="step-num-row">
+            <span class="step-kanji">II</span>
+            <span class="step-roman">Too Rigid</span>
+          </div>
+          <h2 class="step-title">The honest line</h2>
+          <p class="step-body">
+            A straight line is simple. It is also blind. It ignores the shape the data is
+            trying to show. The error it makes is systematic: the model lacks the flexibility
+            to bend toward the truth. This error has a name: <em>bias</em>.
+          </p>
+        </div>
+        <div class="step-content lang-es">
+          <div class="step-num-row">
+            <span class="step-kanji">II</span>
+            <span class="step-roman">Demasiado rígido</span>
+          </div>
+          <h2 class="step-title">La línea honesta</h2>
+          <p class="step-body">
+            Una línea recta es simple. También es ciega. Ignora la forma que los datos
+            intentan mostrar. El error que comete es sistemático: le falta flexibilidad
+            para inclinarse hacia la verdad. Este error tiene nombre: <em>sesgo</em>.
+          </p>
+        </div>
+      </div>
+
+      <div class="step" data-step="2">
+        <div class="step-content lang-en">
+          <div class="step-num-row">
+            <span class="step-kanji">III</span>
+            <span class="step-roman">Too Loyal</span>
+          </div>
+          <h2 class="step-title">The wiggling curve</h2>
+          <p class="step-body">
+            Now a curve that visits every point. It is loyal; too loyal. It has memorized
+            the accidents of this particular sample. Give it new data and it will flail.
+            The error of over-adaptation has a name too: <em>variance</em>.
+          </p>
+        </div>
+        <div class="step-content lang-es">
+          <div class="step-num-row">
+            <span class="step-kanji">III</span>
+            <span class="step-roman">Demasiado leal</span>
+          </div>
+          <h2 class="step-title">La curva que serpentea</h2>
+          <p class="step-body">
+            Ahora una curva que pasa por cada punto. Es leal; demasiado leal. Memorizó
+            los caprichos de esta muestra. Con datos nuevos se desarma.
+            El error de sobreadaptación también tiene nombre: <em>varianza</em>.
+          </p>
+        </div>
+      </div>
+
+      <div class="step" data-step="3">
+        <div class="step-content lang-en">
+          <div class="step-num-row">
+            <span class="step-kanji">IV</span>
+            <span class="step-roman">The Middle</span>
+          </div>
+          <h2 class="step-title">A curve that listens without obeying</h2>
+          <p class="step-body">
+            Between the line and the wiggle lives a curve that tracks the pattern but
+            refuses to chase every fluctuation. This is where good models live. Their quality is
+            judged on <em>data they have never seen</em>; the training set is only the rehearsal.
+          </p>
+        </div>
+        <div class="step-content lang-es">
+          <div class="step-num-row">
+            <span class="step-kanji">IV</span>
+            <span class="step-roman">El centro</span>
+          </div>
+          <h2 class="step-title">Una curva que escucha sin obedecer</h2>
+          <p class="step-body">
+            Entre la línea y el serpenteo vive una curva que sigue el patrón pero se niega
+            a perseguir cada fluctuación. Ahí viven los buenos modelos. Se les mide por el
+            error sobre <em>datos nuevos</em>; el error sobre los datos con que se entrenaron
+            queda como ensayo.
+          </p>
+        </div>
+      </div>
+
+      <div class="step" data-step="4">
+        <div class="step-content lang-en">
+          <div class="step-num-row">
+            <span class="step-kanji">V</span>
+            <span class="step-roman">The Bow</span>
+          </div>
+          <h2 class="step-title">Two errors, one axis</h2>
+          <p class="step-body">
+            Plot error against flexibility and the story becomes geometric. Training
+            error falls forever; more flexibility, tighter fit. Test error falls,
+            then bends, then climbs. Its bottom is the bow's lowest point, the place
+            where bias and variance have negotiated a truce.
+          </p>
+        </div>
+        <div class="step-content lang-es">
+          <div class="step-num-row">
+            <span class="step-kanji">V</span>
+            <span class="step-roman">El arco</span>
+          </div>
+          <h2 class="step-title">Dos errores, un eje</h2>
+          <p class="step-body">
+            Grafica el error frente a la flexibilidad y la historia se vuelve geométrica.
+            El error de entrenamiento cae siempre: más flexibilidad, ajuste más apretado.
+            El error de prueba cae, se curva y vuelve a subir. Su fondo es el punto más bajo
+            del arco, el lugar donde el sesgo y la varianza negocian una tregua.
+          </p>
+        </div>
+      </div>
+
+      <div class="step" data-step="5">
+        <div class="step-content lang-en">
+          <div class="step-num-row">
+            <span class="step-kanji">VI</span>
+            <span class="step-roman">The Honest Mirror</span>
+          </div>
+          <h2 class="step-title">Why training error lies</h2>
+          <p class="step-body">
+            The training curve is a flattering mirror: it always approves of more
+            complexity. It cannot see the valley. To estimate the true bow we hold data
+            out, fit on one part, and test on another. That procedure has a name:
+            <em>cross-validation</em>. It is the instrument that locates the bottom of the U.
+          </p>
+        </div>
+        <div class="step-content lang-es">
+          <div class="step-num-row">
+            <span class="step-kanji">VI</span>
+            <span class="step-roman">El espejo honesto</span>
+          </div>
+          <h2 class="step-title">Por qué miente el error de entrenamiento</h2>
+          <p class="step-body">
+            La curva de entrenamiento es un espejo halagador: siempre pide más complejidad.
+            No puede ver el valle. Para estimar el arco verdadero hay que reservar datos,
+            ajustar con una parte y probar con la otra. Ese procedimiento tiene nombre:
+            <em>validación cruzada</em>. Es el instrumento que localiza el fondo de la U.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════ CODA ═══════════════════════ -->
+  <section class="coda">
+    <div class="coda-inner">
+      <div class="coda-mark">§</div>
+      <div class="lang-en">
+        <p>
+          Every model lives somewhere on the bow.
+        </p>
+        <p>
+          Error cannot be eliminated. The craft is to find the place where the two errors
+          meet, and pitch the model's tent there.
+        </p>
+        <p class="whisper">
+          <em>Excess is as bad as deficiency.</em>
+        </p>
+      </div>
+      <div class="lang-es">
+        <p>
+          Todo modelo vive en algún lugar del arco.
+        </p>
+        <p>
+          El error no puede eliminarse. El oficio es encontrar el punto donde los dos
+          errores se cruzan y asentar ahí el modelo.
+        </p>
+        <p class="whisper">
+          <em>El exceso es tan malo como la carencia.</em>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+  <footer>
+    <div class="hanko">
+      <svg viewBox="0 0 80 80" aria-hidden="true">
+        <defs>
+          <filter id="hankoBrush" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" seed="11" result="n"/>
+            <feDisplacementMap in="SourceGraphic" in2="n" scale="1.8"/>
+          </filter>
+        </defs>
+        <rect x="6" y="6" width="68" height="68" fill="var(--shu)" opacity="0.93" filter="url(#hankoBrush)" rx="2"/>
+        <text x="40" y="38" font-family="EB Garamond" font-size="26" fill="var(--paper)" text-anchor="middle" font-weight="500" font-style="italic">A</text>
+        <text x="40" y="64" font-family="EB Garamond" font-size="26" fill="var(--paper)" text-anchor="middle" font-weight="500" font-style="italic">G</text>
+      </svg>
+    </div>
+    <div class="footer-text lang-en">
+      The Bow of Error<br>
+      A visualization · 2026
+    </div>
+    <div class="footer-text lang-es">
+      El arco del error<br>
+      Una visualización · 2026
+    </div>
+  </footer>
+
+</main>
+
+<script>
+  // ——— Data points and path generation ———
+  const points = [
+    [80, 198], [120, 148], [160, 142], [200, 112], [240, 96],
+    [280, 120], [320, 85], [360, 128], [400, 138], [440, 158],
+    [480, 148], [520, 196]
+  ];
+
+  // Populate scatter points as SVG circles with slight variation for hand-drawn feel
+  const scatterGroup = document.getElementById('scatter-points');
+  points.forEach(([x, y], i) => {
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', x);
+    c.setAttribute('cy', y);
+    c.setAttribute('r', 4.5 + Math.random() * 1.2);
+    c.setAttribute('fill', 'var(--sumi)');
+    c.setAttribute('opacity', 0.88);
+    c.classList.add('scatter-point');
+    c.style.transitionDelay = (i * 50) + 'ms';
+    scatterGroup.appendChild(c);
+  });
+
+  // Catmull-Rom spline through points, converted to cubic beziers.
+  // Tension turned up to exaggerate the wiggle (overfitting aesthetic).
+  function catmullRomBezier(pts, tension = 1.0) {
+    if (pts.length < 2) return '';
+    let d = `M ${pts[0][0]} ${pts[0][1]}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[i + 2] || pts[i + 1];
+      const c1x = p1[0] + (p2[0] - p0[0]) * tension / 6;
+      const c1y = p1[1] + (p2[1] - p0[1]) * tension / 6;
+      const c2x = p2[0] - (p3[0] - p1[0]) * tension / 6;
+      const c2y = p2[1] - (p3[1] - p1[1]) * tension / 6;
+      d += ` C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${p2[0]} ${p2[1]}`;
+    }
+    return d;
+  }
+
+  // Wiggle: tension 1.0 so the curve actually visits every point (overfit look without overshoot)
+  const wigglyD = catmullRomBezier(points, 1.0);
+  const wigglyPath = document.getElementById('wiggle-path');
+  wigglyPath.setAttribute('d', wigglyD);
+
+  // Compute actual path lengths and set --len custom property for accurate draw-in animation
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.draw-path').forEach(p => {
+      try {
+        const len = p.getTotalLength();
+        p.style.setProperty('--len', Math.ceil(len));
+      } catch (e) { /* ignore */ }
+    });
+  });
+
+  // ——— Inject tether elements (vermilion link from card up to viz) ———
+  document.querySelectorAll('.step-content').forEach(el => {
+    const t = document.createElement('div');
+    t.className = 'tether';
+    t.setAttribute('aria-hidden', 'true');
+    el.insertBefore(t, el.firstChild);
+  });
+
+  // ——— Scroll-driven step activation (closest-to-bottom, single active) ———
+  const scrolly = document.querySelector('.scrolly');
+  const steps = [...document.querySelectorAll('.step')];
+  const railButtons = document.querySelectorAll('.side-rail button');
+  const rail = document.querySelector('.side-rail');
+
+  let currentStepIdx = null;
+  function setCurrentStep(stepIdx) {
+    if (stepIdx === currentStepIdx) return;
+    currentStepIdx = stepIdx;
+    scrolly.dataset.active = stepIdx;
+    steps.forEach(s => s.classList.toggle('active', s.dataset.step === stepIdx));
+    railButtons.forEach(btn => {
+      btn.dataset.current = (btn.dataset.jump === stepIdx).toString();
+    });
+  }
+
+  function findActiveStep() {
+    const vh = window.innerHeight;
+    // Active = step whose container bottom is closest to viewport bottom.
+    // This puts the card (anchored at container bottom) in the reading zone
+    // and keeps the viz in the upper viewport — unambiguous vertical pairing.
+    let best = steps[0];
+    let bestDist = Infinity;
+    for (const s of steps) {
+      const rect = s.getBoundingClientRect();
+      // Only consider steps whose card is in or near the reading zone
+      if (rect.bottom < vh * 0.2 || rect.top > vh * 1.2) continue;
+      const dist = Math.abs(rect.bottom - vh);
+      if (dist < bestDist) { bestDist = dist; best = s; }
+    }
+    return best;
+  }
+
+  function updateActiveStep() {
+    const active = findActiveStep();
+    if (active) setCurrentStep(active.dataset.step);
+  }
+
+  // Initialize first step as current
+  setCurrentStep('0');
+
+  // ——— Side-rail click handlers ———
+  railButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.querySelector(`.step[data-step="${btn.dataset.jump}"]`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }
+    });
+  });
+
+  // ——— Progress bar + rail visibility ———
+  const progressFill = document.querySelector('.progress-bar-fill');
+  const coverEl = document.querySelector('.cover');
+
+  function onScroll() {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop;
+    const total = h.scrollHeight - h.clientHeight;
+    const pct = total > 0 ? Math.min(100, (scrolled / total) * 100) : 0;
+    if (progressFill) progressFill.style.width = pct + '%';
+
+    // Fade cover hint once scrolled past intro threshold
+    if (hint && scrolled > 60) {
+      hint.style.opacity = '0';
+    }
+
+    // Side rail appears once the reader has left the cover
+    if (rail) {
+      const coverBottom = coverEl ? coverEl.getBoundingClientRect().bottom : 0;
+      const inScrolly = coverBottom < window.innerHeight * 0.3;
+      rail.classList.toggle('visible', inScrolly);
+    }
+
+    // Update active step from scroll position
+    updateActiveStep();
+  }
+
+  const hint = document.querySelector('.cover-scroll-hint');
+  if (hint) { hint.style.transition = 'opacity 600ms ease'; }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+
+  // ——— Language toggle + back-link sync ———
+  const langBtns = document.querySelectorAll('.lang-btn');
+  const artifactHome = document.getElementById('artifactHome');
+  function setLang(lang) {
+    document.body.dataset.lang = lang;
+    document.documentElement.lang = lang;
+    langBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.langBtn === lang ? 'true' : 'false'));
+    if (artifactHome) {
+      artifactHome.href = lang === 'en' ? '/en/artifacts/' : '/artifacts/';
+    }
+    document.querySelectorAll('.lang-' + lang).forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.animation = 'none';
+    });
+  }
+  langBtns.forEach(btn => {
+    btn.addEventListener('click', () => setLang(btn.dataset.langBtn));
+  });
+
+  // ——— Auto-detect language: ?lang= param > referrer pathname > default (EN) ———
+  (function detectLang() {
+    const params = new URLSearchParams(window.location.search);
+    const paramLang = params.get('lang');
+    if (paramLang === 'es' || paramLang === 'en') { setLang(paramLang); return; }
+    const ref = document.referrer;
+    if (!ref) return;
+    try {
+      const u = new URL(ref);
+      if (u.pathname.startsWith('/en/')) setLang('en');
+      else if (u.hostname.toLowerCase().includes('gonorandres')) setLang('es');
+    } catch (_) { /* ignore malformed referrer */ }
+  })();
+</script>
+
+</body>
+</html>

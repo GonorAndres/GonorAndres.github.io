@@ -25,6 +25,7 @@ export interface NoteLink {
 export interface Note {
   slug: string;
   category: NoteCategory;
+  type?: 'note' | 'artifact';
   title: Record<Lang, string>;
   description: Record<Lang, string>;
   urls: NoteLink[];
@@ -302,11 +303,39 @@ export const notes: Note[] = [
     },
     relatedNotes: ['time-series-delhi', 'ab-testing-bayesian-frequentist'],
   },
+  {
+    slug: 'bias-variance-tradeoff',
+    category: 'stats',
+    type: 'artifact',
+    createdDate: '2026-04-18',
+    version: '1',
+    title: {
+      es: 'El Trueque: Sesgo y Varianza',
+      en: 'The Tradeoff: Bias and Variance',
+    },
+    description: {
+      es: 'Un artefacto interactivo de scrollytelling que explica el balance sesgo-varianza a través de la curva U de error de prueba del Capítulo 2 de ISLR. Seis pasos visuales: desde los datos hasta la validación cruzada, con estética sumi-e en papel washi. En español e inglés.',
+      en: 'An interactive scrollytelling artifact explaining the bias-variance tradeoff through the U-shaped test-error curve from ISLR Chapter 2. Six visual steps: from raw data to cross-validation, rendered in a sumi-e ink-on-washi aesthetic. Bilingual: Spanish and English.',
+    },
+    urls: [
+      { label: { es: 'Abrir artefacto', en: 'Open artifact' }, url: '/artifacts/yuminari-bow/' },
+    ],
+    tags: {
+      es: ['Aprendizaje Estadístico', 'Sesgo-Varianza', 'Visualización', 'ISLR'],
+      en: ['Statistical Learning', 'Bias-Variance', 'Visualization', 'ISLR'],
+    },
+    keywords: {
+      es: ['sesgo varianza', 'error de prueba', 'sobreajuste', 'subajuste', 'validación cruzada', 'aprendizaje estadístico'],
+      en: ['bias variance tradeoff', 'test error', 'overfitting', 'underfitting', 'cross-validation', 'statistical learning'],
+    },
+    relatedNotes: ['ab-testing-bayesian-frequentist', 'time-series-delhi'],
+  },
 ];
 
 export interface LocalizedNote {
   slug: string;
   category: NoteCategory;
+  type: 'note' | 'artifact';
   title: string;
   description: string;
   urls: { label: string; url: string }[];
@@ -321,6 +350,7 @@ export function getNotes(lang: Lang): LocalizedNote[] {
   return notes.map((n) => ({
     slug: n.slug,
     category: n.category,
+    type: n.type ?? 'note',
     title: n.title[lang],
     description: n.description[lang],
     urls: n.urls.map((u) => ({ label: u.label[lang], url: u.url })),
@@ -350,6 +380,7 @@ export function getNoteBySlug(slug: string, lang: Lang): LocalizedNote | undefin
   return {
     slug: note.slug,
     category: note.category,
+    type: note.type ?? 'note',
     title: note.title[lang],
     description: note.description[lang],
     urls: note.urls.map((u) => ({ label: u.label[lang], url: u.url })),

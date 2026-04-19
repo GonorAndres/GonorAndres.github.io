@@ -8,6 +8,7 @@ interface NoteUrl {
 interface NoteData {
   slug: string;
   category: string;
+  type: 'note' | 'artifact';
   title: string;
   description: string;
   urls: NoteUrl[];
@@ -45,8 +46,17 @@ function DownloadIcon() {
   );
 }
 
+function LaunchIcon() {
+  return (
+    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+    </svg>
+  );
+}
+
 function NoteCard({ note, labels }: { note: NoteData; labels: Labels }) {
-  const href = note.lang === 'es' ? `/notes/${note.slug}/` : `/en/notes/${note.slug}/`;
+  const href = note.lang === 'es' ? `/artifacts/${note.slug}/` : `/en/artifacts/${note.slug}/`;
 
   return (
     <article className="group p-6 rounded-2xl border border-[#D4A574]/20 hover:shadow-md hover:-translate-y-0.5 transition-all">
@@ -54,6 +64,11 @@ function NoteCard({ note, labels }: { note: NoteData; labels: Labels }) {
         <span className="text-xs px-2 py-0.5 rounded-full bg-[#7A8B6F]/15 text-[#7A8B6F] font-medium">
           {note.category}
         </span>
+        {note.type === 'artifact' && (
+          <span className="text-xs px-2 py-0.5 rounded-full bg-[#C17654]/12 text-[#C17654] font-medium border border-[#C17654]/25">
+            {note.lang === 'es' ? 'Interactivo' : 'Interactive'}
+          </span>
+        )}
       </div>
       <h3 className="font-serif text-lg font-bold text-[#1B2A4A] mb-2 group-hover:text-[#C17654] transition-colors">
         <a href={href}>{note.title}</a>
@@ -72,13 +87,20 @@ function NoteCard({ note, labels }: { note: NoteData; labels: Labels }) {
           </svg>
           {labels.details}
         </a>
-        {note.urls.map((link) => (
-          <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#C17654] text-[#C17654] text-sm font-medium hover:bg-[#C17654]/10 transition-colors">
-            <DownloadIcon />
-            {link.label}
-          </a>
-        ))}
+        {note.urls.map((link) => {
+          const isInternal = link.url.startsWith('/');
+          const href = isInternal
+            ? `${link.url}${link.url.includes('?') ? '&' : '?'}lang=${note.lang}`
+            : link.url;
+          return (
+            <a key={link.url} href={href}
+              {...(!isInternal && { target: '_blank', rel: 'noopener noreferrer' })}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#C17654] text-[#C17654] text-sm font-medium hover:bg-[#C17654]/10 transition-colors">
+              {isInternal ? <LaunchIcon /> : <DownloadIcon />}
+              {link.label}
+            </a>
+          );
+        })}
       </div>
     </article>
   );

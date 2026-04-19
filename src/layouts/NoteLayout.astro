@@ -16,7 +16,7 @@ const tp = useTranslatedPath(lang);
 const note = getNoteBySlug(slug, lang);
 
 if (!note) {
-  return Astro.redirect(tp('/notes/'));
+  return Astro.redirect(tp('/artifacts/'));
 }
 
 const categoryLabel = noteCategoryLabels[lang][note.category];
@@ -25,7 +25,7 @@ const formattedDate = new Date(note.createdDate + 'T12:00:00').toLocaleDateStrin
   { year: 'numeric', month: 'long', day: 'numeric' }
 );
 const siteUrl = 'https://GonorAndres.github.io';
-const pageUrl = lang === 'es' ? `${siteUrl}/notes/${slug}/` : `${siteUrl}/en/notes/${slug}/`;
+const pageUrl = lang === 'es' ? `${siteUrl}/artifacts/${slug}/` : `${siteUrl}/en/artifacts/${slug}/`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -63,7 +63,7 @@ const relatedNotes = note.relatedNotes
   <article class="py-16 px-6">
     <div class="max-w-2xl mx-auto">
       <div class="mb-8">
-        <a href={tp('/notes/')} class="text-sm text-terracotta hover:underline mb-4 block">
+        <a href={tp('/artifacts/')} class="text-sm text-terracotta hover:underline mb-4 block">
           &larr; {t(lang, 'notes.backToNotes')}
         </a>
         <div class="flex flex-wrap items-center gap-3 mb-4">
@@ -90,24 +90,40 @@ const relatedNotes = note.relatedNotes
         ))}
       </div>
 
-      {/* PDF download links */}
+      {/* Resource links — PDF download or artifact launch */}
       <div class="p-6 rounded-2xl border border-amber/30 bg-amber/5 mb-8">
-        <h2 class="font-serif text-lg font-bold text-navy mb-4">{t(lang, 'notes.downloadMaterial')}</h2>
+        <h2 class="font-serif text-lg font-bold text-navy mb-4">
+          {note.type === 'artifact'
+            ? (lang === 'es' ? 'Artefacto interactivo' : 'Interactive artifact')
+            : t(lang, 'notes.downloadMaterial')}
+        </h2>
         <div class="flex flex-wrap gap-4">
-          {note.urls.map((link) => (
-            <a
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-terracotta text-cream text-sm font-medium hover:bg-terracotta/90 transition-colors"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              {link.label}
-            </a>
-          ))}
+          {note.urls.map((link) => {
+            const isInternal = link.url.startsWith('/');
+            const href = isInternal
+              ? `${link.url}${link.url.includes('?') ? '&' : '?'}lang=${lang}`
+              : link.url;
+            return (
+              <a
+                href={href}
+                {...(!isInternal && { target: '_blank', rel: 'noopener noreferrer' })}
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-terracotta text-cream text-sm font-medium hover:bg-terracotta/90 transition-colors"
+              >
+                {isInternal ? (
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                ) : (
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                )}
+                {link.label}
+              </a>
+            );
+          })}
         </div>
       </div>
 
@@ -118,7 +134,7 @@ const relatedNotes = note.relatedNotes
           <div class="space-y-4">
             {relatedNotes.map((rel) => (
               <a
-                href={lang === 'es' ? `/notes/${rel.slug}/` : `/en/notes/${rel.slug}/`}
+                href={lang === 'es' ? `/artifacts/${rel.slug}/` : `/en/artifacts/${rel.slug}/`}
                 class="block p-4 rounded-xl border border-amber/20 hover:border-amber/40 hover:shadow-sm transition-all group"
               >
                 <div class="flex items-center gap-2 mb-1">
@@ -137,7 +153,7 @@ const relatedNotes = note.relatedNotes
       )}
 
       <div class="mt-12 pt-8 border-t border-amber/20">
-        <a href={tp('/notes/')} class="text-terracotta hover:underline text-sm">
+        <a href={tp('/artifacts/')} class="text-terracotta hover:underline text-sm">
           &larr; {t(lang, 'notes.backToNotes')}
         </a>
       </div>

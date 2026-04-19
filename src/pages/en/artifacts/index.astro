@@ -10,6 +10,7 @@ const allNotes = getNotes('en');
 const notesData = allNotes.map((note) => ({
   slug: note.slug,
   category: noteCategoryLabels['en'][note.category],
+  type: note.type,
   title: note.title,
   description: note.description,
   urls: note.urls,
@@ -33,7 +34,7 @@ const labels = {
 };
 ---
 
-<BaseLayout title="Notes & Study Materials | Actuarial, Finance, Statistics" description={t('en', 'notes.subtitle')} lang="en">
+<BaseLayout title="Artifacts | Actuarial, Finance, Statistics" description={t('en', 'notes.subtitle')} lang="en">
   <section class="relative py-16 px-6 overflow-hidden">
     <OrganicBlob variant={1} color="#D4A574" class="w-[400px] h-[400px] -top-16 -right-20 opacity-20" />
 
@@ -42,11 +43,11 @@ const labels = {
       <p class="text-navy/60 mb-8 fade-up">{t('en', 'notes.subtitle')}</p>
 
       <div class="flex flex-wrap gap-2 mb-10 fade-up">
-        <a href="/en/notes/" class="text-sm px-3 py-1 rounded-full bg-terracotta text-cream">
+        <a href="/en/artifacts/" class="text-sm px-3 py-1 rounded-full bg-terracotta text-cream">
           {t('en', 'notes.allNotes')}
         </a>
         {noteCategories.map((cat) => (
-          <a href={`/en/notes/categoria/${cat}/`} class="text-sm px-3 py-1 rounded-full bg-sage/15 text-sage hover:bg-sage/25 transition-colors">
+          <a href={`/en/artifacts/categoria/${cat}/`} class="text-sm px-3 py-1 rounded-full bg-sage/15 text-sage hover:bg-sage/25 transition-colors">
             {noteCategoryLabels['en'][cat]}
           </a>
         ))}
