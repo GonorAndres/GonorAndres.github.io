@@ -181,5 +181,6 @@ Everything else — the viz, palette, typography, copy voice, motion design — 
 | Slug                      | Category | Folder                                     | Aesthetic                            |
 |---------------------------|----------|--------------------------------------------|--------------------------------------|
 | `bias-variance-tradeoff`  | stats    | `public/artifacts/yuminari-bow/`           | Sumi-e ink on washi paper, Latin-only |
+| `greedy-split-search`     | stats    | `public/artifacts/greedy-node/`            | Cream panels, serif prose, amber accents |
 
 *(Update this table when adding new artifacts.)*

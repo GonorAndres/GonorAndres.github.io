@@ -328,7 +328,34 @@ export const notes: Note[] = [
       es: ['sesgo varianza', 'error de prueba', 'sobreajuste', 'subajuste', 'validación cruzada', 'aprendizaje estadístico'],
       en: ['bias variance tradeoff', 'test error', 'overfitting', 'underfitting', 'cross-validation', 'statistical learning'],
     },
-    relatedNotes: ['ab-testing-bayesian-frequentist', 'time-series-delhi'],
+    relatedNotes: ['ab-testing-bayesian-frequentist', 'greedy-split-search'],
+  },
+  {
+    slug: 'greedy-split-search',
+    category: 'stats',
+    type: 'artifact',
+    createdDate: '2026-04-19',
+    version: '1',
+    title: {
+      es: 'Búsqueda Voraz de Divisiones',
+      en: 'Greedy Split Search',
+    },
+    description: {
+      es: 'Un recorrido paso a paso de cómo un árbol de decisión elige dónde partir un nodo. Con cinco observaciones y cuatro umbrales candidatos, el artefacto recorre el cálculo del RSS para cada división y deja al lector ver por qué la búsqueda voraz gana en claridad lo que pierde en optimalidad global. Animación interactiva y cálculos en vivo, en español e inglés.',
+      en: 'A step-by-step walkthrough of how a decision tree picks where to split a node. With five observations and four candidate thresholds, the artifact traces the RSS computation for each split and lets the reader see why greedy search gains in clarity what it loses in global optimality. Interactive animation and live computation, bilingual.',
+    },
+    urls: [
+      { label: { es: 'Abrir artefacto', en: 'Open artifact' }, url: '/artifacts/greedy-node/' },
+    ],
+    tags: {
+      es: ['Aprendizaje Estadístico', 'Árboles de Decisión', 'Visualización', 'ISLR'],
+      en: ['Statistical Learning', 'Decision Trees', 'Visualization', 'ISLR'],
+    },
+    keywords: {
+      es: ['árbol de decisión', 'búsqueda voraz', 'RSS', 'umbral de división', 'regresión por árboles', 'aprendizaje estadístico'],
+      en: ['decision tree', 'greedy search', 'RSS', 'split threshold', 'tree regression', 'statistical learning'],
+    },
+    relatedNotes: ['bias-variance-tradeoff', 'glm-actuarial-models'],
   },
 ];
 
