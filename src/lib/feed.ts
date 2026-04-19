@@ -10,6 +10,7 @@ export interface FeedItem {
   kind: FeedKind;
   slug: string;
   title: string;
+  description: string;
   date: string;
   category: string;
   href: string;
@@ -32,6 +33,7 @@ export async function getFeedItems(lang: Lang): Promise<FeedItem[]> {
       kind: 'blog',
       slug,
       title: p.data.title,
+      description: p.data.description,
       date: p.data.date,
       category: categoryLabels[lang][p.data.category as Category] ?? p.data.category,
       href: lang === 'es' ? `/blog/${slug}/` : `/en/blog/${slug}/`,
@@ -43,6 +45,7 @@ export async function getFeedItems(lang: Lang): Promise<FeedItem[]> {
     kind: n.type,
     slug: n.slug,
     title: n.title,
+    description: n.description,
     date: n.createdDate,
     category: noteCategoryLabels[lang][n.category] ?? n.category,
     href: lang === 'es' ? `/artifacts/${n.slug}/` : `/en/artifacts/${n.slug}/`,
