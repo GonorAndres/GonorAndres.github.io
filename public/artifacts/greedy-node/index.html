@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greedy Split Search &middot; Búsqueda voraz de divisiones</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f6eed3;
+    --panel: #fdf8e4;
+    --panel-alt: #f1e6c4;
+    --text: #3a2a14;
+    --muted: #8d7d5c;
+    --border: #c9b688;
+    --accent: #7c4a1f;
+    --accent-hover: #5c340f;
+    --left: #385572;
+    --right: #9b3d28;
+    --winner: #5d721c;
+    --grid: #e5d8af;
+    --plot-bg: #fdfbf0;
+    /* Type scale */
+    --fs-body: 1rem;
+    --fs-lead: 1.08rem;
+    --fs-math: 1.02rem;
+    --fs-math-sm: 0.92rem;
+    --fs-small: 0.88rem;
+    --fs-label: 0.78rem;
+    --fs-h1: 2.1rem;
+    --font-prose: Georgia, 'Times New Roman', serif;
+    --font-math: 'Cambria Math', Cambria, 'Times New Roman', serif;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-prose);
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    padding: 2.25rem 1.5rem 3rem 1.5rem;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: var(--fs-h1);
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.015em;
+    color: var(--text);
+    line-height: 1.15;
+    font-weight: 700;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2rem;
+    font-size: var(--fs-lead);
+    max-width: 70ch;
+    line-height: 1.5;
+  }
+  .section-title {
+    font-size: var(--fs-label);
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1.6rem 1.75rem;
+    margin-bottom: 1.35rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(124, 74, 31, 0.04);
+  }
+  .panel > *:last-child { margin-bottom: 0; }
+  .panel p { margin-bottom: 0.85rem; line-height: 1.65; }
+  .panel p:last-child { margin-bottom: 0; }
+  .panel p.lead {
+    font-size: var(--fs-lead);
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  .panel .callout + p,
+  .panel ul + p,
+  .panel ol + p { margin-top: 0.25rem; }
+  .prose { max-width: 72ch; }
+  .grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+  .grid .panel { margin-bottom: 0; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  .controls { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-top: 1rem; }
+  button {
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 0.45rem 1rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    border-radius: 3px;
+    color: var(--text);
+    transition: background 0.15s;
+  }
+  button:hover { background: var(--panel-alt); }
+  button.primary { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+  button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  svg { display: block; width: 100%; height: auto; }
+  .math {
+    font-family: var(--font-math);
+    font-size: var(--fs-math);
+    line-height: 1.55;
+  }
+  em.var {
+    font-style: italic;
+    font-family: var(--font-prose);
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  .math em.var, .math-block em.var, .math-line em.var,
+  .callout em.var, .worked-side em.var, .worked-total em.var,
+  .rss-table em.var {
+    font-family: var(--font-math);
+    font-style: italic;
+  }
+  .var-bar {
+    font-family: var(--font-math);
+    font-style: normal;
+    font-weight: inherit;
+  }
+  .math-block {
+    background: var(--panel-alt);
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--accent);
+    margin-bottom: 0.55rem;
+    border-radius: 0 3px 3px 0;
+    font-family: var(--font-math);
+    font-size: var(--fs-math);
+    line-height: 1.7;
+  }
+  .math-block:last-child { margin-bottom: 0; }
+  .math-block.total { border-left-color: var(--winner); }
+  .math-line { margin: 0.2rem 0; }
+  .callout {
+    background: var(--panel-alt);
+    border-left: 3px solid var(--accent);
+    padding: 0.9rem 1.15rem;
+    border-radius: 0 3px 3px 0;
+    margin: 0.9rem 0;
+    font-family: var(--font-math);
+    font-size: var(--fs-math);
+    line-height: 1.75;
+  }
+  .highlight-left { color: var(--left); font-weight: 600; }
+  .highlight-right { color: var(--right); font-weight: 600; }
+  .winner-text { color: var(--winner); font-weight: 600; }
+  .rss-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-math);
+    font-size: var(--fs-math-sm);
+  }
+  .rss-table th, .rss-table td {
+    padding: 0.55rem 0.85rem;
+    border-bottom: 1px solid var(--border);
+    text-align: right;
+  }
+  .rss-table th:first-child, .rss-table td:first-child { text-align: left; }
+  .rss-table th {
+    color: var(--muted);
+    font-family: var(--font-prose);
+    font-weight: 700;
+    font-size: var(--fs-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .rss-table th sub, .rss-table th sup {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.75em;
+    vertical-align: sub;
+  }
+  .rss-table tr { transition: background 0.25s; }
+  .rss-table tr.active td { background: rgba(124, 74, 31, 0.1); }
+  .rss-table tr.winner-row td { background: rgba(93, 114, 28, 0.14); font-weight: 600; }
+  .rss-table tr.stale td { opacity: 0.32; }
+  .note {
+    color: var(--muted);
+    font-size: var(--fs-small);
+    font-style: italic;
+    margin-top: 0.75rem;
+    line-height: 1.55;
+    max-width: 70ch;
+  }
+  .data-chips {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.25rem 0 1rem 0;
+    flex-wrap: wrap;
+  }
+  .chip {
+    background: var(--panel-alt);
+    padding: 0.32rem 0.7rem;
+    border-radius: 3px;
+    font-family: var(--font-math);
+    font-size: var(--fs-math-sm);
+    border: 1px solid var(--border);
+  }
+  .legend {
+    display: flex;
+    gap: 1.3rem;
+    margin-top: 1rem;
+    margin-bottom: 0.2rem;
+    font-size: var(--fs-small);
+    color: var(--muted);
+    flex-wrap: wrap;
+    font-family: var(--font-prose);
+  }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.35rem; vertical-align: middle; }
+  .slider-wrap {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: var(--fs-small);
+    color: var(--muted);
+    font-style: italic;
+  }
+  input[type=range] { width: 160px; accent-color: var(--accent); }
+  footer { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 2rem; font-style: italic; }
+  .algo {
+    list-style: none;
+    counter-reset: step;
+    padding-left: 0;
+    margin-top: 0.3rem;
+  }
+  .algo li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 2.3rem;
+    margin-bottom: 0.55rem;
+    font-size: var(--fs-body);
+    line-height: 1.55;
+  }
+  .algo li:last-child { margin-bottom: 0; }
+  .algo li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0.15rem;
+    background: var(--accent);
+    color: var(--panel);
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 1.5rem;
+    font-size: 0.8rem;
+    font-family: var(--font-prose);
+    font-weight: 700;
+  }
+
+  .worked {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 1.1rem;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .worked:last-child { margin-bottom: 0; }
+  .worked.winner { border-color: var(--winner); border-width: 2px; }
+  .worked-header {
+    background: var(--panel-alt);
+    padding: 0.7rem 1.1rem;
+    font-family: var(--font-prose);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: var(--fs-body);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .worked-header .meta {
+    font-family: var(--font-prose);
+    font-weight: 400;
+    font-size: var(--fs-small);
+    color: var(--muted);
+    font-style: italic;
+  }
+  .worked.winner .worked-header { background: rgba(93, 114, 28, 0.13); color: var(--winner); border-color: var(--winner); }
+  .worked-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+  }
+  .worked-side {
+    background: var(--panel);
+    padding: 0.95rem 1.1rem;
+    font-family: var(--font-math);
+    font-size: var(--fs-math);
+    line-height: 1.75;
+  }
+  .worked-side div { margin: 0.15rem 0; }
+  .worked-label {
+    font-family: var(--font-prose);
+    font-style: normal;
+    font-size: var(--fs-label);
+    margin-bottom: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    display: block;
+  }
+  .worked-aside {
+    font-family: var(--font-prose);
+    font-style: italic;
+    font-size: var(--fs-small);
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 52ch;
+    text-align: right;
+  }
+  .worked.winner .worked-aside {
+    color: var(--winner);
+    opacity: 0.85;
+    font-weight: 400;
+  }
+  .worked-side.left .worked-label { color: var(--left); }
+  .worked-side.right .worked-label { color: var(--right); }
+  .worked-total {
+    padding: 0.75rem 1.1rem;
+    background: var(--panel-alt);
+    border-top: 1px solid var(--border);
+    font-family: var(--font-math);
+    font-size: var(--fs-math);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    line-height: 1.55;
+  }
+  .worked.winner .worked-total {
+    background: rgba(93, 114, 28, 0.13);
+    color: var(--winner);
+    font-weight: 600;
+    border-color: var(--winner);
+  }
+  .winner-badge {
+    background: var(--winner);
+    color: var(--panel);
+    padding: 0.18rem 0.6rem;
+    border-radius: 2px;
+    font-size: 0.72rem;
+    font-family: var(--font-prose);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 700px) {
+    .worked-body { grid-template-columns: 1fr; }
+  }
+  .mode-toggle {
+    display: inline-flex;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--panel-alt);
+    margin-bottom: 0.9rem;
+  }
+  .mode-toggle button {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0.5rem 1.05rem;
+    font-size: var(--fs-math-sm);
+    color: var(--muted);
+    font-family: var(--font-prose);
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.15s, color 0.15s;
+  }
+  .mode-toggle button + button { border-left: 1px solid var(--border); }
+  .mode-toggle button.active {
+    background: var(--accent);
+    color: var(--panel);
+  }
+  .mode-toggle button:hover:not(.active) { background: var(--bg); color: var(--text); }
+  .mode-note {
+    font-size: var(--fs-small);
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 1rem;
+    max-width: 60ch;
+    line-height: 1.55;
+  }
+  .rss-table-wrap { max-height: 420px; overflow-y: auto; }
+  .prose-list {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin: 0.75rem 0;
+  }
+  .prose-list li { margin-bottom: 0.45rem; line-height: 1.6; }
+  .prose-list li:last-child { margin-bottom: 0; }
+  .math-line.math-sub {
+    font-size: var(--fs-small);
+    color: var(--muted);
+    font-family: var(--font-prose);
+    font-style: italic;
+    margin-top: 0.3rem;
+  }
+  .callout.callout-winner { border-left-color: var(--winner); }
+  .prose-intro { margin-bottom: 1rem; }
+  .grid .panel:has(.math) { display: flex; flex-direction: column; }
+  .grid .panel .math { display: flex; flex-direction: column; gap: 0.65rem; flex: 1 1 auto; }
+  .grid .panel .math-block { margin-bottom: 0; }
+  .subsection-title {
+    font-family: var(--font-prose);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 1.5rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.3;
+  }
+  .prose-afterlist { margin-top: 0.9rem; }
+  html[lang="en"] .lang-es { display: none !important; }
+  html[lang="es"] .lang-en { display: none !important; }
+  .lang-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: inline-flex;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(124, 74, 31, 0.1);
+    z-index: 100;
+    font-family: var(--font-prose);
+  }
+  .lang-toggle button {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .lang-toggle button + button { border-left: 1px solid var(--border); }
+  .lang-toggle button.active {
+    background: var(--accent);
+    color: var(--panel);
+  }
+  .lang-toggle button:hover:not(.active) { background: var(--bg); color: var(--text); }
+  @media (max-width: 560px) {
+    .lang-toggle { top: 0.5rem; right: 0.5rem; }
+  }
+  .artifact-home {
+    position: fixed;
+    top: 14px;
+    left: 18px;
+    z-index: 210;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px 6px 11px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: #1f1f1f;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px) saturate(1.2);
+    -webkit-backdrop-filter: blur(10px) saturate(1.2);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  }
+  .artifact-home:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  }
+  .artifact-home:focus-visible { outline: 2px solid #2060df; outline-offset: 2px; }
+  .artifact-home svg { flex-shrink: 0; opacity: 0.7; width: 12px; height: 12px; display: block; }
+  @media (max-width: 480px) {
+    .artifact-home { top: 10px; left: 12px; font-size: 11px; padding: 5px 11px 5px 9px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .artifact-home, .artifact-home:hover { transition: none; transform: none; }
+  }
+</style>
+</head>
+<body>
+  <a href="/artifacts/" class="artifact-home" id="artifactHome" aria-label="Back to portfolio">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    <span class="lang-en">Portfolio</span>
+    <span class="lang-es">Portafolio</span>
+  </a>
+  <div class="lang-toggle" role="tablist" aria-label="Language">
+    <button data-lang="en" class="active" aria-label="English">EN</button>
+    <button data-lang="es" aria-label="Espa&ntilde;ol">ES</button>
+  </div>
+
+  <h1><span class="lang-en">Greedy Split Search</span><span class="lang-es">B&uacute;squeda voraz de divisiones</span></h1>
+  <p class="subtitle">
+    <span class="lang-en">A step-by-step walkthrough of how a decision tree chooses where to split a node.</span>
+    <span class="lang-es">Un recorrido paso a paso de c&oacute;mo un &aacute;rbol de decisi&oacute;n elige d&oacute;nde dividir un nodo.</span>
+  </p>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Before you start</span><span class="lang-es">Antes de empezar</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p class="lead">A tiny vocabulary, to make the rest of the page readable. Everything else is built from these.</p>
+      <ul class="prose-list">
+        <li><strong>Regression.</strong> Predicting a number <em class="var">y</em> from one or more numbers <em class="var">x</em>. Here we have one predictor <em class="var">x</em> and one target <em class="var">y</em>.</li>
+        <li><strong>Feature.</strong> Another word for a predictor variable <em class="var">x</em>. With several features we call them <em class="var">x</em><sub>1</sub>, <em class="var">x</em><sub>2</sub>, &hellip; On this page there is just one.</li>
+        <li><strong>Observation (data point).</strong> One pair (<em class="var">x</em>, <em class="var">y</em>). We have five of them.</li>
+        <li><strong>Response.</strong> The <em class="var">y</em> we are trying to predict.</li>
+        <li><strong>Decision tree.</strong> A rule of the form &ldquo;ask a question about <em class="var">x</em>, follow the yes-branch or the no-branch, then ask another question, &hellip; until a final prediction comes out.&rdquo; Pictured below.</li>
+        <li><strong>Node.</strong> One point in the tree where a question is asked, or (if there is no further question) where a prediction is returned. The top node is the <strong>root</strong>. Nodes that still split are <em>internal</em>. Leaves are at the bottom.</li>
+        <li><strong>Parent and child.</strong> When a node splits in two, the splitter is the parent, and the two resulting nodes are its children.</li>
+        <li><strong>Split (threshold).</strong> One question of the form &ldquo;is <em class="var">x</em> &le; <em class="var">s</em>?&rdquo;. The number <em class="var">s</em> is the threshold.</li>
+      </ul>
+      <p>We will build everything else (RSS, greedy, the algorithm) from scratch in the panels below.</p>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p class="lead">Un vocabulario breve, para que el resto de la p&aacute;gina se lea con soltura. Todo lo dem&aacute;s se construye a partir de estas ideas.</p>
+      <ul class="prose-list">
+        <li><strong>Regresi&oacute;n.</strong> Predecir un n&uacute;mero <em class="var">y</em> a partir de uno o varios n&uacute;meros <em class="var">x</em>. Aqu&iacute; tenemos una sola variable predictora <em class="var">x</em> y una respuesta <em class="var">y</em>.</li>
+        <li><strong>Variable (<em>feature</em>).</strong> Otra forma de llamar a una variable predictora <em class="var">x</em>. Cuando hay varias, las nombramos <em class="var">x</em><sub>1</sub>, <em class="var">x</em><sub>2</sub>, &hellip; En esta p&aacute;gina solo aparece una.</li>
+        <li><strong>Observaci&oacute;n (punto de datos).</strong> Una pareja (<em class="var">x</em>, <em class="var">y</em>). Tenemos cinco.</li>
+        <li><strong>Respuesta.</strong> El valor <em class="var">y</em> que intentamos predecir.</li>
+        <li><strong>&Aacute;rbol de decisi&oacute;n.</strong> Una regla de la forma &ldquo;haz una pregunta sobre <em class="var">x</em>, sigue la rama del s&iacute; o la del no, haz otra pregunta, &hellip; hasta que salga una predicci&oacute;n final.&rdquo; Se muestra abajo.</li>
+        <li><strong>Nodo.</strong> Cada punto del &aacute;rbol donde se hace una pregunta, o (si ya no hay m&aacute;s preguntas) donde se devuelve una predicci&oacute;n. El nodo de hasta arriba es la <strong>ra&iacute;z</strong>. Los nodos que todav&iacute;a se dividen son <em>internos</em>. Las hojas est&aacute;n al final.</li>
+        <li><strong>Padre e hijo.</strong> Cuando un nodo se parte en dos, el que se dividi&oacute; es el padre, y los dos nodos que resultan son sus hijos.</li>
+        <li><strong>Divisi&oacute;n (umbral).</strong> Una pregunta de la forma &ldquo;&iquest;es <em class="var">x</em> &le; <em class="var">s</em>?&rdquo;. Al n&uacute;mero <em class="var">s</em> se le llama umbral.</li>
+      </ul>
+      <p>El resto (RSS, la idea de voraz, el algoritmo completo) lo iremos construyendo desde cero en los paneles siguientes.</p>
+    </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Visualizing the tree</span><span class="lang-es">Visualizando el &aacute;rbol</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p>Here is the full tree we will build on the 5-point dataset, for reference. Most of this page is about one choice: the threshold at the root (the &ldquo;?&rdquo;).</p>
+    </div>
+    <svg viewBox="0 0 500 240" preserveAspectRatio="xMidYMid meet" style="margin-top: 0.6rem;">
+      <rect x="180" y="15" width="140" height="50" rx="4" fill="#fdf8e4" stroke="#7c4a1f" stroke-width="2"/>
+      <text x="250" y="38" text-anchor="middle" font-family="Georgia" font-size="13" fill="#3a2a14">root: all 5 points</text>
+      <text x="250" y="55" text-anchor="middle" font-family="Georgia" font-size="12" fill="#7c4a1f" font-style="italic">is x &#8804; s ?</text>
+
+      <line x1="220" y1="65" x2="120" y2="130" stroke="#385572" stroke-width="1.5"/>
+      <text x="150" y="100" font-family="Georgia" font-size="11" fill="#385572" font-style="italic">yes</text>
+      <line x1="280" y1="65" x2="380" y2="130" stroke="#9b3d28" stroke-width="1.5"/>
+      <text x="340" y="100" font-family="Georgia" font-size="11" fill="#9b3d28" font-style="italic">no</text>
+
+      <rect x="50" y="130" width="140" height="50" rx="4" fill="#fdf8e4" stroke="#385572" stroke-width="2"/>
+      <text x="120" y="152" text-anchor="middle" font-family="Georgia" font-size="12" fill="#385572">left child</text>
+      <text x="120" y="168" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3a2a14" font-style="italic">points with x &#8804; s</text>
+
+      <rect x="310" y="130" width="140" height="50" rx="4" fill="#fdf8e4" stroke="#9b3d28" stroke-width="2"/>
+      <text x="380" y="152" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9b3d28">right child</text>
+      <text x="380" y="168" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3a2a14" font-style="italic">points with x &gt; s</text>
+
+      <text x="120" y="205" text-anchor="middle" font-family="Georgia" font-size="11" fill="#8d7d5c" font-style="italic">(may split further, same procedure)</text>
+      <text x="380" y="205" text-anchor="middle" font-family="Georgia" font-size="11" fill="#8d7d5c" font-style="italic">(may split further, same procedure)</text>
+    </svg>
+    <p class="note">The whole page is about choosing the value of <em class="var">s</em> at one node, the root. After we pick it, each child runs the exact same procedure on its own data. That is how the tree grows.</p>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p>Aqu&iacute; est&aacute;, para tenerlo a la vista, el &aacute;rbol completo que construiremos sobre el conjunto de 5 puntos. Casi toda la p&aacute;gina gira en torno a una sola elecci&oacute;n: el umbral en la ra&iacute;z (el &ldquo;?&rdquo;).</p>
+    </div>
+    <svg viewBox="0 0 500 240" preserveAspectRatio="xMidYMid meet" style="margin-top: 0.6rem;">
+      <rect x="180" y="15" width="140" height="50" rx="4" fill="#fdf8e4" stroke="#7c4a1f" stroke-width="2"/>
+      <text x="250" y="38" text-anchor="middle" font-family="Georgia" font-size="13" fill="#3a2a14">ra&iacute;z: los 5 puntos</text>
+      <text x="250" y="55" text-anchor="middle" font-family="Georgia" font-size="12" fill="#7c4a1f" font-style="italic">&iquest;es x &#8804; s ?</text>
+
+      <line x1="220" y1="65" x2="120" y2="130" stroke="#385572" stroke-width="1.5"/>
+      <text x="150" y="100" font-family="Georgia" font-size="11" fill="#385572" font-style="italic">s&iacute;</text>
+      <line x1="280" y1="65" x2="380" y2="130" stroke="#9b3d28" stroke-width="1.5"/>
+      <text x="340" y="100" font-family="Georgia" font-size="11" fill="#9b3d28" font-style="italic">no</text>
+
+      <rect x="50" y="130" width="140" height="50" rx="4" fill="#fdf8e4" stroke="#385572" stroke-width="2"/>
+      <text x="120" y="152" text-anchor="middle" font-family="Georgia" font-size="12" fill="#385572">hijo izquierdo</text>
+      <text x="120" y="168" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3a2a14" font-style="italic">puntos con x &#8804; s</text>
+
+      <rect x="310" y="130" width="140" height="50" rx="4" fill="#fdf8e4" stroke="#9b3d28" stroke-width="2"/>
+      <text x="380" y="152" text-anchor="middle" font-family="Georgia" font-size="12" fill="#9b3d28">hijo derecho</text>
+      <text x="380" y="168" text-anchor="middle" font-family="Georgia" font-size="11" fill="#3a2a14" font-style="italic">puntos con x &gt; s</text>
+
+      <text x="120" y="205" text-anchor="middle" font-family="Georgia" font-size="11" fill="#8d7d5c" font-style="italic">(puede volver a dividirse, con el mismo procedimiento)</text>
+      <text x="380" y="205" text-anchor="middle" font-family="Georgia" font-size="11" fill="#8d7d5c" font-style="italic">(puede volver a dividirse, con el mismo procedimiento)</text>
+    </svg>
+    <p class="note">Toda la p&aacute;gina trata de elegir el valor de <em class="var">s</em> en un solo nodo, la ra&iacute;z. Una vez elegido, cada hijo ejecuta exactamente el mismo procedimiento con sus propios datos. As&iacute; crece el &aacute;rbol.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">The Question</span><span class="lang-es">La pregunta</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p class="lead">A decision tree predicts a number <em class="var">y</em> from a number <em class="var">x</em>. It does this by cutting the data into groups and assigning a single prediction to each group: the group's average <em class="var">y</em>.</p>
+      <p>The cut is made one question at a time: &ldquo;is <em class="var">x</em> &le; <em class="var">s</em>?&rdquo;. Observations that answer yes go into one group, the rest into the other. Each group can be cut again by the same kind of question, and again, until we stop.</p>
+      <p>Every cut needs a threshold, a specific number <em class="var">s</em>. <strong>This page answers exactly one question: given 5 data points, which <em class="var">s</em> is best, and why?</strong></p>
+      <p>The plan is honest brute force. List every threshold worth trying. For each one, split the data and score how tightly the two resulting groups cluster around their own averages. Keep the threshold with the best score.</p>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p class="lead">Un &aacute;rbol de decisi&oacute;n predice un n&uacute;mero <em class="var">y</em> a partir de un n&uacute;mero <em class="var">x</em>. Lo hace cortando los datos en grupos y asign&aacute;ndole a cada grupo una sola predicci&oacute;n: el promedio de <em class="var">y</em> dentro de ese grupo.</p>
+      <p>El corte se hace una pregunta a la vez: &ldquo;&iquest;es <em class="var">x</em> &le; <em class="var">s</em>?&rdquo;. Las observaciones que responden s&iacute; se van a un grupo, y el resto al otro. Cada grupo puede volver a cortarse con una pregunta del mismo tipo, y otra vez, hasta que nos detengamos.</p>
+      <p>Cada corte necesita un umbral, un n&uacute;mero concreto <em class="var">s</em>. <strong>Esta p&aacute;gina contesta una &uacute;nica pregunta: dados 5 puntos, &iquest;cu&aacute;l es la mejor <em class="var">s</em>, y por qu&eacute;?</strong></p>
+      <p>El plan es fuerza bruta, sin disimulos. Enumerar todos los umbrales que valga la pena probar. Para cada uno, dividir los datos y medir qu&eacute; tan apretados quedan los dos grupos alrededor de su propio promedio. Quedarse con el umbral de mejor puntaje.</p>
+    </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">The dataset (one feature, five observations)</span><span class="lang-es">El conjunto de datos (una variable, cinco observaciones)</span></div>
+<div class="lang-en">
+    <div class="data-chips">
+      <span class="chip">(x=1, y=4)</span>
+      <span class="chip">(x=2, y=6)</span>
+      <span class="chip">(x=3, y=8)</span>
+      <span class="chip">(x=7, y=25)</span>
+      <span class="chip">(x=8, y=27)</span>
+    </div>
+    <div class="prose">
+      <p>Five (<em class="var">x</em>, <em class="var">y</em>) observations, one feature. Notice that the <em class="var">x</em> values themselves form two clumps, {1, 2, 3} and {7, 8}, with a wide gap in between, and the <em class="var">y</em> values grow with <em class="var">x</em>. You can see the clumps on the scatter plot further down the page.</p>
+    </div>
+    <div class="callout">
+      <div class="math-line">Parent mean &nbsp;<span class="var-bar">&#x0233;</span> = (4+6+8+25+27)/5 = 70/5 = <strong>14</strong></div>
+      <div class="math-line">Parent RSS = (4&minus;14)&sup2; + (6&minus;14)&sup2; + (8&minus;14)&sup2; + (25&minus;14)&sup2; + (27&minus;14)&sup2;</div>
+      <div class="math-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 100 + 64 + 36 + 121 + 169 = <strong>490</strong></div>
+    </div>
+    <p class="note">Before any split, our best single prediction for the node is <span class="var-bar">&#x0233;</span> = 14. The Parent RSS (490) is the total squared error we pay for using that one number. Splitting should shrink this number.</p>
+    </div>
+    <div class="lang-es">
+    <div class="data-chips">
+      <span class="chip">(x=1, y=4)</span>
+      <span class="chip">(x=2, y=6)</span>
+      <span class="chip">(x=3, y=8)</span>
+      <span class="chip">(x=7, y=25)</span>
+      <span class="chip">(x=8, y=27)</span>
+    </div>
+    <div class="prose">
+      <p>Cinco observaciones (<em class="var">x</em>, <em class="var">y</em>), una sola variable. F&iacute;jese en que los valores de <em class="var">x</em> forman dos c&uacute;mulos, {1, 2, 3} y {7, 8}, con un hueco ancho entre ambos, y que los valores de <em class="var">y</em> crecen con <em class="var">x</em>. Los c&uacute;mulos se aprecian en el diagrama de dispersi&oacute;n que aparece m&aacute;s adelante.</p>
+    </div>
+    <div class="callout">
+      <div class="math-line">Media del padre &nbsp;<span class="var-bar">&#x0233;</span> = (4+6+8+25+27)/5 = 70/5 = <strong>14</strong></div>
+      <div class="math-line">RSS del padre = (4&minus;14)&sup2; + (6&minus;14)&sup2; + (8&minus;14)&sup2; + (25&minus;14)&sup2; + (27&minus;14)&sup2;</div>
+      <div class="math-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 100 + 64 + 36 + 121 + 169 = <strong>490</strong></div>
+    </div>
+    <p class="note">Antes de cualquier divisi&oacute;n, la mejor predicci&oacute;n &uacute;nica para el nodo es <span class="var-bar">&#x0233;</span> = 14. El RSS del padre (490) es el error cuadr&aacute;tico total que pagamos por usar ese solo n&uacute;mero. La divisi&oacute;n deber&iacute;a achicar esa cifra.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Why these four thresholds?</span><span class="lang-es">&iquest;Por qu&eacute; justo estos cuatro umbrales?</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p>A threshold is just a number. In principle we could try infinitely many. Why only four?</p>
+      <p>Because <em>between any two consecutive x-values, the split is identical</em>. Any <em class="var">s</em> in the open interval (3, 7), whether 3.1, 5, or 6.999, puts {1, 2, 3} on the left and {7, 8} on the right. Same groups, same RSS. So we only need <em>one</em> threshold per gap.</p>
+      <p>The standard convention is the midpoint of the gap. Sorted unique <em class="var">x</em> values are <strong>1, 2, 3, 7, 8</strong>. Four gaps, four midpoints:</p>
+    </div>
+    <div class="callout">
+      <div class="math-line">(1+2)/2 = <strong>1.5</strong> &nbsp;&nbsp; (2+3)/2 = <strong>2.5</strong> &nbsp;&nbsp; (3+7)/2 = <strong>5</strong> &nbsp;&nbsp; (7+8)/2 = <strong>7.5</strong></div>
+    </div>
+    <p class="note">With <em class="var">n</em> unique <em class="var">x</em> values there are <em class="var">n</em>&nbsp;&minus;&nbsp;1 candidate thresholds. The algorithm tries every one of them.</p>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p>Un umbral no es m&aacute;s que un n&uacute;mero. En principio podr&iacute;amos probar una infinidad. &iquest;Por qu&eacute; nada m&aacute;s cuatro?</p>
+      <p>Porque <em>entre dos valores consecutivos de x, la divisi&oacute;n es siempre la misma</em>. Cualquier <em class="var">s</em> en el intervalo abierto (3, 7), ya sea 3.1, 5 o 6.999, deja {1, 2, 3} a la izquierda y {7, 8} a la derecha. Mismos grupos, mismo RSS. Basta, entonces, con <em>un</em> umbral por cada hueco.</p>
+      <p>La convenci&oacute;n habitual es tomar el punto medio del hueco. Los valores &uacute;nicos de <em class="var">x</em>, ordenados, son <strong>1, 2, 3, 7, 8</strong>. Cuatro huecos, cuatro puntos medios:</p>
+    </div>
+    <div class="callout">
+      <div class="math-line">(1+2)/2 = <strong>1.5</strong> &nbsp;&nbsp; (2+3)/2 = <strong>2.5</strong> &nbsp;&nbsp; (3+7)/2 = <strong>5</strong> &nbsp;&nbsp; (7+8)/2 = <strong>7.5</strong></div>
+    </div>
+    <p class="note">Con <em class="var">n</em> valores &uacute;nicos de <em class="var">x</em> hay <em class="var">n</em>&nbsp;&minus;&nbsp;1 umbrales candidatos. El algoritmo los prueba todos.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">What does RSS mean?</span><span class="lang-es">&iquest;Qu&eacute; significa RSS?</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p>RSS stands for <strong>Residual Sum of Squares</strong>. For a group of <em class="var">y</em>-values with mean <span class="var-bar">&#x0233;</span>:</p>
+    </div>
+    <div class="callout">
+      RSS = &Sigma; (<em class="var">y</em><sub>i</sub> &minus; <span class="var-bar">&#x0233;</span>)&sup2;
+    </div>
+    <div class="prose">
+      <p>In words: pick the mean as the group&rsquo;s representative, measure how far each member is from that mean, square those distances, add them up.</p>
+      <ul class="prose-list">
+        <li><strong>RSS = 0.</strong> Every point in the group is identical. The mean describes them exactly. A &ldquo;pure&rdquo; group.</li>
+        <li><strong>Small RSS.</strong> The group is tightly clustered around its mean. A good local prediction.</li>
+        <li><strong>Large RSS.</strong> The group is spread out. The mean is a poor summary.</li>
+      </ul>
+      <p>When we split, we want each <em>child</em> to be as pure as possible, which means both RSS<sub>L</sub> and RSS<sub>R</sub> should be small. So we minimize their sum: <strong>RSS<sub>L</sub> + RSS<sub>R</sub></strong>.</p>
+      <p><strong>Why squared, not absolute?</strong> Because squaring is the partner of the mean. If we pick a single number <em class="var">c</em> to represent a group of <em class="var">y</em>-values and score it by &Sigma; (<em class="var">y</em><sub>i</sub> &minus; <em class="var">c</em>)&sup2;, then setting the derivative to zero gives &minus;2 &Sigma; (<em class="var">y</em><sub>i</sub> &minus; <em class="var">c</em>) = 0, i.e. <em class="var">c</em> = <span class="var-bar">&#x0233;</span>. So: minimize sum of squares &rarr; best summary is the mean. The two choices are locked together. (If we minimized &Sigma; |<em class="var">y</em><sub>i</sub> &minus; <em class="var">c</em>| instead, the best <em class="var">c</em> would be the median, and that would give a different kind of tree.)</p>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p>RSS viene del ingl&eacute;s <strong>Residual Sum of Squares</strong>, la suma de cuadrados residuales. Para un grupo de valores de <em class="var">y</em> con media <span class="var-bar">&#x0233;</span>:</p>
+    </div>
+    <div class="callout">
+      RSS = &Sigma; (<em class="var">y</em><sub>i</sub> &minus; <span class="var-bar">&#x0233;</span>)&sup2;
+    </div>
+    <div class="prose">
+      <p>En palabras: se toma la media como representante del grupo, se mide qu&eacute; tan lejos queda cada miembro de esa media, se elevan esas distancias al cuadrado y se suman.</p>
+      <ul class="prose-list">
+        <li><strong>RSS = 0.</strong> Todos los puntos del grupo son id&eacute;nticos. La media los describe con exactitud. Un grupo &ldquo;puro&rdquo;.</li>
+        <li><strong>RSS peque&ntilde;o.</strong> El grupo queda apretado alrededor de su media. Buena predicci&oacute;n local.</li>
+        <li><strong>RSS grande.</strong> El grupo est&aacute; disperso. La media resume mal al conjunto.</li>
+      </ul>
+      <p>Al dividir queremos que cada <em>hijo</em> sea lo m&aacute;s puro posible, lo que equivale a que tanto RSS<sub>L</sub> como RSS<sub>R</sub> sean chicos. Por eso minimizamos su suma: <strong>RSS<sub>L</sub> + RSS<sub>R</sub></strong>.</p>
+      <p><strong>&iquest;Por qu&eacute; al cuadrado y no el valor absoluto?</strong> Porque elevar al cuadrado y la media van de la mano. Si elegimos un solo n&uacute;mero <em class="var">c</em> para representar al grupo y lo puntuamos con &Sigma; (<em class="var">y</em><sub>i</sub> &minus; <em class="var">c</em>)&sup2;, al derivar e igualar a cero queda &minus;2 &Sigma; (<em class="var">y</em><sub>i</sub> &minus; <em class="var">c</em>) = 0, es decir, <em class="var">c</em> = <span class="var-bar">&#x0233;</span>. As&iacute; que: minimizar la suma de cuadrados &rarr; el mejor resumen es la media. Las dos decisiones est&aacute;n amarradas. (Si en cambio minimiz&aacute;ramos &Sigma; |<em class="var">y</em><sub>i</sub> &minus; <em class="var">c</em>|, la mejor <em class="var">c</em> ser&iacute;a la mediana, y eso dar&iacute;a un &aacute;rbol distinto.)</p>
+    </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">The algorithm, in four lines</span><span class="lang-es">El algoritmo, en cuatro l&iacute;neas</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p>Now that we have the words (threshold, split, RSS) we can write the whole procedure down:</p>
+    </div>
+    <ol class="algo">
+      <li>List every candidate threshold <em class="var">s</em>. These are the midpoints between consecutive sorted unique <em class="var">x</em> values.</li>
+      <li>For each <em class="var">s</em>, split the node into <span class="highlight-left">Left</span> (<em class="var">x</em> &le; <em class="var">s</em>) and <span class="highlight-right">Right</span> (<em class="var">x</em> &gt; <em class="var">s</em>).</li>
+      <li>Compute the <strong>post-split RSS</strong> = RSS<sub>L</sub> + RSS<sub>R</sub>, the total squared error we pay if we use each group's own mean as that group's prediction.</li>
+      <li>Pick the <em class="var">s</em>* that makes the post-split RSS smallest.</li>
+    </ol>
+    <p class="note">With <em class="var">p</em> features instead of one, step 1 also loops over <em class="var">j</em> = 1, &hellip;, <em class="var">p</em>, and the winner is the pair (<em class="var">j</em>*, <em class="var">s</em>*). Here <em class="var">p</em> = 1, so we can ignore <em class="var">j</em>.</p>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p>Con el vocabulario listo (umbral, divisi&oacute;n, RSS) podemos escribir todo el procedimiento:</p>
+    </div>
+    <ol class="algo">
+      <li>Enumerar los umbrales candidatos <em class="var">s</em>. Son los puntos medios entre valores consecutivos de <em class="var">x</em> (&uacute;nicos y ordenados).</li>
+      <li>Para cada <em class="var">s</em>, dividir el nodo en <span class="highlight-left">izquierda</span> (<em class="var">x</em> &le; <em class="var">s</em>) y <span class="highlight-right">derecha</span> (<em class="var">x</em> &gt; <em class="var">s</em>).</li>
+      <li>Calcular el <strong>RSS tras la divisi&oacute;n</strong> = RSS<sub>L</sub> + RSS<sub>R</sub>, el error cuadr&aacute;tico total que pagamos si usamos la media propia de cada grupo como predicci&oacute;n del grupo.</li>
+      <li>Quedarse con el <em class="var">s</em>* que deje ese RSS lo m&aacute;s chico posible.</li>
+    </ol>
+    <p class="note">Con <em class="var">p</em> variables en lugar de una, el paso 1 tambi&eacute;n recorre <em class="var">j</em> = 1, &hellip;, <em class="var">p</em>, y el ganador es la pareja (<em class="var">j</em>*, <em class="var">s</em>*). Aqu&iacute; <em class="var">p</em> = 1, as&iacute; que podemos olvidarnos de <em class="var">j</em>.</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Worked Computations: All Four Candidates</span><span class="lang-es">C&aacute;lculos detallados: los cuatro candidatos</span></div>
+<div class="lang-en">
+    <div class="prose prose-intro">
+      <p>To see what the algorithm actually does, we compute every number by hand. For each threshold: form the two groups, take each group&rsquo;s mean, compute each group&rsquo;s RSS, add them.</p>
+    </div>
+
+    <div class="worked">
+      <div class="worked-header"><span>Candidate 1 &nbsp;&middot;&nbsp; s = 1.5</span><span class="meta">split at midpoint of (1, 2)</span></div>
+      <div class="worked-body">
+        <div class="worked-side left">
+          <div class="worked-label">Left &nbsp;(x &le; 1.5)</div>
+          <div>members: {4}</div>
+          <div>&#x0233;<sub>L</sub> = 4 / 1 = <strong>4</strong></div>
+          <div>RSS<sub>L</sub> = (4&minus;4)&sup2; = <strong>0</strong></div>
+        </div>
+        <div class="worked-side right">
+          <div class="worked-label">Right &nbsp;(x &gt; 1.5)</div>
+          <div>members: {6, 8, 25, 27}</div>
+          <div>&#x0233;<sub>R</sub> = (6+8+25+27)/4 = 66/4 = <strong>16.5</strong></div>
+          <div>RSS<sub>R</sub> = (6&minus;16.5)&sup2; + (8&minus;16.5)&sup2; + (25&minus;16.5)&sup2; + (27&minus;16.5)&sup2;</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 110.25 + 72.25 + 72.25 + 110.25 = <strong>365</strong></div>
+        </div>
+      </div>
+      <div class="worked-total">
+        <span>Post-split RSS = 0 + 365 = <strong>365</strong></span>
+        <span class="worked-aside">Only one point on the left &rarr; right child still carries most of the spread.</span>
+      </div>
+    </div>
+
+    <p class="note" style="margin: 0 0 0.6rem 0;">Move the threshold one gap to the right. Now the left group gains a point and the right loses one.</p>
+
+    <div class="worked">
+      <div class="worked-header"><span>Candidate 2 &nbsp;&middot;&nbsp; s = 2.5</span><span class="meta">split at midpoint of (2, 3)</span></div>
+      <div class="worked-body">
+        <div class="worked-side left">
+          <div class="worked-label">Left &nbsp;(x &le; 2.5)</div>
+          <div>members: {4, 6}</div>
+          <div>&#x0233;<sub>L</sub> = (4+6)/2 = 10/2 = <strong>5</strong></div>
+          <div>RSS<sub>L</sub> = (4&minus;5)&sup2; + (6&minus;5)&sup2; = 1 + 1 = <strong>2</strong></div>
+        </div>
+        <div class="worked-side right">
+          <div class="worked-label">Right &nbsp;(x &gt; 2.5)</div>
+          <div>members: {8, 25, 27}</div>
+          <div>&#x0233;<sub>R</sub> = (8+25+27)/3 = 60/3 = <strong>20</strong></div>
+          <div>RSS<sub>R</sub> = (8&minus;20)&sup2; + (25&minus;20)&sup2; + (27&minus;20)&sup2;</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 144 + 25 + 49 = <strong>218</strong></div>
+        </div>
+      </div>
+      <div class="worked-total">
+        <span>Post-split RSS = 2 + 218 = <strong>220</strong></span>
+        <span class="worked-aside">Left is now tight (RSS=2), but right mixes small and large y.</span>
+      </div>
+    </div>
+
+    <p class="note" style="margin: 0 0 0.6rem 0;">Jump across the big gap in <em class="var">x</em>. Both groups are now tightly clustered.</p>
+
+    <div class="worked winner">
+      <div class="worked-header"><span>Candidate 3 &nbsp;&middot;&nbsp; s = 5</span><span class="winner-badge">Winner</span></div>
+      <div class="worked-body">
+        <div class="worked-side left">
+          <div class="worked-label">Left &nbsp;(x &le; 5)</div>
+          <div>members: {4, 6, 8}</div>
+          <div>&#x0233;<sub>L</sub> = (4+6+8)/3 = 18/3 = <strong>6</strong></div>
+          <div>RSS<sub>L</sub> = (4&minus;6)&sup2; + (6&minus;6)&sup2; + (8&minus;6)&sup2;</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 4 + 0 + 4 = <strong>8</strong></div>
+        </div>
+        <div class="worked-side right">
+          <div class="worked-label">Right &nbsp;(x &gt; 5)</div>
+          <div>members: {25, 27}</div>
+          <div>&#x0233;<sub>R</sub> = (25+27)/2 = 52/2 = <strong>26</strong></div>
+          <div>RSS<sub>R</sub> = (25&minus;26)&sup2; + (27&minus;26)&sup2; = 1 + 1 = <strong>2</strong></div>
+        </div>
+      </div>
+      <div class="worked-total">
+        <span>Post-split RSS = 8 + 2 = <strong>10</strong></span>
+        <span class="worked-aside">Both children tight. This is the split that respects the natural gap in x.</span>
+      </div>
+    </div>
+
+    <p class="note" style="margin: 0 0 0.6rem 0;">Push the threshold too far right. The left group is forced to mix small and large <em class="var">y</em>-values again.</p>
+
+    <div class="worked">
+      <div class="worked-header"><span>Candidate 4 &nbsp;&middot;&nbsp; s = 7.5</span><span class="meta">split at midpoint of (7, 8)</span></div>
+      <div class="worked-body">
+        <div class="worked-side left">
+          <div class="worked-label">Left &nbsp;(x &le; 7.5)</div>
+          <div>members: {4, 6, 8, 25}</div>
+          <div>&#x0233;<sub>L</sub> = (4+6+8+25)/4 = 43/4 = <strong>10.75</strong></div>
+          <div>RSS<sub>L</sub> = (4&minus;10.75)&sup2; + (6&minus;10.75)&sup2; + (8&minus;10.75)&sup2; + (25&minus;10.75)&sup2;</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 45.5625 + 22.5625 + 7.5625 + 203.0625 = <strong>278.75</strong></div>
+        </div>
+        <div class="worked-side right">
+          <div class="worked-label">Right &nbsp;(x &gt; 7.5)</div>
+          <div>members: {27}</div>
+          <div>&#x0233;<sub>R</sub> = 27 / 1 = <strong>27</strong></div>
+          <div>RSS<sub>R</sub> = (27&minus;27)&sup2; = <strong>0</strong></div>
+        </div>
+      </div>
+      <div class="worked-total">
+        <span>Post-split RSS = 278.75 + 0 = <strong>278.75</strong></span>
+        <span class="worked-aside">Right has one point, so its RSS is 0, but the left child is very spread out.</span>
+      </div>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose prose-intro">
+      <p>Para ver qu&eacute; hace realmente el algoritmo, calculamos todo a mano. Para cada umbral: armamos los dos grupos, sacamos la media de cada uno, calculamos su RSS y los sumamos.</p>
+    </div>
+
+    <div class="worked">
+      <div class="worked-header"><span>Candidato 1 &nbsp;&middot;&nbsp; s = 1.5</span><span class="meta">divisi&oacute;n en el punto medio de (1, 2)</span></div>
+      <div class="worked-body">
+        <div class="worked-side left">
+          <div class="worked-label">Izquierda &nbsp;(x &le; 1.5)</div>
+          <div>miembros: {4}</div>
+          <div>&#x0233;<sub>L</sub> = 4 / 1 = <strong>4</strong></div>
+          <div>RSS<sub>L</sub> = (4&minus;4)&sup2; = <strong>0</strong></div>
+        </div>
+        <div class="worked-side right">
+          <div class="worked-label">Derecha &nbsp;(x &gt; 1.5)</div>
+          <div>miembros: {6, 8, 25, 27}</div>
+          <div>&#x0233;<sub>R</sub> = (6+8+25+27)/4 = 66/4 = <strong>16.5</strong></div>
+          <div>RSS<sub>R</sub> = (6&minus;16.5)&sup2; + (8&minus;16.5)&sup2; + (25&minus;16.5)&sup2; + (27&minus;16.5)&sup2;</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 110.25 + 72.25 + 72.25 + 110.25 = <strong>365</strong></div>
+        </div>
+      </div>
+      <div class="worked-total">
+        <span>RSS tras la divisi&oacute;n = 0 + 365 = <strong>365</strong></span>
+        <span class="worked-aside">Solo queda un punto a la izquierda, as&iacute; que el hijo derecho se carga casi toda la dispersi&oacute;n.</span>
+      </div>
+    </div>
+
+    <p class="note" style="margin: 0 0 0.6rem 0;">Recorremos el umbral un hueco a la derecha. Ahora el grupo de la izquierda gana un punto y el de la derecha pierde uno.</p>
+
+    <div class="worked">
+      <div class="worked-header"><span>Candidato 2 &nbsp;&middot;&nbsp; s = 2.5</span><span class="meta">divisi&oacute;n en el punto medio de (2, 3)</span></div>
+      <div class="worked-body">
+        <div class="worked-side left">
+          <div class="worked-label">Izquierda &nbsp;(x &le; 2.5)</div>
+          <div>miembros: {4, 6}</div>
+          <div>&#x0233;<sub>L</sub> = (4+6)/2 = 10/2 = <strong>5</strong></div>
+          <div>RSS<sub>L</sub> = (4&minus;5)&sup2; + (6&minus;5)&sup2; = 1 + 1 = <strong>2</strong></div>
+        </div>
+        <div class="worked-side right">
+          <div class="worked-label">Derecha &nbsp;(x &gt; 2.5)</div>
+          <div>miembros: {8, 25, 27}</div>
+          <div>&#x0233;<sub>R</sub> = (8+25+27)/3 = 60/3 = <strong>20</strong></div>
+          <div>RSS<sub>R</sub> = (8&minus;20)&sup2; + (25&minus;20)&sup2; + (27&minus;20)&sup2;</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 144 + 25 + 49 = <strong>218</strong></div>
+        </div>
+      </div>
+      <div class="worked-total">
+        <span>RSS tras la divisi&oacute;n = 2 + 218 = <strong>220</strong></span>
+        <span class="worked-aside">La izquierda ya est&aacute; apretada (RSS=2), pero la derecha mezcla valores chicos y grandes de y.</span>
+      </div>
+    </div>
+
+    <p class="note" style="margin: 0 0 0.6rem 0;">Saltamos el hueco grande en <em class="var">x</em>. Los dos grupos quedan ahora bien apretados.</p>
+
+    <div class="worked winner">
+      <div class="worked-header"><span>Candidato 3 &nbsp;&middot;&nbsp; s = 5</span><span class="winner-badge">Ganador</span></div>
+      <div class="worked-body">
+        <div class="worked-side left">
+          <div class="worked-label">Izquierda &nbsp;(x &le; 5)</div>
+          <div>miembros: {4, 6, 8}</div>
+          <div>&#x0233;<sub>L</sub> = (4+6+8)/3 = 18/3 = <strong>6</strong></div>
+          <div>RSS<sub>L</sub> = (4&minus;6)&sup2; + (6&minus;6)&sup2; + (8&minus;6)&sup2;</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 4 + 0 + 4 = <strong>8</strong></div>
+        </div>
+        <div class="worked-side right">
+          <div class="worked-label">Derecha &nbsp;(x &gt; 5)</div>
+          <div>miembros: {25, 27}</div>
+          <div>&#x0233;<sub>R</sub> = (25+27)/2 = 52/2 = <strong>26</strong></div>
+          <div>RSS<sub>R</sub> = (25&minus;26)&sup2; + (27&minus;26)&sup2; = 1 + 1 = <strong>2</strong></div>
+        </div>
+      </div>
+      <div class="worked-total">
+        <span>RSS tras la divisi&oacute;n = 8 + 2 = <strong>10</strong></span>
+        <span class="worked-aside">Los dos hijos quedan apretados. Esta es la divisi&oacute;n que respeta el hueco natural de los datos en x.</span>
+      </div>
+    </div>
+
+    <p class="note" style="margin: 0 0 0.6rem 0;">Empujamos el umbral demasiado a la derecha. El grupo de la izquierda se ve obligado a mezclar valores chicos y grandes de <em class="var">y</em> otra vez.</p>
+
+    <div class="worked">
+      <div class="worked-header"><span>Candidato 4 &nbsp;&middot;&nbsp; s = 7.5</span><span class="meta">divisi&oacute;n en el punto medio de (7, 8)</span></div>
+      <div class="worked-body">
+        <div class="worked-side left">
+          <div class="worked-label">Izquierda &nbsp;(x &le; 7.5)</div>
+          <div>miembros: {4, 6, 8, 25}</div>
+          <div>&#x0233;<sub>L</sub> = (4+6+8+25)/4 = 43/4 = <strong>10.75</strong></div>
+          <div>RSS<sub>L</sub> = (4&minus;10.75)&sup2; + (6&minus;10.75)&sup2; + (8&minus;10.75)&sup2; + (25&minus;10.75)&sup2;</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 45.5625 + 22.5625 + 7.5625 + 203.0625 = <strong>278.75</strong></div>
+        </div>
+        <div class="worked-side right">
+          <div class="worked-label">Derecha &nbsp;(x &gt; 7.5)</div>
+          <div>miembros: {27}</div>
+          <div>&#x0233;<sub>R</sub> = 27 / 1 = <strong>27</strong></div>
+          <div>RSS<sub>R</sub> = (27&minus;27)&sup2; = <strong>0</strong></div>
+        </div>
+      </div>
+      <div class="worked-total">
+        <span>RSS tras la divisi&oacute;n = 278.75 + 0 = <strong>278.75</strong></span>
+        <span class="worked-aside">La derecha tiene un solo punto, as&iacute; que su RSS es 0; pero el hijo izquierdo queda muy disperso.</span>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Comparing the four candidates</span><span class="lang-es">Comparando los cuatro candidatos</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p>Stack the four post-split RSS values next to each other:</p>
+    </div>
+    <div class="callout callout-winner">
+      <div class="math-line">s = 1.5 &nbsp;&rarr;&nbsp; RSS = 365</div>
+      <div class="math-line">s = 2.5 &nbsp;&rarr;&nbsp; RSS = 220</div>
+      <div class="math-line"><span class="winner-text">s = 5 &nbsp;&nbsp;&rarr;&nbsp; RSS = 10 &nbsp;&nbsp;&nbsp;&nbsp;&larr; smallest</span></div>
+      <div class="math-line">s = 7.5 &nbsp;&rarr;&nbsp; RSS = 278.75</div>
+    </div>
+    <div class="prose">
+      <p>The winner is <strong><em class="var">s</em>* = 5</strong>. The total squared error drops from <strong>490</strong> at the parent down to <strong>10</strong> after the split, a reduction of about 98%. In plain language: nearly all of the spread that the single parent mean failed to capture is explained once we let each side of the split use its own mean.</p>
+      <p>The algorithm never &ldquo;sees&rdquo; the visible gap between <em class="var">x</em> = 3 and <em class="var">x</em> = 7. It only compares four numbers. But those four numbers tell the same story the eye does: the cleanest split is the one that respects where the data already clumps.</p>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p>Pongamos los cuatro valores de RSS (tras la divisi&oacute;n) uno al lado del otro:</p>
+    </div>
+    <div class="callout callout-winner">
+      <div class="math-line">s = 1.5 &nbsp;&rarr;&nbsp; RSS = 365</div>
+      <div class="math-line">s = 2.5 &nbsp;&rarr;&nbsp; RSS = 220</div>
+      <div class="math-line"><span class="winner-text">s = 5 &nbsp;&nbsp;&rarr;&nbsp; RSS = 10 &nbsp;&nbsp;&nbsp;&nbsp;&larr; el m&aacute;s chico</span></div>
+      <div class="math-line">s = 7.5 &nbsp;&rarr;&nbsp; RSS = 278.75</div>
+    </div>
+    <div class="prose">
+      <p>El ganador es <strong><em class="var">s</em>* = 5</strong>. El error cuadr&aacute;tico total cae de <strong>490</strong> en el padre a <strong>10</strong> tras la divisi&oacute;n, una reducci&oacute;n cercana al 98%. Dicho en palabras llanas: casi toda la dispersi&oacute;n que la media &uacute;nica del padre no alcanzaba a explicar queda explicada en cuanto dejamos que cada lado de la divisi&oacute;n use su propia media.</p>
+      <p>El algoritmo nunca &ldquo;ve&rdquo; el hueco visible entre <em class="var">x</em> = 3 y <em class="var">x</em> = 7. Solo compara cuatro n&uacute;meros. Y sin embargo, esos cuatro n&uacute;meros cuentan la misma historia que cuenta el ojo: la divisi&oacute;n m&aacute;s limpia es la que respeta el lugar donde los datos ya se agrupan por su cuenta.</p>
+    </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Try it yourself</span><span class="lang-es">Pru&eacute;belo usted mismo</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p>Press <strong>Play</strong> to watch the algorithm step through the four candidates in order. Or drag the slider to move the threshold freely. Points recolor into the left or right group, each group's mean redraws as a dashed line, and the numbers below update live.</p>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p>Oprima <strong>Reproducir</strong> para ver c&oacute;mo el algoritmo recorre los cuatro candidatos en orden. O arrastre el deslizador para mover el umbral libremente. Los puntos cambian de color seg&uacute;n caigan en el grupo izquierdo o derecho, la media de cada grupo se redibuja como l&iacute;nea punteada, y los n&uacute;meros de abajo se actualizan en vivo.</p>
+    </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="section-title"><span class="lang-en">Split View</span><span class="lang-es">Vista de la divisi&oacute;n</span></div>
+      <div class="mode-toggle" id="mode-toggle" role="tablist">
+        <button data-mode="basic" class="active"><span class="lang-en">Basic &middot; 5 points</span><span class="lang-es">B&aacute;sico &middot; 5 puntos</span></button>
+        <button data-mode="advanced"><span class="lang-en">Advanced &middot; 15 points</span><span class="lang-es">Avanzado &middot; 15 puntos</span></button>
+      </div>
+      <div class="mode-note"><span class="lang-en">Advanced mode swaps in a richer dataset with more candidate thresholds: more plateaus, more drama. The worked examples and narrative above stay tied to the basic dataset.</span><span class="lang-es">El modo avanzado usa un conjunto de datos m&aacute;s rico y con m&aacute;s umbrales candidatos: m&aacute;s mesetas, m&aacute;s tensi&oacute;n. Los ejemplos detallados y la narrativa de arriba siguen amarrados al conjunto b&aacute;sico.</span></div>
+      <svg id="scatter" viewBox="0 0 500 360" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="legend">
+        <span><span class="legend-dot" style="background: var(--left);"></span><span class="lang-en">Left group (x &le; s)</span><span class="lang-es">Grupo izquierdo (x &le; s)</span></span>
+        <span><span class="legend-dot" style="background: var(--right);"></span><span class="lang-en">Right group (x &gt; s)</span><span class="lang-es">Grupo derecho (x &gt; s)</span></span>
+        <span><span class="legend-dot" style="background: var(--accent);"></span><span class="lang-en">Threshold s</span><span class="lang-es">Umbral s</span></span>
+      </div>
+      <div class="controls">
+        <button id="play" class="primary"><span class="lang-en">&#9654; Play</span><span class="lang-es">&#9654; Reproducir</span></button>
+        <button id="step"><span class="lang-en">Next candidate</span><span class="lang-es">Siguiente candidato</span></button>
+        <button id="reset"><span class="lang-en">Reset</span><span class="lang-es">Reiniciar</span></button>
+        <div class="slider-wrap">
+          <span class="lang-en">drag:</span><span class="lang-es">arrastrar:</span> <input type="range" id="slider" min="0.5" max="8.5" step="0.01" value="0.5">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="section-title"><span class="lang-en">Live Computation</span><span class="lang-es">C&aacute;lculo en vivo</span></div>
+      <div class="math">
+        <div class="math-block">
+          <div class="math-line"><span class="lang-en">Threshold</span><span class="lang-es">Umbral</span> <em class="var">s</em> = <span id="cur-threshold">&hellip;</span></div>
+          <div class="math-line"><span class="highlight-left"><span class="lang-en">Left</span><span class="lang-es">Izquierda</span></span> = <span id="left-set">&hellip;</span></div>
+          <div class="math-line"><span class="highlight-right"><span class="lang-en">Right</span><span class="lang-es">Derecha</span></span> = <span id="right-set">&hellip;</span></div>
+        </div>
+        <div class="math-block">
+          <div class="math-line"><span class="highlight-left">&#x0233;<sub>L</sub></span> = <span id="left-mean">&hellip;</span> &nbsp;&nbsp;&nbsp; <span class="highlight-right">&#x0233;<sub>R</sub></span> = <span id="right-mean">&hellip;</span></div>
+          <div class="math-line"><span class="highlight-left">RSS<sub>L</sub></span> = <span id="left-rss">&hellip;</span></div>
+          <div class="math-line"><span class="highlight-right">RSS<sub>R</sub></span> = <span id="right-rss">&hellip;</span></div>
+        </div>
+        <div class="math-block total">
+          <div class="math-line"><span class="lang-en">Post-split RSS</span><span class="lang-es">RSS tras la divisi&oacute;n</span> = <strong id="total-rss">&hellip;</strong></div>
+          <div class="math-line math-sub"><span class="lang-en">vs. parent RSS =</span><span class="lang-es">contra el RSS del padre =</span> <span id="parent-rss-label">490</span>. <span class="lang-en">Reduction:</span><span class="lang-es">Reducci&oacute;n:</span> <span id="reduction">&hellip;</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Candidate Comparison (summary)</span><span class="lang-es">Comparaci&oacute;n de candidatos (resumen)</span></div>
+    <div class="rss-table-wrap">
+      <table class="rss-table" id="rss-table">
+        <thead>
+          <tr>
+            <th><span class="lang-en">threshold s</span><span class="lang-es">umbral s</span></th>
+            <th><span class="lang-en">Left y</span><span class="lang-es">y de la izquierda</span></th>
+            <th><span class="lang-en">Right y</span><span class="lang-es">y de la derecha</span></th>
+            <th>RSS<sub>L</sub></th>
+            <th>RSS<sub>R</sub></th>
+            <th><span class="lang-en">Post-split RSS</span><span class="lang-es">RSS tras la divisi&oacute;n</span></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="winner-msg" class="note" style="display:none;"></div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">RSS Landscape</span><span class="lang-es">Paisaje del RSS</span></div>
+    <svg id="landscape" viewBox="0 0 500 210" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="prose">
+      <p class="note"><span class="lang-en">Each horizontal step is one of the four candidate thresholds. The step is flat because any <em class="var">s</em> inside a single gap between two <em class="var">x</em> values produces the same split: the same two groups, and therefore the same RSS. The step drops and rises as the threshold crosses data points. The lowest step is the winner. Toggle to Advanced mode to see a denser version of the same picture, a V-shape whose trough points at where the data naturally separates.</span><span class="lang-es">Cada escal&oacute;n horizontal es uno de los cuatro umbrales candidatos. El escal&oacute;n sale plano porque cualquier <em class="var">s</em> dentro de un mismo hueco entre dos valores de <em class="var">x</em> produce la misma divisi&oacute;n: los mismos dos grupos y, por lo tanto, el mismo RSS. El escal&oacute;n baja o sube conforme el umbral cruza puntos. El escal&oacute;n m&aacute;s bajo es el ganador. Cambie al modo avanzado para ver una versi&oacute;n m&aacute;s densa del mismo dibujo, una forma de V cuyo fondo apunta justo al lugar donde los datos se separan de manera natural.</span></p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">After the split: what happens next</span><span class="lang-es">Despu&eacute;s de la divisi&oacute;n: qu&eacute; sigue</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p>We have picked <strong><em class="var">s</em>* = 5</strong> at the root. The root is done. Each child now becomes a new node with its own data, and the same procedure runs on it from scratch:</p>
+      <ul class="prose-list">
+        <li>The <span class="highlight-left">left child</span> gets {(1,4), (2,6), (3,8)}. Its candidate thresholds are the midpoints of <strong>1, 2, 3</strong>, namely 1.5 and 2.5. It will pick whichever gives the smaller post-split RSS on those three points.</li>
+        <li>The <span class="highlight-right">right child</span> gets {(7,25), (8,27)}. Only one candidate threshold: 7.5.</li>
+      </ul>
+      <p>Each child picks its own <em class="var">s</em>*, splits, and its grand-children repeat the procedure. A stopping rule (typically a minimum node size or a maximum depth) decides when a node becomes a leaf instead of splitting again.</p>
+      <p class="note">Nothing on this page changes for the children. The recipe (enumerate midpoints, compute RSS for each split, pick the smallest) is what the tree runs at every node.</p>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p>Ya elegimos <strong><em class="var">s</em>* = 5</strong> en la ra&iacute;z. La ra&iacute;z queda lista. Cada hijo se vuelve ahora un nodo nuevo con sus propios datos, y el mismo procedimiento corre sobre &eacute;l desde cero:</p>
+      <ul class="prose-list">
+        <li>El <span class="highlight-left">hijo izquierdo</span> recibe {(1,4), (2,6), (3,8)}. Sus umbrales candidatos son los puntos medios de <strong>1, 2, 3</strong>, es decir, 1.5 y 2.5. Elegir&aacute; el que d&eacute; un RSS tras la divisi&oacute;n m&aacute;s chico sobre esos tres puntos.</li>
+        <li>El <span class="highlight-right">hijo derecho</span> recibe {(7,25), (8,27)}. Un &uacute;nico umbral candidato: 7.5.</li>
+      </ul>
+      <p>Cada hijo elige su propia <em class="var">s</em>*, se divide, y sus nietos repiten el procedimiento. Una regla de paro (por lo general un tama&ntilde;o m&iacute;nimo de nodo o una profundidad m&aacute;xima) decide cu&aacute;ndo un nodo se convierte en hoja en lugar de volver a partirse.</p>
+      <p class="note">Nada de lo que vimos en esta p&aacute;gina cambia para los hijos. La receta (enumerar los puntos medios, calcular el RSS de cada divisi&oacute;n, quedarse con el m&aacute;s chico) es lo que el &aacute;rbol ejecuta en cada nodo.</p>
+    </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Where does &ldquo;greedy&rdquo; come in?</span><span class="lang-es">&iquest;De d&oacute;nde viene lo de &ldquo;voraz&rdquo;?</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p>We just ran the search for <em>one node</em>. Once we commit to <em class="var">s</em>* = 5, the two children become new nodes: {4, 6, 8} on the left and {25, 27} on the right. Each child runs the same exhaustive search, using only its own data. The tree grows one node at a time.</p>
+      <p>The algorithm never looks ahead. It does not ask &ldquo;would a slightly worse split now lead to cleaner splits later?&rdquo;. It just picks the best <em class="var">s</em> for the node in front of it. That is the meaning of greedy: locally optimal, globally unverified.</p>
+      <p>This is sometimes suboptimal. A root split that scores slightly worse could unlock much cleaner child splits later. But searching every possible whole tree is computationally intractable (the number of candidate trees explodes very quickly), so in practice we accept the greedy approximation, and empirically it performs well enough to be the standard recipe.</p>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p>Acabamos de correr la b&uacute;squeda para <em>un solo nodo</em>. Una vez que nos comprometemos con <em class="var">s</em>* = 5, los dos hijos se vuelven nodos nuevos: {4, 6, 8} a la izquierda y {25, 27} a la derecha. Cada hijo corre la misma b&uacute;squeda exhaustiva, usando solo sus propios datos. El &aacute;rbol crece nodo a nodo.</p>
+      <p>El algoritmo nunca se asoma hacia adelante. No se pregunta &ldquo;&iquest;una divisi&oacute;n un poco peor ahora me dar&iacute;a divisiones m&aacute;s limpias despu&eacute;s?&rdquo;. Simplemente elige la mejor <em class="var">s</em> para el nodo que tiene enfrente. En eso consiste ser voraz: &oacute;ptimo en lo local, sin garant&iacute;a de ser &oacute;ptimo en lo global.</p>
+      <p>A veces esto sale sub&oacute;ptimo. Una divisi&oacute;n ra&iacute;z que punt&uacute;e algo peor podr&iacute;a destrabar divisiones mucho m&aacute;s limpias despu&eacute;s. Pero buscar entre todos los &aacute;rboles completos posibles es computacionalmente inalcanzable (la cantidad de &aacute;rboles candidatos explota rapid&iacute;simo), as&iacute; que en la pr&aacute;ctica aceptamos la aproximaci&oacute;n voraz, y en los hechos rinde lo suficiente como para ser la receta est&aacute;ndar.</p>
+    </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title"><span class="lang-en">Sequel: many features, and Random Forests</span><span class="lang-es">Continuaci&oacute;n: varias variables y los bosques aleatorios</span></div>
+<div class="lang-en">
+    <div class="prose">
+      <p class="lead">Everything on this page used one feature. Real datasets have many. A mortality table carries age, sex, policy year, duration, smoker status, geography. A claims-severity model can easily have dozens of predictors. How does the algorithm change when <em class="var">p</em> &gt; 1?</p>
+      <p>Very little, in fact. With <em class="var">p</em> features <em class="var">x</em><sub>1</sub>, <em class="var">x</em><sub>2</sub>, &hellip;, <em class="var">x</em><sub>p</sub>, the inner loop of step 1 now runs over both the feature index <em class="var">j</em> and the threshold <em class="var">s</em>:</p>
+    </div>
+    <ol class="algo">
+      <li>For each feature <em class="var">j</em> = 1, &hellip;, <em class="var">p</em>, list its candidate thresholds (the midpoints of its sorted unique values).</li>
+      <li>For each pair (<em class="var">j</em>, <em class="var">s</em>), split the node using <em class="var">x</em><sub>j</sub> &le; <em class="var">s</em>, then compute post-split RSS.</li>
+      <li>Pick the single pair (<em class="var">j</em>*, <em class="var">s</em>*) that minimizes post-split RSS across every feature and every threshold.</li>
+    </ol>
+    <div class="prose prose-afterlist">
+      <p>At each node the tree asks one question: &ldquo;out of all possible splits on any feature, which one purifies the children most?&rdquo; The winner might be age at the root, policy duration at the left child, smoker status four levels down. Every node picks its own feature-threshold pair from its own data.</p>
+      <h3 class="subsection-title">From one tree to a forest</h3>
+      <p>One tree is noisy. Small changes in the training data can swing the root split, which cascades into very different leaves. The fix, once computers got fast enough to afford it, is to build many trees and average them.</p>
+      <p>A <strong>Random Forest</strong> does two things to make the trees differ from each other:</p>
+      <ul class="prose-list">
+        <li><strong>Bagging.</strong> Each tree trains on a bootstrap sample of the rows (sample with replacement). Every tree sees a slightly different dataset.</li>
+        <li><strong>Feature subsampling.</strong> At every node, the exhaustive search is restricted to a random subset of the features (typically of size &radic;<em class="var">p</em>). Same algorithm we just ran, but over fewer candidates.</li>
+      </ul>
+      <p>Hundreds of such trees are built. A new observation gets a prediction from each one, and the forest's answer is the average (for regression) or the majority vote (for classification). The two layers of randomization make the trees weakly correlated, so averaging them shrinks variance without raising bias much.</p>
+      <p><strong>Boosting</strong> is the other common extension. Trees are grown sequentially, each one fitting the residuals the previous trees missed. Gradient boosting (XGBoost, LightGBM) is what dominates on tabular data today.</p>
+      <p class="note">All of these methods inherit the same split-search recipe we built on this page. The greedy choice at one node, with RSS as the score, is the building block every tree-based method is constructed from. Everything else is extra machinery on top.</p>
+    </div>
+    </div>
+    <div class="lang-es">
+    <div class="prose">
+      <p class="lead">Todo lo que vimos us&oacute; una sola variable. Los conjuntos de datos reales tienen muchas. Una tabla de mortalidad carga edad, sexo, a&ntilde;o de p&oacute;liza, duraci&oacute;n, condici&oacute;n de fumador y regi&oacute;n geogr&aacute;fica. Un modelo de severidad de siniestros puede f&aacute;cilmente arrastrar decenas de variables predictoras. &iquest;C&oacute;mo cambia el algoritmo cuando <em class="var">p</em> &gt; 1?</p>
+      <p>Poco, en realidad. Con <em class="var">p</em> variables <em class="var">x</em><sub>1</sub>, <em class="var">x</em><sub>2</sub>, &hellip;, <em class="var">x</em><sub>p</sub>, el ciclo interno del paso 1 ahora recorre tanto el &iacute;ndice de variable <em class="var">j</em> como el umbral <em class="var">s</em>:</p>
+    </div>
+    <ol class="algo">
+      <li>Para cada variable <em class="var">j</em> = 1, &hellip;, <em class="var">p</em>, enumere sus umbrales candidatos (los puntos medios de sus valores &uacute;nicos, ordenados).</li>
+      <li>Para cada pareja (<em class="var">j</em>, <em class="var">s</em>), divida el nodo con <em class="var">x</em><sub>j</sub> &le; <em class="var">s</em> y calcule el RSS tras la divisi&oacute;n.</li>
+      <li>Qu&eacute;dese con la &uacute;nica pareja (<em class="var">j</em>*, <em class="var">s</em>*) que minimice el RSS tras la divisi&oacute;n entre todas las variables y todos los umbrales.</li>
+    </ol>
+    <div class="prose prose-afterlist">
+      <p>En cada nodo el &aacute;rbol hace una sola pregunta: &ldquo;entre todas las divisiones posibles, sobre cualquier variable, &iquest;cu&aacute;l purifica m&aacute;s a los hijos?&rdquo;. El ganador puede ser la edad en la ra&iacute;z, la duraci&oacute;n de la p&oacute;liza en el hijo izquierdo, la condici&oacute;n de fumador cuatro niveles m&aacute;s abajo. Cada nodo elige su propia pareja variable-umbral a partir de sus propios datos.</p>
+      <h3 class="subsection-title">De un &aacute;rbol a un bosque</h3>
+      <p>Un solo &aacute;rbol es ruidoso. Cambios chicos en los datos de entrenamiento pueden mover la divisi&oacute;n de la ra&iacute;z, y eso se propaga en cascada hasta producir hojas muy distintas. La soluci&oacute;n, una vez que las computadoras fueron lo bastante r&aacute;pidas como para permit&iacute;rselo, es construir muchos &aacute;rboles y promediarlos.</p>
+      <p>Un <strong>bosque aleatorio</strong> (<em>Random Forest</em>) hace dos cosas para que los &aacute;rboles se diferencien entre s&iacute;:</p>
+      <ul class="prose-list">
+        <li><strong><em>Bagging</em>.</strong> Cada &aacute;rbol se entrena con una muestra bootstrap de los renglones (muestreo con reemplazo). Cada &aacute;rbol ve un conjunto de datos ligeramente distinto.</li>
+        <li><strong>Submuestreo de variables.</strong> En cada nodo, la b&uacute;squeda exhaustiva se restringe a un subconjunto aleatorio de las variables (por lo com&uacute;n de tama&ntilde;o &radic;<em class="var">p</em>). El mismo algoritmo que acabamos de ver, solo que sobre menos candidatos.</li>
+      </ul>
+      <p>Se construyen cientos de &aacute;rboles as&iacute;. Una observaci&oacute;n nueva recibe una predicci&oacute;n de cada uno, y la respuesta del bosque es el promedio (en regresi&oacute;n) o el voto mayoritario (en clasificaci&oacute;n). Las dos capas de aleatorizaci&oacute;n hacen que los &aacute;rboles queden d&eacute;bilmente correlacionados, de modo que al promediarlos se reduce la varianza sin aumentar mucho el sesgo.</p>
+      <p>El <strong><em>boosting</em></strong> es la otra extensi&oacute;n com&uacute;n. Los &aacute;rboles se construyen en secuencia: cada uno ajusta los residuales que dejaron los &aacute;rboles anteriores. El <em>gradient boosting</em> (XGBoost, LightGBM) es hoy lo que domina sobre datos tabulares.</p>
+      <p class="note">Todos estos m&eacute;todos heredan la misma receta de b&uacute;squeda de divisiones que armamos en esta p&aacute;gina. La elecci&oacute;n voraz en un nodo, con el RSS como criterio, es la pieza b&aacute;sica con la que se construye cualquier m&eacute;todo basado en &aacute;rboles. El resto es maquinaria extra montada encima.</p>
+    </div>
+    </div>
+  </div>
+
+  <footer><span class="lang-en">A study tool for decision trees &middot; greedy split search on a 5-point toy dataset.</span><span class="lang-es">Una herramienta de estudio sobre &aacute;rboles de decisi&oacute;n &middot; b&uacute;squeda voraz de divisiones en un conjunto de juguete de 5 puntos.</span></footer>
+
+  <script>
+    const COLOR_LEFT   = '#385572';
+    const COLOR_RIGHT  = '#9b3d28';
+    const COLOR_ACCENT = '#7c4a1f';
+    const COLOR_WINNER = '#5d721c';
+    const COLOR_GRID   = '#e5d8af';
+    const COLOR_BORDER = '#c9b688';
+    const COLOR_MUTED  = '#8d7d5c';
+    const COLOR_TEXT   = '#3a2a14';
+    const COLOR_PLOT_BG = '#fdfbf0';
+
+    let lang = 'en';
+    const i18n = {
+      en: {
+        play: '&#9654; Play',
+        pause: '&#10074;&#10074; Pause',
+        replay: '&#9654; Replay',
+        threshold_s: 'threshold s',
+        post_split_rss: 'post-split RSS',
+        winner_tpl: (t, rss, n, red, pct) => `<span class="winner-text">Winner: s* = ${t}</span>. Smallest post-split RSS (${rss}) among ${n} candidates. Reduction from parent: ${red} (${pct}%).`
+      },
+      es: {
+        play: '&#9654; Reproducir',
+        pause: '&#10074;&#10074; Pausar',
+        replay: '&#9654; Repetir',
+        threshold_s: 'umbral s',
+        post_split_rss: 'RSS tras la divisi\u00F3n',
+        winner_tpl: (t, rss, n, red, pct) => `<span class="winner-text">Ganador: s* = ${t}</span>. El RSS tras la divisi\u00F3n m\u00E1s chico (${rss}) entre los ${n} candidatos. Reducci\u00F3n respecto al padre: ${red} (${pct}%).`
+      }
+    };
+
+    const datasets = {
+      basic: {
+        data: [{x:1,y:4},{x:2,y:6},{x:3,y:8},{x:7,y:25},{x:8,y:27}],
+        xDomain: [0, 9],
+        yDomain: [0, 32],
+        xTicks: [0,1,2,3,4,5,6,7,8,9],
+        yTicks: [0, 8, 16, 24, 32],
+        landscapeMax: 400,
+        landscapeTicks: [0, 100, 200, 300, 400],
+        showPointLabels: true,
+        stepMs: 2200
+      },
+      advanced: {
+        data: [
+          {x:1,y:8},{x:2,y:5},{x:3,y:10},{x:4,y:7},{x:5,y:12},{x:6,y:9},{x:8,y:11},{x:9,y:14},
+          {x:13,y:28},{x:14,y:34},{x:15,y:30},{x:16,y:36},{x:18,y:32},{x:19,y:38},{x:20,y:35}
+        ],
+        xDomain: [0, 21],
+        yDomain: [0, 44],
+        xTicks: [0, 3, 6, 9, 12, 15, 18, 21],
+        yTicks: [0, 11, 22, 33, 44],
+        landscapeMax: 2400,
+        landscapeTicks: [0, 600, 1200, 1800, 2400],
+        showPointLabels: false,
+        stepMs: 900
+      }
+    };
+
+    let mode = 'basic';
+    let data = datasets.basic.data;
+    let candidates = [];
+    let PARENT_RSS = 0;
+    let STEP_MS = 2200;
+
+    function splitRSS(t) {
+      const L = data.filter(d => d.x <= t);
+      const R = data.filter(d => d.x > t);
+      const lm = L.length ? L.reduce((a,b)=>a+b.y,0)/L.length : 0;
+      const rm = R.length ? R.reduce((a,b)=>a+b.y,0)/R.length : 0;
+      const lrss = L.reduce((a,b)=>a+Math.pow(b.y-lm,2),0);
+      const rrss = R.reduce((a,b)=>a+Math.pow(b.y-rm,2),0);
+      return {L, R, lm, rm, lrss, rrss, total: lrss+rrss};
+    }
+
+    function computeCandidates(arr) {
+      const xs = [...new Set(arr.map(d => d.x))].sort((a,b)=>a-b);
+      const cs = [];
+      for (let i = 0; i < xs.length - 1; i++) {
+        const m = (xs[i] + xs[i+1]) / 2;
+        cs.push(Math.round(m * 100) / 100);
+      }
+      return cs;
+    }
+
+    function computeParentRSS(arr) {
+      const ybar = arr.reduce((a,b)=>a+b.y,0) / arr.length;
+      return arr.reduce((a,b)=>a+Math.pow(b.y-ybar,2),0);
+    }
+
+    const sc = document.getElementById('scatter');
+    const W = 500, H = 360;
+    const pad = { l: 50, r: 30, t: 30, b: 45 };
+    const plotW = W - pad.l - pad.r;
+    const plotH = H - pad.t - pad.b;
+    let xDomain = [0, 9];
+    let yDomain = [0, 32];
+    const sx = x => pad.l + (x - xDomain[0]) / (xDomain[1] - xDomain[0]) * plotW;
+    const sy = y => pad.t + plotH - (y - yDomain[0]) / (yDomain[1] - yDomain[0]) * plotH;
+
+    function drawScatter(threshold, showFinal = false) {
+      const cfg = datasets[mode];
+      let s = '';
+      s += `<rect x="${pad.l}" y="${pad.t}" width="${plotW}" height="${plotH}" fill="${COLOR_PLOT_BG}" stroke="${COLOR_BORDER}"/>`;
+
+      for (const gx of cfg.xTicks) {
+        s += `<line x1="${sx(gx)}" y1="${pad.t}" x2="${sx(gx)}" y2="${pad.t+plotH}" stroke="${COLOR_GRID}"/>`;
+        s += `<text x="${sx(gx)}" y="${pad.t+plotH+18}" text-anchor="middle" font-size="11" fill="${COLOR_MUTED}" font-family="Georgia">${gx}</text>`;
+      }
+      for (const gy of cfg.yTicks) {
+        s += `<line x1="${pad.l}" y1="${sy(gy)}" x2="${pad.l+plotW}" y2="${sy(gy)}" stroke="${COLOR_GRID}"/>`;
+        s += `<text x="${pad.l-8}" y="${sy(gy)+4}" text-anchor="end" font-size="11" fill="${COLOR_MUTED}" font-family="Georgia">${gy}</text>`;
+      }
+      s += `<text x="${pad.l+plotW/2}" y="${H-12}" text-anchor="middle" font-size="13" fill="${COLOR_TEXT}" font-family="Georgia" font-style="italic">x</text>`;
+      s += `<text x="16" y="${pad.t+plotH/2}" text-anchor="middle" font-size="13" fill="${COLOR_TEXT}" font-family="Georgia" font-style="italic" transform="rotate(-90 16 ${pad.t+plotH/2})">y</text>`;
+
+      if (threshold !== null && showFinal) {
+        const xt = sx(threshold);
+        s += `<rect x="${pad.l}" y="${pad.t}" width="${xt-pad.l}" height="${plotH}" fill="rgba(56, 85, 114, 0.08)"/>`;
+        s += `<rect x="${xt}" y="${pad.t}" width="${pad.l+plotW-xt}" height="${plotH}" fill="rgba(155, 61, 40, 0.08)"/>`;
+      }
+
+      if (threshold !== null) {
+        const L = data.filter(d => d.x <= threshold);
+        const R = data.filter(d => d.x > threshold);
+        if (L.length > 0) {
+          const lm = L.reduce((a,b) => a+b.y, 0) / L.length;
+          s += `<line x1="${pad.l}" y1="${sy(lm)}" x2="${sx(threshold)}" y2="${sy(lm)}" stroke="${COLOR_LEFT}" stroke-width="2" stroke-dasharray="5,3"/>`;
+          s += `<text x="${pad.l+6}" y="${sy(lm)-6}" font-size="11" fill="${COLOR_LEFT}" font-family="Georgia">y&#772;&#8320; = ${lm.toFixed(2)}</text>`;
+        }
+        if (R.length > 0) {
+          const rm = R.reduce((a,b) => a+b.y, 0) / R.length;
+          s += `<line x1="${sx(threshold)}" y1="${sy(rm)}" x2="${pad.l+plotW}" y2="${sy(rm)}" stroke="${COLOR_RIGHT}" stroke-width="2" stroke-dasharray="5,3"/>`;
+          s += `<text x="${pad.l+plotW-6}" y="${sy(rm)-6}" text-anchor="end" font-size="11" fill="${COLOR_RIGHT}" font-family="Georgia">y&#772;&#8339; = ${rm.toFixed(2)}</text>`;
+        }
+
+        const xt = sx(threshold);
+        const color = showFinal ? COLOR_WINNER : COLOR_ACCENT;
+        s += `<line x1="${xt}" y1="${pad.t-6}" x2="${xt}" y2="${pad.t+plotH+6}" stroke="${color}" stroke-width="2.5"/>`;
+        s += `<text x="${xt}" y="${pad.t-10}" text-anchor="middle" font-size="12" fill="${color}" font-family="Georgia" font-weight="600">s = ${threshold}</text>`;
+      }
+
+      const dotR = cfg.showPointLabels ? 6.5 : 5;
+      for (const d of data) {
+        let color = '#7a6a48';
+        if (threshold !== null) color = d.x <= threshold ? COLOR_LEFT : COLOR_RIGHT;
+        s += `<circle cx="${sx(d.x)}" cy="${sy(d.y)}" r="${dotR}" fill="${color}" stroke="${COLOR_PLOT_BG}" stroke-width="2"/>`;
+        if (cfg.showPointLabels) {
+          s += `<text x="${sx(d.x)+11}" y="${sy(d.y)+4}" font-size="11" fill="${COLOR_TEXT}" font-family="Georgia">(${d.x}, ${d.y})</text>`;
+        }
+      }
+
+      sc.innerHTML = s;
+    }
+
+    function truncSet(arr) {
+      if (arr.length === 0) return '\u2205';
+      const ys = arr.map(d => d.y);
+      if (ys.length <= 6) return '{' + ys.join(', ') + '}';
+      return '{' + ys.slice(0, 3).join(', ') + ', \u2026, ' + ys.slice(-2).join(', ') + '} (n=' + ys.length + ')';
+    }
+
+    function updateMath(threshold) {
+      const ids = ['cur-threshold','left-set','right-set','left-mean','right-mean','left-rss','right-rss','total-rss','reduction'];
+      if (threshold === null) {
+        ids.forEach(id => document.getElementById(id).textContent = '\u2026');
+        return;
+      }
+      const r = splitRSS(threshold);
+      document.getElementById('cur-threshold').textContent = threshold;
+      document.getElementById('left-set').textContent = truncSet(r.L);
+      document.getElementById('right-set').textContent = truncSet(r.R);
+      document.getElementById('left-mean').textContent = r.L.length ? r.lm.toFixed(2) : '\u2026';
+      document.getElementById('right-mean').textContent = r.R.length ? r.rm.toFixed(2) : '\u2026';
+      document.getElementById('left-rss').textContent = r.lrss.toFixed(2);
+      document.getElementById('right-rss').textContent = r.rrss.toFixed(2);
+      document.getElementById('total-rss').textContent = r.total.toFixed(2);
+      const reduction = PARENT_RSS - r.total;
+      const pct = (reduction / PARENT_RSS * 100).toFixed(1);
+      document.getElementById('reduction').textContent = `${reduction.toFixed(2)} (${pct}%)`;
+    }
+
+    function buildSegments() {
+      const xs = [...new Set(data.map(d => d.x))].sort((a,b)=>a-b);
+      const segs = [];
+      for (let i = 0; i < xs.length - 1; i++) {
+        const t = Math.round(((xs[i] + xs[i+1]) / 2) * 100) / 100;
+        segs.push({from: xs[i], to: xs[i+1], rss: splitRSS(t).total, t});
+      }
+      return segs;
+    }
+
+    function drawLandscape(current) {
+      const cfg = datasets[mode];
+      const lW = 500, lH = 210;
+      const lp = { l: 60, r: 30, t: 25, b: 50 };
+      const lpW = lW - lp.l - lp.r;
+      const lpH = lH - lp.t - lp.b;
+      const maxRSS = cfg.landscapeMax;
+      const xMax = cfg.xDomain[1];
+      const lsx = x => lp.l + x/xMax * lpW;
+      const lsy = y => lp.t + lpH - Math.min(y, maxRSS)/maxRSS * lpH;
+      let s = '';
+      s += `<rect x="${lp.l}" y="${lp.t}" width="${lpW}" height="${lpH}" fill="${COLOR_PLOT_BG}" stroke="${COLOR_BORDER}"/>`;
+
+      for (const gx of cfg.xTicks) {
+        s += `<line x1="${lsx(gx)}" y1="${lp.t+lpH}" x2="${lsx(gx)}" y2="${lp.t+lpH+4}" stroke="${COLOR_MUTED}"/>`;
+        s += `<text x="${lsx(gx)}" y="${lp.t+lpH+18}" text-anchor="middle" font-size="10" fill="${COLOR_MUTED}" font-family="Georgia">${gx}</text>`;
+      }
+      for (const gy of cfg.landscapeTicks) {
+        s += `<line x1="${lp.l-4}" y1="${lsy(gy)}" x2="${lp.l+lpW}" y2="${lsy(gy)}" stroke="${COLOR_GRID}"/>`;
+        s += `<text x="${lp.l-8}" y="${lsy(gy)+3}" text-anchor="end" font-size="10" fill="${COLOR_MUTED}" font-family="Georgia">${gy}</text>`;
+      }
+
+      const segments = buildSegments();
+      const minRSS = Math.min(...segments.map(se => se.rss));
+      const showLabels = mode === 'basic';
+      for (const seg of segments) {
+        const y = lsy(seg.rss);
+        const isCurrent = current !== null && Math.abs(current - seg.t) < 0.01;
+        const isWinner  = Math.abs(seg.rss - minRSS) < 0.001;
+        const color = isWinner ? COLOR_WINNER : COLOR_ACCENT;
+        const alpha = isCurrent ? 1 : 0.55;
+        const width = isCurrent ? 3 : 2;
+        s += `<line x1="${lsx(seg.from)}" y1="${y}" x2="${lsx(seg.to)}" y2="${y}" stroke="${color}" stroke-width="${width}" opacity="${alpha}"/>`;
+        s += `<circle cx="${lsx(seg.t)}" cy="${y}" r="${isCurrent ? 5.5 : 3.5}" fill="${color}" opacity="${alpha}"/>`;
+        if (showLabels || isCurrent || isWinner) {
+          s += `<text x="${lsx(seg.t)}" y="${y-10}" text-anchor="middle" font-size="11" fill="${color}" font-family="Georgia" font-weight="${isCurrent ? 700 : 400}" opacity="${alpha}">${seg.rss.toFixed(2)}</text>`;
+        }
+        if (showLabels) {
+          s += `<text x="${lsx(seg.t)}" y="${lp.t+lpH+32}" text-anchor="middle" font-size="10" fill="${COLOR_MUTED}" font-family="Georgia" font-style="italic">s=${seg.t}</text>`;
+        }
+      }
+
+      s += `<text x="${lp.l+lpW/2}" y="${lH-5}" text-anchor="middle" font-size="11" fill="${COLOR_TEXT}" font-family="Georgia" font-style="italic">${i18n[lang].threshold_s}</text>`;
+      s += `<text x="14" y="${lp.t+lpH/2}" text-anchor="middle" font-size="11" fill="${COLOR_TEXT}" font-family="Georgia" font-style="italic" transform="rotate(-90 14 ${lp.t+lpH/2})">${i18n[lang].post_split_rss}</text>`;
+
+      document.getElementById('landscape').innerHTML = s;
+    }
+
+    function setYValue(y) {
+      const s = y.toFixed(2);
+      return s;
+    }
+
+    function rebuildTable() {
+      const tbody = document.querySelector('#rss-table tbody');
+      const fmt = v => v.toFixed(2);
+      tbody.innerHTML = candidates.map(t => {
+        const r = splitRSS(t);
+        const ysL = r.L.length <= 8 ? '{' + r.L.map(d=>d.y).join(', ') + '}' : '{' + r.L.slice(0,3).map(d=>d.y).join(', ') + ', \u2026} (n=' + r.L.length + ')';
+        const ysR = r.R.length <= 8 ? '{' + r.R.map(d=>d.y).join(', ') + '}' : '{' + r.R.slice(0,3).map(d=>d.y).join(', ') + ', \u2026} (n=' + r.R.length + ')';
+        return `<tr data-t="${t}" class="stale"><td>${t}</td><td>${ysL}</td><td>${ysR}</td><td>${fmt(r.lrss)}</td><td>${fmt(r.rrss)}</td><td>${fmt(r.total)}</td></tr>`;
+      }).join('');
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      const cfg = datasets[newMode];
+      data = cfg.data;
+      candidates = computeCandidates(data);
+      PARENT_RSS = computeParentRSS(data);
+      xDomain = cfg.xDomain;
+      yDomain = cfg.yDomain;
+      STEP_MS = cfg.stepMs;
+      document.getElementById('parent-rss-label').textContent = PARENT_RSS.toFixed(2);
+      document.getElementById('slider').min = xDomain[0] + 0.5;
+      document.getElementById('slider').max = xDomain[1] - 0.5;
+      document.getElementById('slider').value = xDomain[0] + 0.5;
+      document.querySelectorAll('#mode-toggle button').forEach(b => {
+        b.classList.toggle('active', b.dataset.mode === newMode);
+      });
+      rebuildTable();
+      resetAll();
+    }
+
+    let state = 'idle';
+    let candidateIdx = -1;
+    let animTimer = null;
+
+    function resetAll() {
+      state = 'idle';
+      candidateIdx = -1;
+      if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+      drawScatter(null);
+      drawLandscape(null);
+      updateMath(null);
+      document.querySelectorAll('#rss-table tbody tr').forEach(tr => {
+        tr.classList.add('stale');
+        tr.classList.remove('active', 'winner-row');
+      });
+      document.getElementById('winner-msg').style.display = 'none';
+      document.getElementById('slider').value = xDomain[0] + 0.5;
+      document.getElementById('play').innerHTML = i18n[lang].play;
+    }
+
+    function highlightRow(t) {
+      document.querySelectorAll('#rss-table tbody tr').forEach(tr => tr.classList.remove('active'));
+      const row = document.querySelector(`#rss-table tbody tr[data-t="${t}"]`);
+      if (!row) return;
+      row.classList.add('active');
+      row.classList.remove('stale');
+    }
+
+    function showWinner() {
+      document.querySelectorAll('#rss-table tbody tr').forEach(tr => {
+        tr.classList.remove('active', 'stale');
+      });
+      const results = candidates.map(t => ({t, rss: splitRSS(t).total}));
+      const winner = results.reduce((best, cur) => cur.rss < best.rss ? cur : best, results[0]);
+      const winRow = document.querySelector(`#rss-table tbody tr[data-t="${winner.t}"]`);
+      if (winRow) winRow.classList.add('winner-row');
+      const msg = document.getElementById('winner-msg');
+      msg.style.display = 'block';
+      const reduction = (PARENT_RSS - winner.rss);
+      const pct = (reduction / PARENT_RSS * 100).toFixed(1);
+      msg.innerHTML = i18n[lang].winner_tpl(winner.t, winner.rss.toFixed(2), candidates.length, reduction.toFixed(2), pct);
+      drawScatter(winner.t, true);
+      drawLandscape(winner.t);
+      updateMath(winner.t);
+      document.getElementById('slider').value = winner.t;
+    }
+
+    function advance() {
+      candidateIdx++;
+      if (candidateIdx >= candidates.length) {
+        state = 'done';
+        showWinner();
+        document.getElementById('play').innerHTML = i18n[lang].replay;
+        return;
+      }
+      const t = candidates[candidateIdx];
+      drawScatter(t);
+      drawLandscape(t);
+      updateMath(t);
+      highlightRow(t);
+      document.getElementById('slider').value = t;
+      if (state === 'playing') {
+        animTimer = setTimeout(advance, STEP_MS);
+      }
+    }
+
+    document.getElementById('play').addEventListener('click', () => {
+      if (state === 'done') { resetAll(); }
+      if (state === 'idle') {
+        state = 'playing';
+        document.getElementById('play').innerHTML = i18n[lang].pause;
+        advance();
+      } else if (state === 'playing') {
+        state = 'idle';
+        if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+        document.getElementById('play').innerHTML = i18n[lang].play;
+      }
+    });
+
+    document.getElementById('step').addEventListener('click', () => {
+      if (state === 'done') { resetAll(); return; }
+      if (state === 'playing') {
+        state = 'idle';
+        if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+        document.getElementById('play').innerHTML = i18n[lang].play;
+      }
+      advance();
+    });
+
+    document.getElementById('reset').addEventListener('click', resetAll);
+
+    document.getElementById('slider').addEventListener('input', e => {
+      if (state === 'playing') {
+        state = 'idle';
+        if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+        document.getElementById('play').innerHTML = i18n[lang].play;
+      }
+      const t = parseFloat(e.target.value);
+      drawScatter(t);
+      updateMath(t);
+      const tolerance = mode === 'basic' ? 0.25 : 0.4;
+      let nearest = null;
+      for (const c of candidates) {
+        if (Math.abs(c - t) < tolerance) { nearest = c; break; }
+      }
+      drawLandscape(nearest);
+      if (nearest !== null) highlightRow(nearest);
+      else document.querySelectorAll('#rss-table tbody tr').forEach(tr => tr.classList.remove('active'));
+    });
+
+    document.querySelectorAll('#mode-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => setMode(btn.dataset.mode));
+    });
+
+    function setLang(newLang) {
+      if (newLang !== 'en' && newLang !== 'es') return;
+      lang = newLang;
+      document.documentElement.setAttribute('lang', newLang);
+      document.body.dataset.lang = newLang;
+      try { localStorage.setItem('gsp-lang', newLang); } catch (e) {}
+      document.querySelectorAll('.lang-toggle button').forEach(b => {
+        b.classList.toggle('active', b.dataset.lang === newLang);
+      });
+      const home = document.getElementById('artifactHome');
+      if (home) home.href = newLang === 'en' ? '/en/artifacts/' : '/artifacts/';
+      // Re-render JS-driven text that doesn't live in dual-span HTML
+      const sliderVal = parseFloat(document.getElementById('slider').value);
+      if (state === 'done') {
+        showWinner();
+      } else if (state === 'idle' && candidateIdx < 0) {
+        drawLandscape(null);
+      } else {
+        const t = candidateIdx >= 0 && candidateIdx < candidates.length ? candidates[candidateIdx] : sliderVal;
+        drawScatter(t);
+        drawLandscape(t);
+      }
+      // Update play button label if not currently playing
+      if (state === 'idle') {
+        document.getElementById('play').innerHTML = candidateIdx >= 0 && candidateIdx < candidates.length - 1 ? i18n[lang].play : i18n[lang].play;
+      } else if (state === 'done') {
+        document.getElementById('play').innerHTML = i18n[lang].replay;
+      }
+    }
+
+    document.querySelectorAll('.lang-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => setLang(btn.dataset.lang));
+    });
+
+    // Auto-detect language: ?lang= param > referrer pathname > default (EN)
+    (function detectLang() {
+      const params = new URLSearchParams(window.location.search);
+      const paramLang = params.get('lang');
+      if (paramLang === 'es' || paramLang === 'en') { setLang(paramLang); return; }
+      const ref = document.referrer;
+      if (!ref) return;
+      try {
+        const u = new URL(ref);
+        if (u.pathname.startsWith('/en/')) setLang('en');
+        else if (u.hostname.toLowerCase().includes('gonorandres')) setLang('es');
+      } catch (_) {}
+    })();
+
+    setMode('basic');
+  </script>
+</body>
+</html>

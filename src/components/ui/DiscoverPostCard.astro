@@ -1,9 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
 import type { Lang } from '../../i18n';
-import { useTranslatedPath } from '../../i18n';
-import { categoryLabels } from '../../data/categories';
-import type { Category } from '../../data/categories';
+import { getFeedItems, kindLabel, type FeedKind } from '../../lib/feed';
 
 interface Props {
   lang: Lang;
@@ -11,51 +8,53 @@ interface Props {
 
 const { lang } = Astro.props;
 
-const posts = (await getCollection('blog'))
-  .filter((p) => p.data.lang === lang)
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+const items = await getFeedItems(lang);
+const latestKeys = new Set(items.slice(0, 3).map((i) => `${i.kind}:${i.slug}`));
+const pool = items.filter((i) => !latestKeys.has(`${i.kind}:${i.slug}`));
 
-const latestSlugs = new Set(posts.slice(0, 3).map((p) => p.id));
-const remaining = posts.filter((p) => !latestSlugs.has(p.id));
-
-// Fisher-Yates shuffle
-for (let i = remaining.length - 1; i > 0; i--) {
+for (let i = pool.length - 1; i > 0; i--) {
   const j = Math.floor(Math.random() * (i + 1));
-  [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
+  [pool[i], pool[j]] = [pool[j], pool[i]];
 }
 
-const discoverPosts = remaining.slice(0, 3);
-const tp = useTranslatedPath(lang);
+const discover = pool.slice(0, 3);
 
-function getPostUrl(slug: string) {
-  return tp(`/blog/${slug.replace(/^(es|en)\//, '')}/`);
-}
-
-function getCategory(category: string) {
-  return categoryLabels[lang][category as Category] ?? category;
-}
+const KIND_ACCENT: Record<FeedKind, { border: string; chipBg: string; chipText: string }> = {
+  blog: { border: 'border-l-terracotta', chipBg: 'bg-terracotta/12', chipText: 'text-terracotta' },
+  artifact: { border: 'border-l-amber', chipBg: 'bg-amber/15', chipText: 'text-[#9a6a2a]' },
+  note: { border: 'border-l-sage', chipBg: 'bg-sage/15', chipText: 'text-sage' },
+};
 
 function formatDate(date: string) {
-  return new Date(date).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', {
+  return new Date(date + 'T12:00:00').toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', {
     month: 'short',
     day: 'numeric',
   });
 }
 ---
 
-{discoverPosts.map((post) => (
-  <a
-    href={getPostUrl(post.id)}
-    class="flex flex-col gap-0.5 rounded-lg border-l-2 border-l-amber border border-navy/8 bg-white/90 shadow-sm px-3 py-2 hover:shadow-md hover:border-l-terracotta transition-all group flex-1 min-w-0"
-  >
-    <div class="flex items-center gap-2">
-      <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber/15 font-medium whitespace-nowrap" style="color: #9a6a2a;">
-        {getCategory(post.data.category)}
+{discover.map((item) => {
+  const a = KIND_ACCENT[item.kind];
+  return (
+    <a
+      href={item.href}
+      class:list={[
+        'flex flex-col gap-0.5 rounded-lg border-l-2 border border-navy/8 bg-white/90 shadow-sm px-3 py-2 hover:shadow-md transition-all group flex-1 min-w-0',
+        a.border,
+      ]}
+    >
+      <div class="flex items-center gap-2">
+        <span class:list={['text-[10px] px-1.5 py-0.5 rounded-full font-medium whitespace-nowrap uppercase tracking-wider', a.chipBg, a.chipText]}>
+          {kindLabel(lang, item.kind)}
+        </span>
+        <time class="text-xs text-navy/50 ml-auto whitespace-nowrap">{formatDate(item.date)}</time>
+      </div>
+      <span class="font-serif text-xs font-bold text-navy leading-snug group-hover:text-terracotta transition-colors">
+        {item.title}
       </span>
-      <time class="text-xs text-navy/50 ml-auto whitespace-nowrap">{formatDate(post.data.date)}</time>
-    </div>
-    <span class="font-serif text-xs font-bold text-navy leading-snug group-hover:text-terracotta transition-colors">
-      {post.data.title}
-    </span>
-  </a>
-))}
+      <span class="text-[11px] text-navy/60 leading-snug line-clamp-2">
+        {item.description}
+      </span>
+    </a>
+  );
+})}

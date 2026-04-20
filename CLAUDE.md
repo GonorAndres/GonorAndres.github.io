@@ -169,6 +169,22 @@ Two sibling directories contain implementation plans for upcoming portfolio addi
 - **`/home/andtega349/microsoft-suite-data/plan.md`** -- Excel consolidation card + Power BI insurance claims dashboard. Covers project card metadata, DAX measures, star schema, cross-linking to existing projects. Both cards use `data-science` category and share insurance domain data.
 - **`/home/andtega349/risk-analyst/plan.md`** -- 4 theory PDFs (VaR/CVaR foundations, EVT tail risk, copula dependency, stress testing) to add as notes under the `quant` category. Includes note slugs, descriptions (ES+EN), tags, keywords, relatedNotes, and back-linking instructions for existing notes.
 
+## HTML Artifacts Section (`/artifacts/`)
+
+The `/artifacts/` route (formerly `/notes/` — renamed 2026-04-19) houses both PDF entries and interactive HTML artifacts. All entries live in `src/data/notes.ts`; HTML artifacts also have `type: 'artifact'` and a folder under `public/artifacts/<folder>/index.html`.
+
+- **Pattern contract**: `ARTIFACTS.md` (repo root) — folder convention, required universal back-pill snippet, `?lang=` auto-detect logic, per-artifact checklist. Read this before adding a new HTML artifact.
+- **Legacy URLs**: `/notes/*` paths still resolve via redirect pages declared in `astro.config.mjs`.
+
+### Current HTML artifacts and their sandbox sources
+
+| Note slug (detail at `/artifacts/<slug>/`) | Live file (`public/artifacts/<folder>/`) | Sandbox source |
+|---|---|---|
+| `bias-variance-tradeoff` | `yuminari-bow/` | `/home/andtega349/sandbox/17abril/bias-variance-html/` |
+| `greedy-split-search` | `greedy-node/` | `/home/andtega349/sandbox/19abril/greedy-node/` |
+
+When editing an artifact: the portfolio copy under `public/artifacts/` is what ships. The sandbox directory is a dev scratch. Keep them in sync (`cp` back and forth) or treat the portfolio copy as canonical.
+
 ## Local Testing with Playwright MCP
 
 After making changes, use the Playwright MCP browser tools to verify rendering before committing:
@@ -183,6 +199,16 @@ After making changes, use the Playwright MCP browser tools to verify rendering b
 8. Kill the preview server when done: `pkill -f "astro preview"`
 
 Common issue: `$` followed by a digit in blog prose (e.g., `$10`, `$400`) gets parsed as inline math by remark-math. Fix by escaping: `\$10`, `\$400`. Actual math expressions like `$p = 1.5$` should NOT be escaped.
+
+## Button Radii Convention
+
+Three radius values are used across the site; pick by role, not by aesthetic whim:
+
+- **`rounded-full` (9999px)** — inline row actions (pill buttons inside list rows, e.g. `Abrir artefacto`, `Ver PDF` in the artifacts catalog). Signals "small secondary action scoped to this row".
+- **`rounded-xl` (12px)** — page-level CTAs and cards (e.g. the "Ver todos los artefactos" button, the search input, project cards). Signals "primary surface or action for the page".
+- **`rounded-lg` (8px)** — reserved for the home hero's primary CTAs only. Do not introduce new uses; if adding a new button, pick one of the first two.
+
+If a new pattern is needed, extend this list explicitly rather than inventing a fourth value.
 
 ## Project Categories
 

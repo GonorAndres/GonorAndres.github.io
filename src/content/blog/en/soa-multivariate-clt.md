@@ -4,6 +4,7 @@ description: "Study guide for the third Exam P topic: multivariate variables, Ev
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "en"
+shape: "study-guide"
 tags: ["CLT", "exam-P", "SOA", "aggregation", "risk"]
 ---
 

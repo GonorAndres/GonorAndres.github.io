@@ -5,6 +5,16 @@ date: "2026-02-15"
 lastModified: "2026-03-28"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Python · PyTorch · NumPy"
+  datos: "7 volúmenes de \"En busca del tiempo perdido\" de Marcel Proust (7.15M caracteres)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/proust-attention"
+  extraLinks:
+    - { label: "Demo interactiva (HuggingFace)", url: "https://huggingface.co/spaces/GonorAndres/proust-attention" }
 tags: ["deep-learning", "transformers", "NLP", "PyTorch", "NumPy"]
 ---
 

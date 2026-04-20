@@ -4,7 +4,6 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogSearch from '../../../components/ui/BlogSearch';
 import { t } from '../../../i18n';
 import { categories, categoryLabels, type Category } from '../../../data/categories';
-import OrganicBlob from '../../../components/decorations/OrganicBlob.astro';
 
 const posts = (await getCollection('blog'))
   .filter((p) => p.data.lang === 'en')
@@ -15,37 +14,65 @@ const postsData = posts.map((post) => ({
   description: post.data.description,
   slug: post.id.replace(/^(es|en)\//, ''),
   date: post.data.date,
-  category: post.data.category,
+  lastModified: post.data.lastModified,
+  categoryKey: post.data.category as Category,
   categoryLabel: categoryLabels['en'][post.data.category as Category] ?? post.data.category,
+  tags: post.data.tags,
   lang: 'en' as const,
 }));
 
+const categoryCounts = categories
+  .map((cat) => ({
+    key: cat,
+    label: categoryLabels['en'][cat],
+    count: posts.filter((p) => p.data.category === cat).length,
+  }))
+  .filter((cc) => cc.count > 0);
+
+const subtitle = 'Essays, analysis, and technical notes on actuarial science, quantitative finance, data, and tools.';
+
 const labels = {
   searchPlaceholder: t('en', 'blog.searchPlaceholder'),
-  allYears: t('en', 'blog.allYears'),
   noResults: t('en', 'blog.noResults'),
-  readMore: t('en', 'blog.readMore'),
   articleSingular: t('en', 'blog.articleSingular'),
   articlePlural: t('en', 'blog.articlePlural'),
+  readMore: t('en', 'blog.readMore'),
+  sortRecent: 'Newest first',
+  sortOldest: 'Oldest first',
+  sortTitle: 'Title A–Z',
 };
 ---
 
-<BaseLayout title="Blog | Andres Gonzalez Ortega" lang="en">
-  <section class="relative py-16 px-6 overflow-hidden">
-    <OrganicBlob variant={1} color="#D4A574" class="w-[400px] h-[400px] -top-16 -right-20 opacity-20" />
-
-    <div class="max-w-4xl mx-auto relative z-10">
-      <h1 class="text-3xl md:text-5xl font-bold text-navy mb-4 fade-up">{t('en', 'section.blog')}</h1>
-
-      <div class="flex flex-wrap gap-2 mb-10 fade-up">
-        <a href="/en/blog/" class="text-sm px-3 py-1 rounded-full bg-terracotta text-cream">
-          {t('en', 'blog.allPosts')}
-        </a>
-        {categories.map((cat) => (
-          <a href={`/en/blog/categoria/${cat}/`} class="text-sm px-3 py-1 rounded-full bg-sage/15 text-sage hover:bg-sage/25 transition-colors">
-            {categoryLabels['en'][cat]}
+<BaseLayout title="Blog | Andres Gonzalez Ortega" description={subtitle} lang="en">
+  <section class="py-16 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div
+        class="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-x-12 gap-y-6 items-end pb-6 mb-10 border-b border-[#1B2A4A]/15 fade-up"
+      >
+        <div>
+          <h1
+            class="font-serif text-3xl md:text-5xl font-semibold text-[#1B2A4A] leading-[1.05] tracking-tight"
+          >
+            {t('en', 'section.blog')}
+          </h1>
+          <p class="text-[#1B2A4A]/60 mt-3 max-w-[54ch]">{subtitle}</p>
+        </div>
+        <nav class="flex flex-col font-mono text-[10px] uppercase tracking-[0.12em]">
+          <a
+            href="/en/blog/"
+            class="flex justify-between py-1.5 border-b border-[#1B2A4A] text-[#1B2A4A] no-underline"
+          >
+            <span>{t('en', 'blog.allPosts')}</span><span>{posts.length}</span>
           </a>
-        ))}
+          {categoryCounts.map((cc) => (
+            <a
+              href={`/en/blog/categoria/${cc.key}/`}
+              class="flex justify-between py-1.5 border-b border-[#1B2A4A]/15 text-[#1B2A4A]/55 hover:text-[#1B2A4A] no-underline transition-colors"
+            >
+              <span>{cc.label}</span><span>{cc.count}</span>
+            </a>
+          ))}
+        </nav>
       </div>
 
       <BlogSearch client:idle posts={postsData} labels={labels} />

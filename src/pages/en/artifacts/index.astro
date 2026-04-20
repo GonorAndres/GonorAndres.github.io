@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import NotesSearch from '../../../components/ui/NotesSearch';
+import { t } from '../../../i18n';
+import { getNotes, noteCategories, noteCategoryLabels } from '../../../data/notes';
+
+const allNotes = getNotes('en');
+
+const notesData = allNotes
+  .map((note) => ({
+    slug: note.slug,
+    categoryKey: note.category,
+    category: noteCategoryLabels['en'][note.category],
+    type: note.type,
+    title: note.title,
+    description: note.description,
+    urls: note.urls,
+    tags: note.tags,
+    createdDate: note.createdDate,
+    lang: 'en' as const,
+  }))
+  .sort((a, b) => b.createdDate.localeCompare(a.createdDate));
+
+const categoryCounts = noteCategories
+  .map((cat) => ({
+    key: cat,
+    label: noteCategoryLabels['en'][cat],
+    count: allNotes.filter((n) => n.category === cat).length,
+  }))
+  .filter((cc) => cc.count > 0);
+
+const labels = {
+  searchPlaceholder: t('en', 'notes.searchPlaceholder'),
+  noResults: t('en', 'notes.noResults'),
+  noteSingular: t('en', 'notes.noteSingular'),
+  notePlural: t('en', 'notes.notePlural'),
+  interactive: 'Interactive',
+  sortRecent: 'Newest first',
+  sortOldest: 'Oldest first',
+  sortTitle: 'Title A–Z',
+};
+---
+
+<BaseLayout
+  title="Artifacts | Actuarial, Finance, Statistics"
+  description={t('en', 'notes.subtitle')}
+  lang="en"
+>
+  <section class="py-16 px-6">
+    <div class="max-w-4xl mx-auto">
+      <div
+        class="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-x-12 gap-y-6 items-end pb-6 mb-10 border-b border-[#1B2A4A]/15 fade-up"
+      >
+        <div>
+          <h1
+            class="font-serif text-3xl md:text-5xl font-semibold text-[#1B2A4A] leading-[1.05] tracking-tight"
+          >
+            {t('en', 'notes.title')}
+          </h1>
+          <p class="text-[#1B2A4A]/60 mt-3 max-w-[54ch]">
+            {t('en', 'notes.subtitle')}
+          </p>
+        </div>
+        <nav class="flex flex-col font-mono text-[10px] uppercase tracking-[0.12em]">
+          <a
+            href="/en/artifacts/"
+            class="flex justify-between py-1.5 border-b border-[#1B2A4A] text-[#1B2A4A] no-underline"
+          >
+            <span>{t('en', 'notes.allNotes')}</span><span>{allNotes.length}</span>
+          </a>
+          {categoryCounts.map((cc) => (
+            <a
+              href={`/en/artifacts/categoria/${cc.key}/`}
+              class="flex justify-between py-1.5 border-b border-[#1B2A4A]/15 text-[#1B2A4A]/55 hover:text-[#1B2A4A] no-underline transition-colors"
+            >
+              <span>{cc.label}</span><span>{cc.count}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <NotesSearch client:idle notes={notesData} labels={labels} />
+    </div>
+  </section>
+</BaseLayout>

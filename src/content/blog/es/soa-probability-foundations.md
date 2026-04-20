@@ -4,6 +4,7 @@ description: "Guía de estudio para la primera sección del Examen P de la SOA: 
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "es"
+shape: "study-guide"
 tags: ["probabilidad", "examen-P", "SOA", "Bayes", "riesgo"]
 ---
 
@@ -12,6 +13,11 @@ El temario del SOA-P se ve familiar. Los temas llegan a la mente y los entiendes
 Y la dificultad no está en entender los conceptos. Está en resolver de manera eficiente y limpia. El balance entre velocidad y claridad es parte del aprendizaje, no solo la matemática.
 
 Este post es una guía de estudio. Cubre las tres ideas fundamentales de esta sección, por qué la SOA las pone primero, y cómo se conectan con el trabajo actuarial real.
+
+<div class="keyidea">
+  <div class="lbl">Idea clave</div>
+  Un actuario no resuelve ecuaciones: clasifica información para decidir bajo incertidumbre. Los axiomas, la probabilidad condicional y Bayes son el esqueleto de ese proceso. Lo demás son trucos de cálculo.
+</div>
 
 ## El lenguaje de la incertidumbre
 

@@ -161,7 +161,7 @@ export const projects: Project[] = [
       es: 'El análisis crediticio tradicional trata cada préstamo como evento independiente, pero las cadenas de garantías, garantías circulares y concentración accionaria crean exposición correlacionada invisible a modelos relacionales. CreditGraph modela un portafolio de 500 clientes como grafo en Neo4j, procesa datos con PySpark en Databricks, califica con LightGBM calibrado por Platt, y ejecuta pruebas de estrés topológicas que revelan patrones de riesgo estructural ocultos al SQL.',
       en: 'Traditional credit analysis treats each loan as independent, but guarantee chains, circular guarantees, and ownership concentration create correlated exposure invisible to relational models. CreditGraph models a 500-client portfolio as a Neo4j graph, processes data with PySpark on Databricks, scores with Platt-calibrated LightGBM, and runs topological stress tests that reveal structural risk patterns hidden from SQL.',
     },
-    url: 'https://graph-relation-83vplizg3-gonorandres-projects.vercel.app/',
+    url: 'https://graph-relation-db.vercel.app/',
     repo: 'https://github.com/GonorAndres/graph-relation-db',
     platform: 'Vercel',
     category: 'data-science',

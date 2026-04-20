@@ -4,6 +4,7 @@ description: "Guía de estudio para el tercer tema del Examen P: variables multi
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "es"
+shape: "study-guide"
 tags: ["TCL", "examen-P", "SOA", "agregacion", "riesgo"]
 ---
 

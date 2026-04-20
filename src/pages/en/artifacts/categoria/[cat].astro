@@ -1,56 +1,54 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
-import BlogSearch from '../../../../components/ui/BlogSearch';
+import NotesSearch from '../../../../components/ui/NotesSearch';
 import { t } from '../../../../i18n';
-import { categories, categoryLabels, type Category } from '../../../../data/categories';
+import { getNotes, noteCategories, noteCategoryLabels, type NoteCategory } from '../../../../data/notes';
 
-export async function getStaticPaths() {
-  return categories.map((cat) => ({ params: { cat } }));
+export function getStaticPaths() {
+  return noteCategories.map((cat) => ({ params: { cat } }));
 }
 
 const { cat } = Astro.params;
-const activeCat = cat as Category;
+const activeCat = cat as NoteCategory;
 
-const allEn = (await getCollection('blog')).filter((p) => p.data.lang === 'en');
+const allEn = getNotes('en');
+const notesData = allEn
+  .filter((n) => n.category === activeCat)
+  .map((note) => ({
+    slug: note.slug,
+    categoryKey: note.category,
+    category: noteCategoryLabels['en'][note.category],
+    type: note.type,
+    title: note.title,
+    description: note.description,
+    urls: note.urls,
+    tags: note.tags,
+    createdDate: note.createdDate,
+    lang: 'en' as const,
+  }))
+  .sort((a, b) => b.createdDate.localeCompare(a.createdDate));
 
-const posts = allEn
-  .filter((p) => p.data.category === activeCat)
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
-
-const postsData = posts.map((post) => ({
-  title: post.data.title,
-  description: post.data.description,
-  slug: post.id.replace(/^(es|en)\//, ''),
-  date: post.data.date,
-  lastModified: post.data.lastModified,
-  categoryKey: post.data.category as Category,
-  categoryLabel: categoryLabels['en'][post.data.category as Category] ?? post.data.category,
-  tags: post.data.tags,
-  lang: 'en' as const,
-}));
-
-const categoryCounts = categories
+const categoryCounts = noteCategories
   .map((c) => ({
     key: c,
-    label: categoryLabels['en'][c],
-    count: allEn.filter((p) => p.data.category === c).length,
+    label: noteCategoryLabels['en'][c],
+    count: allEn.filter((n) => n.category === c).length,
   }))
   .filter((cc) => cc.count > 0 || cc.key === activeCat);
 
 const labels = {
-  searchPlaceholder: t('en', 'blog.searchPlaceholder'),
-  noResults: t('en', 'blog.noResults'),
-  articleSingular: t('en', 'blog.articleSingular'),
-  articlePlural: t('en', 'blog.articlePlural'),
-  readMore: t('en', 'blog.readMore'),
+  searchPlaceholder: t('en', 'notes.searchPlaceholder'),
+  noResults: t('en', 'notes.noResults'),
+  noteSingular: t('en', 'notes.noteSingular'),
+  notePlural: t('en', 'notes.notePlural'),
+  interactive: 'Interactive',
   sortRecent: 'Newest first',
   sortOldest: 'Oldest first',
   sortTitle: 'Title A–Z',
 };
 ---
 
-<BaseLayout title={`${categoryLabels['en'][activeCat]} | Blog`} lang="en">
+<BaseLayout title={`${noteCategoryLabels['en'][activeCat]} | Artifacts`} lang="en">
   <section class="py-16 px-6">
     <div class="max-w-4xl mx-auto">
       <div
@@ -58,26 +56,26 @@ const labels = {
       >
         <div>
           <div class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#1B2A4A]/45 mb-3">
-            {t('en', 'section.blog')}
+            {t('en', 'notes.title')}
           </div>
           <h1
             class="font-serif text-3xl md:text-5xl font-semibold text-[#1B2A4A] leading-[1.05] tracking-tight"
           >
-            {categoryLabels['en'][activeCat]}
+            {noteCategoryLabels['en'][activeCat]}
           </h1>
         </div>
         <nav class="flex flex-col font-mono text-[10px] uppercase tracking-[0.12em]">
           <a
-            href="/en/blog/"
+            href="/en/artifacts/"
             class="flex justify-between py-1.5 border-b border-[#1B2A4A]/15 text-[#1B2A4A]/55 hover:text-[#1B2A4A] no-underline transition-colors"
           >
-            <span>{t('en', 'blog.allPosts')}</span><span>{allEn.length}</span>
+            <span>{t('en', 'notes.allNotes')}</span><span>{allEn.length}</span>
           </a>
           {categoryCounts.map((cc) => {
             const active = cc.key === activeCat;
             return (
               <a
-                href={`/en/blog/categoria/${cc.key}/`}
+                href={`/en/artifacts/categoria/${cc.key}/`}
                 class:list={[
                   'flex justify-between py-1.5 border-b no-underline transition-colors',
                   active
@@ -92,7 +90,7 @@ const labels = {
         </nav>
       </div>
 
-      <BlogSearch client:idle posts={postsData} labels={labels} />
+      <NotesSearch client:idle notes={notesData} labels={labels} />
     </div>
   </section>
 </BaseLayout>

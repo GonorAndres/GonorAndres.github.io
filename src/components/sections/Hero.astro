@@ -92,33 +92,41 @@ const { lang } = Astro.props;
 </section>
 
 <script>
-  const tabLatest = document.getElementById('tab-latest');
-  const tabDiscover = document.getElementById('tab-discover');
-  const panelLatest = document.getElementById('panel-latest');
-  const panelDiscover = document.getElementById('panel-discover');
+  function wireHeroTabs() {
+    const tabLatest = document.getElementById('tab-latest');
+    const tabDiscover = document.getElementById('tab-discover');
+    const panelLatest = document.getElementById('panel-latest');
+    const panelDiscover = document.getElementById('panel-discover');
+    if (!tabLatest || !tabDiscover || !panelLatest || !panelDiscover) return;
+    if ((tabLatest as HTMLElement).dataset.wired === '1') return;
+    (tabLatest as HTMLElement).dataset.wired = '1';
 
-  function activate(tab: 'latest' | 'discover') {
-    if (tab === 'latest') {
-      panelLatest!.classList.remove('hidden');
-      panelLatest!.classList.add('flex');
-      panelDiscover!.classList.add('hidden');
-      panelDiscover!.classList.remove('flex');
-      tabLatest!.classList.add('bg-terracotta', 'text-cream');
-      tabLatest!.classList.remove('bg-transparent', 'text-navy/50');
-      tabDiscover!.classList.remove('bg-terracotta', 'text-cream');
-      tabDiscover!.classList.add('bg-transparent', 'text-navy/50');
-    } else {
-      panelDiscover!.classList.remove('hidden');
-      panelDiscover!.classList.add('flex');
-      panelLatest!.classList.add('hidden');
-      panelLatest!.classList.remove('flex');
-      tabDiscover!.classList.add('bg-terracotta', 'text-cream');
-      tabDiscover!.classList.remove('bg-transparent', 'text-navy/50');
-      tabLatest!.classList.remove('bg-terracotta', 'text-cream');
-      tabLatest!.classList.add('bg-transparent', 'text-navy/50');
+    function activate(tab: 'latest' | 'discover') {
+      if (tab === 'latest') {
+        panelLatest!.classList.remove('hidden');
+        panelLatest!.classList.add('flex');
+        panelDiscover!.classList.add('hidden');
+        panelDiscover!.classList.remove('flex');
+        tabLatest!.classList.add('bg-terracotta', 'text-cream');
+        tabLatest!.classList.remove('bg-transparent', 'text-navy/50');
+        tabDiscover!.classList.remove('bg-terracotta', 'text-cream');
+        tabDiscover!.classList.add('bg-transparent', 'text-navy/50');
+      } else {
+        panelDiscover!.classList.remove('hidden');
+        panelDiscover!.classList.add('flex');
+        panelLatest!.classList.add('hidden');
+        panelLatest!.classList.remove('flex');
+        tabDiscover!.classList.add('bg-terracotta', 'text-cream');
+        tabDiscover!.classList.remove('bg-transparent', 'text-navy/50');
+        tabLatest!.classList.remove('bg-terracotta', 'text-cream');
+        tabLatest!.classList.add('bg-transparent', 'text-navy/50');
+      }
     }
+
+    tabLatest.addEventListener('click', () => activate('latest'));
+    tabDiscover.addEventListener('click', () => activate('discover'));
   }
 
-  tabLatest?.addEventListener('click', () => activate('latest'));
-  tabDiscover?.addEventListener('click', () => activate('discover'));
+  wireHeroTabs();
+  document.addEventListener('astro:page-load', wireHeroTabs);
 </script>

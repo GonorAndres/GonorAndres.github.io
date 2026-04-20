@@ -4,6 +4,7 @@ description: "Study guide for the heaviest topic on Exam P: random variables, di
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "en"
+shape: "study-guide"
 tags: ["random-variables", "exam-P", "SOA", "insurance", "distributions"]
 ---
 

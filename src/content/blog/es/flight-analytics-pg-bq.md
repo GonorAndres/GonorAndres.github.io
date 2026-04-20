@@ -5,6 +5,15 @@ date: "2026-03-18"
 lastModified: "2026-03-30"
 category: "proyectos-y-analisis"
 lang: "es"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "PostgreSQL · BigQuery · Python · Plotly · Folium · Firebase"
+  datos: "PostgresPro Airlines demo DB (5.74M filas, 104 aeropuertos)"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/learning-posgre"
+  live: "https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/"
 tags: ["PostgreSQL", "BigQuery", "Python", "ETL", "EXPLAIN ANALYZE", "Docker", "GIS", "Plotly", "Folium", "data-engineering"]
 ---
 

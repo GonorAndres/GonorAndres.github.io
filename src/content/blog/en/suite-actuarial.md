@@ -5,6 +5,16 @@ date: "2026-03-19"
 lastModified: "2026-03-22"
 category: "proyectos-y-analisis"
 lang: "en"
+shape: "case-study"
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Python · Pydantic · FastAPI · Streamlit"
+  datos: "EMSSA-09 · AMIS · parámetros CNSF"
+  regulacion: "LISF · CUSF · CNSF (RCS) · SAT (ISR) · Circular S-11.4"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/Analisis_Seguros_Mexico"
+  live: "https://suite-actuarial-d3qj5vwxtq-uc.a.run.app"
 tags: ["Python", "Pydantic", "LISF", "CUSF", "CNSF", "RCS", "Reservas", "Chain Ladder", "Reaseguro", "Streamlit", "EMSSA-09", "SAT", "FastAPI", "GMM", "IMSS"]
 ---
 

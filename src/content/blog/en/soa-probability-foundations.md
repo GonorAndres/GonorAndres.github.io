@@ -4,6 +4,7 @@ description: "Study guide for the first section of the SOA Exam P: axioms, condi
 date: "2026-02-18"
 category: "fundamentos-actuariales"
 lang: "en"
+shape: "study-guide"
 tags: ["probability", "exam-P", "SOA", "Bayes", "risk"]
 ---
 
@@ -12,6 +13,11 @@ The SOA-P syllabus looks familiar. The topics come to mind and you understand th
 And the difficulty is not in understanding the concepts. It is in solving problems efficiently and cleanly. The balance between speed and clarity is part of the learning, not just the math.
 
 This post is a study guide. It covers the three foundational ideas in this section, why the SOA puts them first, and how they connect to real actuarial work.
+
+<div class="keyidea">
+  <div class="lbl">Key idea</div>
+  An actuary does not solve equations; they classify information to decide under uncertainty. Axioms, conditional probability, and Bayes are the skeleton of that process. Everything else is computational glue.
+</div>
 
 ## The language of uncertainty
 

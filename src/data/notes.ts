@@ -25,6 +25,7 @@ export interface NoteLink {
 export interface Note {
   slug: string;
   category: NoteCategory;
+  type?: 'note' | 'artifact';
   title: Record<Lang, string>;
   description: Record<Lang, string>;
   urls: NoteLink[];
@@ -302,11 +303,66 @@ export const notes: Note[] = [
     },
     relatedNotes: ['time-series-delhi', 'ab-testing-bayesian-frequentist'],
   },
+  {
+    slug: 'bias-variance-tradeoff',
+    category: 'stats',
+    type: 'artifact',
+    createdDate: '2026-04-18',
+    version: '1',
+    title: {
+      es: 'El Trueque: Sesgo y Varianza',
+      en: 'The Tradeoff: Bias and Variance',
+    },
+    description: {
+      es: 'Un artefacto interactivo de scrollytelling que explica el balance sesgo-varianza a través de la curva U de error de prueba del Capítulo 2 de ISLR. Seis pasos visuales: desde los datos hasta la validación cruzada, con estética sumi-e en papel washi. En español e inglés.',
+      en: 'An interactive scrollytelling artifact explaining the bias-variance tradeoff through the U-shaped test-error curve from ISLR Chapter 2. Six visual steps: from raw data to cross-validation, rendered in a sumi-e ink-on-washi aesthetic. Bilingual: Spanish and English.',
+    },
+    urls: [
+      { label: { es: 'Abrir artefacto', en: 'Open artifact' }, url: '/artifacts/yuminari-bow/' },
+    ],
+    tags: {
+      es: ['Aprendizaje Estadístico', 'Sesgo-Varianza', 'Visualización', 'ISLR'],
+      en: ['Statistical Learning', 'Bias-Variance', 'Visualization', 'ISLR'],
+    },
+    keywords: {
+      es: ['sesgo varianza', 'error de prueba', 'sobreajuste', 'subajuste', 'validación cruzada', 'aprendizaje estadístico'],
+      en: ['bias variance tradeoff', 'test error', 'overfitting', 'underfitting', 'cross-validation', 'statistical learning'],
+    },
+    relatedNotes: ['ab-testing-bayesian-frequentist', 'greedy-split-search'],
+  },
+  {
+    slug: 'greedy-split-search',
+    category: 'stats',
+    type: 'artifact',
+    createdDate: '2026-04-19',
+    version: '1',
+    title: {
+      es: 'Búsqueda Voraz de Divisiones',
+      en: 'Greedy Split Search',
+    },
+    description: {
+      es: 'Un recorrido paso a paso de cómo un árbol de decisión elige dónde partir un nodo. Con cinco observaciones y cuatro umbrales candidatos, el artefacto recorre el cálculo del RSS para cada división y deja al lector ver por qué la búsqueda voraz gana en claridad lo que pierde en optimalidad global. Animación interactiva y cálculos en vivo, en español e inglés.',
+      en: 'A step-by-step walkthrough of how a decision tree picks where to split a node. With five observations and four candidate thresholds, the artifact traces the RSS computation for each split and lets the reader see why greedy search gains in clarity what it loses in global optimality. Interactive animation and live computation, bilingual.',
+    },
+    urls: [
+      { label: { es: 'Abrir artefacto', en: 'Open artifact' }, url: '/artifacts/greedy-node/' },
+    ],
+    tags: {
+      es: ['Aprendizaje Estadístico', 'Árboles de Decisión', 'Visualización', 'ISLR'],
+      en: ['Statistical Learning', 'Decision Trees', 'Visualization', 'ISLR'],
+    },
+    keywords: {
+      es: ['árbol de decisión', 'búsqueda voraz', 'RSS', 'umbral de división', 'regresión por árboles', 'aprendizaje estadístico'],
+      en: ['decision tree', 'greedy search', 'RSS', 'split threshold', 'tree regression', 'statistical learning'],
+    },
+    relatedNotes: ['bias-variance-tradeoff', 'glm-actuarial-models'],
+  },
 ];
 
 export interface LocalizedNote {
   slug: string;
   category: NoteCategory;
+  type: 'note' | 'artifact';
   title: string;
   description: string;
   urls: { label: string; url: string }[];
@@ -321,6 +377,7 @@ export function getNotes(lang: Lang): LocalizedNote[] {
   return notes.map((n) => ({
     slug: n.slug,
     category: n.category,
+    type: n.type ?? 'note',
     title: n.title[lang],
     description: n.description[lang],
     urls: n.urls.map((u) => ({ label: u.label[lang], url: u.url })),
@@ -350,6 +407,7 @@ export function getNoteBySlug(slug: string, lang: Lang): LocalizedNote | undefin
   return {
     slug: note.slug,
     category: note.category,
+    type: note.type ?? 'note',
     title: note.title[lang],
     description: note.description[lang],
     urls: note.urls.map((u) => ({ label: u.label[lang], url: u.url })),
