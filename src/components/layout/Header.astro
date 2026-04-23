@@ -78,75 +78,88 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
   </div>
 
   <script>
-    const btn = document.getElementById('mobile-menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    btn?.addEventListener('click', () => {
-      menu?.classList.toggle('hidden');
-      const expanded = btn?.getAttribute('aria-expanded') === 'true';
-      btn?.setAttribute('aria-expanded', String(!expanded));
-    });
-
-    // Scroll-spy: highlight nav link based on which section is in view.
-    // Only runs on the homepage where #proyectos and #notas exist.
-    const proyectosSection = document.querySelector('#proyectos');
-    const notasSection = document.querySelector('#notas');
-
-    if (proyectosSection && notasSection) {
-      const ACTIVE = ['text-terracotta', 'border-b-2', 'border-terracotta', 'pb-0.5'];
-      const INACTIVE = ['text-navy/70'];
-
-      function setActive(navKey: string) {
-        document.querySelectorAll('[data-nav]').forEach((el) => {
-          if (el.getAttribute('data-nav') === navKey) {
-            el.classList.remove(...INACTIVE);
-            el.classList.add(...ACTIVE);
-            el.setAttribute('aria-current', 'page');
-          } else {
-            el.classList.remove(...ACTIVE);
-            el.classList.add(...INACTIVE);
-            el.removeAttribute('aria-current');
-          }
-        });
-      }
-
-      // Determine which section is active based on scroll position.
-      // Uses getBoundingClientRect for reliability across all viewport sizes.
-      function updateActiveFromScroll() {
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const triggerPoint = 300;
-        const proyectosTop = proyectosSection.getBoundingClientRect().top;
-        const notasTop = notasSection.getBoundingClientRect().top;
-
-        if (scrollTop < 200) {
-          setActive('home');
-        } else if (notasTop < triggerPoint) {
-          setActive('notes');
-        } else if (proyectosTop < triggerPoint) {
-          setActive('projects');
-        } else {
-          setActive('home');
-        }
-      }
-
-      // Scroll listener as the primary mechanism for nav highlighting.
-      let ticking = false;
-      window.addEventListener('scroll', () => {
-        if (!ticking) {
-          requestAnimationFrame(() => {
-            updateActiveFromScroll();
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }, { passive: true });
-
-      // Also run on anchor clicks (hash navigation doesn't always fire scroll).
-      window.addEventListener('hashchange', () => {
-        requestAnimationFrame(updateActiveFromScroll);
+    function initHeader() {
+      const btn = document.getElementById('mobile-menu-btn');
+      const menu = document.getElementById('mobile-menu');
+      btn?.addEventListener('click', () => {
+        menu?.classList.toggle('hidden');
+        const expanded = btn?.getAttribute('aria-expanded') === 'true';
+        btn?.setAttribute('aria-expanded', String(!expanded));
       });
 
-      // Initial check in case the page loaded at a hash position.
-      updateActiveFromScroll();
+      // Scroll-spy: highlight nav link based on which section is in view.
+      // Only runs on the homepage where #proyectos and #notas exist.
+      const proyectosSection = document.querySelector('#proyectos');
+      const notasSection = document.querySelector('#notas');
+
+      if (proyectosSection && notasSection) {
+        const ACTIVE = ['text-terracotta', 'border-b-2', 'border-terracotta', 'pb-0.5'];
+        const INACTIVE = ['text-navy/70'];
+
+        function setActive(navKey: string) {
+          document.querySelectorAll('[data-nav]').forEach((el) => {
+            if (el.getAttribute('data-nav') === navKey) {
+              el.classList.remove(...INACTIVE);
+              el.classList.add(...ACTIVE);
+              el.setAttribute('aria-current', 'page');
+            } else {
+              el.classList.remove(...ACTIVE);
+              el.classList.add(...INACTIVE);
+              el.removeAttribute('aria-current');
+            }
+          });
+        }
+
+        // Determine which section is active based on scroll position.
+        // Uses getBoundingClientRect for reliability across all viewport sizes.
+        function updateActiveFromScroll() {
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          const triggerPoint = 300;
+          const proyectosTop = proyectosSection.getBoundingClientRect().top;
+          const notasTop = notasSection.getBoundingClientRect().top;
+
+          if (scrollTop < 200) {
+            setActive('home');
+          } else if (notasTop < triggerPoint) {
+            setActive('notes');
+          } else if (proyectosTop < triggerPoint) {
+            setActive('projects');
+          } else {
+            setActive('home');
+          }
+        }
+
+        // Scroll listener as the primary mechanism for nav highlighting.
+        let ticking = false;
+        const scrollHandler = () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              updateActiveFromScroll();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        };
+
+        // Also run on anchor clicks (hash navigation doesn't always fire scroll).
+        const hashHandler = () => requestAnimationFrame(updateActiveFromScroll);
+
+        window.addEventListener('scroll', scrollHandler, { passive: true });
+        window.addEventListener('hashchange', hashHandler);
+
+        // Clean up scroll listeners before ClientRouter swaps the DOM,
+        // so stale handlers don't fire setActive('home') on non-home pages.
+        document.addEventListener('astro:before-swap', () => {
+          window.removeEventListener('scroll', scrollHandler);
+          window.removeEventListener('hashchange', hashHandler);
+        }, { once: true });
+
+        // Initial check in case the page loaded at a hash position.
+        updateActiveFromScroll();
+      }
     }
+
+    // Run on initial load AND after every ClientRouter navigation.
+    document.addEventListener('astro:page-load', initHeader);
   </script>
 </header>
