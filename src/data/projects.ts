@@ -747,8 +747,8 @@ export const projects: Project[] = [
       en: 'Flight Analytics - PostgreSQL to BigQuery',
     },
     description: {
-      es: 'PostgreSQL y BigQuery resuelven problemas diferentes; saber cuándo usar cada uno requiere haberlos comparado con datos reales. Este proyecto migra 5.74M filas de datos reales de aerolíneas de PostgreSQL 16 a BigQuery con un pipeline ETL en Python, documenta aceleraciones de 13x a 1,300x en consultas clave e incluye un dashboard interactivo desplegado en Firebase con mapa WebGL de rutas, heatmaps de retrasos y visualización de internals de PostgreSQL.',
-      en: 'PostgreSQL and BigQuery solve different problems; knowing when to use each requires comparing them on real data. This project migrates 5.74M rows of real airline data from PostgreSQL 16 to BigQuery via a Python ETL pipeline, documents 13x to 1,300x query speedups, and includes an interactive dashboard deployed on Firebase with a WebGL route map, delay heatmaps, and PostgreSQL internals visualization.',
+      es: 'Las aerolíneas generan millones de registros de vuelos, retrasos, ingresos y ocupación de flota. Analizar esos datos requiere elegir la base de datos correcta para cada pregunta. Este proyecto toma 5.74M registros de operaciones aéreas reales, los analiza en PostgreSQL para entender cómo optimizar consultas desde el motor, los migra a BigQuery para comparar ambos paradigmas de bases de datos y presenta los hallazgos en un dashboard interactivo: mapa de rutas, patrones de retraso, concentración de ingresos y rendimiento de flota.',
+      en: 'Airlines generate millions of records on flights, delays, revenue, and fleet utilization. Analyzing that data requires choosing the right database for each question. This project takes 5.74M real airline operation records, analyzes them in PostgreSQL to understand how to optimize queries from the engine level, migrates them to BigQuery to compare both database paradigms, and presents the findings in an interactive dashboard: route map, delay patterns, revenue concentration, and fleet performance.',
     },
     url: 'https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/',
     repo: 'https://github.com/GonorAndres/learning-posgre',
@@ -760,11 +760,18 @@ export const projects: Project[] = [
     },
     variant: 'wide',
     screenshot: '/screenshots/flight-analytics-pg-bq.png',
+    gallery: [
+      { src: '/screenshots/flight-01-map.png', caption: { es: 'Mapa WebGL de 104 aeropuertos y 532 rutas coloreadas por tasa de retraso', en: 'WebGL map of 104 airports and 532 routes colored by delay rate' } },
+      { src: '/screenshots/flight-02-delays.png', caption: { es: 'Análisis de retrasos: 4.9% global, heatmap por hora y día, KPIs de la red', en: 'Delay analysis: 4.9% overall, heatmap by hour and day, network KPIs' } },
+      { src: '/screenshots/flight-03-revenue.png', caption: { es: 'Ingresos: 37.7B RUB, curva de Pareto (128 rutas = 80% del ingreso), desglose por clase', en: 'Revenue: 37.7B RUB, Pareto curve (128 routes = 80% of revenue), fare class breakdown' } },
+      { src: '/screenshots/flight-04-internals.png', caption: { es: 'PostgreSQL internals: mejoras de 44x a 3024x medidas con EXPLAIN ANALYZE', en: 'PostgreSQL internals: 44x to 3024x speedups measured with EXPLAIN ANALYZE' } },
+      { src: '/screenshots/flight-05-pipeline.png', caption: { es: 'Pipeline ETL: 5.74M filas migradas en 102s a 56K filas/s, arquitectura Extract-Transform-Load', en: 'ETL pipeline: 5.74M rows migrated in 102s at 56K rows/s, Extract-Transform-Load architecture' } },
+    ],
     relatedTo: ['data-engineering-platform', 'data-analyst-portfolio'],
     blogSlug: 'flight-analytics-pg-bq',
-    tier: 2,
+    tier: 1,
     creation_date: '2026-02-07',
-    last_modification_date: '2026-03-30',
+    last_modification_date: '2026-05-03',
   },
 
   // repo: https://github.com/GonorAndres/risk-analyst
