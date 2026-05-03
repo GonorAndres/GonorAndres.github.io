@@ -107,8 +107,22 @@ function GalleryModal({ images, title, onClose, startIndex = 0 }: {
   startIndex?: number;
 }) {
   const [idx, setIdx] = useState(startIndex);
+  const [displaySrc, setDisplaySrc] = useState(images[startIndex].src);
+  const readyRef = useRef(false);
   const total = images.length;
   const current = images[idx];
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setDisplaySrc(current.src);
+    img.src = current.src;
+    if (img.complete) setDisplaySrc(current.src);
+  }, [current.src]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => { readyRef.current = true; }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -129,11 +143,10 @@ function GalleryModal({ images, title, onClose, startIndex = 0 }: {
   return createPortal(
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-[#1B2A4A]/90 backdrop-blur-sm"
-      onClick={() => onClose(idx)}
+      onClick={(e) => { if (e.target === e.currentTarget && readyRef.current) onClose(idx); }}
     >
       <div
         className="relative w-full max-w-4xl mx-4"
-        onClick={e => e.stopPropagation()}
       >
         {/* Close */}
         <button
@@ -149,7 +162,7 @@ function GalleryModal({ images, title, onClose, startIndex = 0 }: {
         {/* Image */}
         <div className="bg-[#F8F5F1] rounded-xl overflow-hidden flex items-center justify-center" style={{ maxHeight: '70vh' }}>
           <img
-            src={current.src}
+            src={displaySrc}
             alt={current.caption ?? title}
             className="max-w-full object-contain"
             style={{ maxHeight: '70vh' }}
