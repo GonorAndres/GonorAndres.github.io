@@ -62,6 +62,12 @@ export const certificates: Certificate[] = [
     date: { es: 'Oct 2024', en: 'Oct 2024' },
     url: 'https://drive.google.com/file/d/1Woe6xqxofloFZ9uM2f5VsdGxY-WQWCRI/view?usp=drive_link',
   },
+  {
+    name: 'Databricks Fundamentals',
+    issuer: 'Databricks Academy',
+    date: { es: 'Abr 2026', en: 'Apr 2026' },
+    url: 'https://credentials.databricks.com/45f31d0f-ca80-4e3a-80c1-ede89826f6ce',
+  },
 ];
 
 export function getEducation(lang: Lang) {
