@@ -13,6 +13,7 @@ ficha:
   regulacion: "CNBV Circular Única de Bancos (Art. 73, Circular 3/2012)"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/graph-relation-db"
+  live: "https://graph-relation-db.vercel.app/"
 tags: ["Neo4j", "PySpark", "Databricks", "Credit risk", "Cypher", "LightGBM", "Platt calibration", "Graphs"]
 ---
 

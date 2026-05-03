@@ -1,12 +1,20 @@
 ---
 title: "Data Analyst Portfolio: 7 End-to-End Projects"
-description: "From business question to actionable insight. 7 data analysis projects covering e-commerce, insurance, finance, A/B testing, executive KPIs, and operational efficiency. SQL, Python, Streamlit, Next.js, and Power BI."
+description: "Business decisions depend on questions that data can answer, but only if someone turns raw rows into actionable findings. These 7 projects cover that full arc across different domains: e-commerce cohorts, actuarial reserves, A/B testing, executive KPIs, and financial risk, each with an interactive deployed dashboard."
 date: "2026-03-13"
 lastModified: "2026-03-21"
 category: "proyectos-y-analisis"
 lang: "en"
 shape: "narrative"
 tags: ["portfolio", "data-analyst", "SQL", "Python", "Streamlit", "Next.js", "Power BI"]
+ficha:
+  rol: "Solo author"
+  año: "2024-2026"
+  stack: "Python · SQL · Streamlit · Next.js · Plotly · Power BI"
+  datos: "7 projects: e-commerce, insurance, finance, A/B testing, executive KPIs, operational efficiency"
+  estado: "Completed"
+  repositorio: "https://github.com/GonorAndres/data-analyst-path"
+  live: "https://demo-aesthetics.vercel.app/"
 ---
 
 <img src="/screenshots/data-analyst-portafolio.png" alt="Data Analyst Portfolio" style="width:100%;border-radius:0.75rem;margin-bottom:2rem;box-shadow:0 4px 16px rgba(0,0,0,0.08);" />

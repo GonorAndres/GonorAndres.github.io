@@ -1,6 +1,6 @@
 ---
 title: "What 5.74 Million Flights Taught Me About PostgreSQL, BigQuery, and Knowing When to Use Each"
-description: "A deep dive into building production-grade SQL analytics on real airline data, migrating to BigQuery via Python ETL, and the honest trade-offs between both systems: real timing, real costs, and real query plans."
+description: "Airlines generate millions of flight, delay, and revenue records, but analyzing that data requires choosing the right database for each question. This project takes 5.74M real records, analyzes them first in PostgreSQL with engine-level optimization, migrates to BigQuery to compare both paradigms, and presents the trade-offs with real timing, real costs, and real query plans."
 date: "2026-03-18"
 lastModified: "2026-05-02"
 category: "proyectos-y-analisis"

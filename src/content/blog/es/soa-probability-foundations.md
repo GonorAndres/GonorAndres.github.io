@@ -35,7 +35,7 @@ Casi nada en seguros es incondicional. La probabilidad de un reclamo depende de 
 
 El Examen P pone problemas con tablas de frecuencia conjunta que obligan a distinguir entre P(A y B), P(A|B) y P(B|A). Confundir la dirección del condicionamiento es uno de los errores más comunes y más costosos en la práctica. Si confundes P(joven | accidente) con P(accidente | joven), puedes asignar una prima incorrecta a todo un segmento demográfico. Los distractores del examen están diseñados para cazar exactamente este error: una respuesta que parece correcta pero corresponde a la probabilidad conjunta, otra al condicional invertido. Es un diseño que mide comprensión, no cálculo.
 
-La regla de multiplicación, P(A y B) = P(A) * P(B|A), es la herramienta que permite modelar secuencias. Un árbol de probabilidad para un siniestro de daños por agua: P(tubería revienta) * P(daño excede $20,000 | tubería revienta). Esta descomposición en etapas condicionales es exactamente como opera un modelo actuarial de frecuencia-severidad.
+La regla de multiplicación, P(A y B) = P(A) * P(B|A), es la herramienta que permite modelar secuencias. Un árbol de probabilidad para un siniestro de daños por agua: P(tubería revienta) * P(daño excede \$20,000 | tubería revienta). Esta descomposición en etapas condicionales es exactamente como opera un modelo actuarial de frecuencia-severidad.
 
 ## Bayes: de la fórmula al pensamiento actuarial
 

@@ -13,6 +13,7 @@ ficha:
   datos: "7 volúmenes de \"En busca del tiempo perdido\" de Marcel Proust (7.15M caracteres)"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/proust-attention"
+  live: "https://huggingface.co/spaces/GonorAndres/proust-attention"
   extraLinks:
     - { label: "Demo interactiva (HuggingFace)", url: "https://huggingface.co/spaces/GonorAndres/proust-attention" }
 tags: ["deep-learning", "transformers", "NLP", "PyTorch", "NumPy"]

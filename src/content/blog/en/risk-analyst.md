@@ -1,6 +1,6 @@
 ---
 title: "Risk Analyst: 13 Quantitative Risk Analysis Projects"
-description: "From VaR and Monte Carlo simulation to deep hedging and graph neural networks for systemic contagion. A complete financial risk curriculum with 192 tests and full LaTeX documentation."
+description: "Financial risk models lose credibility when they exist only as formulas in a PDF. These 13 modules implement them in typed Python with automated tests: from portfolio VaR and Monte Carlo simulation to copulas, EVT, deep hedging, and graph neural networks for systemic contagion. Each module pairs LaTeX theory with reproducible results on public market data."
 date: "2026-03-19"
 lastModified: "2026-03-30"
 category: "proyectos-y-analisis"

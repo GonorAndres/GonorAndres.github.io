@@ -2,7 +2,7 @@
 title: "Asistente de Regulación Actuarial: por qué RAG es el enfoque correcto para LISF y CUSF"
 description: "Interpretar la LISF y la CUSF exige navegar entre artículos que se referencian mutuamente entre leyes, y un Ctrl+F no distingue el artículo que define reservas técnicas del que las menciona de paso. La IA permite absorber todo ese volumen sin perder un solo detalle. Este agente usa RAG para indexar cada artículo de forma individual con un grafo de referencias cruzadas, eliminando las alucinaciones de citas y permitiendo que el modelo razone solo sobre texto real de la ley. El resultado es un asistente que amplifica la memoria del actuario sin sustituir su criterio."
 date: "2026-03-22"
-lastModified: "2026-03-28"
+lastModified: "2026-05-03"
 category: "proyectos-y-analisis"
 lang: "es"
 shape: "case-study"
@@ -14,8 +14,9 @@ ficha:
   regulacion: "LISF · CUSF · CNSF"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/regulation-actuarial-agent"
-  live: "https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/"
+  live: "https://actuarial-regulation-agent-451451662791.us-central1.run.app/"
   extraLinks:
+    - { label: "Explorador LISF/CUSF", url: "https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer" }
     - { label: "Versión open-source (HuggingFace)", url: "https://huggingface.co/spaces/GonorAndres/lisf-agent" }
 tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP", "referencias-cruzadas"]
 ---
@@ -78,6 +79,18 @@ El frontend usa un diseño brutalista inspirado en Windows 98: barra de título,
 
 <img src="/screenshots/regulation-agent-screenshot.png" alt="Interfaz del Asistente de Regulación Actuarial mostrando la barra lateral con estructura LISF/CUSF y el área de conversación" style="max-width: 100%; border: 3px solid #000; box-shadow: 4px 4px 0 #000; margin: 1rem 0;" />
 
+## Explorador de regulación
+
+El chat resuelve consultas que requieren razonamiento, pero no todas las consultas lo necesitan. A veces sabes exactamente qué artículo buscar, o quieres recorrer la estructura completa de un Título para entender qué disposiciones contiene. Para eso, el chat es un intermediario innecesario.
+
+El Explorador es una interfaz de lectura directa para recorrer la LISF (510 artículos, 13 Títulos) y la CUSF (1,833 disposiciones, 35 Títulos) como un índice interactivo. El panel izquierdo muestra el árbol completo de cada ley: Títulos, Capítulos y artículos individuales. Al seleccionar uno, el panel derecho muestra el texto completo con sus referencias cruzadas como enlaces activos. Si la disposición 5.8.3 de la CUSF remite a un artículo de la LISF, el enlace te lleva directamente ahí sin salir de la interfaz. Un botón de regreso permite deshacer el salto y volver al punto de partida.
+
+La barra de búsqueda filtra por número o tema en tiempo real. Las URLs son compartibles: `/cusf#5.8.3` abre directamente esa disposición, lo cual es útil para referenciar artículos específicos en correos o notas técnicas.
+
+El Explorador y el chat RAG cubren necesidades distintas. Cuando la consulta es exploratoria ("¿qué hay en el Título 5?") o puntual ("necesito el artículo 237"), el Explorador es más directo. Cuando la consulta requiere razonamiento sobre múltiples disposiciones interrelacionadas ("¿cómo interactúan las reservas técnicas con los fondos propios admisibles?"), el chat sigue siendo la herramienta correcta.
+
+<a href="https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Abrir el Explorador LISF/CUSF</a>
+
 ## Para quién es esta herramienta (y para quién no)
 
 El asistente no es un sustituto para estudiar la LISF y la CUSF. No es una herramienta para alguien que no conoce la estructura regulatoria: si no sabes qué es el RCS, qué papel juegan las reservas técnicas, o cómo se organizan los títulos de la CUSF, las respuestas del sistema no van a tener sentido para ti.
@@ -90,7 +103,7 @@ El juicio humano sigue siendo el factor más importante en la ecuación. El sist
 
 El asistente de regulación es complementario a <a href="/projects/sima" style="color: #C17654; text-decoration: underline;">SIMA</a>, que implementa los cálculos de capital bajo LISF (reservas, SCR, funciones de conmutación). Mientras SIMA ejecuta la matemática, el asistente navega la regulación que define qué matemática aplicar. También se conecta con la <a href="/projects/suite-actuarial" style="color: #C17654; text-decoration: underline;">Suite Actuarial</a>, que estandariza esos cálculos en una librería Python reutilizable, y con la <a href="/projects/life-insurance" style="color: #C17654; text-decoration: underline;">nota técnica de seguros de vida</a>, donde los requisitos regulatorios de la LISF y la CUSF se aplican a productos concretos.
 
-El código está en <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> y la aplicación está desplegada en <a href="https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
+El código está en <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> y la aplicación está desplegada en <a href="https://actuarial-regulation-agent-451451662791.us-central1.run.app/" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
 
 <div style="background-color: #1B2A4A; padding: 1rem 1.5rem; border-left: 4px solid #C17654; margin-top: 2rem; font-size: 1.05rem;">
 <strong style="color: #EDE6DD;">Código de acceso para probar la aplicación en vivo:</strong> <code style="background-color: #C17654; color: #EDE6DD; padding: 0.2rem 0.5rem; border-radius: 3px; font-weight: bold;">actuaria-claude</code>

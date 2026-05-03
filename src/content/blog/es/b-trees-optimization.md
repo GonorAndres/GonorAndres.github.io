@@ -5,6 +5,12 @@ date: "2026-03-13"
 category: "herramientas"
 lang: "es"
 tags: ["Estructuras de Datos", "PostgreSQL", "Optimización", "Rust", "Bases de Datos"]
+ficha:
+  rol: "Autor único"
+  año: "2026"
+  stack: "Rust · PostgreSQL"
+  estado: "Finalizado"
+  repositorio: "https://github.com/GonorAndres/b-trees"
 ---
 
 Cuando PostgreSQL tarda 40 milisegundos en encontrar un registro entre 500 millones, no es magia ni hardware excepcional. Es una operación de árbol B que tocó exactamente 9 nodos antes de llegar al dato. Si la misma consulta tarda 40 segundos, es porque no había índice y el motor tuvo que leer todos los bloques de disco en secuencia. La diferencia entre esos dos escenarios no es de configuración ni de recursos: es de estructura de datos.

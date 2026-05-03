@@ -60,6 +60,16 @@ Key connections to maintain:
 - A/B testing decision framework <-> credit model (both are decision-making under uncertainty)
 - SIMA engine <-> all insurance technical notes (SIMA is the implementation of the theory)
 
+## Project Card and Blog Post Sync
+
+Project cards (`src/data/projects.ts`) and blog posts (`src/content/blog/`) are always linked via `blogSlug`. When updating one, always check and update the other:
+
+- **Changing a project card** (URL, description, stack, status): check the blog post's frontmatter (`ficha`) and body for stale URLs, outdated descriptions, or missing features.
+- **Changing a blog post** (new section, URL update, ficha edit): check the project card for matching `url`, `urls`, `description`, `tags`, and `last_modification_date`.
+- **Adding a new feature to a live app**: update the blog post body, the blog `ficha` (live URL, extraLinks), AND the project card (url/urls, description, last_modification_date).
+
+Every blog post with a corresponding project should have a `ficha:` block in its frontmatter containing at minimum: `rol`, `stack`, `estado`, `repositorio`, and `live` (if the project has a deployed app).
+
 ## Blog i18n Filename Convention
 
 All blog posts MUST use the **English slug** as the filename in both `src/content/blog/es/` and `src/content/blog/en/`. The LanguageSwitcher toggles URLs by adding/removing the `/en` prefix, so both language versions of a post must produce the same slug.

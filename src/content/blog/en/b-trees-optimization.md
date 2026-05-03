@@ -5,6 +5,12 @@ date: "2026-03-13"
 category: "herramientas"
 lang: "en"
 tags: ["Data Structures", "PostgreSQL", "Optimization", "Rust", "Databases"]
+ficha:
+  rol: "Solo author"
+  año: "2026"
+  stack: "Rust · PostgreSQL"
+  estado: "Completed"
+  repositorio: "https://github.com/GonorAndres/b-trees"
 ---
 
 When PostgreSQL finds one record among 500 million in 40 milliseconds, that is not magic or exceptional hardware. It is a B-tree traversal that touched exactly 9 nodes before reaching the data. If the same query takes 40 seconds, it is because there was no index and the engine had to read every disk block in sequence. The difference between those two scenarios is not configuration or resources: it is data structure.
