@@ -36,6 +36,19 @@ When writing or editing any content for this portfolio (blog posts, project desc
 - When describing actuarial work, reference regulatory context (CNSF, LISF, CUSF) where applicable
 - When presenting models, include sensitivity analysis or at minimum acknowledge what parameters drive uncertainty
 
+## Project Card Descriptions -- Written for Everyone, Not Engineers
+
+The project card is the front door. Most visitors are not specialists in the project's domain. The description must let anyone understand what the project is about, why it matters, and what it produces, without requiring prior knowledge of the tools or techniques involved.
+
+**Principle:** The card exposes the work so people can understand intuitively what it is. The technical depth lives in the project itself (repo, live URL, PDF, blog post). The card is the invitation, not the documentation.
+
+Guidelines:
+- **Use general concepts first, specific tools second.** Say "base de datos" before "PostgreSQL". Say "modelo de riesgo" before "LightGBM calibrado por Platt". The reader should understand the sentence even if they skip every proper noun.
+- **Explain the domain, not just the technique.** "Analizar patrones de retraso en vuelos" is accessible. "EXPLAIN ANALYZE sobre 65K filas con Bitmap Index Scan" is not. The second belongs in the blog post.
+- **Name the output.** Every description should make clear what the visitor can see or interact with: a dashboard, a calculator, a report, a live app.
+- **Keep jargon to the minimum that adds real meaning.** If a tool name helps the reader understand the approach (e.g., "migra de PostgreSQL a BigQuery" explains two paradigms), include it. If it only signals technical depth without adding clarity (e.g., "cursores en batch a 56K filas/s"), save it for the post.
+- **Three beats remain:** (1) what problem exists in the real world, (2) what the project does about it using accessible language, (3) what the reader can explore. Present tense.
+
 ## Connection Between Projects
 
 Every project should reference at least one other project in the portfolio where relevant. The portfolio tells a story -- isolated pieces look like coursework, connected pieces look like a body of work.
