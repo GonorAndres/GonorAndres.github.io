@@ -22,7 +22,7 @@ tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP"
 
 La LISF y la CUSF son el marco regulatorio completo del sector asegurador y afianzador en México. Juntas suman más de mil artículos, y la complejidad no está solo en el volumen: está en las dependencias. El artículo 121 de la LISF habla de reservas técnicas, pero para entender qué reservas y cómo, necesitas las disposiciones del Título 5 de la CUSF. Un artículo de solvencia te remite a tres disposiciones sobre fondos propios admisibles, que a su vez referencian criterios de valuación en otro título. Un actuario que ha estudiado ambas leyes a fondo sigue olvidando detalles, sigue necesitando buscar "en cuál disposición estaba lo de cesión de cartera". Es la naturaleza del documento: demasiado extenso, demasiado interconectado para retener completo en la memoria humana.
 
-Eso hace de la regulación actuarial un caso perfecto para un modelo de lenguaje. Un LLM puede tener el corpus completo disponible, nunca olvida un artículo, y puede razonar sobre relaciones entre disposiciones. La pregunta no es si usar IA para esto, sino cómo hacerlo sin que el sistema invente cosas.
+Eso hace de la regulación actuarial un caso perfecto para un modelo de lenguaje. Un LLM puede tener el corpus completo disponible, nunca olvida un artículo, y puede razonar sobre relaciones entre disposiciones. La pregunta es cómo hacerlo sin que el sistema invente cosas.
 
 ## El problema con la búsqueda convencional
 
@@ -56,7 +56,7 @@ No todas las columnas tienen el mismo valor para la búsqueda. El título del ar
 
 ### Palabras clave por artículo
 
-Las palabras clave originales eran por capítulo: 82 disposiciones compartiendo las mismas 10 palabras. Eso significa que buscar por palabra clave no servía para distinguir un artículo de otro dentro del mismo capítulo. Después del enriquecimiento, cada artículo tiene sus propias palabras clave (máximo 15), y el 89.6% de los artículos tiene un conjunto único que lo diferencia del resto. La diferencia es enorme: "cesión de cartera" como palabra clave te lleva directamente al artículo que regula la cesión, no a un capítulo de 50 disposiciones donde la cesión se menciona una vez.
+Las palabras clave originales eran por capítulo: 82 disposiciones compartiendo las mismas 10 palabras. Eso significa que buscar por palabra clave no servía para distinguir un artículo de otro dentro del mismo capítulo. Después del enriquecimiento, cada artículo tiene sus propias palabras clave (máximo 15), y el 89.6% de los artículos tiene un conjunto único que lo diferencia del resto. "Cesión de cartera" como palabra clave ahora te lleva directamente al artículo que regula la cesión, no a un capítulo de 50 disposiciones donde la cesión se menciona una vez.
 
 El enriquecimiento usó un pipeline de múltiples modelos: Sonnet procesó los 2,354 artículos extrayendo palabras clave y resúmenes del contenido real; después, Opus validó y refinó los resultados agrupados por Título, eliminando términos genéricos, corrigiendo clasificaciones y asegurando que las palabras clave fueran discriminantes dentro de su contexto regulatorio.
 
@@ -70,7 +70,7 @@ Cada artículo tiene un resumen que describe en lenguaje natural qué regula y p
 
 ## Resultados
 
-Las mejoras en retrieval fueron drásticas. Consultas como "modelo interno rcs", que antes no devolvían ningún artículo relevante, ahora encuentran directamente las disposiciones que regulan modelos internos para el requerimiento de capital de solvencia. Consultas sobre "fondos propios admisibles" o "reservas técnicas" devuelven los artículos centrales en lugar de menciones periféricas. El sistema pasó de escanear 275 archivos con regex (lento, impreciso) a consultas indexadas que responden en milisegundos.
+Consultas como "modelo interno rcs", que antes no devolvían ningún artículo relevante, ahora encuentran directamente las disposiciones que regulan modelos internos para el requerimiento de capital de solvencia. Consultas sobre "fondos propios admisibles" o "reservas técnicas" devuelven los artículos centrales en lugar de menciones periféricas. El sistema pasó de escanear 275 archivos con regex (lento, impreciso) a consultas indexadas que responden en milisegundos.
 
 ## La interfaz
 
@@ -80,7 +80,7 @@ El frontend usa un diseño brutalista inspirado en Windows 98: barra de título,
 
 ## Para quién es esta herramienta (y para quién no)
 
-Este punto es fundamental. El asistente no es un sustituto para estudiar la LISF y la CUSF. No es una herramienta para alguien que no conoce la estructura regulatoria: si no sabes qué es el RCS, qué papel juegan las reservas técnicas, o cómo se organizan los títulos de la CUSF, las respuestas del sistema no van a tener sentido para ti.
+El asistente no es un sustituto para estudiar la LISF y la CUSF. No es una herramienta para alguien que no conoce la estructura regulatoria: si no sabes qué es el RCS, qué papel juegan las reservas técnicas, o cómo se organizan los títulos de la CUSF, las respuestas del sistema no van a tener sentido para ti.
 
 Es una herramienta para actuarios y profesionales del sector que ya entienden el marco regulatorio y necesitan un asistente que les ayude a navegar su complejidad. Alguien que sabe que existe una disposición sobre cesión de cartera pero no recuerda en qué título está. Alguien que necesita verificar rápidamente las referencias cruzadas de un artículo antes de escribir una nota técnica. Alguien que está revisando los requisitos de solvencia y quiere confirmar que no está omitiendo una disposición relevante.
 

@@ -55,7 +55,7 @@ export default {
   'projects.sortLabel': 'Sort:',
   'projects.filterLabel': 'Category:',
   'lang.switch': 'Español',
-  'section.sharedNotes': 'Worth Sharing Notes',
+  'section.sharedNotes': 'Notes Worth Sharing',
   'sharedNotes.subtitle': 'Ready-to-read documents: analyses, reports, and technical summaries.',
   'sharedNotes.viewPdf': 'View PDF',
   'sharedNotes.cat.actuarial': 'Actuarial Science & Insurance',

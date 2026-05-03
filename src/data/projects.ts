@@ -280,6 +280,18 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     screenshot: '/screenshots/lisf-agent.png',
+    gallery: [
+      { src: '/screenshots/lisf-01-auth.png', caption: { es: 'Pantalla de acceso: el agente es de uso restringido con codigo de acceso', en: 'Access screen: the agent is restricted with an access code' } },
+      { src: '/screenshots/lisf-02-landing.png', caption: { es: 'Panel principal: sidebar con estructura LISF/CUSF, preguntas frecuentes y tres modos de respuesta', en: 'Main panel: sidebar with LISF/CUSF structure, FAQ, and three response modes' } },
+      { src: '/screenshots/lisf-03-indice.png', caption: { es: 'Indice completo de la LISF: 510 articulos organizados en 13 Titulos', en: 'Full LISF index: 510 articles organized in 13 Titles' } },
+      { src: '/screenshots/lisf-04-chat.png', caption: { es: 'Respuesta sobre reservas tecnicas: el agente cita articulos reales con referencias cruzadas LISF-CUSF', en: 'Response on technical reserves: the agent cites real articles with LISF-CUSF cross-references' } },
+      { src: '/screenshots/lisf-06-chat-response.png', caption: { es: 'Detalle de respuesta: desglose de los articulos 216, 217 y 218 sobre constitucion y valuacion de reservas', en: 'Response detail: breakdown of articles 216, 217, and 218 on reserve constitution and valuation' } },
+      { src: '/screenshots/lisf-05-ayuda.png', caption: { es: 'Panel de ayuda: ejemplos de consultas, consejos de uso y aviso legal', en: 'Help panel: query examples, usage tips, and legal disclaimer' } },
+      { src: '/screenshots/lisf-07-hf-landing.png', caption: { es: 'Version open-source en HuggingFace: Qwen2.5-72B, sin codigo de acceso, preguntas frecuentes precalculadas', en: 'Open-source version on HuggingFace: Qwen2.5-72B, no access code, precalculated FAQ' } },
+      { src: '/screenshots/lisf-08-hf-art216.png', caption: { es: 'HuggingFace: respuesta sobre el articulo 216, desglose de reservas por fraccion', en: 'HuggingFace: response on article 216, reserve breakdown by section' } },
+      { src: '/screenshots/lisf-09-hf-articulos.png', caption: { es: 'HuggingFace: estructura completa de la LISF, 510 articulos y articulos transitorios', en: 'HuggingFace: full LISF structure, 510 articles and transitory articles' } },
+      { src: '/screenshots/lisf-10-hf-solvencia.png', caption: { es: 'HuggingFace: requisitos de solvencia con referencia al articulo 237 y disposicion 34.1.2 de la CUSF', en: 'HuggingFace: solvency requirements referencing article 237 and CUSF provision 34.1.2' } },
+    ],
     relatedTo: ['sima', 'credit-graph'],
     blogSlug: 'regulation-agent-rag',
     tier: 1,
@@ -818,11 +830,11 @@ export const projects: Project[] = [
   {
     slug: 'micro-insurance',
     title: {
-      es: 'MicroInsurance.jl - Tarificacion para Economia Informal',
+      es: 'MicroInsurance.jl - Tarificación para Economía Informal',
       en: 'MicroInsurance.jl - Pricing Engine for the Informal Economy',
     },
     description: {
-      es: '~35M de trabajadores informales en Mexico no tienen acceso a seguros de vida porque el underwriting tradicional exige empleo formal, historial crediticio y examen medico. Este motor reemplaza esos requisitos con senales proxy (mortalidad geografica, remesas, pagos de servicios) ponderadas por credibilidad Buhlmann-Straub sobre una superficie de mortalidad Lee-Carter. Julia.',
+      es: '~35M de trabajadores informales en México no tienen acceso a seguros de vida porque el underwriting tradicional exige empleo formal, historial crediticio y examen médico. Este motor reemplaza esos requisitos con señales proxy (mortalidad geográfica, remesas, pagos de servicios) ponderadas por credibilidad Buhlmann-Straub sobre una superficie de mortalidad Lee-Carter. Julia.',
       en: '~35M informal workers in Mexico lack access to life insurance because traditional underwriting requires formal employment, credit history, and medical exams. This engine replaces those requirements with proxy signals (geographic mortality, remittances, utility payments) weighted through Buhlmann-Straub credibility over a Lee-Carter mortality surface. Julia.',
     },
     url: '#',

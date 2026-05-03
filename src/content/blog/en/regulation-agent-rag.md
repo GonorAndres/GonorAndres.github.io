@@ -22,7 +22,7 @@ tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP"
 
 LISF and CUSF are the complete regulatory framework for the insurance and surety sector in Mexico. Together they span over a thousand articles, and the complexity isn't just in the volume: it's in the dependencies. LISF article 121 talks about technical reserves, but to understand which reserves and how, you need the CUSF Title 5 provisions. A solvency article points you to three provisions on eligible own funds, which in turn reference valuation criteria in another title. An actuary who has studied both laws thoroughly still forgets details, still needs to search "which provision covered portfolio transfer". That's the nature of the document: too extensive, too interconnected to hold entirely in human memory.
 
-This makes actuarial regulation a perfect use case for a language model. An LLM can have the full corpus available, never forgets an article, and can reason about relationships between provisions. The question isn't whether to use AI for this, but how to do it without the system making things up.
+This makes actuarial regulation a perfect use case for a language model. An LLM can have the full corpus available, never forgets an article, and can reason about relationships between provisions. The question is how to do it without the system making things up.
 
 ## The problem with conventional search
 
@@ -56,7 +56,7 @@ Not all columns have equal search value. An article's title matters more than a 
 
 ### Per-article keywords
 
-The original keywords were per-chapter: 82 provisions sharing the same 10 words. That means keyword search was useless for distinguishing one article from another within the same chapter. After enrichment, each article has its own keywords (max 15), and 89.6% of articles have a unique set that differentiates them from the rest. The difference is massive: "portfolio transfer" as a keyword takes you directly to the article regulating transfers, not to a chapter of 50 provisions where transfers are mentioned once.
+The original keywords were per-chapter: 82 provisions sharing the same 10 words. That means keyword search was useless for distinguishing one article from another within the same chapter. After enrichment, each article has its own keywords (max 15), and 89.6% of articles have a unique set that differentiates them from the rest. "Portfolio transfer" as a keyword now takes you directly to the article regulating transfers, not to a chapter of 50 provisions where transfers are mentioned once.
 
 The enrichment used a multi-model pipeline: Sonnet processed all 2,354 articles extracting keywords and summaries from the actual content; then Opus validated and refined the results grouped by Title, removing generic terms, correcting classifications, and ensuring keywords were discriminating within their regulatory context.
 
@@ -70,7 +70,7 @@ Each article has a summary describing in plain language what it regulates and wh
 
 ## Results
 
-Retrieval improvements were dramatic. Queries like "internal model for RCS", which previously returned no relevant articles, now directly find the provisions regulating internal models for the solvency capital requirement. Queries about "eligible own funds" or "technical reserves" return the core articles instead of peripheral mentions. The system went from scanning 275 files with regex (slow, imprecise) to indexed queries responding in milliseconds.
+Queries like "internal model for RCS", which previously returned no relevant articles, now directly find the provisions regulating internal models for the solvency capital requirement. Queries about "eligible own funds" or "technical reserves" return the core articles instead of peripheral mentions. The system went from scanning 275 files with regex (slow, imprecise) to indexed queries responding in milliseconds.
 
 ## The interface
 
@@ -80,7 +80,7 @@ The frontend uses a brutalist design inspired by Windows 98: title bar, menu bar
 
 ## Who this tool is for (and who it's not for)
 
-This point is fundamental. The assistant is not a substitute for studying LISF and CUSF. It's not a tool for someone unfamiliar with the regulatory structure: if you don't know what RCS is, what role technical reserves play, or how CUSF titles are organized, the system's answers won't make sense to you.
+The assistant is not a substitute for studying LISF and CUSF. It's not a tool for someone unfamiliar with the regulatory structure: if you don't know what RCS is, what role technical reserves play, or how CUSF titles are organized, the system's answers won't make sense to you.
 
 It's a tool for actuaries and industry professionals who already understand the regulatory framework and need an assistant to help navigate its complexity. Someone who knows a provision about portfolio transfer exists but doesn't remember which title it's in. Someone who needs to quickly verify an article's cross-references before writing a technical note. Someone reviewing solvency requirements who wants to confirm they're not missing a relevant provision.
 
