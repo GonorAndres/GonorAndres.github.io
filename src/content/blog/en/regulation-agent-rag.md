@@ -2,7 +2,7 @@
 title: "Actuarial Regulation Assistant: Why RAG Is the Right Approach for LISF and CUSF"
 description: "Interpreting LISF and CUSF means navigating articles that cross-reference each other across laws, and a Ctrl+F can't tell the article defining technical reserves from one that mentions them in passing. AI makes it possible to absorb that entire volume without losing a single detail. This agent uses RAG to index every article individually with a cross-reference graph, eliminating citation hallucinations and ensuring the model only reasons over real legal text. The result is an assistant that amplifies the actuary's memory without replacing their judgment."
 date: "2026-03-22"
-lastModified: "2026-03-28"
+lastModified: "2026-05-03"
 category: "proyectos-y-analisis"
 lang: "en"
 shape: "case-study"
@@ -14,15 +14,16 @@ ficha:
   regulacion: "LISF · CUSF · CNSF"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/regulation-actuarial-agent"
-  live: "https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/"
+  live: "https://actuarial-regulation-agent-451451662791.us-central1.run.app/"
   extraLinks:
-    - { label: "Versión open-source (HuggingFace)", url: "https://huggingface.co/spaces/GonorAndres/lisf-agent" }
+    - { label: "LISF/CUSF Explorer", url: "https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer" }
+    - { label: "Open-source version (HuggingFace)", url: "https://huggingface.co/spaces/GonorAndres/lisf-agent" }
 tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP", "cross-references"]
 ---
 
 LISF and CUSF are the complete regulatory framework for the insurance and surety sector in Mexico. Together they span over a thousand articles, and the complexity isn't just in the volume: it's in the dependencies. LISF article 121 talks about technical reserves, but to understand which reserves and how, you need the CUSF Title 5 provisions. A solvency article points you to three provisions on eligible own funds, which in turn reference valuation criteria in another title. An actuary who has studied both laws thoroughly still forgets details, still needs to search "which provision covered portfolio transfer". That's the nature of the document: too extensive, too interconnected to hold entirely in human memory.
 
-This makes actuarial regulation a perfect use case for a language model. An LLM can have the full corpus available, never forgets an article, and can reason about relationships between provisions. The question isn't whether to use AI for this, but how to do it without the system making things up.
+This makes actuarial regulation a perfect use case for a language model. An LLM can have the full corpus available, never forgets an article, and can reason about relationships between provisions. The question is how to do it without the system making things up.
 
 ## The problem with conventional search
 
@@ -56,7 +57,7 @@ Not all columns have equal search value. An article's title matters more than a 
 
 ### Per-article keywords
 
-The original keywords were per-chapter: 82 provisions sharing the same 10 words. That means keyword search was useless for distinguishing one article from another within the same chapter. After enrichment, each article has its own keywords (max 15), and 89.6% of articles have a unique set that differentiates them from the rest. The difference is massive: "portfolio transfer" as a keyword takes you directly to the article regulating transfers, not to a chapter of 50 provisions where transfers are mentioned once.
+The original keywords were per-chapter: 82 provisions sharing the same 10 words. That means keyword search was useless for distinguishing one article from another within the same chapter. After enrichment, each article has its own keywords (max 15), and 89.6% of articles have a unique set that differentiates them from the rest. "Portfolio transfer" as a keyword now takes you directly to the article regulating transfers, not to a chapter of 50 provisions where transfers are mentioned once.
 
 The enrichment used a multi-model pipeline: Sonnet processed all 2,354 articles extracting keywords and summaries from the actual content; then Opus validated and refined the results grouped by Title, removing generic terms, correcting classifications, and ensuring keywords were discriminating within their regulatory context.
 
@@ -70,7 +71,7 @@ Each article has a summary describing in plain language what it regulates and wh
 
 ## Results
 
-Retrieval improvements were dramatic. Queries like "internal model for RCS", which previously returned no relevant articles, now directly find the provisions regulating internal models for the solvency capital requirement. Queries about "eligible own funds" or "technical reserves" return the core articles instead of peripheral mentions. The system went from scanning 275 files with regex (slow, imprecise) to indexed queries responding in milliseconds.
+Queries like "internal model for RCS", which previously returned no relevant articles, now directly find the provisions regulating internal models for the solvency capital requirement. Queries about "eligible own funds" or "technical reserves" return the core articles instead of peripheral mentions. The system went from scanning 275 files with regex (slow, imprecise) to indexed queries responding in milliseconds.
 
 ## The interface
 
@@ -78,9 +79,21 @@ The frontend uses a brutalist design inspired by Windows 98: title bar, menu bar
 
 <img src="/screenshots/regulation-agent-screenshot.png" alt="Actuarial Regulation Assistant interface showing the sidebar with LISF/CUSF structure and conversation area" style="max-width: 100%; border: 3px solid #000; box-shadow: 4px 4px 0 #000; margin: 1rem 0;" />
 
+## Regulation Explorer
+
+Not every query needs a language model. Sometimes you know exactly which article to find, or you want to walk through an entire Title's structure to understand what provisions it contains. For those cases, the chat is an unnecessary intermediary.
+
+A direct-reading interface, the Explorer lets you navigate the LISF (510 articles, 13 Titles) and CUSF (1,833 provisions, 35 Titles) as an interactive index. The left panel shows each law's full tree: Titles, Chapters, and individual articles. Selecting one displays the full text in the right panel with cross-references rendered as active links. If CUSF provision 5.8.3 references a LISF article, the link takes you there directly without leaving the interface. A back button lets you undo the jump and return to where you started.
+
+Search filters by number or topic in real time. URLs are shareable: `/cusf#5.8.3` opens that provision directly, useful for referencing specific articles in emails or technical notes.
+
+Both modes cover different needs. When the query is exploratory ("what's in Title 5?") or pinpointed ("I need article 237"), the Explorer is more direct. When the query requires reasoning across multiple interrelated provisions ("how do technical reserves interact with eligible own funds?"), the chat remains the right tool.
+
+<a href="https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Open the LISF/CUSF Explorer</a>
+
 ## Who this tool is for (and who it's not for)
 
-This point is fundamental. The assistant is not a substitute for studying LISF and CUSF. It's not a tool for someone unfamiliar with the regulatory structure: if you don't know what RCS is, what role technical reserves play, or how CUSF titles are organized, the system's answers won't make sense to you.
+The assistant is not a substitute for studying LISF and CUSF. It's not a tool for someone unfamiliar with the regulatory structure: if you don't know what RCS is, what role technical reserves play, or how CUSF titles are organized, the system's answers won't make sense to you.
 
 It's a tool for actuaries and industry professionals who already understand the regulatory framework and need an assistant to help navigate its complexity. Someone who knows a provision about portfolio transfer exists but doesn't remember which title it's in. Someone who needs to quickly verify an article's cross-references before writing a technical note. Someone reviewing solvency requirements who wants to confirm they're not missing a relevant provision.
 
@@ -90,7 +103,7 @@ Human judgment remains the most important factor in the equation. The system sea
 
 The regulation assistant is complementary to <a href="/projects/sima" style="color: #C17654; text-decoration: underline;">SIMA</a>, which implements capital calculations under LISF (reserves, SCR, commutation functions). While SIMA executes the math, the assistant navigates the regulation that defines which math to apply. It also connects to the <a href="/projects/suite-actuarial" style="color: #C17654; text-decoration: underline;">Actuarial Suite</a>, which standardizes those calculations in a reusable Python library, and to the <a href="/projects/life-insurance" style="color: #C17654; text-decoration: underline;">life insurance technical note</a>, where LISF and CUSF regulatory requirements are applied to concrete products.
 
-The code is on <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> and the application is deployed on <a href="https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
+The code is on <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> and the application is deployed on <a href="https://actuarial-regulation-agent-451451662791.us-central1.run.app/" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
 
 <div style="background-color: #1B2A4A; padding: 1rem 1.5rem; border-left: 4px solid #C17654; margin-top: 2rem; font-size: 1.05rem;">
 <strong style="color: #EDE6DD;">Access code to try the live application:</strong> <code style="background-color: #C17654; color: #EDE6DD; padding: 0.2rem 0.5rem; border-radius: 3px; font-weight: bold;">actuaria-claude</code>

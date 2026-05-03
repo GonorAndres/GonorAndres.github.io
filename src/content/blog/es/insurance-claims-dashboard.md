@@ -12,6 +12,7 @@ ficha:
   datos: "NAIC Schedule P · siniestros sintéticos (~50,000 reclamaciones)"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard"
+  live: "https://insurance-claims-dashboard-pi.vercel.app"
 tags: ["reservas", "chain-ladder", "BF", "IBNR", "P&C", "dashboard", "Python", "SQL"]
 ---
 
@@ -51,7 +52,7 @@ Los resultados del análisis revelan diferencias sustanciales entre líneas de n
 
 **Medical Malpractice** muestra un ratio de pérdidas de aproximadamente 280%, la señal más clara de un problema de pricing estructural. En términos de reservas, esto implica que las primas cobradas cubren menos de un tercio de las pérdidas incurridas. No es un accidente: Medical Malpractice es la línea de mayor cola larga del portafolio. Los siniestros de responsabilidad médica pueden tardar años en reportarse (el paciente puede no descubrir el daño hasta mucho después del procedimiento) y años más en liquidarse (litigios prolongados, periciales, apelaciones). El IBNR de esta línea absorbe una proporción desproporcionada del IBNR total del portafolio.
 
-El **IBNR total del portafolio es aproximadamente $20.4 millones**, distribuido de manera heterogénea entre líneas. La concentración del IBNR en las líneas de cola larga (Medical Malpractice, Product Liability, Other Liability) es exactamente el tipo de información que un CRO necesita ver para decidir si el nivel de capital disponible es adecuado.
+El **IBNR total del portafolio es aproximadamente \$20.4 millones**, distribuido de manera heterogénea entre líneas. La concentración del IBNR en las líneas de cola larga (Medical Malpractice, Product Liability, Other Liability) es exactamente el tipo de información que un CRO necesita ver para decidir si el nivel de capital disponible es adecuado.
 
 La comparación entre los resultados de Chain-Ladder y Bornhuetter-Ferguson muestra las mayores divergencias en los años de origen más recientes, donde el triángulo tiene menos desarrollo observado. Esa divergencia no es un defecto: es información. Donde los dos métodos coinciden, hay más confianza en la estimación. Donde divergen significativamente, ahí es donde el actuario debe profundizar el análisis.
 

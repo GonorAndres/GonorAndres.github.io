@@ -1,6 +1,6 @@
 ---
 title: "Risk Analyst: 13 Proyectos de Análisis Cuantitativo de Riesgos Financieros"
-description: "Desde VaR y simulación Monte Carlo hasta deep hedging y redes neuronales en grafos para riesgo sistémico. Un currículum completo de riesgo financiero ejercicios de prueba y documentación."
+description: "Los modelos de riesgo financiero pierden credibilidad cuando existen solo como fórmulas en un PDF. Estos 13 módulos los implementan en Python tipado con tests automatizados: desde VaR de portafolio y simulación Monte Carlo hasta cópulas, EVT, deep hedging y redes neuronales en grafos para contagio sistémico. Cada módulo combina teoría en LaTeX con resultados reproducibles sobre datos públicos de mercado."
 date: "2026-03-19"
 lastModified: "2026-03-30"
 category: "proyectos-y-analisis"

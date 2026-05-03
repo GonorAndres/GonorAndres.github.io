@@ -12,6 +12,7 @@ ficha:
   datos: "NAIC Schedule P · siniestros sintéticos (~50,000 reclamaciones)"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard"
+  live: "https://insurance-claims-dashboard-pi.vercel.app"
 tags: ["reserves", "chain-ladder", "BF", "IBNR", "P&C", "dashboard", "Python", "SQL"]
 ---
 
@@ -47,13 +48,13 @@ Private Passenger Auto and Product Liability are the only profitable lines in th
 
 Medical Malpractice shows a loss ratio of approximately 280%. That is not a rounding artifact or a data error; it reflects the reality that malpractice lines written in soft market conditions, where competition drives premium inadequacy, can take 8 to 10 years to reveal their true cost. Commercial Auto and Workers' Compensation also show combined ratios above 100%, consistent with the broader industry experience of sustained profitability challenges in these lines.
 
-The total portfolio IBNR estimate is approximately $20.4 million. That is the capital the insurer needs to hold today against losses that have occurred but not yet been fully paid. It is not theoretical; it is a direct constraint on dividend capacity, investment strategy, and reinsurance structure.
+The total portfolio IBNR estimate is approximately \$20.4 million. That is the capital the insurer needs to hold today against losses that have occurred but not yet been fully paid. It is not theoretical; it is a direct constraint on dividend capacity, investment strategy, and reinsurance structure.
 
 ## The dashboard
 
 The interactive front end (Next.js + FastAPI) was built to make the reserve analysis navigable without requiring a spreadsheet. It presents six views:
 
-A **KPI bar** shows portfolio-level loss ratio, combined ratio, and total IBNR at a glance, the numbers a CFO reads first. A **loss triangle heatmap** visualizes cumulative development by accident year and age, making it immediately visible which years are underdeveloped and where development factors are most uncertain. An **IBNR waterfall chart** breaks down the $20.4M estimate by line of business, so the concentration of reserve uncertainty is obvious. The **frequency-severity chart** plots claim frequency against average severity across lines, revealing which lines are high-frequency/low-severity (Private Passenger Auto) vs. low-frequency/catastrophic (Medical Malpractice). The **loss ratio by line** and **combined ratio trend** panels complete the picture.
+A **KPI bar** shows portfolio-level loss ratio, combined ratio, and total IBNR at a glance, the numbers a CFO reads first. A **loss triangle heatmap** visualizes cumulative development by accident year and age, making it immediately visible which years are underdeveloped and where development factors are most uncertain. An **IBNR waterfall chart** breaks down the \$20.4M estimate by line of business, so the concentration of reserve uncertainty is obvious. The **frequency-severity chart** plots claim frequency against average severity across lines, revealing which lines are high-frequency/low-severity (Private Passenger Auto) vs. low-frequency/catastrophic (Medical Malpractice). The **loss ratio by line** and **combined ratio trend** panels complete the picture.
 
 The dark/light mode toggle is not decorative; it reflects how these dashboards actually get used, switching between presentation contexts (board slides on white) and after-hours analysis (dark terminal).
 
@@ -71,7 +72,7 @@ The data pipeline itself (ingestion, cleaning, normalization of the NAIC Schedul
 
 Three things I would add with more time:
 
-**Mack's method for confidence intervals.** The Chain-Ladder point estimates in this dashboard carry no uncertainty bounds. Mack's model uses the triangle's own residual variance to compute standard errors on the development factors, which propagates into standard errors on the ultimate estimate. Without that, the $20.4M IBNR figure conveys false precision. A CFO should know whether the 90th percentile is $22M or $35M.
+**Mack's method for confidence intervals.** The Chain-Ladder point estimates in this dashboard carry no uncertainty bounds. Mack's model uses the triangle's own residual variance to compute standard errors on the development factors, which propagates into standard errors on the ultimate estimate. Without that, the \$20.4M IBNR figure conveys false precision. A CFO should know whether the 90th percentile is \$22M or \$35M.
 
 **Stochastic bootstrapping.** Overdispersed Poisson bootstrapping on the development triangle produces a full distribution of reserve outcomes, not just a point estimate. That distribution is what feeds the stochastic capital models that regulators increasingly expect under Solvency II-style frameworks. The CNSF's capital adequacy rules for Mexican carriers are moving in the same direction.
 

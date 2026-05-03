@@ -36,6 +36,19 @@ When writing or editing any content for this portfolio (blog posts, project desc
 - When describing actuarial work, reference regulatory context (CNSF, LISF, CUSF) where applicable
 - When presenting models, include sensitivity analysis or at minimum acknowledge what parameters drive uncertainty
 
+## Project Card Descriptions -- Written for Everyone, Not Engineers
+
+The project card is the front door. Most visitors are not specialists in the project's domain. The description must let anyone understand what the project is about, why it matters, and what it produces, without requiring prior knowledge of the tools or techniques involved.
+
+**Principle:** The card exposes the work so people can understand intuitively what it is. The technical depth lives in the project itself (repo, live URL, PDF, blog post). The card is the invitation, not the documentation.
+
+Guidelines:
+- **Use general concepts first, specific tools second.** Say "base de datos" before "PostgreSQL". Say "modelo de riesgo" before "LightGBM calibrado por Platt". The reader should understand the sentence even if they skip every proper noun.
+- **Explain the domain, not just the technique.** "Analizar patrones de retraso en vuelos" is accessible. "EXPLAIN ANALYZE sobre 65K filas con Bitmap Index Scan" is not. The second belongs in the blog post.
+- **Name the output.** Every description should make clear what the visitor can see or interact with: a dashboard, a calculator, a report, a live app.
+- **Keep jargon to the minimum that adds real meaning.** If a tool name helps the reader understand the approach (e.g., "migra de PostgreSQL a BigQuery" explains two paradigms), include it. If it only signals technical depth without adding clarity (e.g., "cursores en batch a 56K filas/s"), save it for the post.
+- **Three beats remain:** (1) what problem exists in the real world, (2) what the project does about it using accessible language, (3) what the reader can explore. Present tense.
+
 ## Connection Between Projects
 
 Every project should reference at least one other project in the portfolio where relevant. The portfolio tells a story -- isolated pieces look like coursework, connected pieces look like a body of work.
@@ -46,6 +59,16 @@ Key connections to maintain:
 - Quantitative finance (Black-Scholes/FRA/IRS) <-> portfolio optimization
 - A/B testing decision framework <-> credit model (both are decision-making under uncertainty)
 - SIMA engine <-> all insurance technical notes (SIMA is the implementation of the theory)
+
+## Project Card and Blog Post Sync
+
+Project cards (`src/data/projects.ts`) and blog posts (`src/content/blog/`) are always linked via `blogSlug`. When updating one, always check and update the other:
+
+- **Changing a project card** (URL, description, stack, status): check the blog post's frontmatter (`ficha`) and body for stale URLs, outdated descriptions, or missing features.
+- **Changing a blog post** (new section, URL update, ficha edit): check the project card for matching `url`, `urls`, `description`, `tags`, and `last_modification_date`.
+- **Adding a new feature to a live app**: update the blog post body, the blog `ficha` (live URL, extraLinks), AND the project card (url/urls, description, last_modification_date).
+
+Every blog post with a corresponding project should have a `ficha:` block in its frontmatter containing at minimum: `rol`, `stack`, `estado`, `repositorio`, and `live` (if the project has a deployed app).
 
 ## Blog i18n Filename Convention
 
@@ -278,3 +301,61 @@ Two systems run in production, disabled on localhost:
 - Blog content in src/content/blog/es/ and src/content/blog/en/; collection config at src/content.config.ts
 - Subagent outputs go to repositorio/subagents_outputs/
 - Planning and reference docs go in docs/
+
+## Live App Polish Backlog (audited 2026-04-20)
+
+Full report with screenshots: `subagents_outputs/project_state_audit_2026-04-20.md`
+
+The items below were discovered via Playwright audit of every live link. Address them when working on the affected project. Do NOT silently skip them.
+
+### CRITICAL — broken, must fix before showing to anyone
+
+**`data-engineering-platform`** (`claims-dashboard-451451662791.us-central1.run.app`):
+- Every page shows a BigQuery 404: tables `dev_claims_analytics.fct_claims`, `dev_claims_reports.rpt_loss_triangle`, and related tables do not exist in the GCP project (`project-ad7a5be2-a1c7-4510-82d`).
+- Fix path A: re-run the Dagster pipeline locally to recreate the BigQuery tables, then redeploy.
+- Fix path B: replace BigQuery queries with a DuckDB + Parquet static file so the dashboard has no cloud dependency.
+- After the data is fixed: apply a custom Streamlit theme (navy `#1B2A4A` primary, amber `#D4A574` accent, cream `#EDE6DD` background) via `.streamlit/config.toml`.
+- Also rename the sidebar pages from raw Python filenames ("loss triangle", "portfolio health") to proper title case.
+
+### NEEDS POLISH — functional but visually plain or dated
+
+**`actuarial-suite`** (`suite-actuarial-d3qj5vwxtq-uc.a.run.app`):
+- Loads correctly, content is strong (8 sections, bilingual, shows API results with code snippets).
+- Uses default Streamlit chrome (gray/white sidebar, default favicon). The gap between content quality and UI quality is visible.
+- Fix: add `.streamlit/config.toml` with custom theme matching portfolio palette (navy/amber/cream). Change the browser tab title and favicon.
+
+**`lisf-agent`** (`actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app`):
+- Functional and gated with access code `actuaria-claude`.
+- The login screen is a tiny centered box on a flat gray page — looks dated and gives no context to a visitor who arrives without the code.
+- Fix: redesign the landing/login page with a full-width layout, brief explanation of what the tool does, and the access code hint that is already in the portfolio card description.
+
+**`data-analyst-portfolio` — Olist Streamlit** (`da-cohort-streamlit-451451662791.us-central1.run.app`):
+- Functional (was loading at audit time).
+- Sidebar page names are raw Python slugs: "resumen ejecutivo", "retencion cohortes", "segmentos clientes", "analisis geografico", "metodologia", "proceso tecnico" — all lowercase, no accents.
+- Fix: rename page files or add `st.set_page_config(page_title=...)` with proper capitalization and accents. Apply a custom Streamlit theme consistent with `demo-aesthetics.vercel.app` (cream/off-white, serif type).
+
+### MINOR — low priority but noted
+
+**`proust-attention`** (`huggingface.co/spaces/GonorAndres/proust-attention`):
+- Space is sleeping due to inactivity (free HuggingFace tier). Visitor sees "Restart this Space" and waits ~30s.
+- This is expected behavior for free tier, not a bug.
+- Optional fix: add a note to the portfolio card description mentioning the Space wakes on demand. Or upgrade to a paid tier if the project gets heavy traffic.
+
+**`eruption-forecasting` and `micro-insurance`** (both have `url: '#'`):
+- Both have `status: 'in-development'` badge, so the placeholder is intentional.
+- The "ver en vivo" button currently does nothing (clicks `#`). Consider hiding the live button entirely when `url === '#'` in `ProjectsGrid.tsx` to avoid confusion.
+
+### GOOD — no action needed (logged for reference)
+
+These were audited and are in good shape:
+
+| Project | Live URL | Notes |
+|---------|----------|-------|
+| `sima` | sima-d3qj5vwxtq-uc.a.run.app | Custom React app, live KPIs, bilingual nav. Best live app in portfolio. |
+| `gmm-explorer` | gmm-explorer.vercel.app | Dark sidebar, clean module nav, polished. |
+| `credit-graph` | graph-relation-db.vercel.app | Dark hero, bold typography, amber accent, bilingual. Excellent. |
+| `cartera-autos` | cartera-autos-451451662791.us-central1.run.app | Custom bslib theme, icon KPI cards, full nav. Looks like a real dashboard. |
+| `pension-simulator` | simulador-pension-d3qj5vwxtq-uc.a.run.app | Consumer-grade landing page with teal/pink gradient. Strong. |
+| `flight-analytics-pg-bq` | project-ad7a5be2-a1c7-4510-82d.firebaseapp.com | WebGL route map, terminal dark aesthetic. Impressive. |
+| `data-analyst-portfolio` (main) | demo-aesthetics.vercel.app | Editorial aesthetic, clean typography. |
+| `data-analyst-portfolio` (P&C) | insurance-claims-dashboard-pi.vercel.app | Same editorial style, data loading correctly. |

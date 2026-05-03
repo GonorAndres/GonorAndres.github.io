@@ -35,7 +35,7 @@ Almost nothing in insurance is unconditional. Claim probability depends on age, 
 
 Exam P presents problems with joint frequency tables that force you to distinguish between P(A and B), P(A|B), and P(B|A). Confusing the direction of conditioning is one of the most common and most costly errors in practice. If you confuse P(young | accident) with P(accident | young), you can assign an incorrect premium to an entire demographic segment. The exam's distractors are designed to catch exactly this mistake: one answer that looks right but corresponds to the joint probability, another to the reversed conditional. It measures comprehension, not calculation.
 
-The multiplication rule, P(A and B) = P(A) * P(B|A), is the tool for modeling sequences. A probability tree for a water damage claim: P(pipe bursts) * P(damage exceeds $20,000 | pipe bursts). This decomposition into conditional stages is exactly how an actuarial frequency-severity model operates.
+The multiplication rule, P(A and B) = P(A) * P(B|A), is the tool for modeling sequences. A probability tree for a water damage claim: P(pipe bursts) * P(damage exceeds \$20,000 | pipe bursts). This decomposition into conditional stages is exactly how an actuarial frequency-severity model operates.
 
 ## Bayes: from formula to actuarial thinking
 

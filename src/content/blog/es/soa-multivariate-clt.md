@@ -20,7 +20,7 @@ La fórmula que lo captura es la varianza de una suma: Var(X + Y) = Var(X) + Var
 
 La correlación normaliza la covarianza para hacerla comparable: Corr(X,Y) = Cov(X,Y) / (SD(X) * SD(Y)), un número entre -1 y 1 que mide la fuerza de la relación lineal. Un detalle que el Examen P martilla una y otra vez: covarianza cero NO implica independencia. Dos variables pueden tener covarianza cero y seguir teniendo una relación no lineal fuerte. La covarianza solo captura lo lineal, y asumir que captura todo es otro camino hacia la subestimación del riesgo.
 
-Esto no es un punto académico. La crisis de 2008 fue exactamente eso: modelos que asumían correlaciones bajas entre activos que, en estrés, se movieron juntos. En seguros, una temporada de lluvias extremas en Michoacán puede disparar simultáneamente reclamaciones de vivienda, autos y responsabilidad civil, todas correlacionadas por el mismo evento climático.
+No es un punto académico. La crisis de 2008 fue exactamente eso: modelos que asumían correlaciones bajas entre activos que, en estrés, se movieron juntos. En seguros, una temporada de lluvias extremas en Michoacán puede disparar simultáneamente reclamaciones de vivienda, autos y responsabilidad civil, todas correlacionadas por el mismo evento climático.
 
 ## La Ley de Eve
 
@@ -40,7 +40,7 @@ Var(E[X|grupo]): la media condicional E[X|grupo] toma el valor 15,000 con probab
 
 Varianza total: 42,000,000 + 29,040,000 = 71,040,000. Casi el 41% de la varianza total viene de la heterogeneidad entre grupos, no de la aleatoriedad dentro de ellos. Eso es enorme. Y ese 41% es exactamente lo que se REDUCE cuando segmentas el portafolio y cobras primas diferenciadas.
 
-Esto no es teoría abstracta. En México, la Circular Única de Seguros y Fianzas de la CNSF exige que las aseguradoras clasifiquen riesgos y calculen reservas por segmentos. La Ley de Eve es la justificación matemática de ese requisito regulatorio: sin segmentación, la incertidumbre del portafolio se infla por la heterogeneidad no reconocida, y las reservas calculadas sobre esa varianza inflada son o insuficientes (si se ignora el efecto) o ineficientemente altas (si se compensan con margen bruto).
+La aplicación es directa. En México, la Circular Única de Seguros y Fianzas de la CNSF exige que las aseguradoras clasifiquen riesgos y calculen reservas por segmentos. La Ley de Eve es la justificación matemática de ese requisito regulatorio: sin segmentación, la incertidumbre del portafolio se infla por la heterogeneidad no reconocida, y las reservas calculadas sobre esa varianza inflada son o insuficientes (si se ignora el efecto) o ineficientemente altas (si se compensan con margen bruto).
 
 ## El Teorema Central del Límite
 
@@ -48,7 +48,7 @@ Ahora estamos listos para la pieza central. Sea S = X1 + X2 + ... + Xn la suma d
 
 La media de S crece linealmente: E[S] = n * mu. Pero la desviación estándar crece solo como la raíz cuadrada: SD(S) = sigma * sqrt(n). El cociente entre la desviación estándar y la media, el coeficiente de variación que mide la incertidumbre relativa, es CV(S) = sigma / (mu * sqrt(n)). Ese coeficiente se encoge como 1/sqrt(n).
 
-Esto es lo que hace que el seguro funcione económicamente. Con 100 asegurados, la incertidumbre relativa es proporcional a 1/sqrt(100) = 1/10. Con 10,000 asegurados, baja a 1/sqrt(10,000) = 1/100. Diez veces menos incertidumbre relativa. En términos prácticos: un portafolio de 10,000 pólizas necesita proporcionalmente menos capital de reserva que uno de 100 pólizas para mantener la misma probabilidad de ruina. La prima por unidad de riesgo puede ser menor porque la incertidumbre se diluye con el tamaño.
+Aquí está la razón por la que el seguro funciona económicamente. Con 100 asegurados, la incertidumbre relativa es proporcional a 1/sqrt(100) = 1/10. Con 10,000 asegurados, baja a 1/sqrt(10,000) = 1/100. Diez veces menos incertidumbre relativa. En términos prácticos: un portafolio de 10,000 pólizas necesita proporcionalmente menos capital de reserva que uno de 100 pólizas para mantener la misma probabilidad de ruina. La prima por unidad de riesgo puede ser menor porque la incertidumbre se diluye con el tamaño.
 
 Ese es el efecto de la Ley de los Grandes Números en acción, y el TCL le pone forma: nos dice no solo que la media converge, sino que la distribución del total se vuelve normal, lo cual permite calcular probabilidades exactas. Una aseguradora con n = 200 pólizas independientes, cada una con pérdida esperada de 800 pesos y varianza de 250,000, puede decir: el total de pérdidas S tiene media 160,000 y desviación estándar sqrt(200 * 250,000) = 7,071. Si quiere que la probabilidad de que las pérdidas excedan la prima sea como máximo 5%, necesita cobrar una prima de 160,000 + 1.645 * 7,071 = 171,632 pesos. Eso es el principio de prima por desviación estándar, y sale directamente del TCL aplicado al percentil 95 de la normal.
 
@@ -60,7 +60,7 @@ Nassim Taleb martilla este punto en *El Cisne Negro*: nuestros modelos nos seduc
 
 ## Para cerrar
 
-Esta sección es la menos glamorosa del Examen P, pero es la que cierra el argumento. Sin el TCL, agregar riesgos no reduciría la incertidumbre relativa y el seguro sería una apuesta, no un modelo de negocio. Sin la Ley de Eve, no podrías justificar la segmentación de riesgo. Sin entender covarianza, subestimarías la variabilidad de tu portafolio.
+La sección menos glamorosa del Examen P es la que cierra el argumento. Sin el TCL, agregar riesgos no reduciría la incertidumbre relativa y el seguro sería una apuesta, no un modelo de negocio. Sin la Ley de Eve, no podrías justificar la segmentación de riesgo. Sin entender covarianza, subestimarías la variabilidad de tu portafolio.
 
 En términos de preparación, mi enfoque es directo: practicar los casos borde, manejar las tablas numéricas sin tropezar, y memorizar las parametrizaciones explícitas que tienden a confundirse (la lognormal es la clásica trampa). No es la sección que define si apruebas o repruebas, pero perder puntos aquí por errores mecánicos sería frustrante. Hay que mover el lápiz.
 

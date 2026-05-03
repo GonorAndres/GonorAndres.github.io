@@ -1,8 +1,8 @@
 ---
 title: "What 5.74 Million Flights Taught Me About PostgreSQL, BigQuery, and Knowing When to Use Each"
-description: "A deep dive into building production-grade SQL analytics on real airline data, migrating to BigQuery via Python ETL, and the honest trade-offs between both systems: real timing, real costs, and real query plans."
+description: "Airlines generate millions of flight, delay, and revenue records, but analyzing that data requires choosing the right database for each question. This project takes 5.74M real records, analyzes them first in PostgreSQL with engine-level optimization, migrates to BigQuery to compare both paradigms, and presents the trade-offs with real timing, real costs, and real query plans."
 date: "2026-03-18"
-lastModified: "2026-03-30"
+lastModified: "2026-05-02"
 category: "proyectos-y-analisis"
 lang: "en"
 shape: "case-study"
@@ -17,51 +17,45 @@ ficha:
 tags: ["PostgreSQL", "BigQuery", "Python", "ETL", "EXPLAIN ANALYZE", "Docker", "GIS", "Plotly", "Folium", "data-engineering"]
 ---
 
-Every data engineer eventually faces the same question: should this workload live in a relational database or an analytical warehouse? The textbook answer is correct but useless: "use PostgreSQL for OLTP, BigQuery for OLAP." It doesn't tell you *where the crossover point is*, *how the query plans differ*, or *what you lose when you migrate*. This project answers those questions with real data, real timing, and real infrastructure decisions.
+A composite index on two columns cut a query from 33.9ms to 2.6ms. That's 13x faster from a single `CREATE INDEX`. A materialized view over the same dataset dropped it from 174ms to 0.13ms: 1,300x. The most extreme result in the project came from monthly partitioning, which reduced full-table scans to single-partition reads, producing a measured 3,024x speedup in the EXPLAIN ANALYZE output.
 
-## The dataset: 5.74 million rows of Russian airline operations
+These aren't synthetic benchmark numbers. They come from working through 5.74 million real rows of Russian airline operations and watching how PostgreSQL's engine responds to each design decision.
 
-The <a href="https://postgrespro.com/community/demodb" target="_blank" rel="noopener">PostgresPro Airlines demo database</a> contains real flight schedules across 104 Russian airports: bookings, tickets, flights, boarding passes, seat maps, and aircraft specs. Eight tables, 5.74 million rows, JSONB for multilingual names, a `point` type for airport coordinates, and timestamps with timezone awareness. It's the kind of messy, real-world schema that exposes the differences between databases far better than any toy example.
+## The dataset and the questions it raised
 
-The first question I asked was simple: **which routes lose the most time to delays, and how does revenue concentrate across the network?**
+The <a href="https://postgrespro.com/community/demodb" target="_blank" rel="noopener">PostgresPro Airlines demo database</a> contains real operational data: flight schedules across 104 Russian airports, bookings, tickets, boarding passes, seat maps, and aircraft specs. Eight tables, 5.74 million rows, JSONB columns for bilingual names, a `point` type for airport coordinates, and timezone-aware timestamps. It's the kind of schema that exposes database differences far better than any toy example.
 
-## Phase 1: SQL analytics with real metrics
+The questions I started with weren't technical. They were operational: which routes lose the most time to delays? How does revenue concentrate across the network? Which aircraft are underutilized?
 
-Every analysis started with a business question, not a technique. The delays script asks "which routes have the highest delay rate?" and discovers that the Voronezh-to-Pulkovo route leads at 11.1% (10 of 90 flights delayed by 15+ minutes). The revenue script reveals something more surprising: Economy class captures 70.8% of revenue from 88% of tickets, while Business commands 26.5% from just 10%. That concentration has direct pricing implications.
+## What the data reveals
 
-The utilization analysis uncovered something striking: Boeing 777-300s operate at 72.8% average load factor, while Cessna 208 Caravans run at just 16%. That's not a small plane problem; it's a network design problem. Those Cessnas serve routes where boarding passes simply aren't being issued in the dataset, suggesting either data incompleteness or genuinely underutilized regional routes.
+The Voronezh-to-Pulkovo route leads in delay rate at 11.1%: 10 of 90 flights delayed by more than 15 minutes. The network-wide rate is 4.9%, affecting 2,394 flights. The hour-of-day and day-of-week heatmap makes a clear pattern visible: early-morning flights carry disproportionate delays, likely from cascading disruptions accumulated overnight.
 
-The scripts are in the `analysis/` directory, ready to run.
+Revenue concentration is sharper. Economy class captures 70.8% of total revenue from 88% of tickets. Business takes 26.5% from just 10%. But the more useful finding sits in the Pareto curve: 128 routes generate 80% of the 37.7 billion rubles in total revenue. The remaining 64% of routes contribute the last 20%. That level of concentration has direct implications for network planning.
 
-## Phase 2: Understanding the PostgreSQL engine
+The fleet utilization gap is hard to ignore. Boeing 777-300s run at a 72.8% average load factor; Cessna 208 Caravans reach 16%. That's not a small-aircraft problem. It's a signal that either those regional routes have weak demand or the boarding pass data is incomplete. The two explanations have very different consequences for anyone designing the network.
 
-Knowing SQL syntax is table stakes. Understanding *why* a query takes 1,283 milliseconds instead of 2.6 milliseconds is what separates a developer from an engineer.
+Route distance doesn't predict delays linearly. Short routes under 500km and very long routes over 4,000km show similar delay rates. The worst performance clusters in the 500-2,000km range, where turnaround pressure is highest and crews don't have time to fully recover between legs.
 
-The `internals/` directory contains six scripts that go deep into PostgreSQL's engine:
+## What PostgreSQL teaches
 
-**EXPLAIN ANALYZE** was enlightening. A simple filter on `flights WHERE departure_airport = 'SVO' AND status = 'Arrived'` was scanning all 65,664 rows with a Sequential Scan (33.9ms). I created a composite index on `(departure_airport, status)`, and the same query switched to a Bitmap Index Scan and finished in 2.6ms. That's a **13x improvement** from a single `CREATE INDEX` statement.
+Knowing SQL syntax is table stakes. Understanding why a query takes 1,283 milliseconds instead of 2.6 milliseconds is the actual skill.
 
-**Materialized views** delivered the most dramatic result. A route delay summary that took 174ms from raw tables? Served in 0.13ms from the materialized view. That's **1,300x faster**. The catch is staleness: you must `REFRESH MATERIALIZED VIEW CONCURRENTLY` to update the data without blocking reads.
+EXPLAIN ANALYZE was the most instructive tool in the project. A simple filter on `flights WHERE departure_airport = 'SVO' AND status = 'Arrived'` was doing a Sequential Scan across all 65,664 rows in the table. A composite index on `(departure_airport, status)` switched that to a Bitmap Index Scan: from 33.9ms to 2.6ms. The query didn't change. The execution plan did.
 
-**Partitioning** shows another win for smart schema design. Range-partitioning the flights table by month enables partition pruning: a query for July 2017 flights scans only the July partition instead of the entire table. The EXPLAIN output explicitly shows "Partitions selected: 1 of 5."
+Materialized views produced the most dramatic result. A route delay summary took 174ms from raw tables. The same data served from the materialized view: 0.13ms. The trade-off is real: you have to run `REFRESH MATERIALIZED VIEW CONCURRENTLY` to update the data without blocking reads. For analytics where staleness matters less than speed, that's usually the right call.
 
-**VACUUM tuning** exposed the mechanics of MVCC. After updating 50,000 rows, the table held 50,000 dead tuples consuming disk space. Standard VACUUM marks that space as reusable (but doesn't shrink the file); VACUUM FULL rewrites the entire table to reclaim space but demands an exclusive lock.
+Monthly range partitioning made the EXPLAIN output explicit: "Partitions selected: 1 of 5." A query for July 2017 flights scans only that partition, not the full table. With 5.74 million rows spread across five months, the 3,024x measured speedup reflects how much work gets eliminated simply by designing the schema with the queries in mind.
 
-**WAL and checkpoints** revealed trade-offs I hadn't fully appreciated. A bulk operation generating 100,000 inserts and 100,000 updates produces measurable WAL volume. Setting `synchronous_commit = off` can speed up writes, but you lose the last ~600ms of commits on a crash. That's acceptable for analytics; never for financial transactions.
+WAL and checkpoints surfaced trade-offs that the documentation doesn't emphasize. A bulk operation with 100,000 inserts produces measurable WAL volume. Setting `synchronous_commit = off` speeds up writes at the cost of losing the last ~600ms of commits on a crash. For analytics workloads, that risk may be acceptable. For financial transactions, it isn't.
 
-The same decisions apply when configuring a PostgreSQL instance on Cloud SQL.
+## The migration and where each system wins
 
-## Phase 3: Migration to BigQuery
+The migration pipeline is four Python files. `extract.py` reads from PostgreSQL using batched cursors at 56,000 rows per second. `transform.py` flattens JSONB columns, converts the `point` type to separate latitude and longitude floats, strips trailing whitespace from `character(3)` fields, and normalizes all timestamps to UTC. `load.py` pushes DataFrames to BigQuery using Application Default Credentials. The full pipeline moves 5.74 million rows in 102 seconds.
 
-The migration pipeline is four Python files: `extract.py` reads from PostgreSQL using batched cursors (56,000 rows/second), `transform.py` flattens JSONB columns and converts the `point` type to `latitude`/`longitude` floats, and `load.py` pushes DataFrames to BigQuery using Application Default Credentials. The full pipeline moves 5.74 million rows in 102 seconds.
+Each transformation exposed a concrete difference between the two systems. JSONB doesn't exist in BigQuery; the `airport_name` column storing `{"en": "...", "ru": "..."}` became two flat columns. The `point` type has no direct equivalent. Timezone handling differs. None of these are documentation footnotes; they're the things that cause silent failures in a real migration.
 
-The schema translation exposed every difference between the two systems. PostgreSQL's `JSONB` column `airport_name` (storing `{"en": "Sheremetyevo", "ru": "..."}`) became two flat columns: `airport_name_en` and `airport_name_ru`. The `point` type for coordinates became separate `longitude` and `latitude` FLOAT64 columns. Fixed-length `character(3)` fields needed trailing whitespace stripped. Every `timestamptz` was normalized to UTC (BigQuery stores all timestamps in UTC).
-
-Authentication with BigQuery uses Application Default Credentials, no manual service account files.
-
-## Phase 4: PostgreSQL vs BigQuery, compared
-
-I ran the same business queries on both systems and recorded actual timing:
+Timing comparison running the same queries on both systems:
 
 | Query | PostgreSQL (indexed) | BigQuery |
 |:------|:--------------------|:---------|
@@ -70,43 +64,30 @@ I ran the same business queries on both systems and recorded actual timing:
 | Point lookup (1 flight by ID) | 2.6ms | ~800ms |
 | Materialized view query | 0.13ms | N/A |
 
-**PostgreSQL wins on point lookups.** With a proper index, a single-row lookup takes 2.6ms. BigQuery's minimum query time is ~500ms due to job scheduling overhead. For an API backend serving individual flight records, PostgreSQL is 300x faster.
+PostgreSQL wins on point lookups and it isn't close. With a proper index, a single-row lookup takes 2.6ms. BigQuery's minimum latency is around 500ms due to job scheduling overhead. For an API backend serving individual flight records, PostgreSQL is 300x faster.
 
-**BigQuery wins on full-table analytics.** The revenue query scanning 2.3 million rows of `ticket_flights` ran faster on BigQuery (1.2s vs 1.6s) without any index design. BigQuery's columnar storage and parallel execution handle large aggregations naturally.
+BigQuery wins on full-table analytics. The revenue query over 2.3 million rows of `ticket_flights` ran faster on BigQuery (1.2s vs 1.6s) without any indexing work. Columnar storage and parallel execution handle large aggregations naturally.
 
-**Cost tells the real story.** For this 500MB dataset with analytical queries, BigQuery costs ~\$0.25/month (pay-per-query at \$5/TB). The smallest Cloud SQL instance costs ~\$7/month. At scale, the gap widens further: BigQuery charges for what you scan, Cloud SQL charges for what you provision.
+Cost tells the full story. For this 500MB dataset with analytical queries, BigQuery runs about \$0.25/month at \$5/TB pay-per-query pricing. The smallest Cloud SQL instance costs around \$7/month. BigQuery charges for what you scan; Cloud SQL charges for what you provision. At scale, that gap only widens.
 
-The conclusion isn't "BigQuery is better." It's "use PostgreSQL for OLTP and point lookups, BigQuery for OLAP and ad-hoc analytics, and build a pipeline between them." This project implements exactly that pattern.
+The takeaway isn't which system is better. It's that each solves a different problem, and the pipeline between them is the part most often underestimated.
 
-## Phase 5: Geospatial analysis and visualization
+## The map and the dashboard as a communication layer
 
-Airport coordinates enabled a geospatial layer that demonstrates both systems' GIS capabilities. In PostgreSQL, I wrote a PL/pgSQL haversine function to calculate great-circle distances from the `point` type. In BigQuery, the same calculation uses `ST_GEOGPOINT()` and `ST_DISTANCE()`, built-in with no custom functions needed.
+Airport coordinates enabled a geospatial layer. In PostgreSQL, great-circle distances require a PL/pgSQL haversine function. In BigQuery, the same calculation uses `ST_GEOGPOINT()` and `ST_DISTANCE()` with no custom code. The route map in the dashboard reflects that work: 104 airports connected by 532 routes colored by delay rate, filterable by hub.
 
-The distance analysis surfaced an unexpected pattern: delay rates don't correlate linearly with route length. Short routes (<500km) and very long routes (4,000km+) show similar delay percentages. The worst performance clusters in the 500-2,000km range, where turnaround pressure is highest and crews don't have time to fully recover.
+The <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">dashboard</a> is deployed on Firebase, bilingual, and runs entirely on pre-extracted JSON with no database connection. That's not an architectural compromise; it's a deliberate decision to eliminate hosting cost and network latency in a layer that only needs to display results.
 
-A Jupyter notebook ties everything together: interactive plotly charts (delay heatmaps, revenue Pareto curves, load factor rankings, before/after optimization comparisons) plus folium maps showing the route network colored by delay severity. The route map is the visual centerpiece: 104 airports connected by lines that shift from green to red as delays increase, making network stress immediately apparent.
+The internals section translates EXPLAIN ANALYZE output into comparison bars: the 13x, 1,300x, and 3,024x improvements sit side by side without requiring visitors to read query planner text. The pipeline section shows ETL metrics alongside the timing comparison table. Revenue exposes the interactive Pareto curve. Fleet puts the Boeing 777 at 72.8% load factor next to the Cessna 208 at 16%, left as an open question.
 
-## Phase 6: Interactive dashboard
+## Limitations and what comes next
 
-The <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">dashboard</a> takes the results from the five previous phases and makes them explorable in the browser. Deployed on Firebase, bilingual (EN/ES), fed by the same SQL output already in the repository.
+The data is operational, not financial. The revenue analysis uses fares from the dataset that may not reflect actual discounts, airport fees, or revenue-sharing arrangements. The 37.7 billion rubles is what the available data produces, not necessarily actual airline revenue.
 
-The map lets you filter all 532 routes by airport, color them by delay rate or volume, and see how the three Moscow hubs contrast with eastern Russia's thin connectivity. The delays from Phase 1 and the distances from Phase 5 take on a different dimension when explored geographically.
+The delay analysis has no weather or air traffic control data, which are the external factors that explain most systemic delays. The 500-2,000km range performs worst, but without root-cause data it's hard to separate turnaround pressure from routes sharing congested infrastructure.
 
-The internals section translates Phase 2 results into comparison bars: the 13x composite index improvement and the 1,300x materialized view sit side by side, no EXPLAIN output required. The pipeline section shows Phase 3 metrics (rows/second, load times) alongside the Phase 4 comparison table.
+The natural next step would be time-series analysis: whether the delay rate shifted across the dataset's time range, whether revenue concentration in 128 routes is stable or consolidating. That analysis needs the same tooling already built here; it just needs better questions.
 
-Revenue lets you walk through the Pareto curve and see that 20% of routes carry 80% of income. Fleet puts the Boeing 777 at 73% load next to the Cessna 208 at 16%, which sits there as an open question: incomplete data or network design?
+Source code is at <a href="https://github.com/GonorAndres/learning-posgre" target="_blank" rel="noopener">github.com/GonorAndres/learning-posgre</a> and the dashboard at <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">project-ad7a5be2-a1c7-4510-82d.firebaseapp.com</a>. The pipeline reproduces with `docker compose up` and a GCP project.
 
-Everything runs on pre-extracted JSON. No database connection, no hosting cost.
-
-## Learnings
-
-Working with the same dataset across PostgreSQL, BigQuery, and a dashboard made clear that each layer solves a different problem, and choosing between them depends on the question being asked:
-
-1. **PostgreSQL**: EXPLAIN ANALYZE, index strategy, partitioning, VACUUM, and WAL are configuration decisions, not just syntax
-2. **Python ETL**: batch-cursor extraction, type transformations (JSONB, `point`), and BigQuery loading form the bridge between the two systems
-3. **BigQuery**: schema translation exposes real differences in how each system handles types, timestamps, and geospatial functions
-4. **Trade-offs**: PostgreSQL wins point lookups, BigQuery wins full scans; cost behaves in opposite directions for each
-5. **Geospatial visualization**: the same distance question solved with haversine in PL/pgSQL and `ST_DISTANCE` in BigQuery shows two ways of thinking about the problem
-6. **Dashboard**: converting query results to static JSON and serving them from Firebase closes the loop between analysis and communication
-
-Source code at <a href="https://github.com/GonorAndres/learning-posgre" target="_blank" rel="noopener">github.com/GonorAndres/learning-posgre</a> and the dashboard at <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">project-ad7a5be2-a1c7-4510-82d.firebaseapp.com</a>. The pipeline reproduces with `docker compose up` and a GCP project.
+This project shares its core decision logic with the <a href="/en/blog/data-engineering-platform/">actuarial data engineering platform</a>: in both cases, the central question isn't which technology to use, but when the cost of the more capable tool is justified by the problem it solves.

@@ -287,8 +287,8 @@ export const notes: Note[] = [
       en: 'Probabilistic Forecasting of Volcanic Eruptions',
     },
     description: {
-      es: 'Qué tienen en común un actuario y un vulcanólogo? Que ambos intentan predecir eventos raros con consecuencias enormes. Este apunte revisa cómo se modelan los intervalos entre erupciones del Popocatepetl y el Galeras con distribuciones log-normal, modelos de Markov y procesos de renovación. Las preguntas abiertas al final son genuinamente fascinantes. Apunte personal de probabilidad aplicada.',
-      en: 'What do an actuary and a volcanologist have in common? Both try to predict rare events with enormous consequences. This note reviews how eruption intervals for Popocatepetl and Galeras are modeled with log-normal distributions, Markov models, and renewal processes. The open questions at the end are genuinely fascinating. Personal applied probability note.',
+      es: 'Qué tienen en común un actuario y un vulcanólogo? Que ambos intentan predecir eventos raros con consecuencias enormes. Este apunte revisa cómo se modelan los intervalos entre erupciones del Popocatépetl y el Galeras con distribuciones log-normal, modelos de Markov y procesos de renovación. Las preguntas abiertas al final son genuinamente fascinantes. Apunte personal de probabilidad aplicada.',
+      en: 'What do an actuary and a volcanologist have in common? Both try to predict rare events with enormous consequences. This note reviews how eruption intervals for Popocatépetl and Galeras are modeled with log-normal distributions, Markov models, and renewal processes. The open questions at the end are genuinely fascinating. Personal applied probability note.',
     },
     urls: [
       { label: { es: 'Ver PDF', en: 'View PDF' }, url: 'https://drive.google.com/file/d/1eaQmrc0HuQ5fXli6E5HQ54N5vRNkFT9o/view?usp=sharing' },
@@ -298,8 +298,8 @@ export const notes: Note[] = [
       en: ['Probability', 'Volcanoes', 'Models'],
     },
     keywords: {
-      es: ['erupciones volcánicas', 'predicción probabilística', 'Popocatepetl', 'procesos de renovación', 'Markov'],
-      en: ['volcanic eruptions', 'probabilistic forecasting', 'Popocatepetl', 'renewal processes', 'Markov'],
+      es: ['erupciones volcánicas', 'predicción probabilística', 'Popocatépetl', 'procesos de renovación', 'Markov'],
+      en: ['volcanic eruptions', 'probabilistic forecasting', 'Popocatépetl', 'renewal processes', 'Markov'],
     },
     relatedNotes: ['time-series-delhi', 'ab-testing-bayesian-frequentist'],
   },
@@ -310,7 +310,7 @@ export const notes: Note[] = [
     createdDate: '2026-04-18',
     version: '1',
     title: {
-      es: 'El Trueque: Sesgo y Varianza',
+      es: 'El Dilema: Sesgo y Varianza',
       en: 'The Tradeoff: Bias and Variance',
     },
     description: {
@@ -337,11 +337,11 @@ export const notes: Note[] = [
     createdDate: '2026-04-19',
     version: '1',
     title: {
-      es: 'Búsqueda Voraz de Divisiones',
+      es: 'Búsqueda Egoísta de Particiones',
       en: 'Greedy Split Search',
     },
     description: {
-      es: 'Un recorrido paso a paso de cómo un árbol de decisión elige dónde partir un nodo. Con cinco observaciones y cuatro umbrales candidatos, el artefacto recorre el cálculo del RSS para cada división y deja al lector ver por qué la búsqueda voraz gana en claridad lo que pierde en optimalidad global. Animación interactiva y cálculos en vivo, en español e inglés.',
+      es: 'Un recorrido paso a paso de cómo un árbol de decisión elige dónde partir un nodo. Con cinco observaciones y cuatro umbrales candidatos, el artefacto recorre el cálculo del RSS para cada partición y deja al lector ver por qué esta búsqueda egoísta gana en claridad lo que pierde en optimalidad global. Animación interactiva y cálculos en vivo, en español e inglés.',
       en: 'A step-by-step walkthrough of how a decision tree picks where to split a node. With five observations and four candidate thresholds, the artifact traces the RSS computation for each split and lets the reader see why greedy search gains in clarity what it loses in global optimality. Interactive animation and live computation, bilingual.',
     },
     urls: [
@@ -352,7 +352,7 @@ export const notes: Note[] = [
       en: ['Statistical Learning', 'Decision Trees', 'Visualization', 'ISLR'],
     },
     keywords: {
-      es: ['árbol de decisión', 'búsqueda voraz', 'RSS', 'umbral de división', 'regresión por árboles', 'aprendizaje estadístico'],
+      es: ['árbol de decisión', 'búsqueda egoísta', 'RSS', 'umbral de partición', 'regresión por árboles', 'aprendizaje estadístico'],
       en: ['decision tree', 'greedy search', 'RSS', 'split threshold', 'tree regression', 'statistical learning'],
     },
     relatedNotes: ['bias-variance-tradeoff', 'glm-actuarial-models'],

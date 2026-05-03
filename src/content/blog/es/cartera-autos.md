@@ -61,7 +61,7 @@ El score compuesto final pondera 40% al estadístico de Mahalanobis y 60% a las 
 
 ## Decisiones de ingeniería
 
-La aplicación contiene 17 módulos R organizados en tres capas. La capa inferior alberga 4 módulos de utilidades (métricas, tema, datos, exportación) que hacen todo el levantamiento matemático pesado. La capa superior contiene 13 módulos de interfaz, uno por cada pestaña del dashboard. Esta separación es intencional y rigurosa: el código actuarial no tiene cero dependencias de Shiny. Puedes probar el motor de tarificación o las funciones de reservas de forma aislada, en una sesión de R simple, sin necesidad de un servidor web.
+La aplicación contiene 17 módulos R organizados en tres capas. La capa inferior alberga 4 módulos de utilidades (métricas, tema, datos, exportación) que hacen todo el levantamiento matemático pesado. La capa superior contiene 13 módulos de interfaz, uno por cada pestaña del dashboard. Esta separación es intencional y rigurosa: el código actuarial no depende de Shiny en absoluto. Puedes probar el motor de tarificación o las funciones de reservas de forma aislada, en una sesión de R simple, sin necesidad de un servidor web.
 
 La UI se construye encima con bslib y Bootstrap 5 para layout responsivo. Plotly maneja interactividad en gráficos, DT maneja filtrado y ordenamiento de tablas. Ambas librerías se integran limpiamente en Shiny y producen salida que el navegador entiende nativamente.
 
@@ -71,7 +71,7 @@ El deployment sigue el mismo patrón que el simulador de pensiones y SIMA: conte
 
 La variable que más afecta la tarificación en autos mexicanos es la zona geográfica, superando con creces la edad del conductor o el tipo de vehículo. CDMX y Estado de México acumulan la mayor frecuencia y severidad por lejos. Esto se alinea perfectamente con estadísticas de robo de AMIS; el robo se concentra en esos dos estados, y los GLMs capturan esa señal claramente.
 
-La diferencia práctica entre Chain Ladder y Bornhuetter-Ferguson emerge en años de accidente inmaduros. Chain Ladder cabalga la volatilidad de los primeros link ratios hacia arriba y hacia abajo; Bornhuetter-Ferguson se ancla a la expectativa a priori del loss ratio y suaviza el ruido. Para autos con su cola de desarrollo de cuatro años, la divergencia es modesta. En responsabilidad civil de cola larga, la diferencia sería dramática.
+La diferencia práctica entre Chain Ladder y Bornhuetter-Ferguson emerge en años de accidente inmaduros. Chain Ladder amplifica la volatilidad de los primeros link ratios; Bornhuetter-Ferguson se ancla a la expectativa a priori del loss ratio y suaviza el ruido. Para autos con su cola de desarrollo de cuatro años, la divergencia es modesta. En responsabilidad civil de cola larga, la diferencia sería dramática.
 
 Una limitación crítica: los datos son completamente sintéticos. Las correlaciones entre variables—por ejemplo, entre zona geográfica y tipo de vehículo—son por diseño, no descubiertas. Un conjunto de datos real de AMIS o CONDUSEF revelaría patrones e interacciones que no existen en datos generados. El siguiente paso sería obtener datasets públicos de CONDUSEF o negociar un acuerdo de compartir datos con una aseguradora real para reentrenar los GLMs en la realidad del mercado.
 

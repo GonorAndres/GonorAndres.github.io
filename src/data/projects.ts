@@ -31,8 +31,8 @@ export const projects: Project[] = [
   {
     slug: 'sima',
     title: {
-      es: 'SIMA - Sistema Integral de Modelación Actuarial',
-      en: 'SIMA - Integrated Actuarial Modeling System',
+      es: 'SIMA: Sistema Integral de Modelación Actuarial',
+      en: 'SIMA: Integrated Actuarial Modeling System',
     },
     description: {
       es: 'Valuar reservas de vida exige conectar proyección de mortalidad, producto y capital regulatorio en un solo flujo. SIMA lo hace de extremo a extremo: proyecta mortalidad con Lee-Carter, construye tablas de conmutación, valúa reservas para tres productos y calcula el RCS con pruebas de estrés bajo la LISF. Desplegado en Google Cloud.',
@@ -69,8 +69,8 @@ export const projects: Project[] = [
   {
     slug: 'gmm-explorer',
     title: {
-      es: 'GMM Explorer - Gastos Médicos Mayores',
-      en: 'GMM Explorer - Major Medical Expenses',
+      es: 'GMM Explorer: Gastos Médicos Mayores',
+      en: 'GMM Explorer: Major Medical Expenses',
     },
     description: {
       es: 'Tarificar GMM sin datos reales es especular. Este proyecto procesa 5.1M siniestros y 95.9M asegurados-año publicados por la CNSF (2020-2024), los clasifica en tres niveles de hospitalización con IA y calcula la prima pura por frecuencia-severidad ajustada por inflación médica. El resultado: un tarificador interactivo desplegado en Vercel.',
@@ -249,6 +249,14 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     screenshot: '/screenshots/pension-simulator.png',
+    gallery: [
+      { src: '/screenshots/pension-01-landing.png', caption: { es: 'Landing page: calcula tu pensión en 5 minutos, sin registro, 100% privado', en: 'Landing page: calculate your pension in 5 minutes, no registration, 100% private' } },
+      { src: '/screenshots/pension-02-control.png', caption: { es: 'Marco de control: comparación honesta de Ley 73, Ley 97 y Fondo Bienestar con lo que puedes y no puedes controlar', en: 'Control framework: honest comparison of Ley 73, Ley 97, and Fondo Bienestar with what you can and cannot control' } },
+      { src: '/screenshots/pension-03-afore.png', caption: { es: 'Wizard paso 3: selección de AFORE, saldo actual, aportación voluntaria y escenario de rendimiento', en: 'Wizard step 3: AFORE selection, current balance, voluntary contribution, and return scenario' } },
+      { src: '/screenshots/pension-04-results.png', caption: { es: 'Resultado: pensión estimada con desglose AFORE, aportaciones voluntarias y complemento Fondo Bienestar', en: 'Result: estimated pension with AFORE breakdown, voluntary contributions, and Fondo Bienestar supplement' } },
+      { src: '/screenshots/pension-05-sensitivity.png', caption: { es: 'Análisis de sensibilidad: sliders de salario, aportación voluntaria y edad de retiro con proyección de saldo', en: 'Sensitivity analysis: salary, voluntary contribution, and retirement age sliders with balance projection' } },
+      { src: '/screenshots/pension-06-mobile.png', caption: { es: 'Diseño responsive: landing con contexto educativo desplegable en móvil', en: 'Responsive design: landing with expandable educational context on mobile' } },
+    ],
     relatedTo: ['sima', 'life-insurance'],
     blogSlug: 'pension-simulator',
     tier: 1,
@@ -267,10 +275,15 @@ export const projects: Project[] = [
       en: 'Actuarial Regulation Assistant',
     },
     description: {
-      es: 'La LISF y la CUSF suman más de mil artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente, construido con el Claude Agent SDK, indexa el texto completo de ambas leyes y genera respuestas contextualizadas con referencia exacta al artículo. Backend FastAPI desplegado en GCP; sin alucinaciones de citas. Código de acceso: actuaria-claude.',
-      en: 'LISF and CUSF together span over a thousand articles, and interpreting them requires navigating interrelated provisions. This agent, built with the Claude Agent SDK, indexes the full text of both laws and returns contextualized answers with exact article references. FastAPI backend deployed on GCP; no hallucinated citations. Access code: actuaria-claude.',
+      es: 'La LISF y la CUSF suman más de mil artículos y su interpretación requiere navegar entre disposiciones interrelacionadas. Este agente indexa el texto completo de ambas leyes y genera respuestas contextualizadas con referencia exacta al artículo, sin alucinaciones de citas. Incluye un explorador interactivo para recorrer los 510 artículos de la LISF y las 1,833 disposiciones de la CUSF con referencias cruzadas como enlaces activos. Código de acceso: actuaria-claude.',
+      en: 'LISF and CUSF together span over a thousand articles, and interpreting them requires navigating interrelated provisions. This agent indexes the full text of both laws and returns contextualized answers with exact article references, with no hallucinated citations. It includes an interactive explorer to browse all 510 LISF articles and 1,833 CUSF provisions with cross-references as active links. Access code: actuaria-claude.',
     },
-    url: 'https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/',
+    url: 'https://actuarial-regulation-agent-451451662791.us-central1.run.app/',
+    urls: [
+      { label: { es: 'Agente RAG - Versión completa (API)', en: 'RAG Agent - Full version (API)' }, url: 'https://actuarial-regulation-agent-451451662791.us-central1.run.app/' },
+      { label: { es: 'Agente RAG - Versión gratuita (HuggingFace)', en: 'RAG Agent - Free version (HuggingFace)' }, url: 'https://huggingface.co/spaces/GonorAndres/lisf-agent' },
+      { label: { es: 'Explorador LISF/CUSF', en: 'LISF/CUSF Explorer' }, url: 'https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer' },
+    ],
     repo: 'https://github.com/GonorAndres/regulation-actuarial-agent',
     platform: 'GCP',
     category: 'actuarial',
@@ -280,11 +293,23 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     screenshot: '/screenshots/lisf-agent.png',
+    gallery: [
+      { src: '/screenshots/lisf-01-auth.png', caption: { es: 'Pantalla de acceso: el agente es de uso restringido con codigo de acceso', en: 'Access screen: the agent is restricted with an access code' } },
+      { src: '/screenshots/lisf-02-landing.png', caption: { es: 'Panel principal: sidebar con estructura LISF/CUSF, preguntas frecuentes y tres modos de respuesta', en: 'Main panel: sidebar with LISF/CUSF structure, FAQ, and three response modes' } },
+      { src: '/screenshots/lisf-03-indice.png', caption: { es: 'Indice completo de la LISF: 510 articulos organizados en 13 Titulos', en: 'Full LISF index: 510 articles organized in 13 Titles' } },
+      { src: '/screenshots/lisf-04-chat.png', caption: { es: 'Respuesta sobre reservas tecnicas: el agente cita articulos reales con referencias cruzadas LISF-CUSF', en: 'Response on technical reserves: the agent cites real articles with LISF-CUSF cross-references' } },
+      { src: '/screenshots/lisf-06-chat-response.png', caption: { es: 'Detalle de respuesta: desglose de los articulos 216, 217 y 218 sobre constitucion y valuacion de reservas', en: 'Response detail: breakdown of articles 216, 217, and 218 on reserve constitution and valuation' } },
+      { src: '/screenshots/lisf-05-ayuda.png', caption: { es: 'Panel de ayuda: ejemplos de consultas, consejos de uso y aviso legal', en: 'Help panel: query examples, usage tips, and legal disclaimer' } },
+      { src: '/screenshots/lisf-07-hf-landing.png', caption: { es: 'Version open-source en HuggingFace: Qwen2.5-72B, sin codigo de acceso, preguntas frecuentes precalculadas', en: 'Open-source version on HuggingFace: Qwen2.5-72B, no access code, precalculated FAQ' } },
+      { src: '/screenshots/lisf-08-hf-art216.png', caption: { es: 'HuggingFace: respuesta sobre el articulo 216, desglose de reservas por fraccion', en: 'HuggingFace: response on article 216, reserve breakdown by section' } },
+      { src: '/screenshots/lisf-09-hf-articulos.png', caption: { es: 'HuggingFace: estructura completa de la LISF, 510 articulos y articulos transitorios', en: 'HuggingFace: full LISF structure, 510 articles and transitory articles' } },
+      { src: '/screenshots/lisf-10-hf-solvencia.png', caption: { es: 'HuggingFace: requisitos de solvencia con referencia al articulo 237 y disposicion 34.1.2 de la CUSF', en: 'HuggingFace: solvency requirements referencing article 237 and CUSF provision 34.1.2' } },
+    ],
     relatedTo: ['sima', 'credit-graph'],
     blogSlug: 'regulation-agent-rag',
     tier: 1,
     creation_date: '2026-02-01',
-    last_modification_date: '2026-03-19',
+    last_modification_date: '2026-05-03',
   },
 
   // repo: no public GitHub repo — Drive folder IS the deliverable
@@ -292,8 +317,8 @@ export const projects: Project[] = [
   {
     slug: 'life-insurance',
     title: {
-      es: 'Nota Técnica - Seguro de Vida',
-      en: 'Technical Note - Life Insurance',
+      es: 'Nota Técnica: Seguro de Vida',
+      en: 'Technical Note: Life Insurance',
     },
     description: {
       es: 'Registrar un seguro de vida ante la CNSF implica entregar bases técnicas que justifiquen cada supuesto biométrico y cada carga. Esta nota técnica recorre el ciclo completo del producto individual: bases de mortalidad, cálculo de prima neta y comercial, valuación de reservas y cuantificación del requerimiento de capital de solvencia bajo la LISF.',
@@ -318,8 +343,8 @@ export const projects: Project[] = [
   {
     slug: 'property-insurance',
     title: {
-      es: 'Nota Técnica - Seguro de Daños',
-      en: 'Technical Note - Property Insurance',
+      es: 'Nota Técnica: Seguro de Daños',
+      en: 'Technical Note: Property Insurance',
     },
     description: {
       es: 'La prima de un seguro de daños mezcla exposición al riesgo, gastos operativos y margen de utilidad: descomponerlos correctamente requiere estadística. Esta nota técnica usa datos públicos de la CNSF para construir el modelo de frecuencia-severidad para autos, contrasta su estructura con el ramo de vida y entrega un cotizador funcional en Excel.',
@@ -344,8 +369,8 @@ export const projects: Project[] = [
   {
     slug: 'derivatives',
     title: {
-      es: 'Derivados de Divisas - MCF',
-      en: 'Currency Derivatives - QMF',
+      es: 'Derivados de Divisas: Finanzas Cuantitativas',
+      en: 'Currency Derivatives: Quantitative Finance',
     },
     description: {
       es: 'El mercado de divisas cotiza tipo spot, forwards y opciones al mismo tiempo; cada precio implica una tasa o volatilidad distinta. Este análisis construye la curva forward MXN/USD a partir de datos reales, valúa contratos forward, calcula spreads bid-offer y mapea la superficie de volatilidad implícita para distintos strikes y vencimientos.',
@@ -371,8 +396,8 @@ export const projects: Project[] = [
   {
     slug: 'markowitz',
     title: {
-      es: 'Optimización de Portafolio - Markowitz',
-      en: 'Portfolio Optimization - Markowitz',
+      es: 'Optimización de Portafolio: Markowitz',
+      en: 'Portfolio Optimization: Markowitz',
     },
     description: {
       es: 'La decisión de asignación de activos determina más del rendimiento de una cartera que la selección individual de cada valor. Este proyecto aplica optimización de Markowitz a 10 activos del mercado mexicano, construye la frontera eficiente y calcula la cartera tangente, que alcanzó 110% de rendimiento anualizado en el período de prueba.',
@@ -397,8 +422,8 @@ export const projects: Project[] = [
   {
     slug: 'michoacan',
     title: {
-      es: 'Análisis Demográfico - Michoacán',
-      en: 'Demographic Analysis - Michoacan',
+      es: 'Análisis Demográfico: Michoacán',
+      en: 'Demographic Analysis: Michoacan',
     },
     description: {
       es: 'Las tablas nacionales de mortalidad promedian regiones con realidades muy diferentes. Este análisis toma Michoacán como caso de estudio y construye indicadores demográficos propios con datos del censo INEGI 2020: tasas de mortalidad por edad, índices de fecundidad y estructura poblacional. Un ejercicio que muestra cuánto cambian los supuestos actuariales cuando se usan datos regionales en lugar de promedios nacionales.',
@@ -423,8 +448,8 @@ export const projects: Project[] = [
   {
     slug: 'data-cleaning',
     title: {
-      es: 'Limpieza de Datos - Deuda Pública CDMX',
-      en: 'Data Cleaning - CDMX Public Debt',
+      es: 'Limpieza de Datos: Deuda Pública CDMX',
+      en: 'Data Cleaning: CDMX Public Debt',
     },
     description: {
       es: 'Los registros de deuda pública de la Ciudad de México llegaron con inconsistencias de formato, fechas duplicadas y tasas TIIE vacías. El proyecto reconstruye la serie completa y deja la base lista para análisis, documentando cada decisión de limpieza con fórmulas avanzadas de Excel.',
@@ -449,8 +474,8 @@ export const projects: Project[] = [
   {
     slug: 'monte-carlo-poker',
     title: {
-      es: 'Simulación Montecarlo - Poker',
-      en: 'Monte Carlo Simulation - Poker',
+      es: 'Simulación Monte Carlo: Poker',
+      en: 'Monte Carlo Simulation: Poker',
     },
     description: {
       es: 'Cuando la solución analítica es intratable, simular miles de escenarios es la única opción práctica. Este proyecto aplica Monte Carlo a Texas Hold\'em para estimar probabilidades de mano, muestra la convergencia de las estimaciones conforme crece el número de simulaciones y traza el puente metodológico hacia pricing de derivados y análisis de riesgo actuarial.',
@@ -503,8 +528,8 @@ export const projects: Project[] = [
   {
     slug: 'actuarial-suite',
     title: {
-      es: 'Suite Actuarial Mexicana - Python',
-      en: 'Mexican Actuarial Suite - Python',
+      es: 'Suite Actuarial Mexicana',
+      en: 'Mexican Actuarial Suite',
     },
     description: {
       es: 'El ciclo operativo de una aseguradora mexicana se fragmenta entre hojas de cálculo que no se comunican. Esta librería unifica tarificación, reservas, reaseguro y cumplimiento regulatorio para cuatro ramos (vida, daños, salud, pensiones) con validación Pydantic y precisión Decimal. Expuesta como API REST y con ejemplos interactivos, sirve como base modular para construir sistemas actuariales más complejos.',
@@ -551,6 +576,14 @@ export const projects: Project[] = [
     },
     variant: 'wide',
     screenshot: '/screenshots/cartera-autos.png',
+    gallery: [
+      { src: '/screenshots/cartera-autos-01-resumen.png', caption: { es: 'Resumen ejecutivo: 140K pólizas, frecuencia 9.78%, severidad promedio \$27,715 MXN y prima pura \$324 por póliza', en: 'Executive summary: 140K policies, 9.78% frequency, \$27,715 MXN average severity, and \$324 pure premium per policy' } },
+      { src: '/screenshots/cartera-autos-02-temporal.png', caption: { es: 'Análisis temporal: siniestros por mes (año sobre año), severidad mensual promedio, composición por tipo y días de reporte', en: 'Temporal analysis: claims by month (year over year), average monthly severity, composition by type, and report lag' } },
+      { src: '/screenshots/cartera-autos-03-severidad.png', caption: { es: 'Análisis de severidad: distribución por tipo de siniestro, histograma de montos y severidad por tipo de vehículo', en: 'Severity analysis: distribution by claim type, amount histogram, and severity by vehicle type' } },
+      { src: '/screenshots/cartera-autos-04-pricing.png', caption: { es: 'Motor de pricing GLM: coeficientes Poisson (frecuencia) y Gamma (severidad) con prima pura promedio de \$2,682', en: 'GLM pricing engine: Poisson (frequency) and Gamma (severity) coefficients with \$2,682 average pure premium' } },
+      { src: '/screenshots/cartera-autos-05-ibnr.png', caption: { es: 'Reservas IBNR: triángulo de pagos acumulados con factores de desarrollo por año de ocurrencia', en: 'IBNR reserves: cumulative payment triangle with development factors by accident year' } },
+      { src: '/screenshots/cartera-autos-06-escenarios.png', caption: { es: 'Stress testing: simulación Monte Carlo con VaR 99.5%, distribución de pérdida agregada baseline vs. estresada', en: 'Stress testing: Monte Carlo simulation with 99.5% VaR, baseline vs. stressed aggregate loss distribution' } },
+    ],
     blogSlug: 'cartera-autos',
     tier: 1,
     relatedTo: ['pension-simulator', 'sima', 'property-insurance'],
@@ -593,8 +626,8 @@ export const projects: Project[] = [
   {
     slug: 'ab-testing',
     title: {
-      es: 'Inferencia Bayesiana vs Frecuentista - Test A/B',
-      en: 'Bayesian vs Frequentist - A/B Test',
+      es: 'Test A/B: Inferencia Bayesiana vs Frecuentista',
+      en: 'A/B Test: Bayesian vs Frequentist Inference',
     },
     description: {
       es: 'Cuando una prueba A/B termina, la pregunta real es si la diferencia observada justifica cambiar el producto. Este proyecto corre los dos marcos sobre el mismo experimento de conversión: frecuentista con chi-cuadrado y potencia estadística, bayesiano con distribución Beta posterior en PyMC. El resultado muestra cuándo cada enfoque cambia la decisión.',
@@ -650,8 +683,8 @@ export const projects: Project[] = [
   {
     slug: 'b-tree-explorer',
     title: {
-      es: 'B-Tree Explorer - Visualización en Rust + WASM',
-      en: 'B-Tree Explorer - Rust + WASM Visualization',
+      es: 'B-Tree Explorer: Cómo Funcionan los Índices',
+      en: 'B-Tree Explorer: How Database Indexes Work',
     },
     description: {
       es: 'Los índices de PostgreSQL operan sobre árboles B, pero la documentación no muestra cómo funcionan por dentro. Este explorador, implementado en Rust y compilado a WebAssembly, anima inserciones, búsquedas y divisiones de nodos paso a paso, haciendo visible por qué los árboles B garantizan búsqueda O(log n) sobre almacenamiento en disco.',
@@ -704,8 +737,8 @@ export const projects: Project[] = [
   {
     slug: 'euler-method',
     title: {
-      es: 'Método de Euler - EDOs',
-      en: 'Euler Method - ODEs',
+      es: 'Método de Euler: Ecuaciones Diferenciales',
+      en: 'Euler Method: Differential Equations',
     },
     description: {
       es: 'Las ecuaciones diferenciales describen el mundo continuo; las computadoras operan en tiempo discreto. El método de Euler es el puente más simple entre ambos. Esta implementación en Python parte de la demostración del teorema de Picard-Lindelöf, construye el método paso a paso y cuantifica el error de discretización en función del tamaño de paso.',
@@ -731,12 +764,12 @@ export const projects: Project[] = [
   {
     slug: 'flight-analytics-pg-bq',
     title: {
-      es: 'Flight Analytics - PostgreSQL a BigQuery',
-      en: 'Flight Analytics - PostgreSQL to BigQuery',
+      es: 'Flight Analytics: Datos y Dashboards de Aviación',
+      en: 'Flight Analytics: Aviation Data and Dashboards',
     },
     description: {
-      es: 'PostgreSQL y BigQuery resuelven problemas diferentes; saber cuándo usar cada uno requiere haberlos comparado con datos reales. Este proyecto migra 5.74M filas de datos reales de aerolíneas de PostgreSQL 16 a BigQuery con un pipeline ETL en Python, documenta aceleraciones de 13x a 1,300x en consultas clave e incluye un dashboard interactivo desplegado en Firebase con mapa WebGL de rutas, heatmaps de retrasos y visualización de internals de PostgreSQL.',
-      en: 'PostgreSQL and BigQuery solve different problems; knowing when to use each requires comparing them on real data. This project migrates 5.74M rows of real airline data from PostgreSQL 16 to BigQuery via a Python ETL pipeline, documents 13x to 1,300x query speedups, and includes an interactive dashboard deployed on Firebase with a WebGL route map, delay heatmaps, and PostgreSQL internals visualization.',
+      es: 'Las aerolíneas generan millones de registros de vuelos, retrasos, ingresos y ocupación de flota. Analizar esos datos requiere elegir la base de datos correcta para cada pregunta. Este proyecto toma 5.74M registros de operaciones aéreas reales, los analiza en PostgreSQL para entender cómo optimizar consultas desde el motor, los migra a BigQuery para comparar ambos paradigmas de bases de datos y presenta los hallazgos en un dashboard interactivo: mapa de rutas, patrones de retraso, concentración de ingresos y rendimiento de flota.',
+      en: 'Airlines generate millions of records on flights, delays, revenue, and fleet utilization. Analyzing that data requires choosing the right database for each question. This project takes 5.74M real airline operation records, analyzes them in PostgreSQL to understand how to optimize queries from the engine level, migrates them to BigQuery to compare both database paradigms, and presents the findings in an interactive dashboard: route map, delay patterns, revenue concentration, and fleet performance.',
     },
     url: 'https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/',
     repo: 'https://github.com/GonorAndres/learning-posgre',
@@ -748,11 +781,18 @@ export const projects: Project[] = [
     },
     variant: 'wide',
     screenshot: '/screenshots/flight-analytics-pg-bq.png',
+    gallery: [
+      { src: '/screenshots/flight-01-map.png', caption: { es: 'Mapa WebGL de 104 aeropuertos y 532 rutas coloreadas por tasa de retraso', en: 'WebGL map of 104 airports and 532 routes colored by delay rate' } },
+      { src: '/screenshots/flight-02-delays.png', caption: { es: 'Análisis de retrasos: 4.9% global, heatmap por hora y día, KPIs de la red', en: 'Delay analysis: 4.9% overall, heatmap by hour and day, network KPIs' } },
+      { src: '/screenshots/flight-03-revenue.png', caption: { es: 'Ingresos: 37.7B RUB, curva de Pareto (128 rutas = 80% del ingreso), desglose por clase', en: 'Revenue: 37.7B RUB, Pareto curve (128 routes = 80% of revenue), fare class breakdown' } },
+      { src: '/screenshots/flight-04-internals.png', caption: { es: 'PostgreSQL internals: mejoras de 44x a 3024x medidas con EXPLAIN ANALYZE', en: 'PostgreSQL internals: 44x to 3024x speedups measured with EXPLAIN ANALYZE' } },
+      { src: '/screenshots/flight-05-pipeline.png', caption: { es: 'Pipeline ETL: 5.74M filas migradas en 102s a 56K filas/s, arquitectura Extract-Transform-Load', en: 'ETL pipeline: 5.74M rows migrated in 102s at 56K rows/s, Extract-Transform-Load architecture' } },
+    ],
     relatedTo: ['data-engineering-platform', 'data-analyst-portfolio'],
     blogSlug: 'flight-analytics-pg-bq',
-    tier: 2,
+    tier: 1,
     creation_date: '2026-02-07',
-    last_modification_date: '2026-03-30',
+    last_modification_date: '2026-05-03',
   },
 
   // repo: https://github.com/GonorAndres/risk-analyst
@@ -761,8 +801,8 @@ export const projects: Project[] = [
   {
     slug: 'risk-analyst',
     title: {
-      es: 'Risk Analyst - Análisis Cuantitativo de Riesgos',
-      en: 'Risk Analyst - Quantitative Risk Analysis',
+      es: 'Risk Analyst: Análisis Cuantitativo de Riesgos',
+      en: 'Risk Analyst: Quantitative Risk Analysis',
     },
     description: {
       es: 'El riesgo financiero cuantitativo no se aprende de un solo modelo: requiere construir progresivamente desde los fundamentos. Esta serie recorre 13 proyectos que van desde calcular cuánto puede perder un portafolio en un día (VaR) hasta modelar cómo la quiebra de una institución contagia al sistema financiero completo. Cubre acciones, bonos, opciones y riesgo sistémico con datos reales de mercado.',
@@ -818,11 +858,11 @@ export const projects: Project[] = [
   {
     slug: 'micro-insurance',
     title: {
-      es: 'MicroInsurance.jl - Tarificacion para Economia Informal',
-      en: 'MicroInsurance.jl - Pricing Engine for the Informal Economy',
+      es: 'MicroInsurance.jl: Tarificación para Economía Informal',
+      en: 'MicroInsurance.jl: Pricing Engine for the Informal Economy',
     },
     description: {
-      es: '~35M de trabajadores informales en Mexico no tienen acceso a seguros de vida porque el underwriting tradicional exige empleo formal, historial crediticio y examen medico. Este motor reemplaza esos requisitos con senales proxy (mortalidad geografica, remesas, pagos de servicios) ponderadas por credibilidad Buhlmann-Straub sobre una superficie de mortalidad Lee-Carter. Julia.',
+      es: '~35M de trabajadores informales en México no tienen acceso a seguros de vida porque el underwriting tradicional exige empleo formal, historial crediticio y examen médico. Este motor reemplaza esos requisitos con señales proxy (mortalidad geográfica, remesas, pagos de servicios) ponderadas por credibilidad Buhlmann-Straub sobre una superficie de mortalidad Lee-Carter. Julia.',
       en: '~35M informal workers in Mexico lack access to life insurance because traditional underwriting requires formal employment, credit history, and medical exams. This engine replaces those requirements with proxy signals (geographic mortality, remittances, utility payments) weighted through Buhlmann-Straub credibility over a Lee-Carter mortality surface. Julia.',
     },
     url: '#',
