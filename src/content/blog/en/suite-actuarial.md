@@ -1,70 +1,94 @@
 ---
-title: "Mexican Actuarial Suite: four insurance lines in one Python library"
-description: "The operating cycle of a Mexican insurer is fragmented across spreadsheets that don't talk to each other. This library unifies pricing, reserves, reinsurance, and regulatory compliance for life, property, health, and pensions under a single framework with Pydantic domain validation and Decimal precision. The result is a modular base that enables building more complex actuarial systems without rewriting core logic from scratch."
+title: "suite_actuarial: open-source actuarial platform for the Mexican insurance market"
+description: "There is no open-source actuarial library built for Mexican regulation. suite_actuarial fills that gap: it covers eight insurance domains (life, P&C, health, pensions, reserves, reinsurance, regulatory, and configuration) with EMSSA-09 mortality tables, CNSF circulars, and SAT tax articles built into the design. It installs with pip, deploys with Docker, and exposes 28 REST endpoints alongside a bilingual Next.js dashboard."
 date: "2026-03-19"
-lastModified: "2026-03-22"
+lastModified: "2026-05-03"
 category: "proyectos-y-analisis"
 lang: "en"
 shape: "case-study"
 ficha:
-  rol: "Autor único"
+  rol: "Sole author"
   año: "2026"
-  stack: "Python · Pydantic · FastAPI · Streamlit"
-  datos: "EMSSA-09 · AMIS · parámetros CNSF"
+  stack: "Python · Pydantic · FastAPI · Next.js · React · Docker"
+  datos: "EMSSA-09 · AMIS · CNSF parameters"
   regulacion: "LISF · CUSF · CNSF (RCS) · SAT (ISR) · Circular S-11.4"
-  estado: "Finalizado"
+  estado: "Completed"
   repositorio: "https://github.com/GonorAndres/Analisis_Seguros_Mexico"
   live: "https://suite-actuarial-d3qj5vwxtq-uc.a.run.app"
-tags: ["Python", "Pydantic", "LISF", "CUSF", "CNSF", "RCS", "Reservas", "Chain Ladder", "Reaseguro", "Streamlit", "EMSSA-09", "SAT", "FastAPI", "GMM", "IMSS"]
+tags: ["Python", "Pydantic", "LISF", "CUSF", "CNSF", "RCS", "Reserves", "Chain Ladder", "Reinsurance", "Next.js", "EMSSA-09", "SAT", "FastAPI", "GMM", "IMSS"]
 ---
 
-In the technical department of a typical Mexican insurer, the quarterly operating cycle is fragmented across spreadsheets that don't talk to each other. One actuary prices products with an EMSSA-09 table pasted into Excel, another calculates reserves using a separate development triangle, a third fills in the RCS regulatory form by hand, and at the end someone tries to reconcile everything for the report filed with the CNSF. Every quarter, the same manual reconciliation exercise.
+If an actuary in Mexico wants to price a term life policy using the EMSSA-09 table, there are two options: an Excel spreadsheet inherited from the technical department, or writing everything from scratch. Open-source actuarial libraries exist in Python (`chainladder`, `lifelines`, `pyliferisk`), but none of them integrate Mexican regulation: they don't know what an EMSSA-09 table is, don't compute the RCS as defined by the LISF, don't apply articles 93, 142, 151, and 158 of Mexico's income tax law (LISR) to determine premium deductibility. Mexican regulation has requirements that exist in no other market, and the available software assumes the user will adapt generic formulas to their jurisdiction.
 
-The **Mexican Actuarial Suite** unifies those workflows into a single Python library. It covers four lines of the Mexican insurance market (life, property, health, and pensions), with cross-cutting modules for reinsurance, reserves, and regulatory compliance. Every piece of data entering the system is validated by Pydantic v2 before touching a formula, and the entire calculation chain uses `Decimal` instead of `float` so that rounding differences don't compound across portfolios of thousands of policies.
+**suite_actuarial** is an open-source actuarial platform built from scratch for Mexican regulation. It can be used three ways: as a Python library (`pip install`), as a REST API (28 endpoints via FastAPI), or as a web application with interactive calculators (bilingual Next.js 16, ES/EN). Eight insurance domains in a single package, with the EMSSA-09 mortality table bundled as package data, Pydantic v2 validation on every input, and `Decimal` precision on every calculation.
 
-<img src="/screenshots/actuarial-suite.png" alt="Mexican Actuarial Suite interactive examples showing life product calculators, regulatory compliance, and technical reserves" style="max-width: 100%; border: 1px solid #d4d4d4; border-radius: 4px; margin: 1rem 0;" />
+## Why open-source
 
-## The problem
+The Mexican insurance market operates under the LISF and the CUSF, but the actuarial tools that implement those rules live in private spreadsheets inside each company. Every insurer reinvents the same commutation functions, the same development triangles, the same RCS validations. There is no shared foundation.
 
-The Mexican insurance market operates under the LISF and the CUSF, a regulatory framework that imposes requirements found in no other jurisdiction: country-specific mortality tables (EMSSA-09), quarterly report formats with a structure defined by the CNSF, a Solvency Capital Requirement (RCS) calibrated to the Mexican market, and tax deductibility rules that depend on Mexico's income tax law (LISR). Open-source actuarial software exists in Python (`chainladder`, `lifelines`), but none of it integrates Mexican regulatory requirements. There is no library that knows what an EMSSA-09 table is or that computes the RCS as defined by the LISF.
+An open-source library changes that. An actuarial student can install `suite_actuarial` and price a term life policy in five lines of code. An actuary at an insurer can validate their RCS calculations against an independent implementation. A data team can integrate pricing and reserves into an automated pipeline by calling REST endpoints. The code is open, the formulas are auditable, and the tests verify that results match published tables.
 
-## The four domains
+## The eight domains
 
 ### Life
 
-Three products (term, whole life, and endowment) built on the EMSSA-09 table with equivalence principle pricing at a 5.5% technical rate. Each product inherits from a base class that fixes the calculation sequence: validate insurability, compute net premium, apply loadings, build result. A 35-year-old male with a MXN \$1,000,000 sum assured on a 20-year term policy pays roughly \$5,900 per year.
+Term, whole life, and endowment, built on the EMSSA-09 table with equivalence principle pricing at a 5.5% technical rate. Fractional premium factors computed with UDD.
+
+A 35-year-old male with MXN \$1,000,000 sum assured on a 20-year term pays \$2,024 net premium and \$2,388 gross premium. Loading breakdown: administration \$101, acquisition \$202, profit \$60.
 
 ### Property and casualty
 
-Auto insurance pricing calibrated with AMIS data: base frequency, average severity, target loss ratio. The module includes frequency-severity models and a Bonus-Malus system that adjusts the premium based on the driver's claims history.
+Auto, fire, and liability. Auto pricing is calibrated with AMIS data: base frequency, average severity, target loss ratio, and Bonus-Malus system by claims history. Fire uses rate tables by construction type and risk zone. Liability calculates frequency and severity by coverage type. A collective model aggregates claims using Poisson-Gamma and Poisson-Lognormal distributions (Monte Carlo), and Buhlmann credibility adjusts premiums when the insured's history is short.
 
 ### Health
 
-Major Medical Expenses (GMM) with age-band pricing, accident and illness coverage, and adjustments for deductible and coinsurance. The module reflects the structure of GMM products as marketed in the Mexican insurance sector.
+Major Medical Expenses (GMM) with quinquennial age-band pricing, geographic zone, and hospital level, adjusting for deductible and coinsurance. Accidents and illness is covered as a separate product.
 
 ### Pensions
 
-Pension calculations under IMSS Ley 73 and Ley 97, life annuities, and commutation functions. This module shares actuarial logic with the <a href="/blog/pension-simulator/" style="color: #C17654; text-decoration: underline;">pension simulator</a>, but integrated as part of a library that can connect with the other domains.
+IMSS Ley 73 (defined benefit) and Ley 97 (Afore), life annuities, and full commutation tables. The dashboard displays regime, contribution weeks, average daily salary, pension percentage, age factor, monthly and annual pension including the year-end bonus. This module shares actuarial logic with the <a href="/blog/pension-simulator/" style="color: #C17654; text-decoration: underline;">pension simulator</a>, but integrated within the library to connect with the other domains.
 
-## Cross-cutting modules
+### Reserves
 
-**Reinsurance.** Three strategies with domain validation: Quota Share (proportional cession), Excess of Loss (large-claim protection with reinstatements), and Stop Loss (aggregate portfolio protection). A `model_validator` checks that the limit exceeds retention; in editable spreadsheet cells, that condition gets violated more often than anyone would like to admit.
+Chain Ladder, Bornhuetter-Ferguson, and stochastic Bootstrap with percentiles. The Bootstrap delivers a full distribution of possible reserves: if P50 = \$2.5M and P75 = \$3.1M, the decision of how much capital to hold is informed by the tail of the distribution.
 
-**Reserves.** Chain Ladder, Bornhuetter-Ferguson, and Bootstrap. What sets this implementation apart is that Bootstrap returns a full distribution of possible reserves, not just a point estimate. If P50 = \$2.5M and P75 = \$3.1M, there is a 25% probability that the required reserve is at least \$600,000 higher than the median. That difference is directly relevant to how much capital to hold.
+### Reinsurance
 
-**Regulatory compliance.** The RCS computes three risk modules (life, non-life, investment) and aggregates them with a correlation matrix that avoids linear summation. SAT validations determine what portion of each premium is tax-deductible. Circular S-11.4 defines technical reserves. No other public library implements these calculations for the Mexican market.
+Quota share (proportional cession), excess of loss (large-claim protection with reinstatements), and stop loss (aggregate portfolio protection). A `model_validator` checks that the limit exceeds retention; in spreadsheet cells, that condition gets violated more often than anyone would like to admit.
 
-## The API
+### Regulatory
 
-Beyond the interactive Streamlit examples, the suite exposes all its functionality as a REST API via FastAPI. This allows integrating actuarial calculations into other systems without depending on the visual interface: a quoting system can call the pricing endpoint, a batch process can compute reserves for an entire portfolio, or a data pipeline can run regulatory validations as part of an automated workflow.
+RCS with three risk modules (life, P&C, investment) aggregated using the CNSF correlation matrix. Tax deductibility per articles 93, 142, 151, and 158 of the LISR. ISR withholdings on endowment insurance returns. Technical reserves per Circular S-11.4.
 
-## What it makes possible
+### Configuration
 
-The most important consequence of having this suite is not the suite itself, but what it enables you to build on top of it. <a href="/blog/sima/" style="color: #C17654; text-decoration: underline;">SIMA</a>, for instance, builds its mortality pipeline from raw INEGI data via Lee-Carter, implementing its own commutation and pricing logic. With the suite as a module, that same pipeline could be rewritten with cleaner, shorter code, reusing the commutation functions, life products, and RCS calculation that are already validated and tested. Instead of reimplementing, you import.
+Regulatory parameters versioned by fiscal year: 2024, 2025, and 2026. UMA values, SAT tax rates (corporate ISR, VAT, withholdings), CNSF factors, and technical actuarial parameters. Adding a new year to the system means creating one configuration file.
 
-The same applies to any new actuarial project: the suite eliminates the need to rewrite core logic every time. A health pricing project can import the GMM module and focus on analysis, not infrastructure. A solvency model can use the RCS module directly. The <a href="/blog/regulation-agent-rag/" style="color: #C17654; text-decoration: underline;">regulation agent</a> navigates the LISF and CUSF to find the relevant provisions; this suite implements the math those provisions define.
+## Three ways to use it
 
-The library has hundreds of unit tests covering all four domains, with Decimal precision on every calculation and Pydantic validation on every input. The dependency flow is unidirectional with no cycles, allowing any module to be tested in isolation.
+The same actuarial logic is exposed three ways:
+
+**As a library.** `from suite_actuarial import VidaTemporal, TablaMortalidad` and five lines of code to get a premium. Mortality data ships bundled with the package; no external file downloads required.
+
+**As an API.** REST endpoints organized by domain, with Swagger documentation at `/docs`. A quoting system calls the pricing endpoint, a batch process computes reserves for an entire portfolio, a data pipeline runs regulatory validations.
+
+**As a dashboard.** A bilingual web application (ES/EN) with interactive calculators for each domain. Each page shows key calculation results with detail tables and CSV download. `docker-compose up` brings up the API and frontend together.
+
+## Why standardize
+
+When every insurer implements its own commutation functions, its own development triangles, and its own RCS validations, errors replicate silently. A bug in a technical reserve formula can live for years inside a spreadsheet that nobody audits because "it has always produced reasonable results." A shared codebase reverses that dynamic: if someone finds an error in the commutation function, the fix benefits everyone using the library. If someone implements a more efficient reserve method, everyone gets that improvement with `pip install --upgrade`.
+
+Standardizing also lowers the barrier to entry. A newly graduated actuary can start working with tools whose formulas are verified against published EMSSA-09 tables, instead of inheriting an undocumented Excel file. A data team can integrate actuarial calculations into an automated pipeline without rewriting the logic from scratch. The domain complexity doesn't disappear, but the infrastructure stops being an obstacle.
+
+## What's missing
+
+This library meets its technical purpose: tests pass, calculations match published tables, the API responds, the dashboard works in two languages. But an open-source library is only successful when someone else uses it. So far, suite_actuarial has one author and zero external contributors.
+
+The next step is for an actuary at another insurer to report a bug, or for a student to propose a new product, or for someone to adapt the pensions module for a case I didn't anticipate. There are also design decisions that only someone with operational experience can challenge: whether the GMM base rates reflect the real market or are optimistic approximations, whether the collective model needs a distribution I didn't include, whether the RCS calculation handles correctly a regulatory edge case I've never seen in practice. Those are the details that unit tests don't catch but real usage does. That is when the code stops being a personal project and becomes shared infrastructure. The repository has a `CONTRIBUTING.md`, the architecture is documented, and every module can be tested in isolation. The invitation is open.
+
+## Connections
+
+The suite connects with other projects in the portfolio. <a href="/blog/sima/" style="color: #C17654; text-decoration: underline;">SIMA</a> builds its own mortality pipeline from INEGI data via Lee-Carter; with the suite as a module, that pipeline could reuse the commutation functions and RCS calculation that are already validated. The <a href="/blog/regulation-agent-rag/" style="color: #C17654; text-decoration: underline;">regulation agent</a> navigates the LISF and CUSF to find the relevant provisions; this suite implements the math those provisions define.
 
 <div style="margin-top: 2rem; padding: 1rem 1.5rem; border-left: 4px solid #C17654; background-color: #f9f6f2;">
   <p style="margin: 0 0 0.5rem 0;"><strong>Repository:</strong> <a href="https://github.com/GonorAndres/Analisis_Seguros_Mexico" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">github.com/GonorAndres/Analisis_Seguros_Mexico</a></p>

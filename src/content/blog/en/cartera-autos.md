@@ -1,80 +1,78 @@
 ---
-title: "Auto Insurance Claims Platform: GLM Pricing, IBNR Reserves, and Fraud Detection in One Dashboard"
-description: "R Shiny dashboard with 140,000 synthetic policies calibrated to the Mexican market. Two-part GLM pricing engine, IBNR reserves via Chain Ladder and Bornhuetter-Ferguson, Monte Carlo stress testing with VaR/TVaR, and Mahalanobis-based fraud detection. 17 modules, bslib architecture, deployed on Cloud Run."
+title: "Auto Insurance Claims Platform: three questions every insurer needs to answer"
+description: "In Mexico, roughly 70% of vehicles circulate without insurance. For the insurers covering the rest, the business boils down to three questions: how much to charge, how much to reserve, and where the fraud is. This platform builds a dashboard that answers all three with data calibrated to the Mexican market, separating frequency from severity for pricing, estimating what remains unpaid with two complementary methods, and flagging anomalous claims before they reach adjustment."
 date: "2026-03-19"
+lastModified: "2026-05-03"
 category: "proyectos-y-analisis"
 lang: "en"
 shape: "case-study"
 ficha:
-  rol: "Autor único"
+  rol: "Sole author"
   año: "2026"
   stack: "R · Shiny · bslib · Plotly · Docker"
-  datos: "Datos sintéticos calibrados con CONDUSEF · AMIS (140,385 pólizas)"
+  datos: "Synthetic data calibrated with CONDUSEF · AMIS"
   regulacion: "CNSF (RCS · TVaR)"
-  estado: "Finalizado"
+  estado: "Completed"
   repositorio: "https://github.com/GonorAndres/CarteraSeguroAutos"
   live: "https://cartera-autos-451451662791.us-central1.run.app"
 tags: ["R", "Shiny", "GLM", "IBNR", "Monte Carlo", "bslib", "CONDUSEF", "AMIS", "fraud", "auto"]
 ---
 
-In Mexico, roughly 70% of vehicles circulate without insurance. For the insurers covering the remaining 30%, the central question is always the same: how much to charge, how much to reserve, and where the risk lies. This project builds a complete actuarial platform to answer those three questions using synthetic data calibrated to real Mexican market parameters.
+In Mexico, roughly 70% of vehicles circulate without insurance. For the insurers covering the remaining 30%, the business boils down to three questions: how much to charge for each policy, how much to reserve for claims that haven't been reported yet, and which claims deserve investigation before being paid. This project builds a dashboard that answers all three.
 
-## The data: 140,000 policies over five years
+## The data
 
-The dataset covers the 2020-2024 period with 140,385 policies, 11,762 claims, and 24,900 development payments distributed across five development years (0-4). The generation starts with 12,000 new policies per year with an 82% renewal rate, producing the organic growth a real portfolio would show.
+The portfolio is synthetic, but the parameters come from real sources. Claims frequency, average severity, and the target loss ratio are calibrated with public data from CONDUSEF and AMIS. The claims type distribution follows the typical Mexican auto pattern: collision as the dominant event, followed by damage, partial theft, total theft, and fire as the tail. The development pattern uses the short tail characteristic of auto, where most payments concentrate in the accident year.
 
-Calibration parameters come from public sources: 8.5% base frequency (CONDUSEF), \$24,000 MXN average severity (AMIS), 75% target loss ratio (AMIS sector average). The claims distribution follows the typical Mexican auto pattern: collision 65%, damage 20%, partial theft 10%, total theft 4%, fire 1%. The development pattern uses the short tail characteristic of auto: 60% paid in the accident year, 85% at first development, 95% at second, 99% at third, 100% at fourth.
+The KPIs the portfolio produces are consistent with the market: the loss ratio lands close to the sector target, and the severity deviation reflects cumulative inflation over the simulation period. If the parameters were invented, those indicators wouldn't align.
 
-The portfolio covers 13 Mexican states, 18 models from 10 brands (Nissan, Volkswagen, Chevrolet, Toyota, Ford, Honda, Hyundai, Mazda, Kia, Seat), and three vehicle types. The achieved KPIs are consistent with the market: 71.1% loss ratio (target 75%), 8.38% frequency (target 8.5%), \$29,396 severity (target \$24,000; the deviation reflects 4% annual inflation compounded over five years).
+The portfolio covers several Mexican states, multiple brands and models, and three vehicle types. What matters here is that the geographic and vehicular diversity allows the pricing model to capture real risk signals.
 
-## GLM pricing engine
+## Pricing: separating frequency from severity
 
-Auto insurance pricing breaks into two fundamental questions: how often do claims happen, and when they do, how much do they cost? This split is the industry standard because frequency and severity respond to different risk factors and need different probability distributions.
+In auto insurance, a driver who crashes frequently and one who has a single expensive claim represent different risks. The pricing model separates these two dimensions because they respond to different factors: frequency depends on driving habits and geographic zone; severity depends on vehicle value and coverage type.
 
-The first question uses a Poisson GLM with log link. The response is the claim count per policy, with exposure as an offset to account for policies active only part of the year. The second uses a Gamma GLM, also with log link, applied to individual claim amounts. This two-part architecture has been the de facto standard in actuarial modeling for decades because it aligns with how claims actually behave in practice.
+What surprised me most was how much geographic zone dominates. Young drivers generate a significant surcharge, SUVs another, but high-risk zones like CDMX and Estado de Mexico reach a surcharge comparable to age. Zone matters as much as driver age, and both matter more than vehicle type. This aligns with AMIS theft statistics: theft is concentrated in those two states, and the model captures that signal clearly.
 
-The predictors capture the usual suspects: driver age (four brackets: under 25, 25-35, 35-50, 50+), gender, vehicle type, geographic risk zone (high, medium, low), sales channel, and credit score segment. What surprised me most was how much geographic zone dominates. Drivers under 25 trigger a 1.35x surcharge, SUVs warrant 1.15x, but high-risk zones like CDMX and Estado de Mexico hit 1.30x. Zone matters as much as age, and both matter more than vehicle type in this dataset.
+The interactive quoter calculates the premium in real time from any insured's profile. You can inspect how each risk factor (age, zone, vehicle, channel) accumulates into the final price through a waterfall decomposition.
 
-The interactive quoter calculates the pure premium in real time from any insured's profile. You can inspect the relativity tables by risk factor, watch the waterfall premium decomposition show how each factor accumulates, and review model diagnostics: residual plots, Q-Q plots, and observed versus predicted frequencies stratified by each factor.
+## Reserves: estimating what remains unpaid
 
-## IBNR reserves
+Auto claims have a useful property: they develop fast. Most payments occur in the accident year, and by the fourth year everything is settled. That short tail makes it reasonably possible to estimate how much remains unpaid from claims that already happened but haven't been reported yet.
 
-Reserves require two methodologies working in parallel: Chain Ladder and Bornhuetter-Ferguson. Chain Ladder calculates volume-weighted link ratios, which then feed into cumulative development factors (CDFs) to ultimate, complete with Mack standard error for stability diagnostics. The IBNR itself is just the difference between projected ultimate and what you've actually paid.
+The platform uses two methods in parallel. The first projects from how payments have historically developed: if prior years show that 85% was paid by the first development, that pattern gets applied to more recent years. The second blends that projection with a prior expectation of the loss ratio, making it more stable in recent years where data is scarce and each individual claim moves the result substantially.
 
-Bornhuetter-Ferguson offers a different angle. Instead of trusting the data to tell you where development is headed, it blends the Chain Ladder projection with an a priori loss ratio expectation (75% by default, adjustable between 60% and 90%). This method shines for immature accident years, where early link ratios can be erratic because the sample is small and every single claim moves the needle.
+The interface shows the full development triangle and allows comparing both methods' estimates side by side by accident year. Where they diverge most is exactly where having both adds the most value: in immature years.
 
-The interface renders the full development triangle in both incremental and cumulative views, alongside the link ratios table and CDFs. You can compare the IBNR estimates side by side across accident years to see where the two methods diverge most. This connects directly to SIMA, which handles life insurance reserves. Both SIMA and this platform use the same Chain Ladder and Bornhuetter-Ferguson mechanics, but the resemblance ends there. Auto claims develop over four years; life claims extend for decades. The tail lengths are incommensurable.
+This connects to <a href="/blog/sima/" style="color: #C17654; text-decoration: underline;">SIMA</a>, which handles life insurance reserves. Both platforms use the same estimation mechanics, but the resemblance ends there. Auto claims develop over four years; life claims extend for decades. The tail lengths are incommensurable.
 
-## Monte Carlo stress testing
+## Stress testing: what happens if the world gets worse
 
-The scenario module builds a collective risk model: aggregate frequency comes from a Poisson distribution, individual claim costs from a Gamma. The simulation then generates thousands of possible futures (1,000 to 50,000 realizations), each time drawing a different aggregate loss outcome. You can stress-test the portfolio by scaling frequency up or down (0.5x to 2.0x, representing milder or harsher accident environments) and severity independently (same 0.5x to 2.0x range, for inflation or claims inflation shocks).
+The scenario module simulates thousands of possible futures for the portfolio, varying claims frequency (what happens if there are more accidents) and severity (what happens if claims cost more, for example due to inflation). Each run produces a loss distribution that lets you answer questions like: at the 99.5% confidence level, what is the worst expected loss.
 
-Every run computes VaR at 95%, 99%, and 99.5% confidence levels, along with TVaR (the average of losses beyond each threshold), mean, and standard deviation. Visualizations layer the baseline loss density against the stressed scenario side by side, with an exceedance curve showing the cumulative tail and an impact table quantifying the change in each risk metric. TVaR matters most here for regulatory compliance. The CNSF requires it for solvency capital requirement (RCS) calculations, so this dashboard explicitly uses it, not VaR, as the primary risk measure.
+The CNSF requires a specific tail risk measure for solvency capital (RCS) calculations: the average of losses exceeding a given threshold. The dashboard uses it as the primary measure because that is what an actuary needs to report.
 
-## Fraud detection
+The visualizations layer the baseline loss distribution against the stressed scenario, with an exceedance curve showing the cumulative tail. The value is in being able to move the parameters and see in real time how the portfolio's risk profile changes.
 
-Fraud gets flagged through two parallel channels that feed into a single score. The first is statistical: Mahalanobis distance. For each claim type separately, the model looks at three key variables: the claim amount itself, how long the policyholder waited before reporting (in days), and the deductible. It computes the multivariate distance from each claim to the "normal" region defined by the full sample. That distance becomes a percentile for easier interpretation (0 = typical, 100 = extreme). A regularized covariance matrix prevents the math from blowing up on singular cases.
+## Fraud detection: identifying the anomalous
 
-The second channel is rule-based. Five heuristics flag structural red flags: multiple claims on the same policy within 60 days, a claim filed within 30 days of policy inception, an amount exceeding three times the median for that claim type, a report delay longer than 10 days, or an amount above 90% of the sum insured. Each rule votes independently.
+Fraud is detected through two channels that combine into a single score. The first is statistical: for each claim type, the model measures how far each claim sits from the portfolio's typical behavior, considering amount, reporting delay, and deductible. A claim that deviates substantially from the normal pattern across several dimensions simultaneously warrants attention.
 
-The final composite score weights 40% to the Mahalanobis statistic and 60% to the heuristic flags. A threshold of 0.7 identifies the claims most likely to warrant investigation.
+The second channel is rule-based: multiple claims on the same policy in a short window, claims filed right after purchasing the policy, amounts well above the median for that claim type, unusual reporting delays, or amounts close to the sum insured. Each rule votes independently.
 
-## Engineering decisions
-
-The application contains 17 R modules organized across three layers. The bottom layer holds 4 utility modules (metrics, theme, data, export) that do all the heavy mathematical lifting. The top layer contains 13 interface modules, one per dashboard tab. This separation is intentional and strict: the actuarial code has zero Shiny dependencies. You can test the pricing engine or the reserving functions in isolation, in a plain R session, without a web server.
-
-The UI layers on top with bslib and Bootstrap 5 for responsive layout. Plotly handles chart interactivity, DT handles table filtering and sorting. Both libraries integrate cleanly into Shiny and produce output the browser understands natively.
-
-Deployment mirrors the pension simulator and SIMA: Docker container on Google Cloud Run, with GitHub Actions driving CI/CD and Workload Identity Federation handling authentication.
+The composite score combines both channels. What the statistical distance captures (subtle patterns an adjuster wouldn't see in a table) and what the rules capture (structural signals that the sector's operational experience knows well) complement each other. Neither is sufficient alone.
 
 ## What I learned
 
-The variable that most affects pricing in the Mexican auto market is the geographic zone, outweighing driver age or vehicle type. CDMX and Estado de Mexico accumulate the highest frequency and severity by far. This aligns perfectly with AMIS theft statistics; theft is concentrated in those two states, and the GLMs capture that signal clearly.
+The variable that most affects pricing in the Mexican auto market is geographic zone, above driver age or vehicle type. CDMX and Estado de Mexico accumulate the highest frequency and severity.
 
-The practical difference between Chain Ladder and Bornhuetter-Ferguson surfaces in immature accident years. Chain Ladder rides the volatility of early link ratios up and down; Bornhuetter-Ferguson anchors itself to the a priori loss ratio expectation and smooths the noise. For auto with its short four-year development tail, the divergence is modest. In long-tail liability, the difference would be dramatic.
+The practical difference between the two reserve methods surfaces in recent accident years. The first amplifies the volatility of early data; the second anchors to the prior expectation and smooths the noise. For auto with its short tail, the divergence is modest. In long-tail liability, the difference would be dramatic.
 
-One critical limitation: the data is entirely synthetic. Variable correlations—say, between geographic zone and vehicle type—are by design, not discovered. A real dataset from AMIS or CONDUSEF would reveal patterns and interactions that don't exist in generated data. The next step would be obtaining CONDUSEF public datasets or negotiating a data-sharing agreement with an actual insurer to retrain the GLMs on market reality.
+One limitation worth naming: the data is entirely synthetic. Variable correlations are by design. A real dataset from AMIS or CONDUSEF would reveal patterns and interactions that don't exist in generated data. The next step would be obtaining public datasets or negotiating a data-sharing agreement with a real insurer to retrain the models on market data.
 
 <img src="/screenshots/cartera-autos.png" alt="Auto Insurance Claims Platform executive dashboard showing KPIs, claims distribution, and monthly trend" style="max-width: 100%; border: 1px solid #d4d4d4; border-radius: 4px; margin: 1rem 0;" />
 
-The application is deployed on <a href="https://cartera-autos-451451662791.us-central1.run.app" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a> and the source code is on <a href="https://github.com/GonorAndres/CarteraSeguroAutos" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a>.
+<div style="margin-top: 2rem; padding: 1rem 1.5rem; border-left: 4px solid #C17654; background-color: #f9f6f2;">
+  <p style="margin: 0 0 0.5rem 0;"><strong>Repository:</strong> <a href="https://github.com/GonorAndres/CarteraSeguroAutos" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">github.com/GonorAndres/CarteraSeguroAutos</a></p>
+  <p style="margin: 0;"><strong>Live app:</strong> <a href="https://cartera-autos-451451662791.us-central1.run.app" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">cartera-autos on Cloud Run</a></p>
+</div>
