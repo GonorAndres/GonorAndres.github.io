@@ -334,7 +334,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/vida-tecnica.png',
     relatedTo: ['sima', 'property-insurance', 'michoacan', 'gmm-explorer'],
-    tier: 3,
+    tier: 2,
     creation_date: '2024-12-01',
   },
 
@@ -360,7 +360,7 @@ export const projects: Project[] = [
     variant: 'standard',
     screenshot: '/screenshots/danos-tecnica.png',
     relatedTo: ['sima', 'life-insurance', 'gmm-explorer'],
-    tier: 3,
+    tier: 2,
     creation_date: '2025-06-01',
   },
 
@@ -532,24 +532,35 @@ export const projects: Project[] = [
       en: 'Mexican Actuarial Suite',
     },
     description: {
-      es: 'El ciclo operativo de una aseguradora mexicana se fragmenta entre hojas de cálculo que no se comunican. Esta librería unifica tarificación, reservas, reaseguro y cumplimiento regulatorio para cuatro ramos (vida, daños, salud, pensiones) con validación Pydantic y precisión Decimal. Expuesta como API REST y con ejemplos interactivos, sirve como base modular para construir sistemas actuariales más complejos.',
-      en: 'A Mexican insurer\'s operating cycle is fragmented across spreadsheets that don\'t talk to each other. This library unifies pricing, reserves, reinsurance, and regulatory compliance for four lines (life, property, health, pensions) with Pydantic validation and Decimal precision. Exposed as a REST API with interactive examples, it serves as a modular base for building more complex actuarial systems.',
+      es: 'No existe una librería actuarial open-source pensada para la regulación mexicana. suite_actuarial llena ese vacío: ocho dominios de seguros (vida, daños, salud, pensiones, reservas, reaseguro, regulatorio, configuración) con la EMSSA-09, circulares CNSF y artículos SAT integrados desde el diseño. Se instala con pip, se despliega con Docker, y expone endpoints REST junto con un dashboard bilingüe en Next.js.',
+      en: 'There is no open-source actuarial library built for Mexican regulation. suite_actuarial fills that gap: eight insurance domains (life, P&C, health, pensions, reserves, reinsurance, regulatory, configuration) with EMSSA-09 mortality tables, CNSF circulars, and SAT tax articles built into the design. It installs with pip, deploys with Docker, and exposes REST endpoints alongside a bilingual Next.js dashboard.',
     },
     url: 'https://suite-actuarial-d3qj5vwxtq-uc.a.run.app',
     repo: 'https://github.com/GonorAndres/Analisis_Seguros_Mexico',
     platform: 'GCP',
     category: 'actuarial',
     tags: {
-      es: ['Python', 'Pydantic', 'Streamlit', 'LISF', 'RCS', 'CNSF', 'Reaseguro', 'EMSSA-09'],
-      en: ['Python', 'Pydantic', 'Streamlit', 'LISF', 'RCS', 'CNSF', 'Reinsurance', 'EMSSA-09'],
+      es: ['Python', 'Pydantic', 'Next.js', 'FastAPI', 'LISF', 'RCS', 'CNSF', 'Reaseguro', 'EMSSA-09'],
+      en: ['Python', 'Pydantic', 'Next.js', 'FastAPI', 'LISF', 'RCS', 'CNSF', 'Reinsurance', 'EMSSA-09'],
     },
     variant: 'wide',
     screenshot: '/screenshots/actuarial-suite.png',
+    gallery: [
+      { src: '/screenshots/suite-01-home-hero.png', caption: { es: 'Landing bilingue con navegacion por dominio: vida, danos, salud, pensiones, reservas, regulatorio, reaseguro y API', en: 'Bilingual landing with domain navigation: life, P&C, health, pensions, reserves, regulatory, reinsurance, and API' } },
+      { src: '/screenshots/suite-02-vida-results.png', caption: { es: 'Tarificacion vida: prima neta \$2,024 y prima total \$2,388 MXN con desglose de recargos (gastos admin, adquisicion, utilidad)', en: 'Life pricing: \$2,024 net premium and \$2,388 MXN gross premium with loading breakdown (admin, acquisition, profit)' } },
+      { src: '/screenshots/suite-03-danos-auto.png', caption: { es: 'Cotizacion auto: prima total \$14,825 MXN con desglose por cobertura (danos materiales, robo, RC, gastos medicos)', en: 'Auto quote: \$14,825 MXN total premium with coverage breakdown (material damage, theft, liability, medical)' } },
+      { src: '/screenshots/suite-04-pensiones.png', caption: { es: 'Pension IMSS Ley 73: pension mensual \$18,506 MXN para 1,500 semanas cotizadas, con detalle del calculo paso a paso', en: 'IMSS Ley 73 pension: \$18,506 MXN monthly for 1,500 contribution weeks, with step-by-step calculation detail' } },
+      { src: '/screenshots/suite-05-salud-gmm.png', caption: { es: 'GMM: prima total \$45,000 MXN con tabla de tarificacion por zona geografica, nivel hospitalario y factores de ajuste', en: 'GMM: \$45,000 MXN total premium with pricing table by geographic zone, hospital level, and adjustment factors' } },
+      { src: '/screenshots/suite-06-reservas.png', caption: { es: 'Chain Ladder: reserva total \$4,729 MXN, ultimate \$25,729 MXN con desglose por ano de origen', en: 'Chain Ladder: \$4,729 MXN total reserve, \$25,729 MXN ultimate with breakdown by origin year' } },
+      { src: '/screenshots/suite-07-regulatorio.png', caption: { es: 'RCS: capital de solvencia \$209M MXN, ratio 139.58%, con modulos de riesgo vida, danos e inversion agregados por correlacion CNSF', en: 'RCS: \$209M MXN solvency capital, 139.58% ratio, with life, P&C, and investment risk modules aggregated by CNSF correlation' } },
+      { src: '/screenshots/suite-08-reaseguro.png', caption: { es: 'Quota Share: \$20K cedido, \$4.98M retenido, recuperacion \$3,240 MXN con ratio de cesion y resumen del contrato', en: 'Quota Share: \$20K ceded, \$4.98M retained, \$3,240 MXN recovery with cession ratio and contract summary' } },
+      { src: '/screenshots/suite-09-api-docs.png', caption: { es: 'Documentacion de API: 28 endpoints REST agrupados por dominio con parametros, tipos y descripciones', en: 'API documentation: 28 REST endpoints grouped by domain with parameters, types, and descriptions' } },
+    ],
     blogSlug: 'suite-actuarial',
     tier: 1,
     relatedTo: ['sima', 'life-insurance', 'property-insurance'],
     creation_date: '2025-11-18',
-    last_modification_date: '2026-03-19',
+    last_modification_date: '2026-05-03',
   },
 
   // repo: https://github.com/GonorAndres/CarteraSeguroAutos
@@ -643,7 +654,7 @@ export const projects: Project[] = [
     variant: 'tall',
     screenshot: '/screenshots/ab-testing.png',
     relatedTo: ['credit-risk'],
-    tier: 3,
+    tier: 2,
     creation_date: '2025-06-12',
     last_modification_date: '2025-08-09',
   },
@@ -700,7 +711,7 @@ export const projects: Project[] = [
     variant: 'standard',
     relatedTo: ['data-analyst-portfolio'],
     blogSlug: 'b-trees-optimization',
-    tier: 4,
+    tier: 3,
     creation_date: '2026-02-07',
   },
 
@@ -847,7 +858,7 @@ export const projects: Project[] = [
     variant: 'wide',
     screenshot: '/screenshots/credit-risk.png',
     relatedTo: ['ab-testing', 'data-cleaning', 'credit-graph'],
-    tier: 3,
+    tier: 2,
     creation_date: '2025-06-12',
     last_modification_date: '2025-08-09',
   },
@@ -874,9 +885,47 @@ export const projects: Project[] = [
     },
     variant: 'standard',
     relatedTo: ['sima', 'pension-simulator', 'lisf-agent', 'actuarial-suite', 'michoacan'],
-    tier: 2,
+    tier: 3,
     status: 'in-development',
     creation_date: '2026-03-26',
+  },
+
+  // repo: https://github.com/GonorAndres/teaching-apis (pending)
+  // live: https://learning-apis-451451662791.us-central1.run.app
+  // local: /home/andtega349/projects_2.0/teaching-apis
+  // source: FRED, Banxico, World Bank APIs + custom mortality API
+  {
+    slug: 'teaching-apis',
+    title: {
+      es: 'APIs para Analistas',
+      en: 'APIs for Analysts',
+    },
+    description: {
+      es: 'Si trabajas con tasas de la Fed, tipo de cambio de Banxico o indicadores del Banco Mundial, ya consumes APIs sin saberlo. Esta plataforma interactiva enseña qué pasa entre tu solicitud y tus datos: latencia, errores, autenticación, caché. Un playground con datos reales, laboratorios para romper cosas a propósito y escenarios what-if sobre datos de mortalidad y economía.',
+      en: 'If you work with Fed rates, Banxico exchange rates, or World Bank indicators, you already consume APIs without knowing it. This interactive platform teaches what happens between your request and your data: latency, errors, authentication, caching. A playground with live data, labs for breaking things on purpose, and what-if scenarios on mortality and economic data.',
+    },
+    url: 'https://learning-apis-451451662791.us-central1.run.app',
+    repo: 'https://github.com/GonorAndres/teaching-apis',
+    platform: 'GCP',
+    category: 'data-engineering',
+    tags: {
+      es: ['Next.js', 'TypeScript', 'FRED', 'Banxico', 'APIs', 'Educativo'],
+      en: ['Next.js', 'TypeScript', 'FRED', 'Banxico', 'APIs', 'Educational'],
+    },
+    variant: 'standard',
+    screenshot: '/screenshots/teaching-apis.png',
+    gallery: [
+      { src: '/screenshots/teaching-apis-01-hero.png', caption: { es: 'Landing: del concepto a la practica, con datos reales', en: 'Landing: from concept to practice, with real data' } },
+      { src: '/screenshots/teaching-apis-02-playground.png', caption: { es: 'Playground: consulta en vivo a la API de FRED con preview del request y respuesta tabulada', en: 'Playground: live FRED API query with request preview and tabulated response' } },
+      { src: '/screenshots/teaching-apis-03-analysis.png', caption: { es: 'Analisis: tasas de interes (FRED), tipo de cambio (Banxico), mortalidad (World Bank) y metricas combinadas', en: 'Analysis: interest rates (FRED), exchange rates (Banxico), mortality (World Bank), and combined metrics' } },
+      { src: '/screenshots/teaching-apis-04-latency.png', caption: { es: 'Carrera de latencia: cuatro APIs compiten en tiempo real, la local responde en 28ms vs 714ms de FRED', en: 'Latency race: four APIs compete in real time, local responds in 28ms vs 714ms from FRED' } },
+      { src: '/screenshots/teaching-apis-05-chaos.png', caption: { es: 'Laboratorio de errores: provoca cada codigo HTTP a proposito para reconocerlos cuando ocurran en produccion', en: 'Error lab: trigger each HTTP error code on purpose so you recognize them when they happen in production' } },
+      { src: '/screenshots/teaching-apis-06-whatif.png', caption: { es: 'Escenarios what-if: ajusta la esperanza de vida de Mexico y compara dato real vs hipotetico', en: 'What-if scenarios: adjust Mexico life expectancy and compare real vs hypothetical data' } },
+    ],
+    blogSlug: 'teaching-apis',
+    relatedTo: ['flight-analytics-pg-bq', 'data-engineering-platform'],
+    tier: 1,
+    creation_date: '2026-05-01',
   },
 ];
 

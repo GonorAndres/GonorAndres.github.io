@@ -515,13 +515,7 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
 // --- List Row ---
 function ListRow({ project, labels }: { project: ProjectData; labels: Props['labels'] }) {
   const accent = categoryAccent[project.category];
-  const [thumbnailSrc] = useState<string | null>(() => {
-    if (project.screenshot) return project.screenshot;
-    if (project.gallery?.length) {
-      return project.gallery[Math.floor(Math.random() * project.gallery.length)].src;
-    }
-    return null;
-  });
+  const thumbnailSrc = project.screenshot ?? project.gallery?.[0]?.src ?? null;
 
   return (
     <article
@@ -636,9 +630,13 @@ const CATEGORY_ORDER: ProjectCategory[] = ['actuarial', 'data-science', 'data-en
 
 export default function ProjectsGrid({ projects, labels }: Props) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [showAll, setShowAll] = useState(readExpanded);
+  const [showAll, setShowAll] = useState(false);
   const [activeCategory, setActiveCategory] = useState<FilterCat>('all');
   const [sortMode, setSortMode] = useState<SortMode>('tier');
+
+  useEffect(() => {
+    if (readExpanded()) setShowAll(true);
+  }, []);
 
   const handleCategoryChange = (cat: FilterCat) => {
     setActiveCategory(cat);
