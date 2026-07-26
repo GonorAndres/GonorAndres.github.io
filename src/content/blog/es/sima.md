@@ -14,7 +14,7 @@ ficha:
   regulacion: "LISF · CUSF · CNSF (SCR/RCS, Solvencia II)"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/SIMA"
-  live: "https://sima-451451662791.us-central1.run.app/"
+  live: "https://sima.gonor.me"
 tags: ["Lee-Carter", "mortalidad", "LISF", "CUSF", "CNSF", "Whittaker-Henderson", "SVD", "reservas", "SCR", "funciones-de-conmutación", "INEGI", "CONAPO", "FastAPI", "React"]
 ---
 
@@ -57,4 +57,4 @@ El pipeline es sex-diferenciado: masculino, femenino y unisex. Los datos del HMD
 
 Tres lecciones técnicas que no esperaba. Primera: las restricciones de identificabilidad del SVD en Lee-Carter son justamente lo que da interpretación demográfica a los parámetros. Sin la restricción $\sum b_x = 1$, $b_x$ y $k_t$ están definidos salvo una constante multiplicativa arbitraria, y pierdes la capacidad de comparar sensibilidades entre edades. Segunda: la identidad fundamental $A_x + d \cdot \ddot{a}_x = 1$ dice algo concreto: un peso recibido hoy se puede descomponer exactamente en un seguro de vida (pago contingente al fallecimiento) más una anualidad vitalicia (pagos contingentes a la supervivencia). Si tus funciones de conmutación no satisfacen esta identidad con precisión numérica, hay un bug. Tercera: el puente entre actuaria empírica y actuaria teórica es el método `to_life_table()`, que convierte tasas centrales $m_x$ proyectadas en probabilidades $q_x = 1 - e^{-m_x}$ y construye $l_x$ a partir de ellas. Ese método de 15 líneas conecta todo el pipeline de Lee-Carter con toda la maquinaria clásica de conmutación. Sin él, tendrías dos mundos que no se hablan.
 
-SIMA es una demostración de que un actuario puede entender y construir cada capa del pipeline regulatorio, desde el dato demográfico crudo hasta el número que aparece en el reporte de solvencia. El código, los tests y la documentación están en <a href="https://github.com/GonorAndres/SIMA" target="_blank" rel="noopener">GitHub</a>, y la aplicación está desplegada en <a href="https://sima-451451662791.us-central1.run.app/" target="_blank" rel="noopener">Google Cloud Run</a>.
+SIMA es una demostración de que un actuario puede entender y construir cada capa del pipeline regulatorio, desde el dato demográfico crudo hasta el número que aparece en el reporte de solvencia. El código, los tests y la documentación están en <a href="https://github.com/GonorAndres/SIMA" target="_blank" rel="noopener">GitHub</a>, y la aplicación está desplegada en <a href="https://sima.gonor.me" target="_blank" rel="noopener">Google Cloud Run</a>.
