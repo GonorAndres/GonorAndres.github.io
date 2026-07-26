@@ -13,8 +13,8 @@ ficha:
   datos: "EMSSA-09 · AMIS · parámetros CNSF"
   regulacion: "LISF · CUSF · CNSF (RCS) · SAT (ISR) · Circular S-11.4"
   estado: "Finalizado"
-  repositorio: "https://github.com/GonorAndres/Analisis_Seguros_Mexico"
-  live: "https://suite-actuarial-d3qj5vwxtq-uc.a.run.app"
+  repositorio: "https://github.com/GonorAndres/suite-actuarial"
+  live: "https://suite.gonor.me"
 tags: ["Python", "Pydantic", "LISF", "CUSF", "CNSF", "RCS", "Reservas", "Chain Ladder", "Reaseguro", "Next.js", "EMSSA-09", "SAT", "FastAPI", "GMM", "IMSS"]
 ---
 
@@ -91,6 +91,6 @@ El siguiente paso es que un actuario en otra aseguradora reporte un bug, o que u
 La suite conecta con otros proyectos del portafolio. <a href="/blog/sima/" style="color: #C17654; text-decoration: underline;">SIMA</a> construye su propio pipeline de mortalidad desde datos del INEGI vía Lee-Carter; con la suite como módulo, ese pipeline podría reutilizar las funciones de conmutación y el cálculo de RCS que ya están validados. El <a href="/blog/regulation-agent-rag/" style="color: #C17654; text-decoration: underline;">asistente de regulación</a> navega la LISF y la CUSF para encontrar las disposiciones; esta suite implementa la matemática que esas disposiciones definen.
 
 <div style="margin-top: 2rem; padding: 1rem 1.5rem; border-left: 4px solid #C17654; background-color: #f9f6f2;">
-  <p style="margin: 0 0 0.5rem 0;"><strong>Repositorio:</strong> <a href="https://github.com/GonorAndres/Analisis_Seguros_Mexico" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">github.com/GonorAndres/Analisis_Seguros_Mexico</a></p>
-  <p style="margin: 0;"><strong>Aplicación en vivo:</strong> <a href="https://suite-actuarial-d3qj5vwxtq-uc.a.run.app" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">suite-actuarial en Cloud Run</a></p>
+  <p style="margin: 0 0 0.5rem 0;"><strong>Repositorio:</strong> <a href="https://github.com/GonorAndres/suite-actuarial" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">github.com/GonorAndres/Analisis_Seguros_Mexico</a></p>
+  <p style="margin: 0;"><strong>Aplicación en vivo:</strong> <a href="https://suite.gonor.me" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">suite.gonor.me</a></p>
 </div>

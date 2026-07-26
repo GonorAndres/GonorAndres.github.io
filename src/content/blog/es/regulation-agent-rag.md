@@ -14,9 +14,9 @@ ficha:
   regulacion: "LISF · CUSF · CNSF"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/regulation-actuarial-agent"
-  live: "https://actuarial-regulation-agent-451451662791.us-central1.run.app/"
+  live: "https://lisf.gonor.me"
   extraLinks:
-    - { label: "Explorador LISF/CUSF", url: "https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer" }
+    - { label: "Explorador LISF/CUSF", url: "https://lisf.gonor.me/explorer" }
     - { label: "Versión open-source (HuggingFace)", url: "https://huggingface.co/spaces/GonorAndres/lisf-agent" }
 tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP", "referencias-cruzadas"]
 ---
@@ -89,7 +89,7 @@ La barra de búsqueda filtra por número o tema en tiempo real. Las URLs son com
 
 El Explorador y el chat RAG cubren necesidades distintas. Cuando la consulta es exploratoria ("¿qué hay en el Título 5?") o puntual ("necesito el artículo 237"), el Explorador es más directo. Cuando la consulta requiere razonamiento sobre múltiples disposiciones interrelacionadas ("¿cómo interactúan las reservas técnicas con los fondos propios admisibles?"), el chat sigue siendo la herramienta correcta.
 
-<a href="https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Abrir el Explorador LISF/CUSF</a>
+<a href="https://lisf.gonor.me/explorer" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Abrir el Explorador LISF/CUSF</a>
 
 ## Para quién es esta herramienta (y para quién no)
 
@@ -103,7 +103,7 @@ El juicio humano sigue siendo el factor más importante en la ecuación. El sist
 
 El asistente de regulación es complementario a <a href="/projects/sima" style="color: #C17654; text-decoration: underline;">SIMA</a>, que implementa los cálculos de capital bajo LISF (reservas, SCR, funciones de conmutación). Mientras SIMA ejecuta la matemática, el asistente navega la regulación que define qué matemática aplicar. También se conecta con la <a href="/projects/suite-actuarial" style="color: #C17654; text-decoration: underline;">Suite Actuarial</a>, que estandariza esos cálculos en una librería Python reutilizable, y con la <a href="/projects/life-insurance" style="color: #C17654; text-decoration: underline;">nota técnica de seguros de vida</a>, donde los requisitos regulatorios de la LISF y la CUSF se aplican a productos concretos.
 
-El código está en <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> y la aplicación está desplegada en <a href="https://actuarial-regulation-agent-451451662791.us-central1.run.app/" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
+El código está en <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> y la aplicación está desplegada en <a href="https://lisf.gonor.me" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
 
 <div style="background-color: #1B2A4A; padding: 1rem 1.5rem; border-left: 4px solid #C17654; margin-top: 2rem; font-size: 1.05rem;">
 <strong style="color: #EDE6DD;">Código de acceso para probar la aplicación en vivo:</strong> <code style="background-color: #C17654; color: #EDE6DD; padding: 0.2rem 0.5rem; border-radius: 3px; font-weight: bold;">actuaria-claude</code>

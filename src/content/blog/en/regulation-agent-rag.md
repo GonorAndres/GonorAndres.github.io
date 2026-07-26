@@ -14,9 +14,9 @@ ficha:
   regulacion: "LISF · CUSF · CNSF"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/regulation-actuarial-agent"
-  live: "https://actuarial-regulation-agent-451451662791.us-central1.run.app/"
+  live: "https://lisf.gonor.me"
   extraLinks:
-    - { label: "LISF/CUSF Explorer", url: "https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer" }
+    - { label: "LISF/CUSF Explorer", url: "https://lisf.gonor.me/explorer" }
     - { label: "Open-source version (HuggingFace)", url: "https://huggingface.co/spaces/GonorAndres/lisf-agent" }
 tags: ["RAG", "LISF", "CUSF", "CNSF", "FTS5", "BM25", "Claude", "FastAPI", "GCP", "cross-references"]
 ---
@@ -89,7 +89,7 @@ Search filters by number or topic in real time. URLs are shareable: `/cusf#5.8.3
 
 Both modes cover different needs. When the query is exploratory ("what's in Title 5?") or pinpointed ("I need article 237"), the Explorer is more direct. When the query requires reasoning across multiple interrelated provisions ("how do technical reserves interact with eligible own funds?"), the chat remains the right tool.
 
-<a href="https://actuarial-regulation-agent-451451662791.us-central1.run.app/explorer" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Open the LISF/CUSF Explorer</a>
+<a href="https://lisf.gonor.me/explorer" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Open the LISF/CUSF Explorer</a>
 
 ## Who this tool is for (and who it's not for)
 
@@ -103,7 +103,7 @@ Human judgment remains the most important factor in the equation. The system sea
 
 The regulation assistant is complementary to <a href="/projects/sima" style="color: #C17654; text-decoration: underline;">SIMA</a>, which implements capital calculations under LISF (reserves, SCR, commutation functions). While SIMA executes the math, the assistant navigates the regulation that defines which math to apply. It also connects to the <a href="/projects/suite-actuarial" style="color: #C17654; text-decoration: underline;">Actuarial Suite</a>, which standardizes those calculations in a reusable Python library, and to the <a href="/projects/life-insurance" style="color: #C17654; text-decoration: underline;">life insurance technical note</a>, where LISF and CUSF regulatory requirements are applied to concrete products.
 
-The code is on <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> and the application is deployed on <a href="https://actuarial-regulation-agent-451451662791.us-central1.run.app/" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
+The code is on <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> and the application is deployed on <a href="https://lisf.gonor.me" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
 
 <div style="background-color: #1B2A4A; padding: 1rem 1.5rem; border-left: 4px solid #C17654; margin-top: 2rem; font-size: 1.05rem;">
 <strong style="color: #EDE6DD;">Access code to try the live application:</strong> <code style="background-color: #C17654; color: #EDE6DD; padding: 0.2rem 0.5rem; border-radius: 3px; font-weight: bold;">actuaria-claude</code>

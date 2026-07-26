@@ -14,7 +14,7 @@ ficha:
   regulacion: "LISF Art. 201 · CUSF 15.3-15.8 · CNSF"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/gmm-explorer"
-  live: "https://gmm-explorer.vercel.app/contexto"
+  live: "https://gmm.gonor.me/contexto"
 tags: ["GMM", "tarificación", "CNSF", "hospitalización", "Claude AI", "frecuencia-severidad", "credibilidad", "LISF", "Next.js", "Python"]
 ---
 
@@ -179,6 +179,6 @@ No; el tarificador entrega un precio de referencia, no una tarifa comercialmente
 
 ## Cierre
 
-El dashboard está desplegado en <a href="https://gmm-explorer.vercel.app/contexto" target="_blank" rel="noopener">Vercel</a> y el código está en <a href="https://github.com/GonorAndres/gmm-explorer" target="_blank" rel="noopener">GitHub</a>. La nota técnica completa está disponible desde la sección `/contexto` del dashboard.
+El dashboard está desplegado en <a href="https://gmm.gonor.me/contexto" target="_blank" rel="noopener">Vercel</a> y el código está en <a href="https://github.com/GonorAndres/gmm-explorer" target="_blank" rel="noopener">GitHub</a>. La nota técnica completa está disponible desde la sección `/contexto` del dashboard.
 
 El análisis muestra algo que va más allá de este proyecto concreto: cuando los datos existen y son lo suficientemente grandes, la pregunta de si una distinción de riesgo es real tiene respuesta empírica. La industria puede seguir tarificando GMM como un solo bloque, pero los datos de la CNSF ya no permiten argumentar que eso es una simplificación inocua.
