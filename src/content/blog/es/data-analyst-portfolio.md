@@ -14,7 +14,7 @@ ficha:
   datos: "7 proyectos: e-commerce, seguros, finanzas, A/B testing, KPIs ejecutivos, eficiencia operacional"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/data-analyst-path"
-  live: "https://demo-aesthetics.vercel.app/"
+  live: "https://data-analyst.gonor.me"
 ---
 
 <img src="/screenshots/data-analyst-portafolio.png" alt="Portafolio de Analista de Datos" style="width:100%;border-radius:0.75rem;margin-bottom:2rem;box-shadow:0 4px 16px rgba(0,0,0,0.08);" />
@@ -35,7 +35,7 @@ El dataset de Inside Airbnb para CDMX contiene 27,051 listings con 79 columnas. 
 
 Dashboard construido con Next.js y Recharts, arquitectura estática (JSON precalculado, zero backend).
 
-**Estado:** Completo | <a href="https://demo-aesthetics.vercel.app" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics" target="_blank" rel="noopener">GitHub</a>
+**Estado:** Completo | <a href="https://data-analyst.gonor.me" target="_blank" rel="noopener">App en vivo</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics" target="_blank" rel="noopener">GitHub</a>
 
 ### 01 - Reservas actuariales P&C: IBNR y siniestralidad
 
@@ -150,7 +150,7 @@ Este portafolio de DA no existe en aislamiento. Los proyectos actuariales en el 
 ## Material de referencia
 
 - <a href="https://github.com/GonorAndres/data-analyst-path" target="_blank" rel="noopener">Repositorio principal en GitHub</a>: Código completo de los 7 proyectos, notebooks numerados, queries SQL, pipelines ETL y configuración de despliegue.
-- <a href="https://demo-aesthetics.vercel.app" target="_blank" rel="noopener">Airbnb CDMX (App en vivo)</a>: Dashboard Next.js con análisis de mercado de rentas cortas.
+- <a href="https://data-analyst.gonor.me" target="_blank" rel="noopener">Airbnb CDMX (App en vivo)</a>: Dashboard Next.js con análisis de mercado de rentas cortas.
 - <a href="https://insurance-claims-dashboard-pi.vercel.app" target="_blank" rel="noopener">Reservas Actuariales P&C (App en vivo)</a>: Dashboard Next.js + FastAPI con triángulos de pérdida y IBNR.
 - <a href="https://da-cohort-streamlit-451451662791.us-central1.run.app/" target="_blank" rel="noopener">Cohortes E-Commerce (App en vivo)</a>: Streamlit desplegado en Cloud Run con pipeline técnico completo.
 - <a href="https://ab-test-analysis.vercel.app" target="_blank" rel="noopener">Pruebas A/B (App en vivo)</a>: Dashboard Next.js con enfoques frecuentista, bayesiano y paradoja de Simpson.

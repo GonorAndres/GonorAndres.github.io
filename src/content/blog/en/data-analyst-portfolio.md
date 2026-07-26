@@ -14,7 +14,7 @@ ficha:
   datos: "7 projects: e-commerce, insurance, finance, A/B testing, executive KPIs, operational efficiency"
   estado: "Completed"
   repositorio: "https://github.com/GonorAndres/data-analyst-path"
-  live: "https://demo-aesthetics.vercel.app/"
+  live: "https://data-analyst.gonor.me"
 ---
 
 <img src="/screenshots/data-analyst-portafolio.png" alt="Data Analyst Portfolio" style="width:100%;border-radius:0.75rem;margin-bottom:2rem;box-shadow:0 4px 16px rgba(0,0,0,0.08);" />
@@ -35,7 +35,7 @@ The Inside Airbnb dataset for CDMX contains 27,051 listings across 79 columns. T
 
 Dashboard built with Next.js and Recharts, static architecture (precomputed JSON, zero backend).
 
-**Status:** Complete | <a href="https://demo-aesthetics.vercel.app" target="_blank" rel="noopener">Live app</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics" target="_blank" rel="noopener">GitHub</a>
+**Status:** Complete | <a href="https://data-analyst.gonor.me" target="_blank" rel="noopener">Live app</a> | <a href="https://github.com/GonorAndres/data-analyst-path/tree/main/projects/00-demo-aestehtics" target="_blank" rel="noopener">GitHub</a>
 
 ### 01 - P&C actuarial reserves: IBNR and loss experience
 
@@ -150,7 +150,7 @@ This DA portfolio does not exist in isolation. The actuarial projects in the mai
 ## Reference materials
 
 - <a href="https://github.com/GonorAndres/data-analyst-path" target="_blank" rel="noopener">Main GitHub repository</a>: Complete source code for all 7 projects, numbered notebooks, SQL queries, ETL pipelines, and deployment configuration.
-- <a href="https://demo-aesthetics.vercel.app" target="_blank" rel="noopener">Airbnb CDMX (Live app)</a>: Next.js dashboard with short-term rental market analysis.
+- <a href="https://data-analyst.gonor.me" target="_blank" rel="noopener">Airbnb CDMX (Live app)</a>: Next.js dashboard with short-term rental market analysis.
 - <a href="https://insurance-claims-dashboard-pi.vercel.app" target="_blank" rel="noopener">P&C Actuarial Reserves (Live app)</a>: Next.js + FastAPI dashboard with loss triangles and IBNR.
 - <a href="https://da-cohort-streamlit-451451662791.us-central1.run.app/" target="_blank" rel="noopener">E-Commerce Cohorts (Live app)</a>: Streamlit deployed on Cloud Run with full technical pipeline.
 - <a href="https://ab-test-analysis.vercel.app" target="_blank" rel="noopener">A/B Testing (Live app)</a>: Next.js dashboard with frequentist, Bayesian, and Simpson's Paradox approaches.

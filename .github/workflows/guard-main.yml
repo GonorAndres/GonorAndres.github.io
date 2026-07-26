@@ -1,0 +1,27 @@
+name: Guard main
+
+# `main` is the production branch: whatever lands there is published to
+# gonor.me by deploy.yml. The only sanctioned path into production is a pull
+# request from `dev`. GitHub branch rules can require a PR, but they cannot
+# express "only from this branch", so this check enforces it.
+#
+# See docs/DEPLOYMENT.md for the full branching model.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+    branches: [main]
+
+jobs:
+  source-branch:
+    name: PR into main must come from dev
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check head branch
+        run: |
+          if [ "${{ github.head_ref }}" != "dev" ]; then
+            echo "::error::PRs into main must come from 'dev' (this one comes from '${{ github.head_ref }}')."
+            echo "Merge your branch into 'dev' first, verify the Cloudflare preview, then open dev -> main."
+            exit 1
+          fi
+          echo "Head branch is 'dev'. OK."

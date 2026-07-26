@@ -535,8 +535,8 @@ export const projects: Project[] = [
       es: 'No existe una librería actuarial open-source pensada para la regulación mexicana. suite_actuarial llena ese vacío: ocho dominios de seguros (vida, daños, salud, pensiones, reservas, reaseguro, regulatorio, configuración) con la EMSSA-09, circulares CNSF y artículos SAT integrados desde el diseño. Se instala con pip, se despliega con Docker, y expone endpoints REST junto con un dashboard bilingüe en Next.js.',
       en: 'There is no open-source actuarial library built for Mexican regulation. suite_actuarial fills that gap: eight insurance domains (life, P&C, health, pensions, reserves, reinsurance, regulatory, configuration) with EMSSA-09 mortality tables, CNSF circulars, and SAT tax articles built into the design. It installs with pip, deploys with Docker, and exposes REST endpoints alongside a bilingual Next.js dashboard.',
     },
-    url: 'https://suite-actuarial-d3qj5vwxtq-uc.a.run.app',
-    repo: 'https://github.com/GonorAndres/Analisis_Seguros_Mexico',
+    url: 'https://suite.gonor.me',
+    repo: 'https://github.com/GonorAndres/suite-actuarial',
     platform: 'GCP',
     category: 'actuarial',
     tags: {
