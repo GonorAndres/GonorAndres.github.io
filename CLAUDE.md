@@ -15,9 +15,9 @@
 
 ## Session Start Checklist
 
-At the start of every session, read `to-do.md` in the repo root before proposing or starting any work.
-It tracks: missing blog posts, missing screenshots, broken/placeholder links, and development status for priority projects.
-Update `to-do.md` when tasks are completed (check off items, add new ones as discovered).
+At the start of every session, read [`../PORTFOLIO_STATUS_AND_DOMAIN.md`](../PORTFOLIO_STATUS_AND_DOMAIN.md) before proposing or starting any work.
+It carries the work queue that used to live in this repo's `to-do.md`: missing blog posts, missing screenshots, broken or placeholder links, the live-app audit, and development status for priority projects.
+Update that guide when tasks are completed (check off items, add new ones as discovered).
 
 ## Core Narrative -- Emerges from the Work, Never Stated
 
@@ -315,53 +315,7 @@ Two systems run in production, disabled on localhost:
 - Subagent outputs go to repositorio/subagents_outputs/
 - Planning and reference docs go in docs/
 
-## Live App Polish Backlog (re-audited 2026-07-12)
 
-Originally audited via Playwright on 2026-04-20; re-checked via curl/WebFetch on 2026-07-12 (no Playwright MCP available in that session, so purely visual questions — theme colors, sidebar label styling — could not be re-verified and are marked below). Address these when working on the affected project. Do NOT silently skip them.
+## Portfolio status and domain reference
 
-### CRITICAL — broken, must fix before showing to anyone
-
-**`data-engineering-platform`** (`claims-dashboard-451451662791.us-central1.run.app`):
-- Still broken as of 2026-07-12: same BigQuery 404, error text unchanged — `Could not load KPI summary. 404 Not found: Table project-ad7a5be2-a1c7-4510-82d:dev_claims_analytics.fct_claims was not found in location us-central1`.
-- Fix path A: re-run the Dagster pipeline locally to recreate the BigQuery tables, then redeploy.
-- Fix path B: replace BigQuery queries with a DuckDB + Parquet static file so the dashboard has no cloud dependency.
-- After the data is fixed: apply a custom Streamlit theme (navy `#1B2A4A` primary, amber `#D4A574` accent, cream `#EDE6DD` background) via `.streamlit/config.toml`, and rename sidebar pages from raw Python filenames to proper title case.
-
-**`actuarial-suite`** (`suite-actuarial-d3qj5vwxtq-uc.a.run.app`) — escalated from NEEDS POLISH:
-- As of 2026-07-12 the root URL no longer serves the Streamlit dashboard at all — it returns raw FastAPI JSON (`{"name":"Mexican Insurance Analytics Suite API",...}`). Checked `/app`, `/ui`, `/dashboard`, `/streamlit`: all 404. Only `/docs` (Swagger) responds.
-- This is worse than the previously-reported "default Streamlit chrome" issue: the demo is currently inaccessible to a visitor, not just unpolished.
-- Fix: find where the Streamlit frontend service actually lives (may be a separate Cloud Run service that needs redeploying, or the routing/proxy in front of the API changed) and confirm the portfolio card's `url` in `src/data/projects.ts` still points at a live dashboard, not the bare API.
-
-### NEEDS POLISH — functional but visually plain, dated, or unverifiable without a browser
-
-**`lisf-agent`** (`actuarial-regulation-agent-451451662791.us-central1.run.app`, access code `actuaria-claude`):
-- Partially improved since 2026-04-20: no longer a tiny centered box — now a full-width layout with sidebar nav (LISF/CUSF structure index, browsing modes, CNSF links). Still doesn't explain what the tool does or hint the access code to a cold visitor.
-- Note: the portfolio's `src/data/projects.ts` URL changed since the last audit (was `-d3qj5vwxtq-uc.a.run.app`, now `-451451662791.us-central1.run.app`) but **the old domain is still live and serves byte-identical content** — an orphaned duplicate Cloud Run deployment. Worth decommissioning to avoid confusion/cost, or confirm intentional.
-- Fix: add a brief explainer + access-code hint to the login screen.
-
-**`data-analyst-portfolio` — Olist Streamlit** (`da-cohort-streamlit-451451662791.us-central1.run.app`):
-- Still up and functional; confirmed genuine Streamlit app via HTML source. Sidebar page names are client-rendered via JS, so whether they've been fixed (previously raw lowercase Python slugs without accents) **could not be confirmed from curl/WebFetch** — needs an actual Playwright/browser check.
-
-### MINOR — low priority but noted
-
-**`proust-attention`** (`huggingface.co/spaces/GonorAndres/proust-attention`):
-- Unchanged: Space sleeps due to inactivity (free HuggingFace tier), shows "Restart this Space", ~30s wake. Expected, not a bug.
-
-**Five Vercel apps under `data-analyst-portfolio`'s `urls` dropdown** — new finding, 2026-07-12: `insurance-claims-dashboard-pi.vercel.app`, `ab-test-analysis.vercel.app`, `executive-kpi-report.vercel.app`, `financial-portfolio-tracker-iota.vercel.app`, `operational-efficiency.vercel.app` all return HTTP 307 with **no `Location` header** instead of 200 (confirmed with raw headers, cache-busted, `x-vercel-cache: HIT`). A real browser still renders the page fine since there's nowhere to redirect to, but it's spec-non-compliant and could make a bot/crawler/strict fetcher treat these as failed loads. Worth checking each app's Next.js middleware/redirect config.
-
-**`eruption-forecasting` and `micro-insurance`** (both have `url: '#'`):
-- Both have `status: 'in-development'` badge, so the placeholder is intentional.
-- The "ver en vivo" button currently does nothing (clicks `#`). Consider hiding the live button entirely when `url === '#'` in `ProjectsGrid.tsx` to avoid confusion.
-
-### GOOD — no action needed (reconfirmed 2026-07-12)
-
-| Project | Live URL | Notes |
-|---------|----------|-------|
-| `sima` | sima-d3qj5vwxtq-uc.a.run.app | Custom React app, title confirmed live. Best live app in portfolio. |
-| `gmm-explorer` | gmm-explorer.vercel.app | Up, full nav + docs content confirmed. |
-| `credit-graph` | graph-relation-db.vercel.app | Up, full narrative + visualization content confirmed. |
-| `cartera-autos` | cartera-autos-451451662791.us-central1.run.app | Up, custom-themed "Siniestralidad Auto Mexico" dashboard with KPI cards and model tabs (GLM, IBNR, Monte Carlo, fraud) confirmed. |
-| `pension-simulator` | simulador-pension-d3qj5vwxtq-uc.a.run.app | Up, landing page content confirmed. |
-| `flight-analytics-pg-bq` | project-ad7a5be2-a1c7-4510-82d.firebaseapp.com | Up, dashboard loads with data (104 airports, 100 routes) confirmed. |
-| `data-analyst-portfolio` (main) | demo-aesthetics.vercel.app | Up, HTTP 200, full content confirmed. |
-| `teaching-apis` | learning-apis-451451662791.us-central1.run.app | New since last audit — up, ES/EN educational site (Concept/Playground/Analysis/Build) confirmed working. |
+The shared status, public-link inventory, domain strategy, work queue, and live-app audit are maintained in [`../PORTFOLIO_STATUS_AND_DOMAIN.md`](../PORTFOLIO_STATUS_AND_DOMAIN.md). Read and update that guide instead of maintaining a second copy here.
