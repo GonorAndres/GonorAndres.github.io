@@ -4,14 +4,25 @@
 
 **Never commit, push, or open/update a PR without asking the user first and receiving explicit confirmation in that same conversation.** "Deploy", "test it", or similar phrasings are NOT authorization to commit; when in doubt, show the pending diff summary and ask. This applies to every branch, including feature branches.
 
-## Git Workflow -- NEVER Push to Main Directly
+## Git Workflow -- Environments and Branches
 
-**NEVER push commits directly to `main`.** All changes go through pull requests.
+Full detail in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Read it before doing anything deployment-related.
 
-- Work is always done on a feature branch (e.g. `march2`, `fix/something`)
-- To "deploy", open a PR from the feature branch into `main` and let the user merge it
-- The only exception is if the user explicitly says "push to main" in that specific message
-- This applies even when the user asks to "deploy" or "go live" -- create a PR, don't push
+| Environment | Branch | Host | URL |
+|---|---|---|---|
+| Production | `main` | GitHub Pages | https://gonor.me |
+| Development | `dev` | Cloudflare Pages | https://gonorpage-dev.pages.dev |
+| Preview | any other branch | Cloudflare Pages | per-PR URL, commented on the PR |
+
+The flow is `feature/*` -> `dev` -> `main`. Rules:
+
+- **NEVER push commits directly to `main`.** All changes reach production through a pull request.
+- **A PR into `main` may only come from `dev`.** `.github/workflows/guard-main.yml` fails the check otherwise. Never open `feature/x` -> `main`; that skips the dev environment.
+- Work is done on a feature branch cut from `dev` (e.g. `fix/something`), and merged into `dev` by PR.
+- "Deploy" means: merge the work into `dev`, verify the Cloudflare preview, then open `dev` -> `main` and let the user merge it.
+- The only exception is if the user explicitly says "push to main" in that specific message.
+- Cloudflare Pages builds dev and previews through its GitHub App, so there are no Cloudflare secrets in this repo and nothing to configure in Actions. Its build settings live in the Cloudflare dashboard and are mirrored in `docs/DEPLOYMENT.md`; if they change, update that file in the same PR.
+- `public/_headers` noindexes everything Cloudflare serves. It is inert on GitHub Pages. Do not "fix" it, and do not move production to Cloudflare without reworking it first.
 
 ## Session Start Checklist
 
