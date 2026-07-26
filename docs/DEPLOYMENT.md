@@ -16,26 +16,44 @@ gonor.me down.
 ## The only path to production
 
 ```
-feature/*  ──PR──►  dev  ──PR──►  main  ──► gonor.me
-   │                 │              │
-   │                 │              └── deploy.yml: build + Playwright gate + GitHub Pages
-   │                 └── Cloudflare Pages: stable dev URL
-   └── Cloudflare Pages: per-PR preview URL, posted as a PR comment
+push  ──►  dev  ──PR──►  main  ──► gonor.me
+            │             │
+            │             └── deploy.yml: build + Playwright gate + GitHub Pages
+            └── Cloudflare Pages rebuilds gonorpage-dev.pages.dev on every push
 ```
+
+There is exactly one pull request in this model, and it is `dev` → `main`.
+Everything before that is ordinary pushing.
 
 Rules, in order of importance:
 
 1. **Never push directly to `main`.** Production changes arrive only through a
-   pull request.
+   pull request. Enforced by the `main is production` repository ruleset.
 2. **A PR into `main` may only come from `dev`.** Enforced by
    `.github/workflows/guard-main.yml`, which fails the check on any other head
    branch. Merging `feature/x` straight into `main` would skip the dev
    environment, which is the whole point of having one.
-3. **Never push directly to `dev` either, once work is non-trivial.** Branch off
-   `dev`, open a PR, look at the preview URL, then merge.
-4. `dev` is disposable in the sense that it may be ahead of production, but it
-   is not a scratch branch: it should always build. If `dev` is red, fix it
-   before opening `dev` → `main`.
+3. **Pushing straight to `dev` is fine and expected.** No PR, no review, no
+   ceremony. Cloudflare rebuilds the dev environment on every push, so the way
+   you check your work is to push and reload the dev URL. `dev` is deliberately
+   unprotected.
+4. Feature branches remain available and are still built by Cloudflare, but they
+   are optional: use one when you want a preview that does not disturb the dev
+   environment, or when you want a diff to look at before it lands. Merge it
+   into `dev` however you like, including a plain fast-forward.
+5. `dev` may be ahead of production, but it is not a scratch branch: it should
+   always build. If `dev` is red, fix it before opening `dev` → `main`. Nothing
+   enforces this, which is exactly why it is written down.
+
+### Everyday work
+
+```bash
+git checkout dev && git pull
+# ... work ...
+git commit && git push
+```
+
+Then reload https://gonorpage-dev.pages.dev after a minute or two.
 
 ### Promoting dev to production
 
@@ -44,20 +62,21 @@ git checkout dev && git pull
 gh pr create --base main --head dev --title "Release: <summary>"
 ```
 
-Then check that both `Guard main` and `Deploy to GitHub Pages` pass, and merge.
-Merging is the deploy: `deploy.yml` runs on push to `main`, builds the site,
-runs the Playwright deploy-gate tests, and publishes `dist/` to GitHub Pages.
+Then check that `PR into main must come from dev` passes, and merge. Merging is
+the deploy: `deploy.yml` runs on push to `main`, builds the site, runs the
+Playwright deploy-gate tests, and publishes `dist/` to GitHub Pages only if they
+pass.
 
-### Starting new work
+### Optional: an isolated preview
 
 ```bash
 git checkout dev && git pull
-git checkout -b feature/<something>
-# ... work ...
-gh pr create --base dev --head feature/<something>
+git checkout -b preview/<something>
+git push -u origin preview/<something>
 ```
 
-Cloudflare comments the preview URL on the PR within a couple of minutes.
+Cloudflare builds it at `https://preview-<something>.gonorpage-dev.pages.dev`,
+and comments the URL on any PR you open from it.
 
 ## How Cloudflare Pages is wired
 
@@ -74,6 +93,23 @@ Actions workflow. Consequences worth knowing:
   branches, PR comments enabled.
 - Because the settings are outside version control, this table is the record of
   them. If you change them in the dashboard, update this file in the same PR.
+- **Builds are fully automatic.** Every push to `dev` redeploys the dev
+  environment; every push to any other branch produces a preview deployment.
+  Nothing is triggered by hand, and no GitHub Actions workflow is involved in
+  either. A build normally finishes in one to two minutes.
+
+### Preview and dev URLs are public
+
+A Pages deployment is reachable by anyone who knows its URL. The dev
+environment is at a fixed, guessable address, branch previews are at
+`https://<branch>.gonorpage-dev.pages.dev`, and Cloudflare posts those URLs as
+comments on pull requests in a public repository.
+
+`X-Robots-Tag: noindex` keeps them out of search results; it is not access
+control. Treat anything pushed to a branch as published. To actually restrict
+them, put a Cloudflare Access policy in front of the preview and dev hostnames
+from the Zero Trust dashboard; the free tier covers a single-user policy. That
+is not configured today.
 
 To inspect or change the project from the CLI (the API token already lives in
 this machine's environment):

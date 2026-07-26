@@ -12,11 +12,15 @@ Built with Astro 5, Tailwind and React islands. Static output.
 |---|---|---|---|
 | Production | `main` | GitHub Pages | https://gonor.me |
 | Development | `dev` | Cloudflare Pages | https://gonorpage-dev.pages.dev |
-| Preview | any branch / PR | Cloudflare Pages | per-PR URL, commented on the PR |
+| Preview | any other branch | Cloudflare Pages | `<branch>.gonorpage-dev.pages.dev` |
 
-Work flows `feature/*` → `dev` → `main`, and a pull request from `dev` is the
-only way into production. Direct pushes to `main` are not allowed, and a CI
-check rejects PRs into `main` from any branch other than `dev`.
+Push straight to `dev`; Cloudflare rebuilds the dev environment on every push.
+The only pull request in this model is `dev` → `main`, and it is the only way
+into production: direct pushes to `main` are blocked by a repository ruleset,
+and a CI check rejects PRs into `main` from any branch other than `dev`.
+
+Dev and preview URLs are public to anyone who has them, and noindexed so they
+stay out of search results.
 
 **Read [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) before deploying or changing
 anything about how the site is built.**
