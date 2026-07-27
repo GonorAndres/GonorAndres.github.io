@@ -12,19 +12,24 @@ Full detail in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Read it before doing 
 |---|---|---|---|
 | Production | `main` | GitHub Pages | https://gonor.me |
 | Development | `dev` | Cloudflare Pages | https://gonorpage-dev.pages.dev |
-| Preview | any other branch | Cloudflare Pages | `<branch>.gonorpage-dev.pages.dev` |
+
+Cloudflare builds only `dev` (`preview_deployment_setting: "none"`). No other
+branch, including `main` or any `feature/*` branch, produces a build, a URL, or
+a dashboard row.
 
 The flow is `push -> dev -> PR -> main`. There is exactly one pull request in this model, and it is `dev` -> `main`. Rules:
 
 - **NEVER push commits directly to `main`.** All changes reach production through a pull request. The `main is production` ruleset blocks direct pushes, force-pushes and deletion.
 - **A PR into `main` may only come from `dev`.** `.github/workflows/guard-main.yml` fails the check otherwise. Never open `feature/x` -> `main`; that skips the dev environment.
-- **Pushing directly to `dev` is allowed and expected.** Do not open a PR into `dev` and do not create a feature branch unless the user asks for one or the work genuinely needs an isolated preview. Committing to `dev` still requires the user's confirmation under the rule above; it is the PR ceremony that is dropped, not the asking.
+- **Pushing directly to `dev` is allowed and expected.** Do not open a PR into `dev`. Committing to `dev` still requires the user's confirmation under the rule above; it is the PR ceremony that is dropped, not the asking.
+- Feature branches are fine to use for an isolated diff, but Cloudflare will not build them. Merge into `dev` and check the dev URL to verify.
 - Cloudflare rebuilds https://gonorpage-dev.pages.dev on every push to `dev`, normally within two minutes. That is how work gets verified.
 - "Deploy" means: push the work to `dev`, verify it on the dev URL, then open `dev` -> `main` and let the user merge it.
-- Dev and preview URLs are public to anyone holding the link. Never push anything to a branch that must stay private.
+- The dev URL is public to anyone holding the link. Never push anything to `dev` that must stay private.
 - The only exception is if the user explicitly says "push to main" in that specific message.
-- Cloudflare Pages builds dev and previews through its GitHub App, so there are no Cloudflare secrets in this repo and nothing to configure in Actions. Its build settings live in the Cloudflare dashboard and are mirrored in `docs/DEPLOYMENT.md`; if they change, update that file in the same PR.
+- Cloudflare Pages builds dev through its GitHub App, so there are no Cloudflare secrets in this repo and nothing to configure in Actions. Its build settings live in the Cloudflare dashboard and are mirrored in `docs/DEPLOYMENT.md`; if they change, update that file in the same PR.
 - `public/_headers` noindexes everything Cloudflare serves. It is inert on GitHub Pages. Do not "fix" it, and do not move production to Cloudflare without reworking it first.
+- Old dev deployments accumulate in the Cloudflare dashboard as history; delete stale ones per `docs/DEPLOYMENT.md` if it gets cluttered.
 
 ## Session Start Checklist
 
