@@ -126,6 +126,27 @@ npx wrangler pages project list
 npx wrangler pages deployment list --project-name gonorpage-dev
 ```
 
+### Deleting a git branch does not delete its Cloudflare deployment
+
+Every preview build is a standalone deployment, independent of the branch that
+triggered it. Deleting the branch on GitHub leaves the deployment (and its
+`<hash>.gonorpage-dev.pages.dev` URL) orphaned in the Cloudflare dashboard
+indefinitely; Cloudflare does not clean these up on its own. The dashboard's
+"Production" tag on a row also just means it was built from `dev`, not that
+it's the deployment currently being served — only the newest one is live.
+
+To clean up old ones, delete by ID:
+
+```bash
+npx wrangler pages deployment list --project-name gonorpage-dev
+npx wrangler pages deployment delete <deployment-id> --project-name gonorpage-dev --force
+```
+
+or via the API (`DELETE /accounts/{account_id}/pages/projects/gonorpage-dev/deployments/{id}?force=true`).
+Keep the current live deployment; deleting an old one has no effect on
+production or on `dev` itself, since Cloudflare rebuilds from the branch on the
+next push regardless.
+
 ## Why dev is not indexed
 
 `public/_headers` sends `X-Robots-Tag: noindex, nofollow` for every path.
