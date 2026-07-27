@@ -90,7 +90,14 @@ Actions workflow. Consequences worth knowing:
 - Build settings live in the Cloudflare dashboard, not in this repo. Current
   values: build command `npm run build`, output directory `dist`, root
   directory empty, production branch `dev`, preview deployments enabled for all
-  branches, PR comments enabled.
+  branches **except `main`**, PR comments enabled.
+- **`main` is explicitly excluded from Cloudflare builds**
+  (`preview_branch_excludes: ["main"]`). Without this, Cloudflare treats `main`
+  as just another branch and builds it as a "Preview" deployment, since `dev`
+  (not `main`) is the project's production branch. That produces a second,
+  publicly reachable, purposeless copy of production content — gonor.me is
+  already served by GitHub Pages, not Cloudflare. If `main` starts appearing in
+  the Pages deployment list again, check this setting first.
 - Because the settings are outside version control, this table is the record of
   them. If you change them in the dashboard, update this file in the same PR.
 - **Builds are fully automatic.** Every push to `dev` redeploys the dev
