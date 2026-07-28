@@ -77,7 +77,8 @@
 
   @media (max-width: 639px) {
     main p {
-      hyphens: auto;
+      text-align: left;
+      hyphens: none;
       overflow-wrap: break-word;
     }
   }
@@ -142,11 +143,15 @@
   }
 
   .blog-content table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     border: 1px solid rgba(212, 165, 116, 0.25);
     border-radius: 0.5rem;
-    overflow: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .blog-content thead tr {

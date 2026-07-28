@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="brand-title">
+  <title id="brand-title">Andrés González Ortega</title>
   <rect width="512" height="512" fill="#EDE6DD"/>
   <rect x="118" y="196" width="66" height="196" fill="#5B7B9A"/>
   <rect x="206" y="120" width="66" height="272" fill="#1B2A4A"/>

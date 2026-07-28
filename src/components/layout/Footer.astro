@@ -15,7 +15,10 @@ const { lang } = Astro.props;
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
-        <span class="font-serif text-xl font-bold text-cream">{lang === 'es' ? 'Actuaría, UNAM' : 'Actuarial Science, UNAM'}</span>
+        <div class="flex items-center gap-3">
+          <img src="/brand-mark.svg" width="40" height="40" alt="" class="w-10 h-10 rounded-md" loading="lazy" />
+          <span class="font-serif text-xl font-bold text-cream">{lang === 'es' ? 'Actuaría, UNAM' : 'Actuarial Science, UNAM'}</span>
+        </div>
         <p class="mt-1 text-sm text-cream/60">{lang === 'es' ? 'En proceso de titulación' : 'Degree in progress'}</p>
         <p class="mt-2 text-sm text-cream/60">Andrés González Ortega</p>
       </div>

@@ -138,12 +138,12 @@ test.describe('Mobile layout', () => {
     expect(hasHorizontalOverflow).toBe(false);
   });
 
-  test('body copy is justified', async ({ page }) => {
+  test('body copy is left-aligned for mobile readability', async ({ page }) => {
     await page.goto('/about/');
     const alignment = await page.locator('main p').first().evaluate(
       (element) => getComputedStyle(element).textAlign
     );
-    expect(alignment).toBe('justify');
+    expect(alignment).toBe('left');
   });
 
   test('PDF notes provide an in-page preview', async ({ page }) => {
