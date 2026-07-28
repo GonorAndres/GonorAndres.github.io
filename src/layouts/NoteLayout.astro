@@ -63,10 +63,41 @@ const openPreviewLabel = lang === 'es' ? 'Abrir en Google Drive' : 'Open in Goog
   description={note.description}
   lang={lang}
   ogType="article"
+  contentTitle={note.title}
+  articleSchema="Article"
+  datePublished={note.createdDate}
+  section={categoryLabel}
+  tags={note.tags}
 >
   <Fragment slot="head">
     <meta name="keywords" content={note.keywords.join(', ')} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: lang === 'es' ? 'Inicio' : 'Home',
+            item: lang === 'es' ? `${siteUrl}/` : `${siteUrl}/en/`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: t(lang, 'notes.title'),
+            item: `${siteUrl}${tp('/artifacts/')}`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: note.title,
+          },
+        ],
+      })}
+    />
   </Fragment>
 
   <article class="py-10 sm:py-16 px-4 sm:px-6">
@@ -112,7 +143,7 @@ const openPreviewLabel = lang === 'es' ? 'Abrir en Google Drive' : 'Open in Goog
               src={previewUrl}
               title={`${previewLabel}: ${note.title}`}
               loading="lazy"
-              class="block w-full h-[70svh] min-h-[32rem] sm:h-[44rem]"
+              class="block w-full h-[65svh] min-h-[24rem] sm:h-[44rem] sm:min-h-[32rem]"
             ></iframe>
           </div>
         </section>

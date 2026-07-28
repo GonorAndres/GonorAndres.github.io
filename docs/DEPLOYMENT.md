@@ -10,8 +10,14 @@ gonor.me down.
 |---|---|---|---|---|
 | Production | `main` | GitHub Pages | https://gonor.me | Yes |
 | Development | `dev` | Cloudflare Pages | https://gonorpage-dev.pages.dev | No |
-| Preview | any other branch / PR | Cloudflare Pages | `<hash>.gonorpage-dev.pages.dev` | No |
 | Local | working tree | `astro dev` | http://localhost:4321 | n/a |
+
+Cloudflare builds **only** `dev`. Every other branch, including `main` and any
+`feature/*` branch, is invisible to Cloudflare: no build, no URL, no dashboard
+row (`preview_deployment_setting: none`). This keeps the dashboard to one
+deployment at a time and removes the recurring cleanup of orphaned preview
+deployments left behind by deleted branches. The tradeoff: a feature branch has
+no isolated preview of its own; test it by merging into `dev` first.
 
 ## The only path to production
 
@@ -37,10 +43,10 @@ Rules, in order of importance:
    ceremony. Cloudflare rebuilds the dev environment on every push, so the way
    you check your work is to push and reload the dev URL. `dev` is deliberately
    unprotected.
-4. Feature branches remain available and are still built by Cloudflare, but they
-   are optional: use one when you want a preview that does not disturb the dev
-   environment, or when you want a diff to look at before it lands. Merge it
-   into `dev` however you like, including a plain fast-forward.
+4. Feature branches are still fine to use for an isolated diff, but Cloudflare
+   will not build them — there is no preview URL for a branch other than `dev`.
+   Merge it into `dev` however you like, including a plain fast-forward, then
+   check it on the dev URL.
 5. `dev` may be ahead of production, but it is not a scratch branch: it should
    always build. If `dev` is red, fix it before opening `dev` → `main`. Nothing
    enforces this, which is exactly why it is written down.
@@ -67,17 +73,6 @@ the deploy: `deploy.yml` runs on push to `main`, builds the site, runs the
 Playwright deploy-gate tests, and publishes `dist/` to GitHub Pages only if they
 pass.
 
-### Optional: an isolated preview
-
-```bash
-git checkout dev && git pull
-git checkout -b preview/<something>
-git push -u origin preview/<something>
-```
-
-Cloudflare builds it at `https://preview-<something>.gonorpage-dev.pages.dev`,
-and comments the URL on any PR you open from it.
-
 ## How Cloudflare Pages is wired
 
 The Pages project is `gonorpage-dev`, connected to `GonorAndres/GonorPage`
@@ -89,27 +84,31 @@ Actions workflow. Consequences worth knowing:
   itself and builds it on its own runners.
 - Build settings live in the Cloudflare dashboard, not in this repo. Current
   values: build command `npm run build`, output directory `dist`, root
-  directory empty, production branch `dev`, preview deployments enabled for all
-  branches, PR comments enabled.
+  directory empty, production branch `dev`, **preview deployments disabled**
+  (`preview_deployment_setting: "none"`), PR comments enabled (moot while
+  preview deployments are off).
+- **Only `dev` is built.** No other branch — `main`, any `feature/*` branch,
+  anything — triggers a Cloudflare build, produces a URL, or shows up in the
+  Pages dashboard. This was a deliberate simplification: an earlier setup built
+  every branch as a "Preview" (including `main`, redundantly, since it's
+  already served by GitHub Pages) and left orphaned deployments behind every
+  time a feature branch was deleted. If a feature branch needs checking,
+  merge it into `dev` and look at the dev URL.
 - Because the settings are outside version control, this table is the record of
   them. If you change them in the dashboard, update this file in the same PR.
-- **Builds are fully automatic.** Every push to `dev` redeploys the dev
-  environment; every push to any other branch produces a preview deployment.
-  Nothing is triggered by hand, and no GitHub Actions workflow is involved in
-  either. A build normally finishes in one to two minutes.
+- **Builds are fully automatic.** Every push to `dev` redeploys
+  `gonorpage-dev.pages.dev`. Nothing is triggered by hand, and no GitHub
+  Actions workflow is involved. A build normally finishes in one to two
+  minutes.
 
-### Preview and dev URLs are public
+### The dev URL is public
 
-A Pages deployment is reachable by anyone who knows its URL. The dev
-environment is at a fixed, guessable address, branch previews are at
-`https://<branch>.gonorpage-dev.pages.dev`, and Cloudflare posts those URLs as
-comments on pull requests in a public repository.
-
-`X-Robots-Tag: noindex` keeps them out of search results; it is not access
-control. Treat anything pushed to a branch as published. To actually restrict
-them, put a Cloudflare Access policy in front of the preview and dev hostnames
-from the Zero Trust dashboard; the free tier covers a single-user policy. That
-is not configured today.
+A Pages deployment is reachable by anyone who knows its URL, and
+`gonorpage-dev.pages.dev` is a fixed, guessable address. `X-Robots-Tag: noindex`
+keeps it out of search results; it is not access control. Treat anything pushed
+to `dev` as published. To actually restrict it, put a Cloudflare Access policy
+in front of the hostname from the Zero Trust dashboard; the free tier covers a
+single-user policy. That is not configured today.
 
 To inspect or change the project from the CLI (the API token already lives in
 this machine's environment):
@@ -118,6 +117,26 @@ this machine's environment):
 npx wrangler pages project list
 npx wrangler pages deployment list --project-name gonorpage-dev
 ```
+
+### Old dev deployments accumulate too
+
+With preview deployments off, the only new rows are from pushes to `dev`
+itself, but each push still leaves the previous one behind as history — it
+just doesn't get rebuilt or served, only the newest does. The dashboard's
+"Production" tag on a row means it was built from `dev`, not that it's the
+deployment currently being served.
+
+To clean up old ones, delete by ID:
+
+```bash
+npx wrangler pages deployment list --project-name gonorpage-dev
+npx wrangler pages deployment delete <deployment-id> --project-name gonorpage-dev --force
+```
+
+or via the API (`DELETE /accounts/{account_id}/pages/projects/gonorpage-dev/deployments/{id}?force=true`).
+Keep the current live deployment; deleting an old one has no effect on
+production or on `dev` itself, since Cloudflare rebuilds from the branch on the
+next push regardless.
 
 ## Why dev is not indexed
 

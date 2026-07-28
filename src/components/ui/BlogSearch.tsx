@@ -54,7 +54,7 @@ function PostRow({ post, labels }: { post: PostData; labels: Labels }) {
   const catColor = CATEGORY_COLOR[post.categoryKey] ?? '#1B2A4A';
 
   return (
-    <article className="grid grid-cols-[72px_1fr] md:grid-cols-[92px_1fr_140px] gap-x-4 md:gap-x-6 gap-y-2 py-6 border-t border-[#1B2A4A]/10 items-baseline">
+    <article className="grid grid-cols-1 sm:grid-cols-[80px_1fr] md:grid-cols-[92px_1fr_140px] gap-x-4 md:gap-x-6 gap-y-2 py-6 border-t border-[#1B2A4A]/10 items-baseline">
       <time className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[#1B2A4A]/45">
         {formatDotDate(post.date)}
       </time>
@@ -106,7 +106,7 @@ function PostRow({ post, labels }: { post: PostData; labels: Labels }) {
         <div className="flex flex-wrap gap-2">
           <a
             href={href}
-            className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded border border-[#C17654] text-[#C17654] text-xs font-medium hover:bg-[#C17654] hover:text-cream transition-colors no-underline"
+            className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded border border-[#C17654] text-[#C17654] text-xs font-medium hover:bg-[#C17654] hover:text-cream transition-colors no-underline"
           >
             <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
@@ -117,7 +117,7 @@ function PostRow({ post, labels }: { post: PostData; labels: Labels }) {
         </div>
       </div>
 
-      <div className="col-span-2 md:col-span-1 md:text-right">
+      <div className="sm:col-span-2 md:col-span-1 md:text-right">
         <span
           className="font-mono text-[10px] uppercase tracking-[0.16em]"
           style={{ color: catColor }}

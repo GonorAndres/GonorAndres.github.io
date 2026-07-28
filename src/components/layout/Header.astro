@@ -22,11 +22,22 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
 
 <header class="sticky top-0 z-50 bg-[#E8E0D7]/95 backdrop-blur-sm border-b border-amber/20">
   <nav class="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
-    <a href={tp('/')} class="font-serif text-base sm:text-lg md:text-xl font-bold text-navy hover:text-terracotta transition-colors truncate min-w-0">
-      Andrés González Ortega
+    <a
+      href={tp('/')}
+      aria-label={lang === 'es' ? 'Andrés González Ortega, inicio' : 'Andrés González Ortega, home'}
+      class="group flex items-center gap-2.5 font-serif text-base sm:text-lg md:text-xl font-bold text-navy hover:text-terracotta transition-colors truncate min-w-0"
+    >
+      <img
+        src="/brand-mark.svg"
+        width="36"
+        height="36"
+        alt=""
+        class="w-8 h-8 sm:w-9 sm:h-9 rounded-md shrink-0 transition-transform group-hover:scale-105"
+      />
+      <span class="truncate">Andrés González Ortega</span>
     </a>
 
-    <div class="hidden md:flex items-center gap-8">
+    <div class="hidden lg:flex items-center gap-7 xl:gap-8">
       <a href={tp('/')} data-nav="home" class={isHome ? activeClass : inactiveClass} {...(isHome ? {'aria-current': 'page'} : {})}>
         {t(lang, 'nav.home')}
       </a>
@@ -51,7 +62,7 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
     <!-- Mobile menu button -->
     <button
       id="mobile-menu-btn"
-      class="md:hidden p-2 text-navy shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center"
+      class="lg:hidden p-2 text-navy shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center"
       aria-label="Menu"
       aria-expanded="false"
       aria-controls="mobile-menu"
@@ -63,7 +74,7 @@ const inactiveClass = 'text-sm font-medium text-navy/70 hover:text-terracotta tr
   </nav>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="grid grid-rows-[0fr] opacity-0 -translate-y-2 pointer-events-none transition-[grid-template-rows,opacity,transform] duration-200 ease-out md:hidden" aria-hidden="true">
+  <div id="mobile-menu" class="grid grid-rows-[0fr] opacity-0 -translate-y-2 pointer-events-none transition-[grid-template-rows,opacity,transform] duration-200 ease-out lg:hidden" aria-hidden="true">
     <div class="overflow-hidden">
       <div class="px-4 sm:px-6 pb-4 space-y-1">
         <a href={tp('/')} data-nav="home" class={`flex items-center min-h-[44px] -mx-2 px-2 rounded-lg ${isHome ? 'text-sm font-medium text-terracotta' : 'text-sm font-medium text-navy/70 hover:text-terracotta'}`} {...(isHome ? {'aria-current': 'page'} : {})}>

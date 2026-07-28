@@ -14,6 +14,14 @@ interface Props {
   datePublished?: string;
   dateModified?: string;
   noindex?: boolean;
+  schemaType?: 'webpage' | 'profile';
+  image?: string;
+  imageAlt?: string;
+  section?: string;
+  tags?: string[];
+  structuredDescription?: string;
+  contentTitle?: string;
+  articleSchema?: 'Article' | 'BlogPosting';
 }
 
 const {
@@ -23,6 +31,14 @@ const {
   datePublished,
   dateModified,
   noindex = false,
+  schemaType = 'webpage',
+  image,
+  imageAlt,
+  section,
+  tags,
+  structuredDescription,
+  contentTitle,
+  articleSchema,
 } = Astro.props;
 
 const description = Astro.props.description ?? (lang === 'en'
@@ -50,6 +66,14 @@ const skipLabel = lang === 'en' ? 'Skip to content' : 'Saltar al contenido';
       datePublished={datePublished}
       dateModified={dateModified}
       noindex={noindex}
+      schemaType={schemaType}
+      image={image}
+      imageAlt={imageAlt}
+      section={section}
+      tags={tags}
+      structuredDescription={structuredDescription}
+      contentTitle={contentTitle}
+      articleSchema={articleSchema}
     />
     <ClientRouter />
     <slot name="head" />

@@ -72,7 +72,7 @@ function NoteRow({ note, labels }: { note: NoteData; labels: Labels }) {
   const isArtifact = note.type === 'artifact';
 
   return (
-    <article className="grid grid-cols-[64px_1fr] md:grid-cols-[92px_1fr_140px] gap-x-4 md:gap-x-6 gap-y-2 py-6 border-t border-[#1B2A4A]/10 items-baseline">
+    <article className="grid grid-cols-1 sm:grid-cols-[80px_1fr] md:grid-cols-[92px_1fr_140px] gap-x-4 md:gap-x-6 gap-y-2 py-6 border-t border-[#1B2A4A]/10 items-baseline">
       <time className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[#1B2A4A]/45">
         {formatDate(note.createdDate)}
       </time>
@@ -132,7 +132,7 @@ function NoteRow({ note, labels }: { note: NoteData; labels: Labels }) {
                 key={link.url}
                 href={linkHref}
                 {...(!isInternal && { target: '_blank', rel: 'noopener noreferrer' })}
-                className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded border border-[#C17654] text-[#C17654] text-xs font-medium hover:bg-[#C17654] hover:text-cream transition-colors no-underline"
+                className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded border border-[#C17654] text-[#C17654] text-xs font-medium hover:bg-[#C17654] hover:text-cream transition-colors no-underline"
               >
                 {isInternal ? <LaunchIcon /> : <DownloadIcon />}
                 {link.label}
@@ -142,7 +142,7 @@ function NoteRow({ note, labels }: { note: NoteData; labels: Labels }) {
         </div>
       </div>
 
-      <div className="col-span-2 md:col-span-1 md:text-right">
+      <div className="sm:col-span-2 md:col-span-1 md:text-right">
         <span
           className="font-mono text-[10px] uppercase tracking-[0.16em]"
           style={{ color: catColor }}
