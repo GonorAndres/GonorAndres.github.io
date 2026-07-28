@@ -55,15 +55,18 @@ const { lang } = Astro.props;
 
       <!-- Brand mark (middle) -->
       <div class="hidden md:flex md:items-center md:justify-center md:col-span-2 md:col-start-8">
-        <div class="relative p-3">
-          <div class="absolute inset-0 rounded-full bg-amber/10 border border-amber/30"></div>
-          <img
-            src="/brand-mark.svg"
-            width="128"
-            height="128"
-            alt=""
-            class="relative w-28 h-28 lg:w-32 lg:h-32 rounded-xl shadow-sm"
-          />
+        <div class="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-amber/10 border border-amber/30 flex items-center justify-center">
+          <svg
+            viewBox="90 90 300 360"
+            aria-hidden="true"
+            class="w-[72%] h-[72%]"
+          >
+            <rect x="118" y="196" width="66" height="196" fill="#5B7B9A" />
+            <rect x="206" y="120" width="66" height="272" fill="#1B2A4A" />
+            <rect x="294" y="246" width="66" height="146" fill="#5B7B9A" />
+            <rect x="294" y="174" width="66" height="60" fill="#C17654" />
+            <rect x="118" y="410" width="242" height="14" fill="#1B2A4A" />
+          </svg>
         </div>
       </div>
 
