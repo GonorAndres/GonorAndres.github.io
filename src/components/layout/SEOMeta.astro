@@ -11,6 +11,13 @@ interface Props {
   datePublished?: string;
   dateModified?: string;
   noindex?: boolean;
+  schemaType?: 'webpage' | 'profile';
+  imageAlt?: string;
+  section?: string;
+  tags?: string[];
+  structuredDescription?: string;
+  contentTitle?: string;
+  articleSchema?: 'Article' | 'BlogPosting';
 }
 
 const siteUrl = 'https://gonor.me';
@@ -24,6 +31,13 @@ const {
   datePublished,
   dateModified,
   noindex = false,
+  schemaType = 'webpage',
+  imageAlt = title,
+  section,
+  tags = [],
+  structuredDescription = description,
+  contentTitle = title,
+  articleSchema = 'Article',
 } = Astro.props;
 
 const canonicalUrl = new URL(url, siteUrl).href;
@@ -50,50 +64,81 @@ const esHref = new URL(esPath, siteUrl).href;
 const enHref = new URL(enPath, siteUrl).href;
 
 const person = {
+  '@id': `${siteUrl}/about/#person`,
   '@type': 'Person',
   name: AUTHOR_NAME,
-  url: siteUrl,
+  url: `${siteUrl}/about/`,
+  sameAs: SAME_AS,
 };
 
-const jsonLd = type === 'article'
+const website = {
+  '@id': `${siteUrl}/#website`,
+  '@type': 'WebSite',
+  url: `${siteUrl}/`,
+  name: AUTHOR_NAME,
+  inLanguage: ['es', 'en'],
+  publisher: { '@id': `${siteUrl}/about/#person` },
+};
+
+const pageEntity = type === 'article'
   ? {
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: title,
-      description,
+      '@id': `${canonicalUrl}#article`,
+      '@type': articleSchema,
+      headline: contentTitle,
+      description: structuredDescription,
       image: imageUrl,
       url: canonicalUrl,
-      mainEntityOfPage: canonicalUrl,
+      mainEntityOfPage: { '@id': canonicalUrl },
       inLanguage: lang,
       ...(datePublished ? { datePublished } : {}),
       ...(dateModified ? { dateModified } : datePublished ? { dateModified: datePublished } : {}),
-      author: person,
-      publisher: person,
+      ...(section ? { articleSection: section } : {}),
+      ...(tags.length ? { keywords: tags.join(', ') } : {}),
+      author: { '@id': `${siteUrl}/about/#person` },
+      publisher: { '@id': `${siteUrl}/about/#person` },
+      isPartOf: { '@id': `${siteUrl}/#website` },
     }
+  : schemaType === 'profile'
+    ? {
+        '@id': canonicalUrl,
+        '@type': 'ProfilePage',
+        url: canonicalUrl,
+        name: title,
+        description,
+        inLanguage: lang,
+        isPartOf: { '@id': `${siteUrl}/#website` },
+        mainEntity: { '@id': `${siteUrl}/about/#person` },
+      }
   : {
-      '@context': 'https://schema.org',
-      '@type': 'Person',
-      name: AUTHOR_NAME,
-      url: siteUrl,
-      jobTitle: lang === 'es' ? 'Actuario y Científico de Datos' : 'Actuary & Data Scientist',
+      '@id': canonicalUrl,
+      '@type': 'WebPage',
+      url: canonicalUrl,
+      name: title,
       description,
-      email: 'mailto:gonorandres@ciencias.unam.mx',
-      knowsLanguage: ['es', 'en'],
-      knowsAbout: [
-        'Ciencia actuarial',
-        'Solvencia II / LISF / CUSF',
-        'Modelo Lee-Carter',
-        'Machine Learning',
-        'BigQuery',
-        'Finanzas cuantitativas',
-      ],
-      alumniOf: {
-        '@type': 'CollegeOrUniversity',
-        name: 'Universidad Nacional Autónoma de México',
-        department: 'Facultad de Ciencias',
-      },
-      sameAs: SAME_AS,
+      inLanguage: lang,
+      isPartOf: { '@id': `${siteUrl}/#website` },
+      about: { '@id': `${siteUrl}/about/#person` },
     };
+
+const personEntity = {
+  ...person,
+  jobTitle: lang === 'es' ? 'Actuario y Científico de Datos' : 'Actuary & Data Scientist',
+  description: lang === 'es'
+    ? 'Actuario y científico de datos formado en la UNAM, especializado en herramientas actuariales, seguros, regulación mexicana y plataformas de datos.'
+    : 'UNAM-trained actuary and data scientist specializing in actuarial tools, insurance, Mexican regulation, and data platforms.',
+  email: 'mailto:gonorandres@ciencias.unam.mx',
+  knowsLanguage: ['es', 'en'],
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: 'Universidad Nacional Autónoma de México',
+    department: 'Facultad de Ciencias',
+  },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [website, personEntity, pageEntity],
+};
 ---
 
 <meta name="description" content={description} />
@@ -113,6 +158,7 @@ const jsonLd = type === 'article'
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={imageUrl} />
+<meta property="og:image:alt" content={imageAlt} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content={type} />
 <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
@@ -124,12 +170,15 @@ const jsonLd = type === 'article'
   <meta property="article:modified_time" content={dateModified ?? datePublished} />
 )}
 {type === 'article' && <meta property="article:author" content={AUTHOR_NAME} />}
+{type === 'article' && section && <meta property="article:section" content={section} />}
+{type === 'article' && tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:image:alt" content={imageAlt} />
 
 <!-- JSON-LD Structured Data -->
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

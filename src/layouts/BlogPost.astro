@@ -105,6 +105,7 @@ const L = {
   series: lang === 'es' ? 'Serie' : 'Series',
   related: lang === 'es' ? 'Relacionados' : 'Related',
   backToBlog: lang === 'es' ? 'Volver al blog' : 'Back to blog',
+  shortAnswer: lang === 'es' ? 'En breve' : 'In brief',
 };
 
 const fichaRows: { key: string; value: string; href?: string }[] = [];
@@ -124,16 +125,54 @@ if (shape === 'case-study' && ficha) {
 }
 
 const prose = shape;
+const metaDescription = description.length <= 160
+  ? description
+  : `${description.slice(0, 157).replace(/\s+\S*$/, '')}…`;
 ---
 
 <BaseLayout
   title={`${title} | AGO Blog`}
-  description={description}
+  description={metaDescription}
+  structuredDescription={description}
+  contentTitle={title}
+  articleSchema="BlogPosting"
   lang={lang}
   ogType="article"
   datePublished={date}
   dateModified={lastModified}
+  image={heroImage}
+  imageAlt={heroCaption ?? title}
+  section={categoryDisplay}
+  tags={tags}
 >
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: lang === 'es' ? 'Inicio' : 'Home',
+            item: lang === 'es' ? 'https://gonor.me/' : 'https://gonor.me/en/',
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Blog',
+            item: `https://gonor.me${backHref}`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: title,
+          },
+        ],
+      })}
+    />
+  </Fragment>
   <article class="py-10 md:py-16 px-4 sm:px-6">
     <div class="max-w-[1020px] mx-auto">
       <nav
@@ -168,14 +207,31 @@ const prose = shape;
         {title}
       </h1>
 
-      <p class="lede font-serif text-lg md:text-[19px] leading-[1.55] text-[#1B2A4A]/75 max-w-[64ch] mb-5">
-        {description}
-      </p>
+      <section class="lede max-w-[64ch] mb-5" aria-labelledby="short-answer">
+        <h2
+          id="short-answer"
+          class="font-mono text-[10px] uppercase tracking-[0.16em] text-[#A35E3E] mb-2"
+        >
+          {L.shortAnswer}
+        </h2>
+        <p class="font-serif text-lg md:text-[19px] leading-[1.55] text-[#1B2A4A]/75">
+          {description}
+        </p>
+      </section>
 
       <div
         class="byline font-mono text-[10px] uppercase tracking-[0.14em] text-[#1B2A4A]/55 pt-4 border-t border-[#1B2A4A]/10 flex flex-wrap gap-x-4 gap-y-1"
       >
-        <span>{L.by} <b class="text-[#1B2A4A] font-medium">Andrés González Ortega</b></span>
+        <span>
+          {L.by}
+          <a
+            href={lang === 'es' ? '/about/' : '/en/about/'}
+            rel="author"
+            class="text-[#1B2A4A] font-medium hover:text-[#A35E3E] underline underline-offset-2"
+          >
+            Andrés González Ortega
+          </a>
+        </span>
         <span>{formattedDate}</span>
         {formattedUpdated && <span>{L.updated} {formattedUpdated}</span>}
         <span>{readingTime} {L.read}</span>
@@ -476,7 +532,9 @@ const prose = shape;
     width: 100%;
     max-width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
+  .prose :where(img, video, iframe, svg) { max-width: 100%; }
   .prose code { overflow-wrap: anywhere; }
 
   /* KaTeX readability (keep display math tidy) ------------------------- */
@@ -485,7 +543,11 @@ const prose = shape;
 
   @media (max-width: 639px) {
     .prose h2 { font-size: 1.4rem; }
-    .prose p { font-size: 1rem; }
+    .prose p {
+      font-size: 1rem;
+      text-align: left;
+      hyphens: none;
+    }
     .prose[data-shape="blog"] > p:first-of-type::first-letter,
     .prose[data-shape="case-study"] > p:first-of-type::first-letter {
       font-size: 3rem;

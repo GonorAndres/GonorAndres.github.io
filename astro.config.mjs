@@ -36,11 +36,9 @@ export default defineConfig({
   },
   // Legacy /notes/* URLs redirect to /artifacts/* after the 2026-04 rename.
   redirects: {
-    '/notes': '/artifacts',
     '/notes/': '/artifacts/',
     '/notes/[slug]': '/artifacts/[slug]',
     '/notes/categoria/[cat]': '/artifacts/categoria/[cat]',
-    '/en/notes': '/en/artifacts',
     '/en/notes/': '/en/artifacts/',
     '/en/notes/[slug]': '/en/artifacts/[slug]',
     '/en/notes/categoria/[cat]': '/en/artifacts/categoria/[cat]',
