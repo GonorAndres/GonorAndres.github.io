@@ -4,7 +4,7 @@ Guidance for Claude Code when working inside `cv/`.
 
 ## What This Is
 
-LaTeX sources for Andrés González Ortega's CV -- actuarial science graduate from UNAM (Facultad de Ciencias). Primary language is Spanish; English variants mirror the ES content. Each month forks the previous month (e.g. `may_2026.tex` forked `april_2026.tex`).
+LaTeX sources for Andrés González Ortega's CV -- actuarial science graduate from UNAM (Facultad de Ciencias). Primary language is Spanish; English variants mirror the ES content. Each month forks the previous month (e.g. `august_2026.tex` forked `may_2026.tex`).
 
 This folder holds **sources only**. It is versioned inside the portfolio site repo so the CV and the portfolio stay in sync -- the same projects, the same wording, one place to edit.
 
@@ -32,7 +32,7 @@ sudo apt install texlive-latex-recommended texlive-fonts-recommended texlive-lan
 tlmgr --repository https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023/tlnet-final/ install fontawesome5 sourcesanspro
 
 # Smoke test
-cd cv && ./build.sh may_2026.tex
+cd cv && ./build.sh august_2026.tex
 # Expect: 1 page, 0 overfull warnings.
 ```
 
@@ -85,12 +85,17 @@ cv/
   awesome-cv.cls           # class file
   qr_portfolio.png         # QR for header
 
-  may_2026.tex             # current base
-  may_2026/                # current cycle variants (13 canonical)
-  april_2026.tex           # previous base
-  april_2026/              # previous cycle variants (13 canonical + 4 legacy generics)
+  august_2026.tex          # current base
+  august_2026/             # current cycle variants (13 canonical)
+  may_2026.tex             # previous base
+  may_2026/                # previous cycle variants (13 canonical)
+  april_2026.tex           # older base
+  april_2026/              # older cycle variants (13 canonical + 4 legacy generics)
   archive/                 # older months (agosto, feb_2026, march_2026 + generics)
 ```
+
+`archive/agosto.tex` is August **2025** and predates the QR/`placetopright` block. It is
+not a precedent for the current cycle; do not confuse it with `august_2026`.
 
 Compiled PDFs, `.aux`/`.log`, job postings and employer variants are gitignored -- see the public-repo section above.
 
@@ -108,7 +113,7 @@ Compiled PDFs, `.aux`/`.log`, job postings and employer variants are gitignored 
 | `g1_insurtech.tex` / `g2_en` | Insurtech (May 2026 onward) | Insurance + product/platform engineering |
 | `actuarial_analyst_us_insurer.tex` | USI -- actuarial EN for US-parent insurers | Actuarial Science first; credibility/Bühlmann-Straub emphasized |
 
-**What changes per variant:** Sobre mí closing, Habilidades bullet order and content, Proyectos (6 role-matched).
+**What changes per variant:** Sobre mí closing, Habilidades bullet order and content, Proyectos (4 role-matched).
 **What stays fixed:** preamble, header (modulo contact-line paragraph break), experience bullets (ATS), education, certs structure.
 
 ## CV Sections (order in the base file)
@@ -125,12 +130,17 @@ Compiled PDFs, `.aux`/`.log`, job postings and employer variants are gitignored 
 4. **Habilidades** -- 6 bullets. A1/OCC/A2 lead with Ciencia Actuarial as the second bullet (right after Lenguajes). Spoken languages is its own bullet (`\item \textit{Idiomas:} ...` / `\item \textit{Languages:} ...`), not pipe-joined.
 5. **Educación** -- one line: `Pasante (100\% de créditos cubiertos); titulación por exámenes profesionales SOA (Society of Actuaries).` EN: `Degree requirements completed (100\% of coursework); graduating via SOA exam track.` **Always escape `%` as `\%`.**
 6. **Certificaciones** -- SOA P (Exam P, Aprobado Marzo 2026, linked) + 3 DataCamp certs + Databricks Fundamentals as **separate items**, each with its own link:
-   - Associate Data Analyst (DataCamp) -> Drive `1-QUuVH3zPBPsl6RhUvuUWxpZkP1i8TYb`
+   - Associate Data Analyst (DataCamp) -> Drive `1EqzyjRkWOJBlU9zUTpkcUcj6QtuXRZfK`
+     (`Asociate_Data_Analyst.pdf`). **Cycles up to `may_2026` wrongly pointed this at
+     `1-QUuVH3zPBPsl6RhUvuUWxpZkP1i8TYb`, which is the `MisDocumentos` _folder_, not the
+     certificate** -- a reader clicking it landed in a file listing. Fixed from `august_2026`
+     onward. Do not reintroduce the folder ID here; it belongs only in the Drive-upload
+     section below as the parent folder.
    - Associate Data Scientist in R (DataCamp) -> Drive `1xVLk15A1LBbyXH1fZnd4eBTaJ4d8FLLO`
    - Data Scientist Professional with R (DataCamp) -> Drive `1Woe6xqxofloFZ9uM2f5VsdGxY-WQWCRI`
    - **Databricks Fundamentals** (Databricks Academy, Abr 2026, no expiry) -> `https://credentials.databricks.com/45f31d0f-ca80-4e3a-80c1-ede89826f6ce`
    FM and SRM removed (scheduled exams != certifications).
-7. **Proyectos** -- 6 projects using `twocolentrynarrow` (2.2cm right column for links). Problem-first descriptions.
+7. **Proyectos** -- 4 projects using `twocolentrynarrow` (2.2cm right column for links). Problem-first descriptions. All 14 variants in the current cycle carry exactly 4; if you raise the count, re-check the 1-page fit.
 
 ## Style Rules
 
@@ -165,7 +175,7 @@ Blog close (uniform across all canonical variants, never rephrase):
 - **Footer**: `Andrés Ortega -- Página X de Y` (ES) / `Page X of Y` (EN). **No variant code** (`[A1] General`, etc.) -- strip before sending.
 - **QR block**: anchored at `(paperwidth-0.3cm, paperheight-0.2cm)`, width 1.3cm. Sits in right margin, above the centered header's horizontal reach. Do not move it into a wider position or it will collide with the GitHub link.
 - **Compact-preamble variants (b1/c1/d1/e1/f1)**: the header MUST have a blank line between `\textbf{Andrés González Ortega}` and `\vspace{0.15 cm}`, otherwise the contact line renders on the same line as the name.
-- **QR image path**: `qr_portfolio.png` in the base files, `../qr_portfolio.png` in variants under `april_2026/` and `may_2026/`.
+- **QR image path**: `qr_portfolio.png` in the base files, `../qr_portfolio.png` in variants under any cycle directory (`april_2026/`, `may_2026/`, `august_2026/`).
 
 ## LaTeX Environments
 
@@ -183,12 +193,38 @@ Blog close (uniform across all canonical variants, never rephrase):
 ## Build
 
 ```bash
-./build.sh may_2026.tex              # base
-./build.sh may_2026/d1_insurance.tex # variant
-./build.sh --all may_2026            # every .tex in a cycle
+./build.sh august_2026.tex           # base
+./build.sh august_2026/d1_insurance.tex # variant
+./build.sh --all august_2026         # every .tex in a cycle
 ```
 
-`build.sh` runs `pdflatex` twice (lastpage needs the second pass), then reports page count and overfull boxes. Verify: **1 page, 0 overfull**. Any overfull > 1pt must be fixed before exporting.
+`build.sh` picks the engine from the document class (`awesome-cv` -> `xelatex`, since the class
+loads `fontspec` and aborts under pdflatex; older `article` files -> `pdflatex`) and runs it
+twice, since `lastpage` needs the second pass. It then reports page count and overfull boxes.
+Verify: **1 page, 0 overfull**. Any overfull > 1pt must be fixed before exporting.
+
+**Known pre-existing exception:** every variant reports exactly one Overfull \hbox of
+**1.33pt** in the centered header (`\makecvheader`, the math-mode contact separators). It is
+under the 1pt-plus-margin judgement call in practice and is identical in `may_2026` and
+`august_2026`, so it is a class-level artifact, not variant drift. Don't chase it per-variant.
+
+### Alternative engine: Tectonic (no TeX Live install)
+
+`tectonic` is a single static binary that fetches packages on demand -- useful on a fresh VM
+where installing TeX Live is heavy. It is **XeTeX-only**, which suits `awesome-cv` but cannot
+build the older `article`-based files that need pdflatex.
+
+```bash
+curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net | sh   # drops ./tectonic
+mv tectonic ~/.local/bin/
+sudo apt-get install -y fonts-roboto    # REQUIRED: the class calls \newfontfamily\roboto{Roboto}
+                                        # by system-font name; without it the build dies with
+                                        # `Package fontspec Error: The font "Roboto" cannot be found`
+tectonic -X compile august_2026.tex --outdir /tmp/texout --keep-logs
+```
+
+`SourceSansPro` needs no system install (the class loads the `.otf` files by filename, which
+Tectonic fetches automatically). Only `Roboto` is resolved by system-font lookup.
 
 Output PDFs land next to the source and are gitignored. Move the deliverable out of the repo (or into the private `claude-job` checkout) before sending it anywhere.
 

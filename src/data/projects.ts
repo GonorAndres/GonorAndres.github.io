@@ -25,7 +25,7 @@ export interface Project {
 
 export const projects: Project[] = [
   // repo: https://github.com/GonorAndres/SIMA
-  // live: https://sima-d3qj5vwxtq-uc.a.run.app
+  // live: https://sima.gonor.me
   // local: /home/andtega349/SIMA
   // source: original work, demographic data from CONAPO/INEGI for mortality projection
   {
@@ -63,7 +63,7 @@ export const projects: Project[] = [
   },
 
   // repo: https://github.com/GonorAndres/gmm-explorer
-  // live: https://gmm-explorer.vercel.app/contexto
+  // live: https://gmm.gonor.me/contexto
   // local: /home/andtega349/gmm-explorer
   // source: CNSF open data — 5.1M GMM claims, 95.9M insured-years (2020-2024)
   {
@@ -266,7 +266,7 @@ export const projects: Project[] = [
 
   // repo: https://github.com/GonorAndres/regulation-actuarial-agent
   // local: /home/andtega349/lisf-agent
-  // live: https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/
+  // live: https://lisf.gonor.me/
   // source: LISF + CUSF PDFs — Mexican insurance and surety regulation
   {
     slug: 'lisf-agent',
@@ -564,7 +564,7 @@ export const projects: Project[] = [
   },
 
   // repo: https://github.com/GonorAndres/CarteraSeguroAutos
-  // live: https://cartera-autos-d3qj5vwxtq-uc.a.run.app
+  // live: https://cartera-autos-451451662791.us-central1.run.app
   // local: /home/andtega349/carteras-autos-R
   // source: synthetic data generated with R, calibrated to AMIS and CONDUSEF market parameters
   {
