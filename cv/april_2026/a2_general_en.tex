@@ -1,0 +1,332 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot,
+    top=1.1 cm,
+    bottom=1.1 cm,
+    left=1.4 cm,
+    right=1.4 cm,
+    footskip=0.7 cm,
+]{geometry}
+\usepackage[explicit]{titlesec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{primaryColor}{RGB}{217, 119, 87}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+\usepackage[
+    pdftitle={Andrés Ortega CV -- A2 General},
+    pdfauthor={Andrés González Ortega},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref}
+\usepackage[pscoord]{eso-pic}
+\usepackage{calc}
+\usepackage{bookmark}
+\usepackage{lastpage}
+\usepackage{changepage}
+\usepackage{paracol}
+\usepackage{ifthen}
+\usepackage{needspace}
+\usepackage{iftex}
+% graphicx not needed -- using pdfximage primitive for QR code
+
+% ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage[default, type1]{sourcesanspro}
+
+% Settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+\pagestyle{empty}
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\columnsep}{0.15cm}
+\makeatletter
+\let\ps@customFooterStyle\ps@plain
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Andrés Ortega -- Page \thepage{} of \pageref*{LastPage}}
+}{}{}
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{
+    % avoid page braking right after the section title
+    \needspace{4\baselineskip}
+    % make the font size of the section title large and color it with the primary color
+    \large\color{primaryColor}
+}{
+}{
+}{
+    % print bold title, give 0.15 cm space and draw a line of 0.8 pt thickness
+    % from the end of the title to the end of the body
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
+}[] % section title formatting
+
+\titlespacing{\section}{
+    -1pt
+}{
+    0.06 cm
+}{
+    0.04 cm
+}
+
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.05 cm,
+        parsep=0.05 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.02 cm,
+        parsep=0.05 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+}
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.0 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{twocolentrynarrow}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 2.2 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{1 cm, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
+}{
+    \par\kern\topsep
+}
+
+% QR code + date in top-right corner
+\newcommand{\placetopright}{%
+  \AddToShipoutPictureFG*{%
+    \put(\LenToUnit{\paperwidth-0.3 cm},\LenToUnit{\paperheight-0.2 cm}){%
+      \vtop{{\null}\makebox[0pt][r]{%
+        \vbox{%
+          \hbox to 1.3cm{\hfil{\small\color{gray}\textit{April 2026}}\hfil}%
+          \vspace{0.05cm}%
+          \hbox{\pdfximage width 1.3cm {../qr_portfolio.png}\pdfrefximage\pdflastximage}%
+          \vspace{0.03cm}%
+          \hbox to 1.3cm{\hfil{\tiny\color{gray}\textit{portafolio}}\hfil}%
+        }
+      }}%
+    }%
+  }%
+}
+
+% Colored highlight for key terms
+\newcommand{\hl}[1]{\textcolor{primaryColor}{\textbf{#1}}}
+
+\let\hrefWithoutArrow\href
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placetopright
+
+    \begin{header}
+        \fontsize{24 pt}{24 pt}
+        \textbf{Andrés González Ortega}
+
+        \vspace{0.15 cm}
+
+        \normalsize
+        \mbox{{\footnotesize\faMapMarker*}\hspace*{0.13cm}CDMX}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto:gonorandres@ciencias.unam.mx}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}gonorandres@ciencias.unam.mx}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel:+525548344672}{{\footnotesize\faPhone*}\hspace*{0.13cm}+52 55 4834 4672}}%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://gonorandres.github.io/\#proyectos}{{\footnotesize\faLink}\hspace*{0.13cm}Portfolio (25+ projects)}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://github.com/GonorAndres}{{\footnotesize\faGithub}\hspace*{0.13cm}GitHub}}%
+    \end{header}
+
+    \vspace{0.03 cm}
+
+    \section{About me}
+
+        \begin{onecolentry}
+Actuary from UNAM with \textbf{SOA Exam Probability passed}, data science intern at \textbf{Grupo Gigante} and IGF-UNAM paper co-author. I turn insurance problems (pricing, reserves, regulatory capital) into running systems: model, pipeline in \textbf{GCP}, API and dashboard. I practice continuing formation and enjoy multidisciplinary collaborative work. On \href{https://gonorandres.github.io/blog/}{my website} I share what I learn and build.
+        \end{onecolentry}
+
+
+    \section{Experience}
+
+        \begin{onecolentry}
+            \textbf{Data Science Intern} -- Grupo Gigante\quad{\small\color{gray}\textit{Sept 2025 -- Present}}
+            \begin{highlights}
+                \item I contribute to the group's \textbf{CDP}: identity resolution across brands, classification models to anticipate churn, \textbf{ETL} pipelines (BigQuery, Cloud SQL, Firebase) across millions of profiles. Cross-functional work: inventory analytics, web behavior and audience activation.
+            \end{highlights}
+            \end{onecolentry}
+
+        \vspace{0.02 cm}
+
+        \begin{onecolentry}
+            \textbf{Scientific Research Assistant} -- Institute of Geophysics, UNAM \textit{(practicum, UNAM)}\quad{\small\color{gray}\textit{2025 -- Present}}
+            \begin{highlights}
+                \item Co-author of a paper forecasting Popocatepetl eruptions with \textbf{Weibull renewal processes} -- modeling rare events with outsized consequences. Supervised by \hrefWithoutArrow{https://scholar.google.com/citations?user=lDD0DZQAAAAJ}{Dr.\ Hugo Delgado-Granados} (IGF-UNAM).
+            \end{highlights}
+            \end{onecolentry}
+
+
+    \section{Skills}
+
+\begin{onecolentry}
+    \begin{highlightsforbulletentries}
+        \item \textit{Programming:} Python, R, SQL, TypeScript, Bash, Git, \LaTeX, Advanced Excel
+        \item \textit{Actuarial Science:} Life/P\&C/Health Insurance, \textbf{Pricing} (GLM, frequency-severity, credibility), \textbf{Reserves} (BEL, IBNR, Chain Ladder, BF), Lee-Carter, \textbf{RCS/SCR} under \textbf{LISF/CUSF}, EMSSA-09, Reinsurance, CONAPO/HMD, IMSS Pensions (Ley 73/97, Fondo Bienestar)
+        \item \textit{Cloud \& DevOps:} GCP (Cloud Run, BigQuery, Pub/Sub), Docker, Terraform, Dagster, GitHub Actions, PostgreSQL
+        \item \textit{Data Science \& ML:} scikit-learn, PyTorch, XGBoost, LightGBM, Monte Carlo, SHAP, Pandas, FastAPI, Streamlit
+        \item \textit{AI \& Agents:} LLMs, Claude API, Claude Agent SDK, RAG, Transformers, Bayesian Inference
+        \item \textit{Languages:} Spanish (native), Advanced English (reading, writing, fluent communication)
+    \end{highlightsforbulletentries}
+\end{onecolentry}
+
+
+    \section{Education}
+
+        \begin{twocolentry}{2021 -- 2025}
+            \textbf{UNAM, Faculty of Sciences} -- B.S. in Actuarial Science. Degree requirements completed (100\% of coursework); graduating via SOA exam track.
+        \end{twocolentry}
+
+    \section{Certifications}
+
+    \begin{onecolentry}
+        \begin{highlightsforbulletentries}
+            \item \textbf{SOA Exam Probability} -- Passed March 2026 \href{https://drive.google.com/file/d/1rt3emgBnPpQi7NiXkBQeA5WwJTV0JuAf/view?usp=sharing}{}
+            \item \textbf{Associate Data Analyst} -- DataCamp \href{https://drive.google.com/drive/folders/1-QUuVH3zPBPsl6RhUvuUWxpZkP1i8TYb?usp=sharing}{}
+            \item \textbf{Associate Data Scientist in R} -- DataCamp \href{https://drive.google.com/file/d/1xVLk15A1LBbyXH1fZnd4eBTaJ4d8FLLO/view?usp=drive_link}{}
+            \item \textbf{Data Scientist Professional with R} -- DataCamp \href{https://drive.google.com/file/d/1Woe6xqxofloFZ9uM2f5VsdGxY-WQWCRI/view?usp=drive_link}{}
+        \end{highlightsforbulletentries}
+    \end{onecolentry}
+
+
+    \section{Projects}
+
+\begin{twocolentrynarrow}{\href{https://sima-d3qj5vwxtq-uc.a.run.app}{app live}}
+    \textbf{SIMA -- Actuarial Modeling System}
+    \begin{highlights}
+        \item Valuing life reserves requires connecting mortality, product and capital in one pipeline. SIMA integrates it: \hl{Lee-Carter}, commutation, \hl{BEL} for three products and \hl{RCS} under \hl{LISF} with stress tests. \textit{Python, FastAPI, React, GCP.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.01 cm}
+
+\begin{twocolentrynarrow}{\href{https://cartera-autos-451451662791.us-central1.run.app}{app live}}
+    \textbf{Auto Insurance Platform}
+    \begin{highlights}
+        \item A portfolio with scattered data yields slow, inconsistent decisions. Unifies \hl{GLM} pricing, \hl{IBNR} reserves (Chain Ladder + BF), \hl{Monte Carlo} stress (VaR/TVaR) and fraud detection across 140K Mexican policies. \textit{R Shiny, Plotly, Docker, GCP.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.01 cm}
+
+\begin{twocolentrynarrow}{\href{https://gmm-explorer.vercel.app/contexto}{app live}}
+    \textbf{GMM Explorer -- Health Insurance Pricing}
+    \begin{highlights}
+        \item Pricing major-medical without real data is speculation. Processes 5.1M claims from CNSF, classifies them into three tiers with AI and computes premium by \hl{frequency-severity} adjusted for medical inflation. \textit{Python, Next.js, Vercel.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.01 cm}
+
+\begin{twocolentrynarrow}{\href{https://actuarial-regulation-agent-d3qj5vwxtq-uc.a.run.app/}{app live}}
+    \textbf{Actuarial Regulation Assistant (RAG)}
+    \begin{highlights}
+        \item LISF and CUSF add up to 1,000+ interrelated articles Ctrl+F can't navigate. AI agent indexing both laws with \hl{FTS5/BM25} and a cross-reference graph; answers with exact-article citation. Code: \texttt{actuaria-claude}. \textit{Claude Agent SDK, FastAPI, GCP.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.01 cm}
+
+\begin{twocolentrynarrow}{\href{https://gonorandres.github.io/blog/data-engineering-platform}{blog}}
+    \textbf{Insurance Data Platform on GCP}
+    \begin{highlights}
+        \item A claim travels far from event to pricing model. End-to-end pipeline: \hl{Pub/Sub}+Beam ingestion, dimensional \hl{BigQuery} warehouse, \hl{Dagster}, Terraform and a \hl{GLM Tweedie} model. \textit{Python, GCP, Docker.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.01 cm}
+
+\begin{twocolentrynarrow}{\href{https://gonorandres.github.io/blog/credit-graph-topological-risk/}{blog}}
+    \textbf{CreditGraph -- Topological Credit Risk}
+    \begin{highlights}
+        \item SQL treats each loan as independent; guarantee chains create correlated exposure invisible to relational models. \hl{Neo4j} portfolio, \hl{PySpark} ETL on Databricks, \hl{LightGBM}+Platt scoring. \textit{Python, Cypher, Databricks.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\end{document}

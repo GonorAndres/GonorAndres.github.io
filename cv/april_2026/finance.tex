@@ -1,0 +1,330 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot,
+    top=1.1 cm,
+    bottom=1.1 cm,
+    left=1.4 cm,
+    right=1.4 cm,
+    footskip=0.7 cm,
+]{geometry}
+\usepackage[explicit]{titlesec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{primaryColor}{RGB}{0, 79, 144}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+\usepackage[
+    pdftitle={Andrés Ortega CV},
+    pdfauthor={Andrés González Ortega},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref}
+\usepackage[pscoord]{eso-pic}
+\usepackage{calc}
+\usepackage{bookmark}
+\usepackage{lastpage}
+\usepackage{changepage}
+\usepackage{paracol}
+\usepackage{ifthen}
+\usepackage{needspace}
+\usepackage{iftex}
+% graphicx not needed -- using pdfximage primitive for QR code
+
+% ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage[default, type1]{sourcesanspro}
+
+% Settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+\pagestyle{empty}
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\columnsep}{0.15cm}
+\makeatletter
+\let\ps@customFooterStyle\ps@plain
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Andrés Ortega -- Página \thepage{} de \pageref*{LastPage}}
+}{}{}
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{
+    % avoid page braking right after the section title
+    \needspace{4\baselineskip}
+    % make the font size of the section title large and color it with the primary color
+    \large\color{primaryColor}
+}{
+}{
+}{
+    % print bold title, give 0.15 cm space and draw a line of 0.8 pt thickness
+    % from the end of the title to the end of the body
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
+}[] % section title formatting
+
+\titlespacing{\section}{
+    -1pt
+}{
+    0.12 cm
+}{
+    0.07 cm
+}
+
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.05 cm,
+        parsep=0.05 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.05 cm,
+        parsep=0.05 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+}
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.0 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{twocolentrynarrow}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 2.2 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{1 cm, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
+}{
+    \par\kern\topsep
+}
+
+% QR code + date in top-right corner
+\newcommand{\placetopright}{%
+  \AddToShipoutPictureFG*{%
+    \put(
+        \LenToUnit{\paperwidth-1.5 cm},
+        \LenToUnit{\paperheight-0.9 cm}
+    ){\vtop{{\null}\makebox[0pt][r]{%
+        \vbox{%
+            \hbox to 1.3cm{\hfil{\small\color{gray}\textit{Abril 2026}}\hfil}%
+            \vspace{0.05cm}%
+            \hbox{\pdfximage width 1.3cm {../qr_portfolio.png}\pdfrefximage\pdflastximage}%
+            \vspace{0.03cm}%
+            \hbox to 1.3cm{\hfil{\tiny\color{gray}\textit{portafolio}}\hfil}%
+        }
+    }}}%
+  }%
+}
+
+% Colored highlight for key terms
+\newcommand{\hl}[1]{\textcolor{primaryColor}{\textbf{#1}}}
+
+\let\hrefWithoutArrow\href
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placetopright
+
+    \begin{header}
+        \fontsize{24 pt}{24 pt}
+        \textbf{Andrés González Ortega}
+
+        \vspace{0.15 cm}
+
+        \normalsize
+        \mbox{{\footnotesize\faMapMarker*}\hspace*{0.13cm}CDMX}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto:gonorandres@ciencias.unam.mx}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}gonorandres@ciencias.unam.mx}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel:+52 55 48344672}{{\footnotesize\faPhone*}\hspace*{0.13cm}55 48344672}}%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://gonorandres.github.io/\#proyectos}{{\footnotesize\faLink}\hspace*{0.13cm}Mi web(25+ proyectos)}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://github.com/GonorAndres}{{\footnotesize\faGithub}\hspace*{0.13cm}GitHub}}%
+    \end{header}
+
+    \vspace{0.03 cm}
+
+    \section{Sobre mí}
+
+        \begin{onecolentry}
+Actuario con \textbf{SOA P aprobado}, becario de datos en \textbf{Grupo Gigante} y co-autor de artículo científico sobre el \textbf{Popocatépetl} (IGF-UNAM). Orientado a riesgo cuantitativo: modelos de valuación, medidas de riesgo (VaR/TVaR) y automatización de flujos financieros sobre GCP. Escribo sobre lo que aprendo en \href{https://gonorandres.github.io/blog/}{mi página web}.
+        \end{onecolentry}
+
+
+    \section{Experiencia}
+
+        \begin{twocolentry}{Sept 2025 -- Presente}
+            \textbf{Becario Ciencia de Datos} -- Grupo Gigante
+            \begin{highlights}
+                \item Colaboro en el \textbf{CDP} del grupo: resolución de identidad entre marcas, modelos de clasificación para anticipar abandono y pipelines en \textbf{GCP} (BigQuery, Cloud SQL, Firebase) que procesan millones de perfiles. Proyectos transversales: inventarios, datos internos y activación de audiencias.
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.05 cm}
+
+        \begin{twocolentry}{2025 -- Presente}
+            \textbf{Asistente de Investigación Científica} -- Instituto de Geofísica, UNAM \textit{(Servicio Social)}
+            \begin{highlights}
+                \item Co-autor de un artículo sobre predecir erupciones del Popocatépetl con \textbf{procesos de renovación Weibull}. Lo que tienen en común un actuario y un vulcanólogo: ambos modelan eventos raros con consecuencias enormes. Supervisión: \hrefWithoutArrow{https://scholar.google.com/citations?user=lDD0DZQAAAAJ}{Dr.\ Hugo Delgado-Granados} (IGF-UNAM).
+            \end{highlights}
+        \end{twocolentry}
+
+
+    \section{Habilidades}
+
+\begin{onecolentry}
+    \begin{highlightsforbulletentries}
+        \item \textit{Finanzas Cuantitativas:} VaR, CVaR/TVaR, Monte Carlo, Derivados (forwards, opciones), Markowitz, Riesgo de Crédito, Copulas
+        \item \textit{Lenguajes:} Python, R, SQL, TypeScript, Bash, Git, \LaTeX, Excel Avanzado
+        \item \textit{Data Science \& ML:} GLM, scikit-learn, XGBoost, PyTorch, Simulación Monte Carlo, Pandas, FastAPI
+        \item \textit{Cloud \& DevOps:} GCP Cloud Run, Cloud SQL, BigQuery, Docker, GitHub Actions, PostgreSQL
+        \item \textit{IA \& Agentes:} LLMs, Claude API, Claude Agent SDK, RAG | \textit{Idiomas:} Inglés avanzado (lectura, redacción, comunicación fluida)
+    \end{highlightsforbulletentries}
+\end{onecolentry}
+
+
+    \section{Educación}
+
+        \begin{twocolentry}{2021 -- 2025}
+            \textbf{UNAM, Facultad de Ciencias} -- Licenciatura en Actuaría. Pasante; titulación vía exámenes SOA.
+        \end{twocolentry}
+
+    \section{Certificaciones}
+
+    \begin{onecolentry}
+        \begin{highlightsforbulletentries}
+            \item \href{https://www.soa.org/}{\textit{Society of Actuaries}:} \textbf{Exam P} (Probabilidad) -- Aprobado Marzo 2026 \href{https://drive.google.com/file/d/1rt3emgBnPpQi7NiXkBQeA5WwJTV0JuAf/view?usp=sharing}{}
+            \item \textbf{Associate Data Analyst} \textbullet{} \textbf{Associate Data Scientist R} \textbullet{} \textbf{Data Scientist in R} -- DataCamp \href{https://drive.google.com/drive/folders/1-QUuVH3zPBPsl6RhUvuUWxpZkP1i8TYb?usp=sharing}{}
+        \end{highlightsforbulletentries}
+    \end{onecolentry}
+
+
+    \section{Proyectos}
+
+\begin{twocolentrynarrow}{\href{https://gonorandres.github.io/blog/risk-analyst}{blog}}
+    \textbf{Risk Analyst -- Análisis Cuantitativo de Riesgos}
+    \begin{highlights}
+        \item 13 proyectos progresivos de riesgo cuantitativo: \hl{VaR} paramétrico e histórico, valuación de opciones, riesgo sistémico con \hl{copulas}. Acciones, bonos y opciones con datos reales del mercado mexicano. \textit{Python, Monte Carlo, Deep Learning.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.02 cm}
+
+\begin{twocolentrynarrow}{\href{https://cartera-autos-451451662791.us-central1.run.app}{app live}}
+    \textbf{Plataforma Integral de Seguros de Autos}
+    \begin{highlights}
+        \item Cuánto cobrar, cuánto reservar y dónde está el riesgo. Tarificación \hl{GLM}, reservas IBNR, estrés \hl{Monte Carlo} (VaR/TVaR) y detección de fraude sobre 140K pólizas calibradas al mercado mexicano. \textit{R Shiny, Plotly, Docker, GCP.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.02 cm}
+
+\begin{twocolentrynarrow}{\href{https://gonorandres.github.io/blog/credit-risk}{blog}}
+    \textbf{Modelo Predictivo de Incumplimiento Crediticio}
+    \begin{highlights}
+        \item 32,000 registros, \hl{GLM} logístico, 85\% AUC. Discrimina riesgo de incumplimiento con calibración de umbral según apetito de riesgo del portafolio. \textit{Python, GLM, scikit-learn.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.02 cm}
+
+\begin{twocolentrynarrow}{\href{https://sima-d3qj5vwxtq-uc.a.run.app}{app live}}
+    \textbf{SIMA -- Sistema Integral de Modelación Actuarial}
+    \begin{highlights}
+        \item El camino de mortalidad cruda a capital regulatorio suele estar fragmentado. SIMA lo integra: graduación, proyección \hl{Lee-Carter}, valuación BEL y \hl{RCS} bajo LISF en un flujo documentado y testado. \textit{Python, FastAPI, React, GCP.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.02 cm}
+
+\begin{twocolentrynarrow}{\href{https://gonorandres.github.io/blog/data-engineering-platform}{blog}}
+    \textbf{Plataforma de Datos en GCP para Seguros}
+    \begin{highlights}
+        \item Los siniestros llegan por correo y los modelos viven en Excel -- a 50K registros se rompe. Pipeline automatizado: Pub/Sub, \hl{BigQuery}, Dagster, Terraform y pricing \hl{GLM Tweedie} por menos de \$10/mes. \textit{Python, GCP, Docker.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\vspace{0.02 cm}
+
+\begin{twocolentrynarrow}{\href{https://simulador-pension-d3qj5vwxtq-uc.a.run.app/}{app live}}
+    \textbf{Simulador de Pensión IMSS + Fondo Bienestar}
+    \begin{highlights}
+        \item Tres regímenes superpuestos con fórmulas y supuestos ocultos. Calcula \hl{Ley 73}, \hl{Ley 97} y Fondo Bienestar en un solo lugar, tasas 2025. \textit{R Shiny, Docker, GCP.}
+    \end{highlights}
+\end{twocolentrynarrow}
+
+\end{document}

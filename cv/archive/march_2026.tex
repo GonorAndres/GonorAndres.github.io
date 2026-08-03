@@ -1,0 +1,381 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot, % set margins without considering header and footer
+    top=2 cm, % seperation between body and page edge from the top
+    bottom=2 cm, % seperation between body and page edge from the bottom
+    left=2 cm, % seperation between body and page edge from the left
+    right=2 cm, % seperation between body and page edge from the right
+    footskip=1.0 cm, % seperation between body and footer
+    % showframe % for debugging 
+]{geometry} % for adjusting page geometry
+\usepackage[explicit]{titlesec} % for customizing section titles
+\usepackage{tabularx} % for making tables with fixed width columns
+\usepackage{array} % tabularx requires this
+\usepackage[dvipsnames]{xcolor} % for coloring text
+\definecolor{primaryColor}{RGB}{0, 79, 144} % define primary color
+\usepackage{enumitem} % for customizing lists
+\usepackage{fontawesome5} % for using icons
+\usepackage{amsmath} % for math
+\usepackage[
+    pdftitle={Andrés Ortega CV},
+    pdfauthor={Andrés González Ortega},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref} % for links, metadata and bookmarks
+\usepackage[pscoord]{eso-pic} % for floating text on the page
+\usepackage{calc} % for calculating lengths
+\usepackage{bookmark} % for bookmarks
+\usepackage{lastpage} % for getting the total number of pages
+\usepackage{changepage} % for one column entries (adjustwidth environment)
+\usepackage{paracol} % for two and three column entries
+\usepackage{ifthen} % for conditional statements
+\usepackage{needspace} % for avoiding page brake right after the section title
+\usepackage{iftex} % check if engine is pdflatex, xetex or luatex
+
+% Ensure that generate pdf is machine readable/ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage[default, type1]{sourcesanspro} 
+
+% Some settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt} % remove space before adjustwidth environment
+\pagestyle{empty} % no header or footer
+\setcounter{secnumdepth}{0} % no section numbering
+\setlength{\parindent}{0pt} % no indentation
+\setlength{\topskip}{0pt} % no top skip
+\setlength{\columnsep}{0.15cm} % set column seperation
+\makeatletter
+\let\ps@customFooterStyle\ps@plain % Copy the plain style to customFooterStyle
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Andrés Ortega - Página \thepage{} de \pageref*{LastPage}}
+}{}{} % replace number by desired string
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{
+    % avoid page braking right after the section title
+    \needspace{4\baselineskip}
+    % make the font size of the section title large and color it with the primary color
+    \Large\color{primaryColor}
+}{
+}{
+}{
+    % print bold title, give 0.15 cm space and draw a line of 0.8 pt thickness
+    % from the end of the title to the end of the body
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
+}[] % section title formatting
+
+\titlespacing{\section}{
+    % left space:
+    -1pt
+}{
+    % top space:
+    0.3 cm
+}{
+    % bottom space:
+    0.2 cm
+} % section title spacing
+
+% \renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$} % custom bullet points
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.10 cm,
+        parsep=0.10 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+} % new environment for highlights for bullet entries
+
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+} % new environment for one column entries
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for two column entries
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{1 cm, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+} % new environment for three column entries
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
+}{
+    \par\kern\topsep
+} % new environment for the header
+
+\newcommand{\placelastupdatedtext}{% \placetextbox{<horizontal pos>}{<vertical pos>}{<stuff>}
+  \AddToShipoutPictureFG*{% Add <stuff> to current page foreground
+    \put(
+        \LenToUnit{\paperwidth-2 cm-0.2 cm+0.05cm},
+        \LenToUnit{\paperheight-1.0 cm}
+    ){\vtop{{\null}\makebox[0pt][c]{
+        \small\color{gray}\textit{Marzo 2026}\hspace{\widthof{Marzo 2026}}
+    }}}%
+  }%
+}%
+
+% save the original href command in a new command:
+\let\hrefWithoutArrow\href
+
+% new command for external links:
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placelastupdatedtext
+    \begin{header}
+        \fontsize{30 pt}{30 pt}
+        \textbf{Andrés González Ortega}
+
+        \vspace{0.3 cm}
+
+        \normalsize
+        \mbox{{\footnotesize\faMapMarker*}\hspace*{0.13cm}CDMX}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto:gonorandres@ciencias.unam.mx}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}gonorandres@ciencias.unam.mx}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel:+52 55 48344672}{{\footnotesize\faPhone*}\hspace*{0.13cm}55 48344672}}%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://gonorandres.github.io/}{{\footnotesize\faLink}\hspace*{0.13cm}Portafolio}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://github.com/GonorAndres}{{\footnotesize\faGithub}\hspace*{0.13cm}GitHub}}%
+    \end{header}
+
+    \vspace{0.3 cm - 0.3 cm}
+
+
+    \section{Sobre mí}
+
+        \begin{onecolentry}
+Pasante de la \textbf{Licenciatura en Actuaría} (UNAM, Facultad de Ciencias) y actualmente me desempeño como \textbf{Becario de Ciencia de Datos} en Grupo Gigante; también realizo mi servicio social como asistente de investigación científica en el Instituto de Geofísica (UNAM) y en proceso de titulación mediante los exámenes SOA. Mi rol en Grupo Gigante me ha llevado a ganar experiencia en ingeniería de datos en GCP (BigQuery, Cloud SQL, FireBase), modelación actuarial (Lee-Carter, reservas, RCS) y machine learning (modelos de clasificación, forecasting, optimización). Integro tecnología de vanguardia -- incluyendo agentes y LLMs -- en el flujo de trabajo técnico para hacer más con mayor precisión. Domino Python, R y SQL.
+        \end{onecolentry}
+
+    \section{Experiencia}
+
+        \begin{twocolentry}{
+            Septiembre 2025 -- Presente
+        }
+            \textbf{Becario Ciencia de Datos} -- Grupo Gigante
+            \begin{highlights}
+                \item Trabajo en el area de Data del grupo: enfocado en el paradigma CDP (Customer Data Platform) una plataforma de \textbf{gestión de grandes volúmenes de datos} adaptada a la lógica de cada marca (Office Depot, Casa Ideas y otras), con \textbf{resolución de identidad} para consolidar un perfil único por cliente. Construí modelos de \textbf{clasificación} para estimar probabilidad de abandono y orientar campañas de retención segmentadas.
+                \item Formo parte de proyectos piloto para el desarrollo de apps internas para diferentes propósitos (acceso a la información, marketing, tracking web); donde he aprendido a integrar servicios de la nube para compartir en escala y manejar de forma segura todos los datos.
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.2 cm}
+
+        \begin{twocolentry}{
+            2025 -- Presente
+        }
+            \textbf{Asistente de Investigación Científica} -- Instituto de Geofísica, UNAM \textit{(Servicio Social)}
+            \begin{highlights}
+                \item Participé como co-autor en un artículo (pendiente de publicación) sobre pronóstico de erupciones del Popocatépetl. Modelé los tiempos de reposo mediante \textbf{procesos de renovación} (\textbf{Weibull}) para construir \textbf{intervalos de confianza} sobre el inicio y término de actividad eruptiva. Continúo apoyando al Dr. Delgado-Granados en enfoques estadísticos para datos geofísicos.
+                \item Artículo: \textit{Forecasting onset and termination of volcanic eruptions: A case study -- Popocatépetl volcano, Mexico}. Autora principal: Daniela Hernández Villamizar. Supervisión: \hrefWithoutArrow{https://scholar.google.com/citations?user=lDD0DZQAAAAJ}{Dr.\ Hugo Delgado-Granados} (IGF-UNAM).
+            \end{highlights}
+        \end{twocolentry}
+
+    \section{Habilidades}
+
+\begin{onecolentry}
+    \begin{highlightsforbulletentries}
+        \item \textit{Lenguajes:} Python, R, SQL, C, Bash, Git, \LaTeX, Excel Avanzado
+        \item \textit{Cloud \& DevOps:} GCP Cloud Run, Cloud SQL, BigQuery, Docker, GitHub Actions, PostgreSQL
+        \item \textit{Data Science \& ML:} scikit-learn, PyTorch, XGBoost, Pandas, FastAPI, Plotly, Streamlit, PostHog
+        \item \textit{Ciencia Actuarial:} Seguros de Vida y Daños, Lee-Carter, Reservas (BEL), RCS/SCR, LISF/CUSF
+        \item \textit{Finanzas Cuantitativas:} Derivados, Black-Scholes, Markowitz, VaR, Series de Tiempo
+        \item \textit{IA \& Agentes:} LLMs, Claude API, Claude Agent SDK, flujos agénticos
+        \item \textit{Idiomas:} Inglés (lectura y redacción fluida) | \textit{Soft Skills:} Pensamiento analítico, aprendizaje autónomo
+    \end{highlightsforbulletentries}
+\end{onecolentry}
+
+    \section{Educación}
+
+        \begin{threecolentry}{\textbf{}}{
+            2021 – 2025
+        }
+            \textbf{Facultad de Ciencias UNAM}, \textbf{Licenciatura en Actuaría}
+            \begin{highlights}
+                \item Pasante -- proceso de titulación activo mediante Exámenes SOA (P, FM, SRM)
+            \end{highlights}
+        \end{threecolentry}
+
+    \section{Cursos y certificados}
+
+    \begin{onecolentry}
+        \begin{highlightsforbulletentries}
+            \item \textbf{Associate Data Analyst} / DataCamp \href{https://drive.google.com/file/d/1EqzyjRkWOJBlU9zUTpkcUcj6QtuXRZfK/view?usp=sharing}{}
+            \item \textbf{Associate Data Scientist R} / DataCamp \href{https://drive.google.com/file/d/1xVLk15A1LBbyXH1fZnd4eBTaJ4d8FLLO/view?usp=sharing}{}
+            \item \textbf{Data Scientist in R} / DataCamp \href{https://drive.google.com/file/d/1Woe6xqxofloFZ9uM2f5VsdGxY-WQWCRI/view?usp=sharing}{}
+            \item \textbf{Examen P (Probabilidad) / SOA} -- Aprobado, Marzo 2026 \href{https://drive.google.com/file/d/1rt3emgBnPpQi7NiXkBQeA5WwJTV0JuAf/view?usp=sharing}{}
+            \item \textbf{Exámenes SOA:} FM (10 Abril 2026), SRM (Mayo 2026) -- programados
+        \end{highlightsforbulletentries}
+    \end{onecolentry}
+
+    \section{Proyectos}
+
+% --- New high-impact projects ---
+
+\begin{twocolentry}{
+    \href{https://gonorandres.github.io/blog/data-analyst-portfolio}{Ver proyectos}
+}
+    \textbf{Portafolio de Analista de Datos}
+    \begin{highlights}
+        \item 7 proyectos end-to-end de análisis de datos: cohortes de e-commerce, reservas actuariales, pruebas A/B, KPIs ejecutivos, portafolio financiero y eficiencia operacional. \textit{SQL, Python, Streamlit, Next.js, Power BI.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.05 cm}
+
+\begin{twocolentry}{
+    \href{https://sima-451451662791.us-central1.run.app/}{GCP App}
+    \href{https://github.com/GonorAndres/SIMA}{GitHub}
+}
+    \textbf{SIMA -- Sistema Integral de Modelación Actuarial}
+    \begin{highlights}
+        \item Plataforma actuarial completa: desde datos crudos de mortalidad hasta reservas valuadas y capital regulatorio en un solo flujo. Proyección \textbf{Lee-Carter}, tablas de conmutación, \textbf{BEL} (temporal, vitalicio, dotal), \textbf{RCS} con pruebas de estrés bajo LISF/CUSF. \textit{Python, FastAPI, GCP Cloud Run, Streamlit.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.05 cm}
+
+\begin{twocolentry}{
+    \href{https://github.com/GonorAndres/lisf-agent}{GitHub}
+}
+    \textbf{LISF Agent -- Consultor Regulatorio con IA}
+    \begin{highlights}
+        \item Agente conversacional que responde consultas sobre la LISF en lenguaje natural, a partir del documento oficial. Construido con \textbf{Claude Agent SDK} y desplegado en GCP; explora cómo los \textbf{LLMs} hacen accesible el marco regulatorio actuarial. \textit{Python, FastAPI, Claude API, GCP.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.05 cm}
+
+\begin{twocolentry}{
+    \href{https://gmm-explorer.vercel.app/contexto}{Vercel App}
+}
+    \textbf{GMM Explorer -- Gastos Médicos Mayores}
+    \begin{highlights}
+        \item 5.1 millones de siniestros y 95.9 millones de asegurados-año (2020--2024): desarrollamos un dashboard interactivo para explorar, clasificar y tarifar coberturas GMM por padecimiento, grupo etario y año. \textbf{Prima pura} y \textbf{factores de ajuste} calculados en tiempo real. Proyecto académico en equipo, UNAM. \textit{Next.js, TypeScript.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.05 cm}
+
+\begin{twocolentry}{
+    \href{https://github.com/GonorAndres/proust-attention}{GitHub}
+}
+    \textbf{Proust Attention Machine}
+    \begin{highlights}
+        \item Entrené un \textbf{transformer decoder-only} desde cero sobre el corpus en español de \textit{En busca del tiempo perdido}. El modelo aprende la sintaxis y el ritmo literario de Proust para generar texto; entrenado en Google Colab como solución al costo computacional. \textit{PyTorch, Tokenizers.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.05 cm}
+
+% --- Trimmed existing projects ---
+
+\begin{twocolentry}{
+    \href{https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model}{GitHub}
+    \href{https://drive.google.com/file/d/1PrDvAmmp_u9IBGZnbSPdPh7uDb3i5jY5/view?usp=sharing}{PDF}
+}
+    \textbf{Modelo Predictivo de Incumplimiento Crediticio}
+    \begin{highlights}
+        \item Exploración del riesgo crediticio desde el modelado estadístico: \textbf{GLM} para clasificación de \textbf{default} con \textbf{validación cruzada} y análisis de variables. \textit{Python, scikit-learn.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.05 cm}
+
+\begin{twocolentry}{
+    \href{https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Bayesian_vs_Frequentist}{GitHub}
+    \href{https://drive.google.com/file/d/1kguG7XKBYd6OLJ3nI1z-Syt7Ozcq0mUB/view?usp=drive_link}{PDF}
+}
+    \textbf{A/B Testing: Inferencia Bayesiana vs Frecuentista}
+    \begin{highlights}
+        \item El p-valor no es suficiente para tomar decisiones: implementé el mismo experimento con \textbf{inferencia bayesiana} y frecuentista, y comparé las conclusiones bajo \textbf{teoría de decisión} con utilidad esperada. \textit{Python, PyMC.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.05 cm}
+
+\begin{twocolentry}{
+    \href{https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/EvaluaciónDerivadosDivisas}{GitHub}
+}
+    \textbf{Evaluación de Productos Derivados de Divisas}
+    \begin{highlights}
+        \item Construí desde cero la infraestructura de valuación FX: \textbf{curvas forward}, pricing de forwards y opciones sobre divisas, e interpolación de \textbf{superficie de volatilidad implícita}. \textit{Python.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.05 cm}
+
+\begin{twocolentry}{
+    \href{https://drive.google.com/file/d/1u2uN4X-W-sbW3lEXOigsWpWmMOgzthxX/view?usp=sharing}{PDF}
+}
+    \textbf{Limpieza de Datos -- Deuda Pública CDMX}
+    \begin{highlights}
+        \item Una base administrativa con fechas inconsistentes, tasas rotas y registros duplicados: depuración completa, estandarización de variables y reconstrucción de series \textbf{TIIE} para dejar los datos listos para análisis. \textit{Excel avanzado.}
+    \end{highlights}
+\end{twocolentry}
+
+\end{document}

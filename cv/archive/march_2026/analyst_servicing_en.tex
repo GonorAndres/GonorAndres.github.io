@@ -1,0 +1,322 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot,
+    top=1.1 cm,
+    bottom=1.1 cm,
+    left=1.4 cm,
+    right=1.4 cm,
+    footskip=0.7 cm,
+]{geometry}
+\usepackage[explicit]{titlesec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{primaryColor}{RGB}{0, 79, 144}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+\usepackage[
+    pdftitle={Andrés Ortega CV - Analyst},
+    pdfauthor={Andrés González Ortega},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref}
+\usepackage[pscoord]{eso-pic}
+\usepackage{calc}
+\usepackage{bookmark}
+\usepackage{lastpage}
+\usepackage{changepage}
+\usepackage{paracol}
+\usepackage{ifthen}
+\usepackage{needspace}
+\usepackage{iftex}
+
+% ATS parsable:
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage[default, type1]{sourcesanspro}
+
+% Settings:
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+\pagestyle{empty}
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\columnsep}{0.15cm}
+\makeatletter
+\let\ps@customFooterStyle\ps@plain
+\patchcmd{\ps@customFooterStyle}{\thepage}{
+    \color{gray}\textit{\small Andrés Ortega -- Page \thepage{} of \pageref*{LastPage}}
+}{}{}
+\makeatother
+\pagestyle{customFooterStyle}
+
+\titleformat{\section}{
+    \needspace{4\baselineskip}
+    \large\color{primaryColor}
+}{
+}{
+}{
+    \textbf{#1}\hspace{0.15cm}\titlerule[0.8pt]\hspace{-0.1cm}
+}[]
+
+\titlespacing{\section}{
+    -1pt
+}{
+    0.15 cm
+}{
+    0.10 cm
+}
+
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.05 cm,
+        parsep=0.05 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=0.4 cm + 10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.05 cm,
+        parsep=0.05 cm,
+        partopsep=0pt,
+        itemsep=0pt,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{
+        0.2 cm + 0.00001 cm
+    }{
+        0.2 cm + 0.00001 cm
+    }
+}{
+    \end{adjustwidth}
+}
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{1 cm, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\color{primaryColor}\linespread{1.5}
+}{
+    \par\kern\topsep
+}
+
+% QR code + date in top-right corner
+\newcommand{\placetopright}{%
+  \AddToShipoutPictureFG*{%
+    \put(
+        \LenToUnit{\paperwidth-1.5 cm},
+        \LenToUnit{\paperheight-0.9 cm}
+    ){\vtop{{\null}\makebox[0pt][r]{%
+        \vbox{%
+            \hbox to 1.3cm{\hfil{\small\color{gray}\textit{April 2026}}\hfil}%
+            \vspace{0.05cm}%
+            \hbox{\pdfximage width 1.3cm {../qr_portfolio.png}\pdfrefximage\pdflastximage}%
+            \vspace{0.03cm}%
+            \hbox to 1.3cm{\hfil{\tiny\color{gray}\textit{portfolio}}\hfil}%
+        }
+    }}}%
+  }%
+}
+
+% Colored highlight for key terms
+\newcommand{\hl}[1]{\textcolor{primaryColor}{\textbf{#1}}}
+
+\let\hrefWithoutArrow\href
+\renewcommand{\href}[2]{\hrefWithoutArrow{#1}{\ifthenelse{\equal{#2}{}}{ }{#2 }\raisebox{.15ex}{\footnotesize \faExternalLink*}}}
+
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{}
+
+    \placetopright
+
+    \begin{header}
+        \fontsize{24 pt}{24 pt}
+        \textbf{Andrés González Ortega}
+
+        \vspace{0.15 cm}
+
+        \normalsize
+        \mbox{{\footnotesize\faMapMarker*}\hspace*{0.13cm}Mexico City}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{mailto:gonorandres@ciencias.unam.mx}{{\footnotesize\faEnvelope[regular]}\hspace*{0.13cm}gonorandres@ciencias.unam.mx}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{tel:+52 55 48344672}{{\footnotesize\faPhone*}\hspace*{0.13cm}+52 55 4834 4672}}%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://gonorandres.github.io/}{{\footnotesize\faLink}\hspace*{0.13cm}gonorandres.github.io}}%
+        \kern 0.25 cm%
+        \AND%
+        \kern 0.25 cm%
+        \mbox{\hrefWithoutArrow{https://github.com/GonorAndres}{{\footnotesize\faGithub}\hspace*{0.13cm}GitHub}}%
+    \end{header}
+
+    \vspace{0.05 cm}
+
+
+    \section{About Me}
+
+        \begin{onecolentry}
+Actuary by training, toolmaker by vocation. \textbf{SOA Exam P passed}, data science intern at \textbf{Grupo Gigante}, and co-author of a research paper on \textbf{Popocatépetl} eruption forecasting (IGF-UNAM). I care about data that is correct before it is clever -- reliable pipelines, reconciled numbers, and reports people can act on without second-guessing.
+        \end{onecolentry}
+
+
+    \section{Experience}
+
+        \begin{twocolentry}{
+            Sep 2025 -- Present
+        }
+            \textbf{Data Science Intern} -- Grupo Gigante
+            \begin{highlights}
+                \item Contributing to the group's \textbf{CDP}: identity resolution across brands (Office Depot, Casa Ideas, and others), classification models to predict churn, and pipelines on \textbf{GCP} (BigQuery, Cloud SQL, Firebase) processing millions of customer profiles. Also involved in cross-functional projects: inventory analytics, internal data usage, and audience activation.
+            \end{highlights}
+        \end{twocolentry}
+
+        \vspace{0.10 cm}
+
+        \begin{twocolentry}{
+            2025 -- Present
+        }
+            \textbf{Research Assistant} -- Institute of Geophysics, UNAM \textit{(Community Service)}
+            \begin{highlights}
+                \item Co-author of a paper on forecasting Popocatépetl eruptions using \textbf{Weibull renewal processes}. What an actuary and a volcanologist have in common: both model rare events with massive consequences. Advisor: \hrefWithoutArrow{https://scholar.google.com/citations?user=lDD0DZQAAAAJ}{Dr.\ Hugo Delgado-Granados} (IGF-UNAM).
+            \end{highlights}
+        \end{twocolentry}
+
+
+    \section{Skills}
+
+\begin{onecolentry}
+    \begin{highlightsforbulletentries}
+        \item \textit{Languages:} Python, R, SQL, TypeScript, Bash, Git, \LaTeX, Advanced Excel
+        \item \textit{Data \& Reporting:} BigQuery, PostgreSQL, Cloud SQL, Pandas, Plotly, Streamlit, Power BI, Looker Studio
+        \item \textit{Cloud \& Automation:} GCP Cloud Run, Docker, GitHub Actions, Dagster, Terraform, FastAPI
+        \item \textit{Finance \& Actuarial:} Financial Mathematics, Forecasting, Monte Carlo Simulation, GLM, Reserves, Risk Capital
+        \item \textit{AI \& Agents:} LLMs, Claude API, Claude Agent SDK, RAG | \textit{Languages:} Native Spanish, fluent English (reading, writing, speaking)
+    \end{highlightsforbulletentries}
+\end{onecolentry}
+
+
+    \section{Education \& Certificates}
+
+        \begin{twocolentry}{
+            2021 – 2025
+        }
+            \textbf{UNAM, Faculty of Sciences} -- B.S.\ in Actuarial Science. Completed all coursework; degree via SOA pathway: \textbf{P passed} March 2026 \href{https://drive.google.com/file/d/1rt3emgBnPpQi7NiXkBQeA5WwJTV0JuAf/view?usp=sharing}{view}, FM April 10 2026, SRM May 2026.
+        \end{twocolentry}
+
+    \begin{onecolentry}
+        \begin{highlightsforbulletentries}
+            \item \textbf{Associate Data Analyst, Associate Data Scientist R, Data Scientist in R} / DataCamp \href{https://drive.google.com/file/d/1EqzyjRkWOJBlU9zUTpkcUcj6QtuXRZfK/view?usp=sharing}{}
+        \end{highlightsforbulletentries}
+    \end{onecolentry}
+
+
+    \section{Projects}
+
+\begin{twocolentry}{
+    \href{https://gonorandres.github.io/blog/data-analyst-portfolio}{Blog}
+    \href{https://github.com/GonorAndres/data-analyst-path}{GitHub}
+}
+    \textbf{Data Analyst Portfolio}
+    \begin{highlights}
+        \item 7 end-to-end projects answering real business questions: e-commerce cohorts, actuarial reserves, \hl{A/B tests}, executive \hl{KPIs}, and operational efficiency. \textit{SQL, Python, Streamlit, Next.js, Power BI.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.03 cm}
+
+\begin{twocolentry}{
+    \href{https://gonorandres.github.io/blog/data-engineering-platform}{Blog}
+    \href{https://github.com/GonorAndres/data-engineer-path}{GitHub}
+}
+    \textbf{Insurance Data Platform on GCP}
+    \begin{highlights}
+        \item An actuary shouldn't depend on IT for clean data. Warehouse, orchestration, streaming, and IaC over insurance datasets -- all on GCP for under \$10/month. \textit{Python, BigQuery, Dagster, Terraform.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.03 cm}
+
+\begin{twocolentry}{
+    \href{https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model}{GitHub}
+}
+    \textbf{Credit Risk Model}
+    \begin{highlights}
+        \item Who will default? Loan default prediction on 32,000+ records with \hl{85\% AUC}: \hl{GLM}, gradient boosting, and cross-validation to separate good and bad credit. \textit{Python, scikit-learn, XGBoost.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.03 cm}
+
+\begin{twocolentry}{
+    \href{https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Bayesian_vs_Frequentist}{GitHub}
+}
+    \textbf{A/B Testing -- Bayesian vs Frequentist}
+    \begin{highlights}
+        \item When should you call a winner in a conversion test? Same question, two paths: frequentist p-values and \hl{Beta} posterior distributions with \hl{PyMC}. Decision by expected utility, not just significance. \textit{Python, Bayesian Statistics.}
+    \end{highlights}
+\end{twocolentry}
+
+\vspace{0.03 cm}
+
+\begin{twocolentry}{
+    \href{https://gonorandres.github.io/blog/proust-attention-machine/}{Blog}
+    \href{https://github.com/GonorAndres/proust-attention}{GitHub}
+}
+    \textbf{Proust Attention Machine}
+    \begin{highlights}
+        \item Can a network learn literary style character by character? Transformer built from scratch, trained on all 7 volumes of \textit{In Search of Lost Time}: \hl{embeddings}, \hl{multi-head attention}, and autoregressive generation. \textit{PyTorch, NLP, Deep Learning.}
+    \end{highlights}
+\end{twocolentry}
+
+\end{document}
