@@ -59,11 +59,27 @@ test-results/
 playwright-report/
 
 # ---------------------------------------------------------------------------
-# cv/ -- THIS REPO IS PUBLIC. Sources only; never track compiled or private CV
-# material. Employer-specific tailoring belongs in the private claude-job repo.
+# cv/ -- THIS REPO IS PUBLIC.
+#
+# ONLY the public CV lives here: cv-andres-gonzalez.tex, the single document
+# published at gonor.me/docs/cv-andres-gonzalez.pdf.
+#
+# Role variants (data scientist, insurance, risk, insurtech, ...) are tailored
+# to specific positions and are NOT shareable. They live in the private
+# GonorAndres/claude-job repo. Never add them back here.
+#
+# This is an ALLOWLIST: everything under cv/ is ignored unless named below, so
+# a new variant cannot be committed by accident.
 # ---------------------------------------------------------------------------
+cv/*
+cv/**/
+!cv/cv-andres-gonzalez.tex
+!cv/qr_portfolio.png
+!cv/build.sh
+!cv/CLAUDE.md
+!cv/README.md
 
-# Compiled output and LaTeX build artifacts
+# Compiled output and LaTeX build artifacts (defense in depth)
 cv/**/*.pdf
 cv/**/*.aux
 cv/**/*.out

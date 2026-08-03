@@ -1,39 +1,45 @@
-# CV -- LaTeX sources
+# CV -- LaTeX source
 
-Sources for Andrés González Ortega's CV, versioned alongside the portfolio site so the
-CV wording and `src/data/projects.ts` stay in sync.
-
-```bash
-./build.sh august_2026.tex               # current base
-./build.sh august_2026/d1_insurance.tex  # one variant
-./build.sh --all august_2026             # the whole cycle
-```
-
-Target for every variant: **1 page, 0 overfull boxes**.
-
-Requires TeX Live plus two user-mode packages:
+Source for the **public CV** of Andrés González Ortega, versioned alongside the portfolio site
+so the CV wording and `src/data/projects.ts` stay in sync.
 
 ```bash
-tlmgr --repository https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023/tlnet-final/ \
-  install fontawesome5 sourcesanspro
+./build.sh cv-andres-gonzalez.tex
 ```
 
-## Layout
+Target: **1 page, 0 overfull boxes.**
 
-| Path | Contents |
-|---|---|
-| `august_2026.tex` + `august_2026/` | Current cycle: base + 13 canonical role variants |
-| `may_2026.tex` + `may_2026/` | Previous cycle |
-| `april_2026.tex` + `april_2026/` | Older cycle |
-| `archive/` | Older months |
-| `awesome-cv.cls`, `qr_portfolio.png` | Build dependencies |
-| `CLAUDE.md` | Full editorial rules: narrative, style, ATS, skill integrity |
+## Only one CV lives here
 
-## This repo is public
+`cv-andres-gonzalez.tex` is the single document in this folder. It is the public CV, published
+at `gonor.me/docs/cv-andres-gonzalez.pdf`, and it is edited **in place** each cycle rather than
+forked into a new file per month. The revision month lives in the `\placetopright` date.
 
-Compiled PDFs, job postings, employer-specific variants and exam proofs are **gitignored
-and must stay that way**. They live in the private `GonorAndres/claude-job` repo. Read the
-first section of `CLAUDE.md` before adding files here.
+**Role variants are not kept here.** Versions tailored to a specific position (data scientist,
+insurance, risk, data analyst, finance, insurtech, ...) are written for a particular application
+and are **not shareable**, so they live in the private `GonorAndres/claude-job` repo along with
+job postings, cover letters and application emails.
 
-The public CV PDF is served from the Drive permanent link that `src/components/sections/Hero.astro`
-and `Contact.astro` point at.
+This repo is public, and `.gitignore` enforces the rule as an allowlist: everything under `cv/`
+is ignored except `cv-andres-gonzalez.tex`, `qr_portfolio.png`, `build.sh`, `CLAUDE.md` and
+`README.md`. Do not weaken it to add "just one" variant.
+
+## Requirements
+
+The document is `article` + `paracol` and **needs pdflatex** (run twice, for `lastpage`).
+Tectonic cannot build it -- Tectonic is XeTeX-only.
+
+```bash
+sudo apt-get install -y texlive-latex-recommended texlive-latex-extra \
+                        texlive-fonts-recommended texlive-fonts-extra texlive-lang-spanish
+```
+
+`fontawesome5` and `sourcesanspro` come from `texlive-fonts-extra`.
+
+## Publishing
+
+Building a PDF does not change the site. To publish, copy the built PDF over
+`../public/docs/cv-andres-gonzalez.pdf` and deploy -- that tracked file is what `Hero.astro`
+and `Contact.astro` link to.
+
+See `CLAUDE.md` for the full editorial rules: narrative, style, ATS, skill integrity.

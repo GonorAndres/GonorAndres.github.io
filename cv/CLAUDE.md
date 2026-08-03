@@ -4,16 +4,36 @@ Guidance for Claude Code when working inside `cv/`.
 
 ## What This Is
 
-LaTeX sources for Andrés González Ortega's CV -- actuarial science graduate from UNAM (Facultad de Ciencias). Primary language is Spanish; English variants mirror the ES content. Each month forks the previous month (e.g. `august_2026.tex` forked `may_2026.tex`).
+LaTeX source for Andrés González Ortega's CV -- actuarial science graduate from UNAM (Facultad de Ciencias). Spanish.
 
-This folder holds **sources only**. It is versioned inside the portfolio site repo so the CV and the portfolio stay in sync -- the same projects, the same wording, one place to edit.
+**Exactly one CV document lives here: `cv-andres-gonzalez.tex`.** It is the public CV, the one
+published at `gonor.me/docs/cv-andres-gonzalez.pdf` and handed to anyone. It is edited **in
+place** each cycle, not forked monthly; the `\placetopright` date carries the revision month.
+
+### THE RULE: role variants are private, and never live here
+
+Role variants (data scientist, insurance/actuarial, risk management, data analyst/DE, finance,
+insurtech, general, and their English counterparts) are **tailored to specific positions and are
+not shareable**. They do not belong in this repo in any form -- not under a cycle directory, not
+renamed, not "temporarily".
+
+They live in the private **`github.com/GonorAndres/claude-job`** repo, which is also where
+employer-specific tailoring, job postings, cover letters and application emails belong.
+
+`.gitignore` enforces this with an **allowlist**: everything under `cv/` is ignored except
+`cv-andres-gonzalez.tex`, `qr_portfolio.png`, `build.sh`, `CLAUDE.md`, `README.md`. A new
+variant cannot be committed by accident. Do not weaken that allowlist to "just add one".
+
+If a task asks for a tailored variant, do it in `claude-job`, not here.
 
 ### THIS REPO IS PUBLIC
 
-`GonorAndres.github.io` is a public GitHub repo. Everything committed under `cv/` is world-readable. Consequences:
+`GonorAndres/GonorPage` is a public GitHub repo. Everything committed under `cv/` is
+world-readable, **and stays readable in git history even after deletion**. Consequences:
 
-- **Never commit compiled PDFs.** `.gitignore` excludes `cv/**/*.pdf`. The public CV lives on the Drive permanent link; that is the only PDF anyone should be handed.
-- **Never commit job postings** (`*_job.md`), **application emails**, **cover letters**, or **any variant named after an employer**. Which companies Andrés applied to is private. Those live in the private `claude-job` repo (see below).
+- **Never commit role variants.** See the rule above. This is the one that matters most.
+- **Never commit compiled PDFs** under `cv/`. The published PDF is a separate tracked artifact at `../public/docs/cv-andres-gonzalez.pdf`; that is the only PDF anyone should be handed.
+- **Never commit job postings** (`*_job.md`), **application emails**, **cover letters**, or **anything named after an employer**. Which companies Andrés applied to is private.
 - **Never commit exam proofs, transcripts, or interview prep.** `docs/preliminar_soa.pdf` and similar stay private.
 - Contact details (email, phone, portfolio links) inside the `.tex` are fine -- they already appear on the public CV PDF and on the live site.
 
@@ -32,13 +52,13 @@ sudo apt install texlive-latex-recommended texlive-fonts-recommended texlive-lan
 tlmgr --repository https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2023/tlnet-final/ install fontawesome5 sourcesanspro
 
 # Smoke test
-cd cv && ./build.sh august_2026.tex
+cd cv && ./build.sh cv-andres-gonzalez.tex
 # Expect: 1 page, 0 overfull warnings.
 ```
 
 ## Professional Identity -- Key Differentiators (May 2026)
 
-These are Andrés's core differentiators. Every CV variant should signal them through evidence, not through trait claims:
+These are Andrés's core differentiators. The CV should signal them through evidence, not through trait claims:
 
 1. **Continuous learning, documented** -- He doesn't just learn; he publishes what he learns (blog, production projects, technical notes). The website IS the evidence. Never claim "aprendo rapido" -- show the blog with 22 bilingual posts and 25+ live projects.
 2. **Production-ready mindset** -- Projects are not notebooks or exercises; they run on GCP with CI/CD, tests, and live URLs. The pipeline goes from raw data to deployed API. Highlight deployed systems, not POCs.
@@ -75,72 +95,39 @@ The CV shows the work and lets the reader draw conclusions. It never states "I'm
 - **"Sobre mí"** is a professional summary, first-person throughout ("Soy…", "He construido…", "Escribo…"). Ban: "Me apasiona…", motivation statements, anything that reads like a cover-letter opening.
 - **Highlight the outliers, not the expected**. Reserves and pricing are standard for an actuary. A transformer on Proust, a GCP data platform, and a RAG agent over regulation are not.
 
-## Directory Layout
-
-```
-cv/
-  CLAUDE.md                # this file
-  README.md
-  build.sh                 # compile helper (2 passes + overfull/page check)
-  awesome-cv.cls           # class file
-  qr_portfolio.png         # QR for header
-
-  august_2026.tex          # current base
-  august_2026/             # current cycle variants (13 canonical)
-  may_2026.tex             # previous base
-  may_2026/                # previous cycle variants (13 canonical)
-  april_2026.tex           # older base
-  april_2026/              # older cycle variants (13 canonical + 4 legacy generics)
-  archive/                 # older months (agosto, feb_2026, march_2026 + generics)
-```
-
-`archive/agosto.tex` is August **2025** and predates the QR/`placetopright` block. It is
-not a precedent for the current cycle; do not confuse it with `august_2026`.
-
-Compiled PDFs, `.aux`/`.log`, job postings and employer variants are gitignored -- see the public-repo section above.
-
-## Role Variants
-
-| File | Target | Habilidades emphasis |
-|---|---|---|
-| `<month>.tex` (A1) / `occ_general.tex` (OCC) | BASE -- general OCC | **Ciencia Actuarial leads (2nd bullet), packed**: Tarificación (GLM, frecuencia-severidad, credibilidad), Reservas (BEL, IBNR, Chain Ladder, BF), Lee-Carter, RCS/SCR bajo LISF/CUSF, EMSSA-09, Reaseguro, CONAPO/HMD, Pensiones IMSS |
-| `a2_general_en.tex` | EN general | Same as A1 in English |
-| `b1_data_scientist.tex` / `b2_en` | Data Scientist / ML | DS & ML first; actuarial last |
-| `c1_risk_management.tex` / `c2_en` | Risk Analyst / Quant Risk | Riesgo Cuantitativo second line |
-| `d1_insurance.tex` / `d2_en` | Actuarial / Insurance | Ciencia Actuarial deep (Whittaker-Henderson, EMSSA-09, Bühlmann-Straub, Ley 73/97, Fondo Bienestar) |
-| `e1_data_analyst_de.tex` / `e2_en` | Data Analyst / Data Engineer | Data Engineering second line (Dagster, Beam, Terraform, PySpark, Databricks, DuckDB) |
-| `f1_financial.tex` / `f2_en` | Finance / Quant Finance | Finanzas Cuantitativas (Markowitz, Black-Scholes, derivados, cópulas, EVT, series de tiempo) |
-| `g1_insurtech.tex` / `g2_en` | Insurtech (May 2026 onward) | Insurance + product/platform engineering |
-| `actuarial_analyst_us_insurer.tex` | USI -- actuarial EN for US-parent insurers | Actuarial Science first; credibility/Bühlmann-Straub emphasized |
-
-**What changes per variant:** Sobre mí closing, Habilidades bullet order and content, Proyectos (4 role-matched).
-**What stays fixed:** preamble, header (modulo contact-line paragraph break), experience bullets (ATS), education, certs structure.
-
-## CV Sections (order in the base file)
+## CV Sections (order in the document)
 
 1. **Header** -- name, CDMX, email, phone (+52 55 4834 4672), portfolio link "Mi web(25+ proyectos)", GitHub. QR + date in top-right margin.
 2. **Sobre mí** -- professional summary. **Three-part structure (strict)**:
-   1. **Fact opening**: UNAM + SOA P + Grupo Gigante + **IGF-UNAM** -- all four in the first sentence. IGF-UNAM co-authorship is a required differentiator and must appear in every variant's opening (it's been missed in past iterations on B1/B2/E1/E2/F1/F2).
+   1. **Fact opening**: UNAM + SOA P + **current employer (Levely)** + **IGF-UNAM** -- all four in the first sentence. IGF-UNAM co-authorship is a required differentiator and must appear in the opening sentence.
    2. **Role hook**: one concrete problem/solution clause naming what the person DOES (pricing, reservas, capital; ML models; quant risk; pipelines; etc.) and ending with tech anchors (model, pipeline, API, dashboard / GCP / LISF / Neo4j).
    3. **Fact+preference split (canonical)** -- then blog close:
       - ES: *"Practico la formación continua y disfruto el trabajo colaborativo con equipos multidisciplinarios. En mi página web comparto lo que aprendo y construyo."*
       - EN: *"I practice continuing formation and enjoy collaborative work with multidisciplinary teams. On my website I share what I learn and build."*
-      - Shorter EN variant for tight fits: *"I practice continuing formation and enjoy multidisciplinary collaborative work."*
-3. **Experiencia** -- **single-column, dates inline**: `Becario Ciencia de Datos -- Grupo Gigante\quad{\small\color{gray}\textit{Septiembre 2025 -- Presente}}`. Uses `\begin{onecolentry}`, NOT `twocolentry`. **Job title must say "Becario Ciencia de Datos" / "Data Science Intern" (full)** -- never the short form "Becario de datos" / "Data Intern" except in USI where the lead is "Actuarial analyst" and the title is intentionally shortened.
-4. **Habilidades** -- 6 bullets. A1/OCC/A2 lead with Ciencia Actuarial as the second bullet (right after Lenguajes). Spoken languages is its own bullet (`\item \textit{Idiomas:} ...` / `\item \textit{Languages:} ...`), not pipe-joined.
+3. **Experiencia** -- **single-column, dates inline**: `<Puesto> -- <Empresa>\quad{\small\color{gray}\textit{Junio 2026 -- Presente}}`. Uses `\begin{onecolentry}`, NOT `twocolentry`. Three entries, most recent first:
+   - **Analista de Performance Marketing -- Levely** (Junio 2026 -- Presente). No client names, ever: describe actions and cases, not subjects.
+   - **Becario Ciencia de Datos -- Grupo Gigante** (Septiembre 2025 -- Mayo 2026, closed; past tense). Job title must say **"Becario Ciencia de Datos"** in full, never "Becario de datos".
+   - **Asistente de Investigación Científica -- IGF-UNAM** (2025 -- Presente).
+4. **Habilidades** -- 6 bullets in order: Lenguajes, Ciencia Actuarial, Cloud \& DevOps, Medición \& Marketing Analytics, Data Science/ML \& IA, Idiomas. Spoken languages is its own bullet (`\item \textit{Idiomas:} ...`), not pipe-joined.
 5. **Educación** -- one line: `Pasante (100\% de créditos cubiertos); titulación por exámenes profesionales SOA (Society of Actuaries).` EN: `Degree requirements completed (100\% of coursework); graduating via SOA exam track.` **Always escape `%` as `\%`.**
-6. **Certificaciones** -- SOA P (Exam P, Aprobado Marzo 2026, linked) + 3 DataCamp certs + Databricks Fundamentals as **separate items**, each with its own link:
+6. **Certificaciones** -- 8 items, each a **separate `\item`** with its own link (never `\textbullet`-join; ATS reads only the first entry on a line):
    - Associate Data Analyst (DataCamp) -> Drive `1EqzyjRkWOJBlU9zUTpkcUcj6QtuXRZfK`
-     (`Asociate_Data_Analyst.pdf`). **Cycles up to `may_2026` wrongly pointed this at
-     `1-QUuVH3zPBPsl6RhUvuUWxpZkP1i8TYb`, which is the `MisDocumentos` _folder_, not the
-     certificate** -- a reader clicking it landed in a file listing. Fixed from `august_2026`
-     onward. Do not reintroduce the folder ID here; it belongs only in the Drive-upload
-     section below as the parent folder.
+     (`Asociate_Data_Analyst.pdf`). This once wrongly pointed at
+     `1-QUuVH3zPBPsl6RhUvuUWxpZkP1i8TYb`, which is the `MisDocumentos` **folder**, not the
+     certificate, so readers landed in a file listing. Do not reintroduce the folder ID here;
+     it belongs only in the Drive-upload section below as the parent folder.
    - Associate Data Scientist in R (DataCamp) -> Drive `1xVLk15A1LBbyXH1fZnd4eBTaJ4d8FLLO`
    - Data Scientist Professional with R (DataCamp) -> Drive `1Woe6xqxofloFZ9uM2f5VsdGxY-WQWCRI`
-   - **Databricks Fundamentals** (Databricks Academy, Abr 2026, no expiry) -> `https://credentials.databricks.com/45f31d0f-ca80-4e3a-80c1-ede89826f6ce`
-   FM and SRM removed (scheduled exams != certifications).
-7. **Proyectos** -- 4 projects using `twocolentrynarrow` (2.2cm right column for links). Problem-first descriptions. All 14 variants in the current cycle carry exactly 4; if you raise the count, re-check the 1-page fit.
+   - **Databricks Fundamentals** (Abr 2026) -> `https://credentials.databricks.com/45f31d0f-ca80-4e3a-80c1-ede89826f6ce`
+   - **AI Agent Fundamentals** (Databricks, Abr 2026) -> `https://credentials.databricks.com/14950fb9-6260-46d2-b78e-8ec864397479`
+   - **Generative AI Fundamentals** (Databricks, Abr 2026) -> `https://credentials.databricks.com/9e3a7d69-10f5-4474-901f-d35e73bb69b2`
+   - **Create ML Models with BigQuery ML** (Google Cloud, Jun 2026) -> `https://www.credly.com/badges/627e036d-0757-4d8a-9dca-6a40a8088f3c`
+   - SOA P (Aprobado Marzo 2026) -> Drive `1rt3emgBnPpQi7NiXkBQeA5WwJTV0JuAf`
+
+   `\href` is redefined in the preamble to always append a visible external-link arrow, so
+   `\href{url}{}` with empty text is correct and clickable. Adding link text renders two icons.
+   FM and SRM stay out (scheduled exams != certifications).
+7. **Proyectos** -- 6 projects using `twocolentrynarrow` (2.2cm right column for links). Problem-first descriptions. If you change the count, re-check the 1-page fit.
 
 ## Style Rules
 
@@ -155,15 +142,15 @@ The general rule against "I'm a fast learner" character claims still holds, but 
 - **Reject**: using "aprender" / "learn" twice in the Sobre mí paragraph -- the blog close already says "comparto lo que aprendo" / "share what I learn", so the soft-skill sentence must use synonyms (colaborativo, multidisciplinary teams, etc.) to avoid word repetition.
 - **Reject**: em-dash punctuation (`--`) as sentence connector. Use commas, semicolons, or colons. `-` only for hyphenated compound words (rare-event, RBC-analog, Lee-Carter, IBNR/BEL, etc.).
 
-Blog close (uniform across all canonical variants, never rephrase):
+Blog close (never rephrase):
 - ES: *"En mi página web comparto lo que aprendo y construyo."*
 - EN: *"On my website I share what I learn and build."*
 
 ### General
 
-- **First-person throughout Sobre mí**: "Soy", "He construido", "mi página web" -- never third-person. Check every verb when copying across variants.
-- **Full month names in Spanish**: Enero, Febrero, …, Diciembre. ES variants never use "Sept" etc.; EN variants use short forms ("Sept 2025") which are fine.
-- **Primary color**: RGB(217, 119, 87) -- Claude orange-red (`#D97757`). A few variants have individual colors (USI=blue `#004F90`, OCC=purple `#5C4B8A`).
+- **First-person throughout Sobre mí**: "Soy", "He construido", "mi página web" -- never third-person. Check every verb when editing.
+- **Full month names in Spanish**: Enero, Febrero, …, Diciembre. Never "Sept" etc. This is a Spanish document.
+- **Primary color**: RGB(217, 119, 87) -- Claude orange-red (`#D97757`), set via `\definecolor{primaryColor}`.
 - **Font**: Source Sans Pro (type1).
 - **ATS parsable**: `glyphtounicode` enabled; use `\%` for literal percent; never split ATS-critical strings across `%` line-continuations.
 - **Phone**: E.164 href, human-readable display:
@@ -172,10 +159,9 @@ Blog close (uniform across all canonical variants, never rephrase):
 - **Project descriptions**: problem-first, ~150-230 chars, ending with italic tools.
 - **Experience entries**: single-column (`onecolentry`), date inline after role as `\quad{\small\color{gray}\textit{DATE}}`. No `twocolentry` for experience anymore.
 - **Project entries**: `twocolentrynarrow` with 2.2cm right column for the link. Keep them.
-- **Footer**: `Andrés Ortega -- Página X de Y` (ES) / `Page X of Y` (EN). **No variant code** (`[A1] General`, etc.) -- strip before sending.
+- **Footer**: `Andrés Ortega -- Página X de Y`. **No variant code** (`[A1] General`, etc.) anywhere, including `pdftitle` -- this is the public CV.
 - **QR block**: anchored at `(paperwidth-0.3cm, paperheight-0.2cm)`, width 1.3cm. Sits in right margin, above the centered header's horizontal reach. Do not move it into a wider position or it will collide with the GitHub link.
-- **Compact-preamble variants (b1/c1/d1/e1/f1)**: the header MUST have a blank line between `\textbf{Andrés González Ortega}` and `\vspace{0.15 cm}`, otherwise the contact line renders on the same line as the name.
-- **QR image path**: `qr_portfolio.png` in the base files, `../qr_portfolio.png` in variants under any cycle directory (`april_2026/`, `may_2026/`, `august_2026/`).
+- **QR image path**: `qr_portfolio.png`, loaded via the `\pdfximage` primitive (no `graphicx`).
 
 ## LaTeX Environments
 
@@ -193,44 +179,30 @@ Blog close (uniform across all canonical variants, never rephrase):
 ## Build
 
 ```bash
-./build.sh august_2026.tex           # base
-./build.sh august_2026/d1_insurance.tex # variant
-./build.sh --all august_2026         # every .tex in a cycle
+./build.sh cv-andres-gonzalez.tex
 ```
 
-`build.sh` picks the engine from the document class (`awesome-cv` -> `xelatex`, since the class
-loads `fontspec` and aborts under pdflatex; older `article` files -> `pdflatex`) and runs it
-twice, since `lastpage` needs the second pass. It then reports page count and overfull boxes.
-Verify: **1 page, 0 overfull**. Any overfull > 1pt must be fixed before exporting.
+The document is `article` + `paracol` and **requires pdflatex** (run twice -- `lastpage` needs
+the second pass). `build.sh` picks the engine from the document class and does both passes,
+then reports page count and overfull boxes.
 
-**Known pre-existing exception:** every variant reports exactly one Overfull \hbox of
-**1.33pt** in the centered header (`\makecvheader`, the math-mode contact separators). It is
-under the 1pt-plus-margin judgement call in practice and is identical in `may_2026` and
-`august_2026`, so it is a class-level artifact, not variant drift. Don't chase it per-variant.
+Verify: **1 page, 0 overfull.** Any overfull > 1pt must be fixed before publishing.
 
-### Alternative engine: Tectonic (no TeX Live install)
-
-`tectonic` is a single static binary that fetches packages on demand -- useful on a fresh VM
-where installing TeX Live is heavy. It is **XeTeX-only**, which suits `awesome-cv` but cannot
-build the older `article`-based files that need pdflatex.
+**Tectonic cannot build this document.** Tectonic is XeTeX-only; this lineage needs pdflatex.
+On a bare VM install TeX Live instead:
 
 ```bash
-curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net | sh   # drops ./tectonic
-mv tectonic ~/.local/bin/
-sudo apt-get install -y fonts-roboto    # REQUIRED: the class calls \newfontfamily\roboto{Roboto}
-                                        # by system-font name; without it the build dies with
-                                        # `Package fontspec Error: The font "Roboto" cannot be found`
-tectonic -X compile august_2026.tex --outdir /tmp/texout --keep-logs
+sudo apt-get update
+sudo apt-get install -y texlive-latex-recommended texlive-latex-extra \
+                        texlive-fonts-recommended texlive-fonts-extra texlive-lang-spanish
 ```
 
-`SourceSansPro` needs no system install (the class loads the `.otf` files by filename, which
-Tectonic fetches automatically). Only `Roboto` is resolved by system-font lookup.
-
-Output PDFs land next to the source and are gitignored. Move the deliverable out of the repo (or into the private `claude-job` checkout) before sending it anywhere.
+Output PDFs land next to the source and are gitignored. To publish, copy the built PDF over
+`../public/docs/cv-andres-gonzalez.pdf` and deploy -- see Version Tracking below.
 
 ## Tailoring for Job Postings
 
-Do employer-specific tailoring in the **private** `claude-job` repo, not here. Copy the closest canonical variant out, tailor it there, and keep the posting text with it. Only bring a change back into `cv/` if it improves a canonical variant.
+Do **all** tailoring in the private `claude-job` repo, not here. Copy `cv-andres-gonzalez.tex` out, tailor it there, and keep the posting text with it. Bring a change back into this file only if it improves the **public** CV for every reader. A position-specific edit never comes back.
 
 ### ATS Pass + Technical Depth
 
@@ -266,7 +238,10 @@ Adding any of these to the CV breaks the defensibility rule.
 Permanent public link (never create a new file; always update in place):
 https://drive.google.com/file/d/16cdRmnzf0drNv9c5848N6ZedgYX9WhwV/view?usp=drive_link
 
-This is the same ID the site's Hero and Contact CV buttons point at (`../src/components/sections/Hero.astro`, `Contact.astro`). If it ever changes, both components change too.
+**This Drive file is NOT what the site serves.** `Hero.astro` and `Contact.astro` both link
+`/docs/cv-andres-gonzalez.pdf`, a tracked binary at `../public/docs/cv-andres-gonzalez.pdf`.
+Updating the Drive file changes nothing on gonor.me; updating the tracked PDF and deploying is
+what changes it. Keep both in sync when publishing a new CV, or decide which one is canonical.
 
 **Workflow:**
 1. Edit `.tex`, compile with `build.sh`.
@@ -299,7 +274,7 @@ The internship covers three distinct ML workstreams:
 | **Cross-brand propensity** | Cross-sell/upsell across brands (enabled by identity resolution) | Retail, CRM, customer analytics |
 | **Web behavior** | Clickstream and session models | E-commerce, growth, product analytics |
 
-Base bullet covers all three at a high level. For retail-targeted variants, expand explicitly.
+The CV bullet covers all three at a high level. Expand only in a private tailored copy.
 
 **CDP ownership phrasing**: Andrés is an intern -- use "Contribuyo al CDP" / "I contribute to the group's CDP", NOT "Desarrollo el CDP" / "I develop the CDP". Ownership claims raise red flags in tech screens.
 
@@ -337,7 +312,7 @@ The portfolio site is the single source of truth for project descriptions, skill
 
 ### GMM tech stack (standardized)
 
-`\textit{Python, Next.js, Vercel.}` -- NOT "TypeScript, Astro, Vercel" (old template error). Applies to all variants showing GMM.
+`\textit{Python, Next.js, Vercel.}` -- NOT "TypeScript, Astro, Vercel" (old template error).
 
 ## Common Pitfalls (learned the hard way)
 
