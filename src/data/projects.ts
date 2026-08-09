@@ -9,7 +9,7 @@ export interface Project {
   url: string;           // primary link: live app, Drive folder, Colab, or GitHub if no live version
   urls?: Array<{ label: Record<Lang, string>; url: string }>; // optional: when present, "Ver en vivo" opens a dropdown with multiple live URLs
   repo?: string;         // GitHub repo URL — only set when url points to a live deployment
-  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP' | 'HuggingFace' | 'Firebase';
+  platform: 'GitHub' | 'Drive' | 'Vercel' | 'Colab' | 'GCP' | 'HuggingFace' | 'Firebase' | 'Cloudflare';
   category: ProjectCategory;
   tags: Record<Lang, string[]>;
   variant: 'standard' | 'tall' | 'wide';
@@ -770,6 +770,7 @@ export const projects: Project[] = [
   },
 
   // repo: https://github.com/GonorAndres/learning-posgre
+  // live: https://analytics-flights.gonor.me (Cloudflare Pages; Firebase Hosting retired)
   // local: /home/andtega349/learning_posgre
   // source: PostgresPro Airlines demo database — 5.74M rows of real Russian airline data
   {
@@ -782,13 +783,13 @@ export const projects: Project[] = [
       es: 'Las aerolíneas generan millones de registros de vuelos, retrasos, ingresos y ocupación de flota. Analizar esos datos requiere elegir la base de datos correcta para cada pregunta. Este proyecto toma 5.74M registros de operaciones aéreas reales, los analiza en PostgreSQL para entender cómo optimizar consultas desde el motor, los migra a BigQuery para comparar ambos paradigmas de bases de datos y presenta los hallazgos en un dashboard interactivo: mapa de rutas, patrones de retraso, concentración de ingresos y rendimiento de flota.',
       en: 'Airlines generate millions of records on flights, delays, revenue, and fleet utilization. Analyzing that data requires choosing the right database for each question. This project takes 5.74M real airline operation records, analyzes them in PostgreSQL to understand how to optimize queries from the engine level, migrates them to BigQuery to compare both database paradigms, and presents the findings in an interactive dashboard: route map, delay patterns, revenue concentration, and fleet performance.',
     },
-    url: 'https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/',
+    url: 'https://analytics-flights.gonor.me',
     repo: 'https://github.com/GonorAndres/learning-posgre',
-    platform: 'Firebase',
+    platform: 'Cloudflare',
     category: 'data-engineering',
     tags: {
-      es: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Next.js', 'deck.gl', 'Firebase', 'recharts'],
-      en: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Next.js', 'deck.gl', 'Firebase', 'recharts'],
+      es: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Next.js', 'deck.gl', 'Cloudflare', 'recharts'],
+      en: ['PostgreSQL', 'BigQuery', 'Python', 'Docker', 'ETL', 'EXPLAIN ANALYZE', 'Next.js', 'deck.gl', 'Cloudflare', 'recharts'],
     },
     variant: 'wide',
     screenshot: '/screenshots/flight-analytics-pg-bq.png',
@@ -803,7 +804,7 @@ export const projects: Project[] = [
     blogSlug: 'flight-analytics-pg-bq',
     tier: 1,
     creation_date: '2026-02-07',
-    last_modification_date: '2026-05-03',
+    last_modification_date: '2026-08-09',
   },
 
   // repo: https://github.com/GonorAndres/risk-analyst
@@ -890,8 +891,8 @@ export const projects: Project[] = [
     creation_date: '2026-03-26',
   },
 
-  // repo: https://github.com/GonorAndres/teaching-apis (pending)
-  // live: https://learning-apis-451451662791.us-central1.run.app
+  // repo: https://github.com/GonorAndres/learning-apis
+  // live: https://learning-apis.gonor.me (Cloudflare Worker; proxies /api to the Cloud Run backend)
   // local: /home/andtega349/projects_2.0/teaching-apis
   // source: FRED, Banxico, World Bank APIs + custom mortality API
   {
@@ -904,9 +905,9 @@ export const projects: Project[] = [
       es: 'Si trabajas con tasas de la Fed, tipo de cambio de Banxico o indicadores del Banco Mundial, ya consumes APIs sin saberlo. Esta plataforma interactiva enseña qué pasa entre tu solicitud y tus datos: latencia, errores, autenticación, caché. Un playground con datos reales, laboratorios para romper cosas a propósito y escenarios what-if sobre datos de mortalidad y economía.',
       en: 'If you work with Fed rates, Banxico exchange rates, or World Bank indicators, you already consume APIs without knowing it. This interactive platform teaches what happens between your request and your data: latency, errors, authentication, caching. A playground with live data, labs for breaking things on purpose, and what-if scenarios on mortality and economic data.',
     },
-    url: 'https://learning-apis-451451662791.us-central1.run.app',
-    repo: 'https://github.com/GonorAndres/teaching-apis',
-    platform: 'GCP',
+    url: 'https://learning-apis.gonor.me',
+    repo: 'https://github.com/GonorAndres/learning-apis',
+    platform: 'Cloudflare',
     category: 'data-engineering',
     tags: {
       es: ['Next.js', 'TypeScript', 'FRED', 'Banxico', 'APIs', 'Educativo'],
@@ -926,6 +927,7 @@ export const projects: Project[] = [
     relatedTo: ['flight-analytics-pg-bq', 'data-engineering-platform'],
     tier: 1,
     creation_date: '2026-05-01',
+    last_modification_date: '2026-08-09',
   },
 ];
 

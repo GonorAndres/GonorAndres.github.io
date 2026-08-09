@@ -2,18 +2,18 @@
 title: "What 5.74 Million Flights Taught Me About PostgreSQL, BigQuery, and Knowing When to Use Each"
 description: "Airlines generate millions of flight, delay, and revenue records, but analyzing that data requires choosing the right database for each question. This project takes 5.74M real records, analyzes them first in PostgreSQL with engine-level optimization, migrates to BigQuery to compare both paradigms, and presents the trade-offs with real timing, real costs, and real query plans."
 date: "2026-03-18"
-lastModified: "2026-05-02"
+lastModified: "2026-08-09"
 category: "proyectos-y-analisis"
 lang: "en"
 shape: "case-study"
 ficha:
   rol: "Autor único"
   año: "2026"
-  stack: "PostgreSQL · BigQuery · Python · Plotly · Folium · Firebase"
+  stack: "PostgreSQL · BigQuery · Python · Plotly · Folium · Cloudflare Pages"
   datos: "PostgresPro Airlines demo DB (5.74M filas, 104 aeropuertos)"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/learning-posgre"
-  live: "https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/"
+  live: "https://analytics-flights.gonor.me"
 tags: ["PostgreSQL", "BigQuery", "Python", "ETL", "EXPLAIN ANALYZE", "Docker", "GIS", "Plotly", "Folium", "data-engineering"]
 ---
 
@@ -76,7 +76,7 @@ The takeaway isn't which system is better. It's that each solves a different pro
 
 Airport coordinates enabled a geospatial layer. In PostgreSQL, great-circle distances require a PL/pgSQL haversine function. In BigQuery, the same calculation uses `ST_GEOGPOINT()` and `ST_DISTANCE()` with no custom code. The route map in the dashboard reflects that work: 104 airports connected by 532 routes colored by delay rate, filterable by hub.
 
-The <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">dashboard</a> is deployed on Firebase, bilingual, and runs entirely on pre-extracted JSON with no database connection. That's not an architectural compromise; it's a deliberate decision to eliminate hosting cost and network latency in a layer that only needs to display results.
+The <a href="https://analytics-flights.gonor.me" target="_blank" rel="noopener">dashboard</a> is deployed on Cloudflare Pages, bilingual, and runs entirely on pre-extracted JSON with no database connection. That's not an architectural compromise; it's a deliberate decision to eliminate hosting cost and network latency in a layer that only needs to display results.
 
 The internals section translates EXPLAIN ANALYZE output into comparison bars: the 13x, 1,300x, and 3,024x improvements sit side by side without requiring visitors to read query planner text. The pipeline section shows ETL metrics alongside the timing comparison table. Revenue exposes the interactive Pareto curve. Fleet puts the Boeing 777 at 72.8% load factor next to the Cessna 208 at 16%, left as an open question.
 
@@ -88,6 +88,6 @@ The delay analysis has no weather or air traffic control data, which are the ext
 
 The natural next step would be time-series analysis: whether the delay rate shifted across the dataset's time range, whether revenue concentration in 128 routes is stable or consolidating. That analysis needs the same tooling already built here; it just needs better questions.
 
-Source code is at <a href="https://github.com/GonorAndres/learning-posgre" target="_blank" rel="noopener">github.com/GonorAndres/learning-posgre</a> and the dashboard at <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">project-ad7a5be2-a1c7-4510-82d.firebaseapp.com</a>. The pipeline reproduces with `docker compose up` and a GCP project.
+Source code is at <a href="https://github.com/GonorAndres/learning-posgre" target="_blank" rel="noopener">github.com/GonorAndres/learning-posgre</a> and the dashboard at <a href="https://analytics-flights.gonor.me" target="_blank" rel="noopener">analytics-flights.gonor.me</a>. The pipeline reproduces with `docker compose up` and a GCP project.
 
 This project shares its core decision logic with the <a href="/en/blog/data-engineering-platform/">actuarial data engineering platform</a>: in both cases, the central question isn't which technology to use, but when the cost of the more capable tool is justified by the problem it solves.

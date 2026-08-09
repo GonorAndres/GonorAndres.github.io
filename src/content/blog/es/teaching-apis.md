@@ -2,6 +2,7 @@
 title: "Por qué todo analista debería entender APIs (y no solo los desarrolladores)"
 description: "Si trabajas con tasas de la Fed, tipo de cambio de Banxico o esperanza de vida del Banco Mundial, ya consumes APIs. Entender qué pasa entre tu solicitud y tus datos te convierte en un mejor analista: puedes diagnosticar cuando algo falla, optimizar cuando algo es lento, y construir cuando necesitas algo que no existe. Este proyecto lo demuestra con datos reales y laboratorios interactivos."
 date: "2026-05-03"
+lastModified: "2026-08-09"
 category: "herramientas"
 lang: "es"
 shape: "case-study"
@@ -11,8 +12,8 @@ ficha:
   stack: "Next.js · TypeScript · Tailwind · Recharts"
   datos: "FRED · Banxico · World Bank · API de mortalidad propia"
   estado: "Finalizado"
-  repositorio: "https://github.com/GonorAndres/teaching-apis"
-  live: "https://learning-apis-451451662791.us-central1.run.app"
+  repositorio: "https://github.com/GonorAndres/learning-apis"
+  live: "https://learning-apis.gonor.me"
 tags: ["APIs", "Next.js", "TypeScript", "FRED", "Banxico", "World Bank", "Educativo"]
 ---
 
@@ -51,5 +52,5 @@ Un actuario que entiende APIs puede construir un pipeline que consulte tasas de 
 La diferencia entre un analista que solo consume datos y uno que entiende cómo llegan es la misma que entre alguien que sabe manejar y alguien que además sabe abrir el cofre cuando el coche no arranca. Ambos llegan a su destino la mayoría de los días, pero solo uno puede resolver el problema cuando algo falla.
 
 <div style="margin-top: 2rem; padding: 1rem 1.5rem; border-left: 4px solid #C17654; background-color: #f9f6f2;">
-  <p style="margin: 0 0 0.5rem 0;"><strong>Aplicación en vivo:</strong> <a href="https://learning-apis-451451662791.us-central1.run.app/es" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">learning-apis en Cloud Run</a></p>
+  <p style="margin: 0 0 0.5rem 0;"><strong>Aplicación en vivo:</strong> <a href="https://learning-apis.gonor.me/es" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">learning-apis.gonor.me</a></p>
 </div>
