@@ -33,6 +33,7 @@ interface Props {
     viewDrive: string;
     viewDetails: string;
     viewLive: string;
+    viewGallery: string;
     seeAlso: string;
     inDevelopment: string;
     showAll: string;
@@ -375,31 +376,43 @@ function GridCard({ project, labels }: { project: ProjectData; labels: Props['la
       style={{ borderColor: accent }}>
       {/* Visual area */}
       {galleryImages ? (
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => { track('tool_used', { tool: project.title }); setGalleryOpen(true); }}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); track('tool_used', { tool: project.title }); setGalleryOpen(true); } }}
-          className="relative overflow-hidden aspect-[16/9] w-full cursor-zoom-in"
-          aria-label={`Ver galería: ${project.title}`}
-        >
-          <picture className="w-full h-full flex items-center justify-center bg-[#EDE6DD]">
-            {webpThumbFor(thumbnailSrc) && (
-              <source srcSet={webpThumbFor(thumbnailSrc)!} type="image/webp" />
-            )}
-            <img src={thumbnailSrc!} alt={project.title}
-              suppressHydrationWarning
-              className="max-w-full max-h-full object-contain transition-opacity duration-300 group-hover:opacity-85" loading="lazy" />
-          </picture>
-          {badges}
+        <div className="relative overflow-hidden aspect-[16/9] w-full">
+          {/* Image itself navigates to the project's primary link */}
+          <a
+            href={project.url}
+            {...(!project.url.startsWith('/') && { target: '_blank', rel: 'noopener noreferrer' })}
+            onClick={() => { track('tool_used', { tool: project.title }); trackOutboundLink(project.url, { project: project.title, link_type: 'card' }); }}
+            className="block w-full h-full"
+          >
+            <picture className="w-full h-full flex items-center justify-center bg-[#EDE6DD]">
+              {webpThumbFor(thumbnailSrc) && (
+                <source srcSet={webpThumbFor(thumbnailSrc)!} type="image/webp" />
+              )}
+              <img src={thumbnailSrc!} alt={project.title}
+                suppressHydrationWarning
+                className="max-w-full max-h-full object-contain transition-opacity duration-300 group-hover:opacity-85" loading="lazy" />
+            </picture>
+            {badges}
+          </a>
+          {/* Gallery opener — sibling of the link, never nested inside it */}
+          <button
+            type="button"
+            onClick={() => setGalleryOpen(true)}
+            className="absolute bottom-2 left-3 z-10 inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-0 px-3 py-2 sm:py-1.5 rounded-full bg-white/85 backdrop-blur-sm text-xs font-medium text-[#1B2A4A]/70 shadow-sm hover:bg-white hover:text-[#1B2A4A] transition-colors duration-200"
+          >
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 19.5h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25z" />
+            </svg>
+            {labels.viewGallery}
+          </button>
           {/* Dot strip: vertical right side, always visible, click to jump thumbnail */}
           {project.gallery && project.gallery.length > 1 && (
-            <div className="absolute right-1 top-0 bottom-0 flex flex-col justify-center gap-0 sm:gap-1.5 sm:right-2" aria-hidden="true">
+            <div className="absolute right-1 top-0 bottom-0 z-10 flex flex-col justify-center gap-0 sm:gap-1.5 sm:right-2" aria-hidden="true">
               {project.gallery.map((_, i) => (
                 <button
                   key={i}
                   type="button"
-                  onClick={(e) => { e.stopPropagation(); setActiveIndex(i); }}
+                  onClick={() => setActiveIndex(i)}
                   className="p-2.5 sm:p-0 flex items-center justify-center"
                   aria-label={`Ver imagen ${i + 1}`}
                 >
