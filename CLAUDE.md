@@ -37,6 +37,10 @@ At the start of every session, read [`../PORTFOLIO_STATUS_AND_DOMAIN.md`](../POR
 It carries the work queue that used to live in this repo's `to-do.md`: missing blog posts, missing screenshots, broken or placeholder links, the live-app audit, and development status for priority projects.
 Update that guide when tasks are completed (check off items, add new ones as discovered).
 
+Before any blog or design work, also read [`docs/future-features.md`](docs/future-features.md).
+It holds the open blog UX and accessibility backlog from the Playwright QA pass of 2026-08-02; the bugs listed there are confirmed against file:line evidence, not speculative.
+Consult it before touching the blog index, `BlogSearch.tsx` or `BlogPost.astro`, and update it (tick the task list, add findings) as work lands.
+
 ## Core Narrative -- Emerges from the Work, Never Stated
 
 The portfolio's message is never declared explicitly. No section, paragraph, or sentence should say "I'm learning," "I know what I don't know," or any variation of "although I lack X, I have Y." The reader arrives at their own conclusions by moving through the projects, posts, and notes.
