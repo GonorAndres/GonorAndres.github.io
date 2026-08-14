@@ -58,7 +58,7 @@ In the university course, the distribution is the end of the exercise: integrate
 
 What also changes is the question structure. The SOA does not vary the format much; once you recognize the pattern, the variance between questions is low. But what it does evaluate is concept interrelation: a single problem can combine a Pareto with a deductible, inflation, and coinsurance all at once. Knowing each piece in isolation is not enough.
 
-The same logic shows up in the [GMM Explorer](https://gmm-explorer.vercel.app/contexto), one of my projects from a risk management course, where the problem is exactly this: you have claims data and need to decide which mixture of distributions describes it best so you can price it. Also in the [credit risk model with GLMs](https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model), which shares the fundamental structure: a random variable, a distribution, and a function that transforms probability into an operational decision.
+The same logic shows up in the [GMM Explorer](https://gmm.gonor.me/contexto), one of my projects from a risk management course, where the problem is exactly this: you have claims data and need to decide which mixture of distributions describes it best so you can price it. Also in the [credit risk model with GLMs](https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model), which shares the fundamental structure: a random variable, a distribution, and a function that transforms probability into an operational decision.
 
 ## Study materials
 

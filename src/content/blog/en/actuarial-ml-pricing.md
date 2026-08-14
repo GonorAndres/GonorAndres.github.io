@@ -2,7 +2,7 @@
 title: "Insurance Pricing with ML: What Mexico Can Learn from Europe's Actuarial Data Science Revolution"
 description: "Frequency-severity pricing models on freMTPL2: Poisson GLM vs XGBoost vs LightGBM with SHAP explainability, fairness audits, and a cross-border analysis of what European ML pricing techniques mean for Mexico's 70% uninsured auto market."
 date: "2026-03-14"
-lastModified: "2026-03-19"
+lastModified: "2026-08-14"
 category: "proyectos-y-analisis"
 lang: "en"
 shape: "case-study"
@@ -13,7 +13,6 @@ ficha:
   datos: "freMTPL2 (677,991 pólizas reales, asegurador francés)"
   regulacion: "LISF (nota técnica de suficiencia)"
   estado: "Finalizado"
-  repositorio: "https://github.com/GonorAndres/data-science-path/tree/main/projects/insurance-pricing"
 tags: ["pricing", "GLM", "XGBoost", "LightGBM", "SHAP", "freMTPL2", "actuarial", "frequency-severity", "Optuna", "MLflow", "fairness"]
 ---
 
@@ -65,9 +64,9 @@ This project occupies a specific position in the insurance technical pipeline. T
 
 The connection is direct. Predicted frequency from the pricing model feeds into the reserve model's expected loss inputs. If the pricing model systematically underestimates frequency for a segment (as the GLM does for certain urban profiles in the double-lift analysis), the reserve model will eventually show adverse development. The two projects are consecutive stages of a single actuarial cycle.
 
-[SIMA](https://sima-451451662791.us-central1.run.app/) implements the regulatory calculation layer for Mexico: LISF/CUSF-compliant reserves, Lee-Carter mortality projection, and CNSF-mandated capital adequacy. The technical premiums from this project's pricing models feed into SIMA's reserve modules downstream. Different products (auto vs. life), same regulatory logic: the CNSF requires technical notes that demonstrate actuarial adequacy, and ML pricing with SHAP explainability delivers exactly that.
+[SIMA](https://sima.gonor.me) implements the regulatory calculation layer for Mexico: LISF/CUSF-compliant reserves, Lee-Carter mortality projection, and CNSF-mandated capital adequacy. The technical premiums from this project's pricing models feed into SIMA's reserve modules downstream. Different products (auto vs. life), same regulatory logic: the CNSF requires technical notes that demonstrate actuarial adequacy, and ML pricing with SHAP explainability delivers exactly that.
 
-The [GMM Explorer](https://gmm-explorer.vercel.app/contexto) addresses the severity distribution: given a claim portfolio, what mixture of distributions best describes the cost? This is the severity side of the frequency-severity decomposition that this project handles on the frequency side.
+The [GMM Explorer](https://gmm.gonor.me/contexto) addresses the severity distribution: given a claim portfolio, what mixture of distributions best describes the cost? This is the severity side of the frequency-severity decomposition that this project handles on the frequency side.
 
 ## What this means for Mexico
 
@@ -90,9 +89,3 @@ On the modeling side, CatBoost and Explainable Boosting Machines (EBMs) would ex
 The four papers that ground this project:
 
 Noll, Salzmann, and Wuthrich (2020) established the freMTPL2 benchmark and showed GBM superiority for claim frequency. Colella and Jones (2023, CAS E-Forum) confirmed no single model dominates universally, validating the comparative approach. MDPI Risks (2024) showed a hybrid GLM+ANN model outperforms all individual models, pointing toward ensemble strategies as the likely future of actuarial pricing. Kuo and Lupton (2023, Variance) formalized the explainability framework that makes ML pricing regulatorily viable.
-
-The PDFs are available in the project repository under `docs/references/`.
-
-## Study materials
-
-- <a href="https://github.com/GonorAndres/data-science-path/tree/main/projects/insurance-pricing" target="_blank" rel="noopener">GitHub repository</a>: Complete ML pipeline (Poisson/Gamma GLMs, XGBoost, LightGBM with Optuna tuning and MLflow tracking), SHAP analysis, fairness audit, FastAPI backend, and Next.js interactive dashboard with 4 tabs.

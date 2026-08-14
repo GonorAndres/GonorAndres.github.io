@@ -48,7 +48,7 @@ El mínimo de ocupación también está garantizado: cada nodo (excepto la raíz
 
 ## PostgreSQL: el árbol B en producción
 
-El explorador interactivo que construí en Rust ([B-Tree Explorer](/proyectos/b-tree-explorer)) usa un árbol de orden 4 para que las divisiones sean visibles. PostgreSQL usa un orden mucho mayor, calibrado contra el tamaño de página de 8 KB. Cada página del árbol (un bloque del heap de PostgreSQL) almacena tantas claves como quepan en 8 KB después de los metadatos del nodo.
+El explorador interactivo que construí en Rust ([B-Tree Explorer](https://github.com/GonorAndres/b-trees)) usa un árbol de orden 4 para que las divisiones sean visibles. PostgreSQL usa un orden mucho mayor, calibrado contra el tamaño de página de 8 KB. Cada página del árbol (un bloque del heap de PostgreSQL) almacena tantas claves como quepan en 8 KB después de los metadatos del nodo.
 
 Para un índice sobre un entero de 8 bytes en PostgreSQL, un nodo hoja cabe aproximadamente 250-300 claves por página. Para un índice sobre un VARCHAR(255), menos. Esto tiene consecuencias directas:
 
@@ -56,7 +56,7 @@ Para un índice sobre un entero de 8 bytes en PostgreSQL, un nodo hoja cabe apro
 
 **Los índices compuestos tienen un orden que importa.** Un índice sobre `(pais, ciudad)` es un árbol B cuyas claves son pares ordenados lexicográficamente: primero por país, luego por ciudad dentro del mismo país. Una consulta `WHERE pais = 'MX'` puede usarlo eficientemente porque sabe dónde empieza y termina el rango de México en el árbol. Una consulta `WHERE ciudad = 'Guadalajara'` sin filtrar por país no puede: los valores de Guadalajara están dispersos en todo el árbol, intercalados entre ciudades de otros países. El orden de las columnas en un índice compuesto no es un detalle de estilo: es la diferencia entre O(log n) y O(n).
 
-**El análisis de vuelos a 2.5 GB** que implementé en el proyecto [flight-analytics](/proyectos/flight-analytics) ilustra esto en práctica. Con tablas de esa escala, la presencia o ausencia de un índice sobre las columnas de filtrado frecuente determina si una consulta tarda 200 ms o 40 segundos. El plan de ejecución de PostgreSQL (`EXPLAIN ANALYZE`) muestra exactamente cuántos nodos del árbol se recorrieron, cuántas páginas se leyeron de disco, y si se usó el índice o se hizo un sequential scan. Esa información es la diferencia entre optimizar con evidencia o adivinar.
+**El análisis de vuelos a 2.5 GB** que implementé en el proyecto [flight-analytics](/blog/flight-analytics-pg-bq/) ilustra esto en práctica. Con tablas de esa escala, la presencia o ausencia de un índice sobre las columnas de filtrado frecuente determina si una consulta tarda 200 ms o 40 segundos. El plan de ejecución de PostgreSQL (`EXPLAIN ANALYZE`) muestra exactamente cuántos nodos del árbol se recorrieron, cuántas páginas se leyeron de disco, y si se usó el índice o se hizo un sequential scan. Esa información es la diferencia entre optimizar con evidencia o adivinar.
 
 ## El costo que no aparece en el `SELECT`
 
@@ -74,4 +74,4 @@ Entender la estructura del árbol hace que esas decisiones del planificador deje
 
 La siguiente vez que una consulta tarde más de lo esperado, el árbol B es el primer lugar donde mirar. ¿Hay un índice en las columnas del filtro? ¿El orden de las columnas en el índice compuesto coincide con la selectividad de los filtros habituales? ¿El índice existe pero el planificador lo ignora porque la tabla tiene estadísticas desactualizadas? (`ANALYZE` resuelve eso.) Esas preguntas ya no son abstractas cuando se tiene el modelo mental de qué está pasando adentro.
 
-El [B-Tree Explorer](/proyectos/b-tree-explorer) que construí en Rust y compilé a WebAssembly permite ver en tiempo real cómo se divide un nodo, cómo sube la clave del medio al padre, y cómo la altura del árbol crece de forma controlada. No como un tutorial de estructuras de datos, sino como una herramienta para desarrollar la intuición que hace mejores las decisiones de diseño de índices.
+El [B-Tree Explorer](https://github.com/GonorAndres/b-trees) que construí en Rust y compilé a WebAssembly permite ver en tiempo real cómo se divide un nodo, cómo sube la clave del medio al padre, y cómo la altura del árbol crece de forma controlada. No como un tutorial de estructuras de datos, sino como una herramienta para desarrollar la intuición que hace mejores las decisiones de diseño de índices.

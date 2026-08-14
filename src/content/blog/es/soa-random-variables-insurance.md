@@ -58,7 +58,7 @@ En la carrera, la distribución es el fin del ejercicio: integrar la PDF, calcul
 
 Lo que también cambia es la estructura de las preguntas. La SOA no varía mucho el formato; una vez que reconoces el patrón, la varianza entre preguntas es baja. Pero lo que sí evalúa es la interrelación de conceptos: una pregunta puede combinar una Pareto con un deducible, inflación y coaseguro en el mismo problema. No basta saber cada pieza aislada.
 
-La misma lógica aparece en el [GMM Explorer](https://gmm-explorer.vercel.app/contexto), que es uno de mis proyectos de la materia de administración de riesgos, donde el problema es exactamente este: tienes datos de siniestros y necesitas decidir qué mezcla de distribuciones los describe mejor para poder tarificar. También en el [modelo de riesgo crediticio con GLM](https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model), que comparte la estructura fundamental: una variable aleatoria, una distribución, y una función que transforma probabilidad en decisión operativa.
+La misma lógica aparece en el [GMM Explorer](https://gmm.gonor.me/contexto), que es uno de mis proyectos de la materia de administración de riesgos, donde el problema es exactamente este: tienes datos de siniestros y necesitas decidir qué mezcla de distribuciones los describe mejor para poder tarificar. También en el [modelo de riesgo crediticio con GLM](https://github.com/GonorAndres/Proyectos_Aprendizaje/tree/main/Credit_Risk_Model), que comparte la estructura fundamental: una variable aleatoria, una distribución, y una función que transforma probabilidad en decisión operativa.
 
 ## Material de estudio
 

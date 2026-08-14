@@ -2,7 +2,7 @@
 title: "Actuarial Regulation Assistant: Why RAG Is the Right Approach for LISF and CUSF"
 description: "Interpreting LISF and CUSF means navigating articles that cross-reference each other across laws, and a Ctrl+F can't tell the article defining technical reserves from one that mentions them in passing. AI makes it possible to absorb that entire volume without losing a single detail. This agent uses RAG to index every article individually with a cross-reference graph, eliminating citation hallucinations and ensuring the model only reasons over real legal text. The result is an assistant that amplifies the actuary's memory without replacing their judgment."
 date: "2026-03-22"
-lastModified: "2026-07-12"
+lastModified: "2026-08-14"
 category: "proyectos-y-analisis"
 lang: "en"
 shape: "case-study"
@@ -101,7 +101,7 @@ Human judgment remains the most important factor in the equation. The system sea
 
 ## Connection to other projects
 
-The regulation assistant is complementary to <a href="/projects/sima" style="color: #C17654; text-decoration: underline;">SIMA</a>, which implements capital calculations under LISF (reserves, SCR, commutation functions). While SIMA executes the math, the assistant navigates the regulation that defines which math to apply. It also connects to the <a href="/projects/suite-actuarial" style="color: #C17654; text-decoration: underline;">Actuarial Suite</a>, which standardizes those calculations in a reusable Python library, and to the <a href="/projects/life-insurance" style="color: #C17654; text-decoration: underline;">life insurance technical note</a>, where LISF and CUSF regulatory requirements are applied to concrete products.
+The regulation assistant is complementary to <a href="/en/blog/sima/" style="color: #C17654; text-decoration: underline;">SIMA</a>, which implements capital calculations under LISF (reserves, SCR, commutation functions). While SIMA executes the math, the assistant navigates the regulation that defines which math to apply. It also connects to the <a href="/en/blog/suite-actuarial/" style="color: #C17654; text-decoration: underline;">Actuarial Suite</a>, which standardizes those calculations in a reusable Python library, and to the <a href="https://drive.google.com/drive/folders/1PfotLUbidzwk8gdW4kbqQfLB4PbkuYBj" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">life insurance technical note</a>, where LISF and CUSF regulatory requirements are applied to concrete products.
 
 The code is on <a href="https://github.com/GonorAndres/regulation-actuarial-agent" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">GitHub</a> and the application is deployed on <a href="https://lisf.gonor.me" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">Google Cloud Run</a>.
 

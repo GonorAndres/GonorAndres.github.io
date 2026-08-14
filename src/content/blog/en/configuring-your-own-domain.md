@@ -11,7 +11,7 @@ ficha:
   año: "2026"
   stack: "Cloudflare · GitHub Pages · DNS · Let's Encrypt"
   estado: "Completed"
-  repositorio: "https://github.com/GonorAndres/GonorAndres.github.io"
+  repositorio: "https://github.com/GonorAndres/GonorPage"
   live: "https://gonor.me"
 ---
 
