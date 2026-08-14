@@ -37,6 +37,7 @@ export default {
   'projects.viewDrive': 'ir a gdrive',
   'projects.viewDetails': 'ver detalles',
   'projects.viewLive': 'ver en vivo',
+  'projects.viewGallery': 'Ver galería',
   'projects.actuarial': 'Actuarial',
   'projects.data-science': 'Ciencia de Datos',
   'projects.quant-finance': 'Finanzas Cuantitativas',

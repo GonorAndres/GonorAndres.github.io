@@ -57,3 +57,55 @@ docs/*.log
 # Playwright artifacts
 test-results/
 playwright-report/
+
+# ---------------------------------------------------------------------------
+# cv/ -- THIS REPO IS PUBLIC.
+#
+# ONLY the public CV lives here: cv-andres-gonzalez.tex, the single document
+# published at gonor.me/docs/cv-andres-gonzalez.pdf.
+#
+# Role variants (data scientist, insurance, risk, insurtech, ...) are tailored
+# to specific positions and are NOT shareable. They live in the private
+# GonorAndres/claude-job repo. Never add them back here.
+#
+# This is an ALLOWLIST: everything under cv/ is ignored unless named below, so
+# a new variant cannot be committed by accident.
+# ---------------------------------------------------------------------------
+cv/*
+cv/**/
+!cv/cv-andres-gonzalez.tex
+!cv/qr_portfolio.png
+!cv/build.sh
+!cv/CLAUDE.md
+!cv/README.md
+
+# Compiled output and LaTeX build artifacts (defense in depth)
+cv/**/*.pdf
+cv/**/*.aux
+cv/**/*.out
+cv/**/*.toc
+cv/**/*.fls
+cv/**/*.fdb_latexmk
+cv/**/*.synctex.gz
+cv/**/*.bbl
+cv/**/*.blg
+cv/**/*.dvi
+
+# Private: job postings, application emails, cover letters, exam proofs
+cv/**/*_job.md
+cv/**/*_email.md
+cv/**/*_cover*.md
+cv/docs/
+
+# Private: employer-specific variants (which companies were applied to is not public)
+cv/**/alsea_*
+cv/**/autofinanciamiento_*
+cv/**/banorte_*
+cv/**/bbva_*
+cv/**/bess_*
+cv/**/vinkos_*
+cv/**/greenday*
+cv/**/kayum*
+cv/**/stefanini*
+cv/**/ds_stats_latam*
+cv/**/reinsurance_lh*

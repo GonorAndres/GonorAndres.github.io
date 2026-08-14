@@ -2,18 +2,18 @@
 title: "Qué 5.74 Millones de Vuelos me Enseñaron sobre PostgreSQL, BigQuery y Cuándo Usar Cada Uno"
 description: "Las aerolíneas generan millones de registros de vuelos, retrasos e ingresos, pero analizar esos datos exige elegir la base de datos correcta para cada pregunta. Este proyecto toma 5.74M registros reales, los analiza primero en PostgreSQL optimizando desde el motor, los migra a BigQuery para comparar ambos paradigmas, y presenta los trade-offs con timing, costos y planes de consulta reales."
 date: "2026-03-18"
-lastModified: "2026-05-02"
+lastModified: "2026-08-09"
 category: "proyectos-y-analisis"
 lang: "es"
 shape: "case-study"
 ficha:
   rol: "Autor único"
   año: "2026"
-  stack: "PostgreSQL · BigQuery · Python · Plotly · Folium · Firebase"
+  stack: "PostgreSQL · BigQuery · Python · Plotly · Folium · Cloudflare Pages"
   datos: "PostgresPro Airlines demo DB (5.74M filas, 104 aeropuertos)"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/learning-posgre"
-  live: "https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/"
+  live: "https://analytics-flights.gonor.me"
 tags: ["PostgreSQL", "BigQuery", "Python", "ETL", "EXPLAIN ANALYZE", "Docker", "GIS", "Plotly", "Folium", "data-engineering"]
 ---
 
@@ -76,7 +76,7 @@ La conclusión no es cuál sistema es mejor. Es que cada uno resuelve un problem
 
 Las coordenadas de aeropuertos habilitaron una capa geoespacial. En PostgreSQL, la distancia de gran círculo requiere una función haversine en PL/pgSQL. En BigQuery, el mismo cálculo usa `ST_GEOGPOINT()` y `ST_DISTANCE()` sin código personalizado. El mapa de rutas en el dashboard refleja ese trabajo: 104 aeropuertos conectados por 532 rutas coloreadas por tasa de retraso, filtrables por hub.
 
-El <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">dashboard</a> está desplegado en Firebase, es bilingüe y corre completamente sobre JSON pre-extraído sin conexión a base de datos. Eso no es un compromiso de arquitectura; es una decisión deliberada para eliminar costo de hosting y latencia de red en una capa que solo necesita presentar resultados.
+El <a href="https://analytics-flights.gonor.me" target="_blank" rel="noopener">dashboard</a> está desplegado en Cloudflare Pages, es bilingüe y corre completamente sobre JSON pre-extraído sin conexión a base de datos. Eso no es un compromiso de arquitectura; es una decisión deliberada para eliminar costo de hosting y latencia de red en una capa que solo necesita presentar resultados.
 
 La sección de internals traduce los resultados de EXPLAIN ANALYZE a barras comparativas: las mejoras de 13x, 1,300x y 3,024x quedan lado a lado sin que el visitante tenga que leer output de query planner. La sección de pipeline muestra las métricas de ETL junto a la tabla comparativa de timing. Revenue expone la curva de Pareto interactiva. Fleet pone el Boeing 777 al 72.8% de ocupación junto al Cessna 208 al 16% como pregunta abierta.
 
@@ -88,6 +88,6 @@ El análisis de retrasos carece de datos meteorológicos y de tráfico aéreo, q
 
 Con más tiempo, el paso natural sería agregar series de tiempo: ver si la tasa de retrasos cambió a lo largo del período de los datos, si la concentración de ingresos en 128 rutas es estable o si se está consolidando. Ese análisis necesita las mismas herramientas que ya están construidas; solo requiere formular mejores preguntas.
 
-El código fuente está en <a href="https://github.com/GonorAndres/learning-posgre" target="_blank" rel="noopener">github.com/GonorAndres/learning-posgre</a> y el dashboard en <a href="https://project-ad7a5be2-a1c7-4510-82d.firebaseapp.com/" target="_blank" rel="noopener">project-ad7a5be2-a1c7-4510-82d.firebaseapp.com</a>. El pipeline se reproduce con `docker compose up` y un proyecto de GCP.
+El código fuente está en <a href="https://github.com/GonorAndres/learning-posgre" target="_blank" rel="noopener">github.com/GonorAndres/learning-posgre</a> y el dashboard en <a href="https://analytics-flights.gonor.me" target="_blank" rel="noopener">analytics-flights.gonor.me</a>. El pipeline se reproduce con `docker compose up` y un proyecto de GCP.
 
 Este proyecto comparte la lógica de decisión bajo incertidumbre con el <a href="/blog/data-engineering-platform/">proyecto de ingeniería de datos actuarial</a>: en ambos casos, la pregunta central no es qué tecnología usar, sino cuándo el costo de la herramienta más sofisticada se justifica por el problema que resuelve.

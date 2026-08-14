@@ -2,6 +2,7 @@
 title: "Why every analyst should understand APIs (not just developers)"
 description: "If you work with Fed rates, Banxico exchange rates, or World Bank life expectancy, you already consume APIs. Understanding what happens between your request and your data makes you a better analyst: you can diagnose when something fails, optimize when something is slow, and build when you need something custom. This project demonstrates it with real data and interactive labs."
 date: "2026-05-03"
+lastModified: "2026-08-09"
 category: "herramientas"
 lang: "en"
 shape: "case-study"
@@ -11,8 +12,8 @@ ficha:
   stack: "Next.js · TypeScript · Tailwind · Recharts"
   datos: "FRED · Banxico · World Bank · Custom mortality API"
   estado: "Completed"
-  repositorio: "https://github.com/GonorAndres/teaching-apis"
-  live: "https://learning-apis-451451662791.us-central1.run.app"
+  repositorio: "https://github.com/GonorAndres/learning-apis"
+  live: "https://learning-apis.gonor.me"
 tags: ["APIs", "Next.js", "TypeScript", "FRED", "Banxico", "World Bank", "Educational"]
 ---
 
@@ -51,5 +52,5 @@ An actuary who understands APIs can build a pipeline that queries Fed rates ever
 The difference between an analyst who only consumes data and one who understands how it arrives is the same as between someone who can drive and someone who can also pop the hood when the car won't start. Both reach their destination most days, but only one can solve the problem when something fails.
 
 <div style="margin-top: 2rem; padding: 1rem 1.5rem; border-left: 4px solid #C17654; background-color: #f9f6f2;">
-  <p style="margin: 0 0 0.5rem 0;"><strong>Live app:</strong> <a href="https://learning-apis-451451662791.us-central1.run.app" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">learning-apis on Cloud Run</a></p>
+  <p style="margin: 0 0 0.5rem 0;"><strong>Live app:</strong> <a href="https://learning-apis.gonor.me" target="_blank" rel="noopener" style="color: #C17654; text-decoration: underline;">learning-apis.gonor.me</a></p>
 </div>

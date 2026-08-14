@@ -37,6 +37,10 @@ At the start of every session, read [`../PORTFOLIO_STATUS_AND_DOMAIN.md`](../POR
 It carries the work queue that used to live in this repo's `to-do.md`: missing blog posts, missing screenshots, broken or placeholder links, the live-app audit, and development status for priority projects.
 Update that guide when tasks are completed (check off items, add new ones as discovered).
 
+Before any blog or design work, also read [`docs/future-features.md`](docs/future-features.md).
+It holds the open blog UX and accessibility backlog from the Playwright QA pass of 2026-08-02; the bugs listed there are confirmed against file:line evidence, not speculative.
+Consult it before touching the blog index, `BlogSearch.tsx` or `BlogPost.astro`, and update it (tick the task list, add findings) as work lands.
+
 ## Core Narrative -- Emerges from the Work, Never Stated
 
 The portfolio's message is never declared explicitly. No section, paragraph, or sentence should say "I'm learning," "I know what I don't know," or any variation of "although I lack X, I have Y." The reader arrives at their own conclusions by moving through the projects, posts, and notes.
@@ -332,6 +336,17 @@ Two systems run in production, disabled on localhost:
 - Blog content in src/content/blog/es/ and src/content/blog/en/; collection config at src/content.config.ts
 - Subagent outputs go to repositorio/subagents_outputs/
 - Planning and reference docs go in docs/
+- CV LaTeX sources go in cv/ -- see [`cv/CLAUDE.md`](cv/CLAUDE.md)
+
+## CV (`cv/`)
+
+The LaTeX CV lives in this repo so its wording and `src/data/projects.ts` stay in sync: when a project card's description changes, the matching CV bullet should follow, and vice versa. Read [`cv/CLAUDE.md`](cv/CLAUDE.md) before editing anything under `cv/` -- it carries the narrative rules, ATS constraints, and the skill-integrity rule (never claim a skill no project backs).
+
+**Only sources are tracked.** This repo is public, so `.gitignore` excludes compiled PDFs, job postings, application emails, exam proofs, and employer-specific variants. That material stays in the private `GonorAndres/claude-job` repo, which is also where employer-specific tailoring is done. Check the diff before committing anything under `cv/`.
+
+Build with `cd cv && ./build.sh <file.tex>` (or `--all <cycle-dir>`). Target: 1 page, 0 overfull boxes. `cv/` is inert to the Astro build -- nothing there reaches `dist/`.
+
+The public CV PDF is served from the Drive permanent link (`16cdRmnzf0drNv9c5848N6ZedgYX9WhwV`) that `src/components/sections/Hero.astro` and `Contact.astro` point at. Building a new PDF does not change the site; updating that Drive file in place does, and it needs the user's explicit approval.
 
 
 ## Portfolio status and domain reference
