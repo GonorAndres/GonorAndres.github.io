@@ -96,6 +96,32 @@ Project cards (`src/data/projects.ts`) and blog posts (`src/content/blog/`) are 
 
 Every blog post with a corresponding project should have a `ficha:` block in its frontmatter containing at minimum: `rol`, `stack`, `estado`, `repositorio`, and `live` (if the project has a deployed app).
 
+## Routes That Exist -- Do Not Invent Internal Paths
+
+The site has exactly five route families, each mirrored under `/en/`:
+
+| Route | Example |
+|---|---|
+| `/` | home, where the project cards live |
+| `/about` | `/about/` |
+| `/blog/<slug>/` | `/blog/sima/`, `/en/blog/sima/` |
+| `/artifacts/<slug>/` | |
+| `/notes/<slug>/` | plus `/notes/categoria/<cat>/` |
+
+**There is no `/projects/*` or `/proyectos/*` route, and there never has been.** Project cards render on the home page from `src/data/projects.ts` and carry no per-card `id`, so no anchor targets an individual card either.
+
+This is not a hypothetical. The 2026-08-14 audit found nine links to invented `/projects/<slug>` and `/proyectos/<slug>` paths across four posts in both languages, every one a 404 for every visitor since publication. A project slug existing in `projects.ts` does not make it a URL.
+
+To link a project from a post, use one of:
+
+1. Its blog post -- `/blog/<blogSlug>/`, and `/en/blog/<blogSlug>/` from an English post. Prefer this when the project has a post.
+2. Its live app or repo -- copy the exact `url` or `repo` string from the card in `projects.ts`; do not retype the host.
+3. The card's own destination when it is a document -- several cards point at Drive folders rather than apps.
+
+Language matters: an English post must link `/en/blog/...`, a Spanish post `/blog/...`. Getting this wrong silently switches the reader's language.
+
+Before adding any internal link, confirm the target builds: after `npm run build`, `ls dist/<path>/index.html`. `/notes/*` is a real route family but is excluded from the sitemap, so absence from `sitemap-0.xml` is not proof a path is invalid -- check `dist/`.
+
 ## Blog i18n Filename Convention
 
 All blog posts MUST use the **English slug** as the filename in both `src/content/blog/es/` and `src/content/blog/en/`. The LanguageSwitcher toggles URLs by adding/removing the `/en` prefix, so both language versions of a post must produce the same slug.
