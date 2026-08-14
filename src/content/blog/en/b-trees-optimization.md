@@ -48,7 +48,7 @@ The minimum occupancy is also guaranteed: every node except the root must hold a
 
 ## PostgreSQL: the B-tree in production
 
-The interactive explorer I built in Rust ([B-Tree Explorer](/en/proyectos/b-tree-explorer)) uses a tree of order 4 so that splits are visible. PostgreSQL uses a much larger order, calibrated against the 8 KB page size. Each tree page (one block in the PostgreSQL heap) stores as many keys as fit in 8 KB after the node metadata.
+The interactive explorer I built in Rust ([B-Tree Explorer](https://github.com/GonorAndres/b-trees)) uses a tree of order 4 so that splits are visible. PostgreSQL uses a much larger order, calibrated against the 8 KB page size. Each tree page (one block in the PostgreSQL heap) stores as many keys as fit in 8 KB after the node metadata.
 
 For an index over an 8-byte integer in PostgreSQL, a leaf page holds roughly 250-300 keys. For a VARCHAR(255) index, fewer. This has direct consequences:
 
@@ -56,7 +56,7 @@ For an index over an 8-byte integer in PostgreSQL, a leaf page holds roughly 250
 
 **Composite index column order matters.** An index on `(country, city)` is a B-tree whose keys are lexicographically ordered pairs: first by country, then by city within the same country. A query with `WHERE country = 'MX'` can use it efficiently because it knows exactly where Mexico's range starts and ends in the tree. A query with `WHERE city = 'Guadalajara'` without filtering by country cannot: Guadalajara values are scattered throughout the tree, interleaved with cities from every other country. The column order in a composite index is not a style detail; it is the difference between O(log n) and O(n).
 
-**The flight data analysis at 2.5 GB** in my [flight-analytics](/en/proyectos/flight-analytics) project illustrates this in practice. At that scale, the presence or absence of an index on frequently filtered columns determines whether a query takes 200 ms or 40 seconds. PostgreSQL's execution plan (`EXPLAIN ANALYZE`) shows exactly how many tree nodes were traversed, how many pages were read from disk, and whether the index was used or the engine fell back to a sequential scan. That information is the difference between optimizing with evidence and guessing.
+**The flight data analysis at 2.5 GB** in my [flight-analytics](/en/blog/flight-analytics-pg-bq/) project illustrates this in practice. At that scale, the presence or absence of an index on frequently filtered columns determines whether a query takes 200 ms or 40 seconds. PostgreSQL's execution plan (`EXPLAIN ANALYZE`) shows exactly how many tree nodes were traversed, how many pages were read from disk, and whether the index was used or the engine fell back to a sequential scan. That information is the difference between optimizing with evidence and guessing.
 
 ## The cost that does not show up in the `SELECT`
 
@@ -74,4 +74,4 @@ Understanding the tree's structure makes those planner decisions stop being blac
 
 The next time a query takes longer than expected, the B-tree is the first place to look. Is there an index on the filter columns? Does the column order in the composite index match the selectivity of the typical filters? Does the index exist but the planner ignores it because table statistics are stale? (`ANALYZE` fixes that.) Those questions stop being abstract once you have the mental model of what is happening inside.
 
-The [B-Tree Explorer](/en/proyectos/b-tree-explorer) I built in Rust and compiled to WebAssembly lets you watch in real time how a node splits, how the middle key rises to the parent, and how the tree height grows in a controlled way. Not as a data structures tutorial, but as a tool for building the intuition that leads to better index design decisions.
+The [B-Tree Explorer](https://github.com/GonorAndres/b-trees) I built in Rust and compiled to WebAssembly lets you watch in real time how a node splits, how the middle key rises to the parent, and how the tree height grows in a controlled way. Not as a data structures tutorial, but as a tool for building the intuition that leads to better index design decisions.

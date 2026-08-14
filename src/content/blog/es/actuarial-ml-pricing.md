@@ -2,7 +2,7 @@
 title: "Pricing de Seguros con ML: Lo que México Puede Aprender de la Revolución Actuarial Europea"
 description: "Modelos de frecuencia-severidad sobre freMTPL2: Poisson GLM vs XGBoost vs LightGBM con explicabilidad SHAP, auditorías de fairness y un análisis transfronterizo de lo que las técnicas europeas de pricing con ML significan para el mercado mexicano donde el 70% de los autos no tiene seguro."
 date: "2026-03-14"
-lastModified: "2026-03-19"
+lastModified: "2026-08-14"
 category: "proyectos-y-analisis"
 lang: "es"
 shape: "case-study"
@@ -13,7 +13,6 @@ ficha:
   datos: "freMTPL2 (677,991 pólizas reales, asegurador francés)"
   regulacion: "LISF (nota técnica de suficiencia)"
   estado: "Finalizado"
-  repositorio: "https://github.com/GonorAndres/data-science-path/tree/main/projects/insurance-pricing"
 tags: ["pricing", "GLM", "XGBoost", "LightGBM", "SHAP", "freMTPL2", "actuarial", "frecuencia-severidad", "Optuna", "MLflow", "fairness"]
 ---
 
@@ -65,9 +64,9 @@ Este proyecto ocupa una posición específica en el pipeline técnico de seguros
 
 La conexión es directa. La frecuencia predicha del modelo de pricing alimenta los inputs de pérdida esperada del modelo de reservas. Si el modelo de pricing subestima sistemáticamente la frecuencia para un segmento (como el GLM hace para ciertos perfiles urbanos en el análisis de double-lift), el modelo de reservas eventualmente mostrará desarrollo adverso. Los dos proyectos son etapas consecutivas de un solo ciclo actuarial.
 
-[SIMA](https://sima-451451662791.us-central1.run.app/) implementa la capa de cálculo regulatorio para México: reservas bajo LISF/CUSF, proyección de mortalidad Lee-Carter y suficiencia de capital mandatada por la CNSF. Las primas técnicas de este proyecto alimentan los módulos de reservas de SIMA río abajo. Productos distintos (auto vs. vida), misma lógica regulatoria: la CNSF requiere notas técnicas que demuestren suficiencia actuarial, y el pricing con ML más explicabilidad SHAP entrega exactamente eso.
+[SIMA](https://sima.gonor.me) implementa la capa de cálculo regulatorio para México: reservas bajo LISF/CUSF, proyección de mortalidad Lee-Carter y suficiencia de capital mandatada por la CNSF. Las primas técnicas de este proyecto alimentan los módulos de reservas de SIMA río abajo. Productos distintos (auto vs. vida), misma lógica regulatoria: la CNSF requiere notas técnicas que demuestren suficiencia actuarial, y el pricing con ML más explicabilidad SHAP entrega exactamente eso.
 
-El [GMM Explorer](https://gmm-explorer.vercel.app/contexto) aborda la distribución de severidad: dado un portafolio de siniestros, ¿qué mezcla de distribuciones describe mejor el costo? Este es el lado de severidad de la descomposición frecuencia-severidad que este proyecto maneja en el lado de frecuencia.
+El [GMM Explorer](https://gmm.gonor.me/contexto) aborda la distribución de severidad: dado un portafolio de siniestros, ¿qué mezcla de distribuciones describe mejor el costo? Este es el lado de severidad de la descomposición frecuencia-severidad que este proyecto maneja en el lado de frecuencia.
 
 ## Lo que esto significa para México
 
@@ -90,9 +89,3 @@ En el lado de modelado, CatBoost y Explainable Boosting Machines (EBMs) extender
 Los cuatro papers que sustentan este proyecto:
 
 Noll, Salzmann y Wuthrich (2020) establecieron el benchmark freMTPL2 y mostraron superioridad del GBM para frecuencia de siniestros. Colella y Jones (2023, CAS E-Forum) confirmaron que ningún modelo domina universalmente, validando el enfoque comparativo. MDPI Risks (2024) mostró que un modelo híbrido GLM+ANN supera a todos los modelos individuales, apuntando hacia estrategias de ensamble como el futuro probable del pricing actuarial. Kuo y Lupton (2023, Variance) formalizaron el marco de explicabilidad que hace el pricing con ML regulatoriamente viable.
-
-Los PDFs están disponibles en el repositorio del proyecto bajo `docs/references/`.
-
-## Material de referencia
-
-- <a href="https://github.com/GonorAndres/data-science-path/tree/main/projects/insurance-pricing" target="_blank" rel="noopener">Repositorio en GitHub</a>: Pipeline ML completo (GLMs Poisson/Gamma, XGBoost, LightGBM con tuning Optuna y tracking MLflow), análisis SHAP, auditoría de fairness, backend FastAPI y dashboard interactivo Next.js con 4 pestañas.
