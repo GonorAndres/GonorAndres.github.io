@@ -12,7 +12,7 @@ ficha:
   datos: "NAIC Schedule P · siniestros sintéticos (~50,000 reclamaciones)"
   estado: "Finalizado"
   repositorio: "https://github.com/GonorAndres/data-analyst-path/tree/main/projects/01-insurance-claims-dashboard"
-  live: "https://insurance-claims-dashboard-pi.vercel.app"
+  live: "https://data-analyst.gonor.me/insurance"
 tags: ["reservas", "chain-ladder", "BF", "IBNR", "P&C", "dashboard", "Python", "SQL"]
 ---
 
