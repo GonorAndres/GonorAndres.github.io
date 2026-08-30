@@ -201,7 +201,7 @@ export const projects: Project[] = [
       es: 'Un siniestro de seguros recorre un camino largo entre el evento y el modelo que lo tarifica. Automatizar ese flujo produce datos más rápidos, confiables y consistentes. Este proyecto construye cada tramo sobre GCP: ingesta en tiempo real con Pub/Sub y Beam, warehouse dimensional en BigQuery, orquestación con Dagster, infraestructura con Terraform y un modelo GLM Tweedie que convierte los datos limpios en prima actuarial. Seis etapas, un solo flujo.',
       en: 'An insurance claim travels a long path between the event and the model that prices it. Automating that flow produces faster, more reliable, and more consistent data. This project builds every segment on GCP: real-time ingestion with Pub/Sub and Beam, dimensional warehouse in BigQuery, Dagster orchestration, Terraform infrastructure, and a Tweedie GLM that turns clean data into actuarial premium. Six stages, one continuous flow.',
     },
-    url: 'https://claims-dashboard-451451662791.us-central1.run.app',
+    url: 'https://data-engineer.gonor.me',
     repo: 'https://github.com/GonorAndres/data-engineer-path',
     platform: 'GCP',
     category: 'data-engineering',
