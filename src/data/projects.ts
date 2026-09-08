@@ -150,7 +150,7 @@ export const projects: Project[] = [
 
   // repo: https://github.com/GonorAndres/graph-relation-db
   // local: /home/andtega349/graph-relation-db
-  // source: real UK PSC + GLEIF MX ownership topology with synthetic Mexican credit layer
+  // source: fictional connected-borrower showcase plus a reproducible modeling experiment
   {
     slug: 'credit-graph',
     title: {
@@ -158,16 +158,16 @@ export const projects: Project[] = [
       en: 'CreditGraph: Topological Credit Risk Analysis',
     },
     description: {
-      es: 'El análisis crediticio tradicional trata cada préstamo como evento independiente, pero las cadenas de garantías, garantías circulares y concentración accionaria crean exposición correlacionada invisible a modelos relacionales. CreditGraph modela un portafolio de 500 clientes como grafo en Neo4j, procesa datos con PySpark en Databricks, califica con LightGBM calibrado por Platt, y ejecuta pruebas de estrés topológicas que revelan patrones de riesgo estructural ocultos al SQL.',
-      en: 'Traditional credit analysis treats each loan as independent, but guarantee chains, circular guarantees, and ownership concentration create correlated exposure invisible to relational models. CreditGraph models a 500-client portfolio as a Neo4j graph, processes data with PySpark on Databricks, scores with Platt-calibrated LightGBM, and runs topological stress tests that reveal structural risk patterns hidden from SQL.',
+      es: 'CreditGraph muestra cómo las relaciones entre propietarios, empresas y garantías cambian la revisión de un portafolio. Explora cuatro escenarios ficticios, saldos conectados y un experimento separado que compara modelos con y sin variables de red.',
+      en: 'CreditGraph shows how relationships between owners, companies, and guarantees change portfolio review. Explore four fictional scenarios, connected balances, and a separate experiment comparing models with and without network features.',
     },
-    url: 'https://graph-relation-db.vercel.app/',
+    url: 'https://graph-db.gonor.me/',
     repo: 'https://github.com/GonorAndres/graph-relation-db',
-    platform: 'Vercel',
+    platform: 'Cloudflare',
     category: 'data-science',
     tags: {
-      es: ['Neo4j', 'PySpark', 'Databricks', 'Cypher', 'LightGBM', 'Riesgo crediticio', 'Grafos'],
-      en: ['Neo4j', 'PySpark', 'Databricks', 'Cypher', 'LightGBM', 'Credit risk', 'Graphs'],
+      es: ['Python', 'D3.js', 'LightGBM', 'Riesgo crediticio', 'Grafos'],
+      en: ['Python', 'D3.js', 'LightGBM', 'Credit risk', 'Graphs'],
     },
     variant: 'standard',
     gallery: [
@@ -184,7 +184,7 @@ export const projects: Project[] = [
     blogSlug: 'credit-graph-topological-risk',
     tier: 1,
     creation_date: '2026-03-29',
-    last_modification_date: '2026-03-21',
+    last_modification_date: '2026-09-08',
   },
 
   // repo: https://github.com/GonorAndres/data-engineer-path
@@ -659,9 +659,8 @@ export const projects: Project[] = [
     last_modification_date: '2025-08-09',
   },
 
-  // repo: https://github.com/GonorAndres/data-science-path (subfolder: projects/insurance-pricing)
-  // local: /home/andtega349/data-science-path/projects/insurance-pricing
-  // source: synthetic insurance data generated with actuarial assumptions (Poisson/Gamma frequency-severity)
+  // repo: https://github.com/GonorAndres/insurance-pricing-ml
+  // source: freMTPL2 (public benchmark dataset, French motor insurer, via sklearn.fetch_openml)
   {
     slug: 'insurance-pricing-ml',
     title: {
@@ -669,11 +668,11 @@ export const projects: Project[] = [
       en: 'Insurance Pricing with ML',
     },
     description: {
-      es: 'El modelo actuarial clásico ofrece interpretabilidad; machine learning ofrece capacidad predictiva. La pregunta es cuándo la ganancia en precisión justifica la complejidad adicional. Este proyecto corre ambos enfoques sobre los mismos datos de seguros, compara sus resultados y analiza si las primas que genera cada modelo son equitativas entre género y grupos de edad. Resultados explorables en un dashboard interactivo.',
-      en: 'The classic actuarial model offers interpretability; machine learning offers predictive power. The question is when the gain in accuracy justifies the added complexity. This project runs both approaches on the same insurance data, compares their outputs, and analyzes whether each model\'s premiums are equitable across gender and age groups. Results explorable in an interactive dashboard.',
+      es: 'El modelo actuarial clásico ofrece interpretabilidad; el aprendizaje automático ofrece capacidad predictiva. La pregunta es cuándo la ganancia en precisión justifica la complejidad adicional. Este proyecto compara ambos enfoques sobre 678 mil pólizas reales de un asegurador francés, mide cuánto mejora la predicción de siniestros y audita si esa mejora viene acompañada de un sesgo geográfico injustificado. Análisis completo, código reproducible y una API de predicción documentados en el blog.',
+      en: 'The classic actuarial model offers interpretability; machine learning offers predictive power. The question is when the gain in accuracy justifies the added complexity. This project compares both approaches on 678,000 real policies from a French insurer, measures how much claim prediction actually improves, and audits whether that improvement comes with an unwarranted geographic bias. Full analysis, reproducible code, and a prediction API documented in the blog post.',
     },
     url: '/blog/actuarial-ml-pricing/',
-    repo: 'https://github.com/GonorAndres/data-science-path',
+    repo: 'https://github.com/GonorAndres/insurance-pricing-ml',
     platform: 'GitHub',
     category: 'data-science',
     tags: {
@@ -684,8 +683,8 @@ export const projects: Project[] = [
     relatedTo: ['sima', 'data-analyst-portfolio', 'credit-risk'],
     blogSlug: 'actuarial-ml-pricing',
     tier: 2,
-    creation_date: '2026-02-21',
-    last_modification_date: '2026-03-15',
+    creation_date: '2026-09-08',
+    last_modification_date: '2026-09-08',
   },
 
   // repo: https://github.com/GonorAndres/b-trees
