@@ -9,7 +9,10 @@
 <meta http-equiv="refresh" content="0; url=https://gonor.me/">
 <script>
   // Preserve path, query and hash so old deep links land on the same page.
-  location.replace('https://gonor.me' + location.pathname + location.search + location.hash);
+  // /GonorPage/* was the portfolio's project-site path before it had a custom
+  // domain; drop that prefix so those links land on the same page too.
+  var path = location.pathname.replace(/^\/GonorPage(?=\/|$)/, '') || '/';
+  location.replace('https://gonor.me' + path + location.search + location.hash);
 </script>
 </head>
 <body>
